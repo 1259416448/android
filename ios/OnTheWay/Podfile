@@ -1,0 +1,11 @@
+platform :'ios','9.0'
+target 'OnTheWay' do
+  pod 'MBProgressHUD'
+  pod 'AFNetworking'
+  pod 'SDWebImage'
+  pod 'MJExtension'
+  pod 'MJRefresh'
+  pod 'IQKeyboardManager'
+  pod 'PPNetworkHelper'
+end
+
