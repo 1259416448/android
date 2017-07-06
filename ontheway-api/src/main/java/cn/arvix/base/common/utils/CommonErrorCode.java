@@ -13,6 +13,7 @@ public interface CommonErrorCode {
     String DIGEST_ERROR = "000201";
 
     /**
+     *
      * 验证码发送操作频繁，请稍后再试
      */
     String FREQUENT_OPERATION = "000101";
