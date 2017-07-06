@@ -1,19 +1,14 @@
 package cn.arvix.ontheway.sys.resource.service;
 
+import cn.arvix.base.common.entity.JSONResult;
+import cn.arvix.base.common.entity.search.Searchable;
+import cn.arvix.base.common.service.impl.BaseServiceImpl;
+import cn.arvix.base.common.utils.*;
 import cn.arvix.ontheway.sys.auth.service.AuthService;
 import cn.arvix.ontheway.sys.permission.repository.RoleResourceRepository;
 import cn.arvix.ontheway.sys.resource.entity.Resource;
 import cn.arvix.ontheway.sys.resource.entity.ResourceType;
 import cn.arvix.ontheway.sys.resource.repository.ResourceRepository;
-import cn.arvix.ontheway.sys.user.entity.User;
-import cn.arvix.ontheway.sys.user.entity.UserType;
-import cn.arvix.base.common.entity.JSONResult;
-import cn.arvix.base.common.entity.search.Searchable;
-import cn.arvix.base.common.service.impl.BaseServiceImpl;
-import cn.arvix.base.common.utils.CommonContact;
-import cn.arvix.base.common.utils.CommonPermission;
-import cn.arvix.base.common.utils.JsonUtil;
-import cn.arvix.base.common.utils.MessageUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -94,7 +89,6 @@ public class ResourceService extends BaseServiceImpl<Resource, Long> {
      */
     @SuppressWarnings("unchecked")
     public JSONResult tree(Long rId) {
-        User user = webContextUtils.getCheckCurrentUser();
         if (!SecurityUtils.getSubject().isPermitted(CommonPermission.SYSTEM_AUTH_AND_ROLE))
             return JsonUtil.getFailure(MessageUtils.message(CommonContact.NO_PERMISSION), CommonContact.NO_PERMISSION);
         Map<String, Object> params = Maps.newHashMap();
@@ -104,14 +98,6 @@ public class ResourceService extends BaseServiceImpl<Resource, Long> {
             params.put("show_eq", Boolean.TRUE);
         }
         Searchable searchable = Searchable.newSearchable(params, new Sort(Sort.Direction.ASC, "sorter"));
-        //如果当前用户是saas用户 增加过滤条件，只获取分配给saas_companyId 的资源信息
-        if (user.getUserType().equals(UserType.saas) || (UserType.user.equals(user.getUserType())
-                && SecurityUtils.getSubject().isPermitted(CommonPermission.SYSTEM_AUTH_AND_ROLE))) {
-            searchable.addSearchParam("saasRole", user);
-        }
-//        else {
-//            params.put("resourceType_eq", ResourceType.column);
-//        }
         List<Resource> resourceList = findAllWithSort(searchable);
         List<?> jsonList = JsonUtil.getBaseEntityMapList(resourceList);
         //增加选中节点
@@ -120,7 +106,7 @@ public class ResourceService extends BaseServiceImpl<Resource, Long> {
             resourceIds.forEach(checkedSet::add);
             jsonList.forEach(x -> {
                 Map<String, Object> map = (Map<String, Object>) x;
-                map.put("checked", checkedSet.contains(map.get("id")));
+                map.put("checked", checkedSet.contains(Checks.toLong(String.valueOf(map.get("id")))));
             });
         }
         return JsonUtil.getSuccess(MessageUtils.message(CommonContact.FETCH_SUCCESS),

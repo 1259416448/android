@@ -10,7 +10,7 @@ public class LoginDTO {
 
     @ApiModelProperty(required = true, value = "用户名/email/手机号码")
     private String username;
-    @ApiModelProperty(required = true, value = "登陆密码")
+    @ApiModelProperty(required = true, value = "登陆密码/手机验证码")
     private String password;
     @ApiModelProperty(required = true, value = "记住我")
     private Boolean rememberMe = false;

@@ -1,18 +1,5 @@
 package cn.arvix.ontheway.sys.user.service;
 
-import cn.arvix.ontheway.sys.auth.service.AuthService;
-import cn.arvix.ontheway.sys.config.service.ConfigService;
-import cn.arvix.ontheway.sys.dto.*;
-import cn.arvix.ontheway.sys.organization.entity.Organization;
-import cn.arvix.ontheway.sys.organization.service.OrganizationService;
-import cn.arvix.ontheway.sys.shiro.web.mgt.HeaderRememberMeManager;
-import cn.arvix.ontheway.sys.user.entity.*;
-import cn.arvix.ontheway.sys.user.exception.UserException;
-import cn.arvix.ontheway.sys.user.repository.UserOrganizationJobRepository;
-import cn.arvix.ontheway.sys.user.repository.UserRepository;
-import cn.arvix.ontheway.sys.utils.Email;
-import cn.arvix.ontheway.sys.utils.EndecryptUtils;
-import cn.arvix.ontheway.sys.utils.RegExpValidatorUtils;
 import cn.arvix.base.common.entity.JSONResult;
 import cn.arvix.base.common.entity.search.PageRequest;
 import cn.arvix.base.common.entity.search.Searchable;
@@ -24,6 +11,22 @@ import cn.arvix.base.common.utils.CommonContact;
 import cn.arvix.base.common.utils.JsonUtil;
 import cn.arvix.base.common.utils.MessageUtils;
 import cn.arvix.base.common.utils.TimeMaker;
+import cn.arvix.ontheway.sys.config.service.ConfigService;
+import cn.arvix.ontheway.sys.dto.*;
+import cn.arvix.ontheway.sys.organization.entity.Organization;
+import cn.arvix.ontheway.sys.organization.service.OrganizationService;
+import cn.arvix.ontheway.sys.shiro.web.mgt.HeaderRememberMeManager;
+import cn.arvix.ontheway.sys.sms.SMSService;
+import cn.arvix.ontheway.sys.user.entity.TokenInfo;
+import cn.arvix.ontheway.sys.user.entity.User;
+import cn.arvix.ontheway.sys.user.entity.UserOrganizationJob;
+import cn.arvix.ontheway.sys.user.entity.UserType;
+import cn.arvix.ontheway.sys.user.exception.UserException;
+import cn.arvix.ontheway.sys.user.repository.UserOrganizationJobRepository;
+import cn.arvix.ontheway.sys.user.repository.UserRepository;
+import cn.arvix.ontheway.sys.utils.EndecryptUtils;
+import cn.arvix.ontheway.sys.utils.HmacSHA256Utils;
+import cn.arvix.ontheway.sys.utils.RegExpValidatorUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +35,7 @@ import org.apache.shiro.subject.Subject;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Sort;
@@ -43,7 +47,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * @author Created by yangyang on 2017/3/8.
@@ -51,7 +54,6 @@ import java.util.stream.Collectors;
  */
 @Service
 public class UserService extends BaseServiceImpl<User, Long> {
-
 
     private final UserOrganizationJobRepository userOrganizationJobRepository;
 
@@ -61,27 +63,18 @@ public class UserService extends BaseServiceImpl<User, Long> {
 
     private final RedissonClient redissonClient;
 
-    private final Email emailSender;
+    private SMSService smsService;
+
+    @Autowired
+    public void setSmsService(@Qualifier("juHeSMSServiceImpl") SMSService smsService) {
+        this.smsService = smsService;
+    }
 
     private HeaderRememberMeManager rememberMeManager;
 
     @Autowired
     public void setRememberMeManager(HeaderRememberMeManager rememberMeManager) {
         this.rememberMeManager = rememberMeManager;
-    }
-
-    private UserOrganizationRecordsService userOrganizationRecordsService;
-
-    private AuthService authService;
-
-    @Autowired
-    public void setAuthService(AuthService authService) {
-        this.authService = authService;
-    }
-
-    @Autowired
-    public void setUserOrganizationRecordsService(UserOrganizationRecordsService userOrganizationRecordsService) {
-        this.userOrganizationRecordsService = userOrganizationRecordsService;
     }
 
     @PersistenceContext
@@ -93,14 +86,12 @@ public class UserService extends BaseServiceImpl<User, Long> {
     public UserService(UserOrganizationJobRepository userOrganizationJobRepository,
                        OrganizationService organizationService,
                        CacheManager cacheManager, ConfigService configService,
-                       RedissonClient redissonClient,
-                       Email emailSender) {
+                       RedissonClient redissonClient) {
         this.userOrganizationJobRepository = userOrganizationJobRepository;
         this.organizationService = organizationService;
         this.authCache = cacheManager.getCache(CommonContact.X_AUTH_TOKEN_CACHE);
         this.configService = configService;
         this.redissonClient = redissonClient;
-        this.emailSender = emailSender;
     }
 
     private UserRepository getUserRepository() {
@@ -240,7 +231,6 @@ public class UserService extends BaseServiceImpl<User, Long> {
             UserOrganizationJob userOrganizationJob = new UserOrganizationJob(organizationId, null);
             userOrganizationJob.setUser(user);
             userOrganizationJob.setDateCreated(date);
-            userOrganizationJob.setCompanyId(currentUser.getCompanyId());
             list.add(userOrganizationJob);
         }
         userOrganizationJobRepository.save(list);
@@ -271,7 +261,6 @@ public class UserService extends BaseServiceImpl<User, Long> {
         m.setSalt(oldUser.getSalt());
         m.setHeadImg(oldUser.getHeadImg());
         m.setHeadImgYuan(oldUser.getHeadImgYuan());
-        m.setCompanyId(oldUser.getCompanyId());
         m.setOrganizationJobs(oldUser.getOrganizationJobs());
         return super.update_(m);
     }
@@ -320,141 +309,14 @@ public class UserService extends BaseServiceImpl<User, Long> {
                 CommonContact.FETCH_SUCCESS, number == -1 ? findAllWithSort(searchable) : findAll(searchable));
     }
 
-    /**
-     * 用户注册
-     * 这里添加的用户都是未激活用户，用户类型都为普通用户类型
-     * 这里将生成一个uuid作为当前用户的用户名
-     *
-     * @param dto 注册数据
-     * @return 注册结果
-     */
-    public JSONResult register(RegisterDTO dto) {
-        if (StringUtils.isEmpty(dto.getUsername())) return JsonUtil.getFailure("username.is.null", "username.is.null");
-        if (StringUtils.isEmpty(dto.getName())) return JsonUtil.getFailure("name.is.null", "name.is.null");
-        if (StringUtils.isEmpty(dto.getPassword())) return JsonUtil.getFailure("password.is.null", "password.is.null");
-        User user = new User();
-        user.setUsername(UUID.randomUUID().toString().replace("-", ""));
-        user.setName(dto.getName());
-        user.setStatus(UserStatus.unactivated);
-        user.setUserType(UserType.user);
-        if (RegExpValidatorUtils.match(User.MOBILE_PHONE_NUMBER_PATTERN, dto.getUsername())) {
-            user.setMobilePhoneNumber(dto.getUsername());
-        } else if (RegExpValidatorUtils.match(User.EMAIL_PATTERN, dto.getUsername())) {
-            user.setEmail(dto.getUsername());
-        } else return JsonUtil.getFailure("username.is.error", "username.is.error");
-        user.setPassword(dto.getPassword());
-        JSONResult jsonResult = save_(user);
-        if (!jsonResult.ifSuccess()) return jsonResult;
-        //如果邮箱注册方式，这里需要发送激活邮件
-        if (!StringUtils.isEmpty(user.getEmail())) {
-            sendActivationEmail(user.getUsername());
-        }
-        return jsonResult;
-    }
-
-    /**
-     * 发送激活邮件
-     *
-     * @param username 用户名
-     * @return 发送结果
-     */
-    public JSONResult sendActivationEmail(String username) {
-        User user = getUserRepository().findByUsername(username);
-        if (user == null || StringUtils.isEmpty(user.getEmail()))
-            return JsonUtil.getFailure(MessageUtils.message("user.not.find"), "user.not.find");
-        RBucket<EmailDTO> bucket = redissonClient.getBucket(getActivationKey(username));
-        EmailDTO email = bucket.get();
-        if (email == null) { //不存在，重新发送
-            email = new EmailDTO();
-            email.setEmailType(EmailDTO.EmailType.activation);
-            email.setEmail(user.getEmail());
-            email.setContent(UUID.randomUUID().toString().replace("-", ""));
-        }
-        //获取激活邮件内容 前端路由 /mail/{username}
-        String content = configService.getConfigString(CommonContact.SAAS_USER_ACTIVATION_EMAIL);
-        Date now = TimeMaker.nowSqlDate();
-        content = content.replace(CommonContact.EMAIL_DATE, TimeMaker.toDateTimeStr(now))
-                .replace(CommonContact.EMAIL_ACTIVATION_URL, getActivationMailUrl(username, email.getContent()));
-        email.setDate(now.getTime());
-        //激活邮件有效时间
-        String[] time = configService.getConfigString(CommonContact.SENT_EMAIL_TTL_TIME).split("-");
-        bucket.set(email, Long.valueOf(time[0]), TimeUnit.valueOf(time[1]));
-        //发送邮件
-        //如果是测试模式下，这里的邮件都指定发送到一个配置的邮箱中
-
-        if (webContextUtils.ifTest()) {
-            emailSender.sendSimpleEmail("账号激活", content,
-                    configService.getConfigString(CommonContact.TEST_SENT_EMAIL_APPOINT),
-                    Boolean.TRUE);
-        } else {
-            emailSender.sendSimpleEmail("账号激活", content, email.getEmail(), Boolean.TRUE);
-        }
-        return JsonUtil.getSuccess(MessageUtils.message("activation.mail.sent.success"), "activation.mail.sent.success");
-    }
-
-    /**
-     * 激活账号
-     *
-     * @param username 用户名
-     * @return 激活结果
-     */
-    public JSONResult activationEmail(String username, String uuid) {
-        User user = getUserRepository().findByUsername(username);
-        if (user == null || StringUtils.isEmpty(user.getEmail()))
-            return JsonUtil.getFailure(MessageUtils.message("user.not.find"), "user.not.find");
-        //判断是否发送激活邮件
-        if (!user.getStatus().equals(UserStatus.unactivated))
-            return JsonUtil.getFailure(MessageUtils.message("activation.mail.already"), "activation.mail.already");
-        RBucket<EmailDTO> bucket = redissonClient.getBucket(getActivationKey(username));
-        EmailDTO email = bucket.get();
-        if (email == null || !Objects.equals(email.getContent(), uuid))
-            return JsonUtil.getFailure(MessageUtils.message("activation.mail.error"), "activation.mail.error");
-        //账号激活，账号目前没有团队
-        user.setStatus(UserStatus.noteam);
-        super.update(user);
-        redissonClient.getKeys().delete(getActivationKey(username));
-        return JsonUtil.getSuccess(MessageUtils.message("activation.mail.success"), "activation.mail.success", username);
-    }
-
-    /**
-     * 发送找回密码验证邮件
-     *
-     * @param username 登陆邮箱
-     * @return 发送结果
-     */
-    public JSONResult forgetEmail(String username) {
-        User user = getUserRepository().findByEmail(username);
-        if (user == null) return JsonUtil.getFailure(MessageUtils.message("user.not.find"), "user.not.find");
-        RBucket<EmailDTO> bucket = redissonClient.getBucket(getForgetKey(username));
-        EmailDTO email = bucket.get();
-        if (email == null) { //不存在，重新发送
-            email = new EmailDTO();
-            email.setEmail(user.getEmail());
-            email.setEmailType(EmailDTO.EmailType.activation);
-            email.setContent(getVerificationCode());
-        }
-        String content = configService.getConfigString(CommonContact.USER_FORGET_PASS_EMAIL);
-        Date now = TimeMaker.nowSqlDate();
-        content = content.replace(CommonContact.EMAIL_DATE, TimeMaker.toDateTimeStr(now))
-                .replace(CommonContact.EMAIL_CHECK_CODE, email.getContent());
-        email.setDate(now.getTime());
-        //激活邮件有效时间
-        String[] time = configService.getConfigString(CommonContact.SENT_EMAIL_TTL_TIME).split("-");
-        bucket.set(email, Long.valueOf(time[0]), TimeUnit.valueOf(time[1]));
-        //发送邮件
-        emailSender.sendSimpleEmail("找回密码", content, email.getEmail(), Boolean.TRUE);
-        return JsonUtil.getSuccess(MessageUtils.message("code.sent.success"), "code.sent.success");
-    }
-
-    //获取激活邮件点击url
-    private String getActivationMailUrl(String username, String uuid) {
-        return configService.getConfigString(CommonContact.HTML_SERVER_BASE_PATH) + "register/check?u=" + username + "&hash=" + uuid;
-    }
-
-    //获取一个4位验证码
-    private String getVerificationCode() {
+    //获取一个6位验证码
+    private String getSixNumberCode() {
         Random random = new Random();
-        int x = random.nextInt(9000) + 1000;
+        int x = random.nextInt(900000) + 100000;
+        //测试环境 默认验证码123456
+        if (webContextUtils.ifTest()) {
+            return String.valueOf(123456);
+        }
         return String.valueOf(x);
     }
 
@@ -539,17 +401,6 @@ public class UserService extends BaseServiceImpl<User, Long> {
     }
 
     /**
-     * 根据公司ID获取当前公司下的saas用户
-     *
-     * @param companyId 公司ID
-     * @return saas用户
-     */
-    public User getCompanySaasUser(Long companyId) {
-        return getUserRepository().findByCompanyIdAndUserType(companyId, UserType.saas);
-    }
-
-
-    /**
      * 更新当前登陆用户名称
      *
      * @return 更新结果
@@ -625,193 +476,6 @@ public class UserService extends BaseServiceImpl<User, Long> {
     }
 
     /**
-     * 邀请同事
-     * 1、判断邀请用户是否存在。
-     * 2、不存在，自动完成注册。
-     * 3、存在、判断是否已在当前team，在提醒 不在自动加入组织。
-     *
-     * @param dto 邀请数据
-     * @return 返回邀请结果数组
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public JSONResult invitation(InvitationDTO dto) {
-        if (dto.getInvitations() != null && dto.getInvitations().size() > 0) {
-            for (RegisterDTO registerDTO : dto.getInvitations()) {
-                User register;
-                if (RegExpValidatorUtils.match(User.MOBILE_PHONE_NUMBER_PATTERN, registerDTO.getUsername())) {
-                    register = getUserRepository().findByMobilePhoneNumber(registerDTO.getUsername());
-                } else if (RegExpValidatorUtils.match(User.EMAIL_PATTERN, registerDTO.getUsername())) {
-                    register = getUserRepository().findByEmail(registerDTO.getUsername());
-                } else throw new UserException("username.is.error");
-                if (register == null) {
-                    //首先注册用户
-                    String defaultPassword = "123456";
-                    register = new User();
-                    register.setUsername(UUID.randomUUID().toString().replace("-", ""));
-                    register.setStatus(UserStatus.normal);
-                    register.setUserType(UserType.user);
-                    register.setPassword(defaultPassword);
-                    register.setName(registerDTO.getName());
-                    register.setEmail(registerDTO.getUsername());
-                    JSONResult jsonResult = save_(register);
-                    if (jsonResult.ifSuccess()) {
-                        Organization currentOrganization = organizationService.getUserCurrentOrganization();
-                        UserOrganizationRecords userOrganizationRecords = new UserOrganizationRecords();
-                        userOrganizationRecords.setUser(register);
-                        userOrganizationRecords.setOrganization(currentOrganization);
-                        boolean ifExist = userOrganizationRecordsService.create(userOrganizationRecords);
-                        if (!ifExist) { //添加关系
-                            this.removeOrAddOrganization(register.getId(), currentOrganization.getId());
-                        }
-                        String emailContent = configService.getConfigString(CommonContact.INVITATION_PASSWORD_HTML);
-                        emailContent = emailContent.replace(CommonContact.REMIND_NAME, register.getName());
-                        emailContent = emailContent.replace(CommonContact.INVITATION_HTML_URL,
-                                configService.getConfigString(CommonContact.HTML_SERVER_BASE_PATH) + "login");
-                        emailContent = emailContent.replace(CommonContact.INVITATION_PASSWORD_HTML_PASSWORD, defaultPassword);
-                        emailContent = emailContent.replace(CommonContact.EMAIL_DATE, TimeMaker.toDateStr(new Date()));
-                        emailContent = emailContent.replace(CommonContact.INVITATION_HTML_TEAM_NAME, currentOrganization.getName());
-                        emailSender.sendSimpleEmail("团队邀请提醒", emailContent, register.getEmail(), Boolean.TRUE);
-                    }
-                } else {
-                    //加入当前要求人所有的团队
-                    Organization currentOrganization = organizationService.getUserCurrentOrganization();
-                    UserOrganizationRecords userOrganizationRecords = new UserOrganizationRecords();
-                    userOrganizationRecords.setUser(register);
-                    userOrganizationRecords.setOrganization(currentOrganization);
-                    boolean ifExist = userOrganizationRecordsService.create(userOrganizationRecords);
-                    //变更当前人companyId
-                    register.setCompanyId(currentOrganization.getCompanyId());
-                    if (!ifExist) {//添加关系
-                        this.removeOrAddOrganization(register.getId(), currentOrganization.getId());
-                    }
-                    register.setStatus(UserStatus.normal);
-                    super.update(register);
-                    //发送邮件提醒
-                    String emailContent = configService.getConfigString(CommonContact.INVITATION_HTML);
-                    emailContent = emailContent.replace(CommonContact.REMIND_NAME, register.getName());
-                    emailContent = emailContent.replace(CommonContact.INVITATION_HTML_URL,
-                            configService.getConfigString(CommonContact.HTML_SERVER_BASE_PATH) + "login");
-                    emailContent = emailContent.replace(CommonContact.EMAIL_DATE, TimeMaker.toDateStr(new Date()));
-                    emailContent = emailContent.replace(CommonContact.INVITATION_HTML_TEAM_NAME, currentOrganization.getName());
-                    emailSender.sendSimpleEmail("团队邀请提醒", emailContent, register.getEmail(), Boolean.TRUE);
-                }
-            }
-            return JsonUtil.getSuccess(MessageUtils.message(CommonContact.OPTION_SUCCESS), CommonContact.OPTION_SUCCESS);
-        }
-        return JsonUtil.getFailure(MessageUtils.message(CommonContact.REQUIRE_PARAMS_MISS), CommonContact.REQUIRE_PARAMS_MISS);
-    }
-
-    /**
-     * 把一个用户从当前登陆用户的team中移除
-     *
-     * @param uid 用户ID
-     * @return 操作结果
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public JSONResult removeTeam(Long uid) {
-        User user = super.findOne(uid);
-        //需要检查一下用户类型，不能移除sass用户
-        if (UserType.saas.equals(user.getUserType())) throw new UserException("saas user not remove error");
-        Organization currentOrganization = organizationService.getUserCurrentOrganization();
-        //删除关系记录
-        userOrganizationRecordsService.delete(uid, currentOrganization.getId());
-        Long[] oIds = organizationService.getOrganizationByCompanyId(currentOrganization.getCompanyId());
-        //删除所有team关系
-        userOrganizationJobRepository.deleteByUserIdAndOrganizationIdIn(uid, oIds);
-        //操作成功后，设置当前用户的默认companyId 如果不存在任何部门了 需要修改用户状态
-        List<UserOrganizationRecords> userOrganizationRecordsList = userOrganizationRecordsService.getByUid(uid);
-        if (userOrganizationRecordsList != null && userOrganizationRecordsList.size() > 0) {
-            user.setCompanyId(userOrganizationRecordsList.get(0).getOrganization().getCompanyId());
-        } else {
-            user.setCompanyId(null);
-            user.setStatus(UserStatus.noteam);//没有团队状态
-        }
-        super.updateNoCompanyId(user);
-        //删除角色分配数据
-        authService.deleteByUserIdAndCompanyId(uid, currentOrganization.getCompanyId());
-        //手动清理一下集合缓存
-        HibernateUtils.evictLevel2CollectionRegions(entityManager);
-        return JsonUtil.getSuccess(MessageUtils.message(CommonContact.OPTION_SUCCESS), CommonContact.OPTION_SUCCESS);
-    }
-
-    /**
-     * 这里会获取当前公司下的所有用户信息
-     *
-     * @return 分组数组
-     */
-    @Transactional(readOnly = true)
-    public JSONResult mailListInit() {
-
-        User user = webContextUtils.getCheckCurrentUser();
-        Map<String, Object> params = Maps.newHashMap();
-        params.put("companyId_eq", user.getCompanyId());
-        //查询当前用户下的所有组织
-        List<Organization> organizations = organizationService.findAllWithSort(Searchable
-                .newSearchable(params, new Sort(Sort.Direction.ASC, "sorter")));
-        //目前获取用户信息不排序不分页
-        params.put("deleted_eq", false);
-        List<User> users = super.findAllWithNoPageNoSort(Searchable.newSearchable(params));
-        List<Object> jsonList = Lists.newArrayList();
-        if (organizations.size() == 1) {
-            Map<String, Object> jsonMap = organizations.get(0).toMap();
-            jsonMap.put("users", simpleJsonUserList(users));
-            jsonList.add(jsonMap);
-        } else {
-            organizations.forEach(x -> {
-                Map<String, Object> jsonMap = x.toMap();
-                if (x.getParentId() == null) { //顶级 条件只有一个部门而且是属于当前
-                    List<User> userList = users.stream().filter(u -> ifNotFen(u, x.getId())).collect(Collectors.toList());
-                    jsonMap.put("users", simpleJsonUserList(userList));
-                } else { // 用户可能存在多个
-                    List<User> userList = users.stream().filter(u -> ifBelongToOrganization(u, x.getId()))
-                            .collect(Collectors.toList());
-                    jsonMap.put("users", simpleJsonUserList(userList));
-                }
-                jsonList.add(jsonMap);
-            });
-        }
-        return JsonUtil.getSuccess(MessageUtils.message(CommonContact.FETCH_SUCCESS), CommonContact.FETCH_SUCCESS, jsonList);
-    }
-
-    //当前用户为分配
-    private boolean ifNotFen(User user, Long oId) {
-        return user.getOrganizationJobs().size() == 1
-                && ifBelongToOrganization(user, oId);
-    }
-
-    //判断一个用户是否属于某个团队
-    private boolean ifBelongToOrganization(User user, Long oId) {
-        for (UserOrganizationJob one : user.getOrganizationJobs()) {
-            if (one.getOrganization() == null || one.getOrganization().getId() == null) continue;
-            if (oId.equals(one.getOrganization().getId())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private List simpleJsonUserList(List<User> users) {
-        List<Object> list = Lists.newArrayList();
-        if (users != null && users.size() > 0) {
-            users.forEach(x -> list.add(x.toSimpleMap()));
-        }
-        return list;
-    }
-
-    private List simpleJsonOrganizationList(List<Organization> organizations) {
-        List<Object> list = Lists.newArrayList();
-        if (organizations != null && organizations.size() > 0) {
-            organizations.forEach(x -> {
-                Map<String, Object> jsonMap = Maps.newHashMap();
-                jsonMap.put("id", x.getId());
-                jsonMap.put("name", x.getName());
-                list.add(jsonMap);
-            });
-        }
-        return list;
-    }
-
-    /**
      * 移动，把某个用户由某个部门移动到某个部门下
      *
      * @param uId 用户ID
@@ -825,31 +489,6 @@ public class UserService extends BaseServiceImpl<User, Long> {
         if (!removeOrAddOrganization(uId, mId).ifSuccess()) throw new UserException(CommonContact.OPTION_ERROR);
         return JsonUtil.getSuccess(MessageUtils.message(CommonContact.OPTION_SUCCESS), CommonContact.OPTION_SUCCESS);
     }
-
-
-    /**
-     * 获取筛选条件接口
-     *
-     * @return 筛选条件
-     */
-    public JSONResult choose() {
-        User user = webContextUtils.getCheckCurrentUser();
-        //获取部门时，不获取parentId = null 的部门
-        Map<String, Object> params = Maps.newHashMap();
-        params.put("companyId_eq", user.getCompanyId());
-        params.put("id_ne", user.getId());
-        params.put("deleted_eq", Boolean.FALSE);
-        List<User> users = super.findAllWithNoPageNoSort(Searchable.newSearchable(params));
-        params.remove("id_ne");
-        params.remove("deleted_eq");
-        params.put("parentId_isNotNull", null);
-        List<Organization> organizations = organizationService.findAllWithSort(Searchable.newSearchable(params, new Sort(Sort.Direction.ASC, "sorter")));
-        params.clear();
-        params.put("users", simpleJsonUserList(users));
-        params.put("organizations", simpleJsonOrganizationList(organizations));
-        return JsonUtil.getSuccess(MessageUtils.message(CommonContact.FETCH_SUCCESS), CommonContact.OPTION_SUCCESS, params);
-    }
-
 
     public boolean onLoginSuccess() {
         return onLoginSuccess(false);
@@ -886,19 +525,85 @@ public class UserService extends BaseServiceImpl<User, Long> {
     }
 
     /**
-     * 获取当前用户下的公司所有成员
+     * 发送短信验证码，6位验证码
+     * 需要进行消息摘要验证，防止恶意访问，目前使用固定的app key
      *
-     * @return 成员数据
+     * @param mobile 手机号
+     * @param digest 消息摘要 对手机号求消息摘要
+     * @return 操作结果
      */
-    public JSONResult team() {
-        User user = webContextUtils.getCheckCurrentUser();
+    public JSONResult sentSMSCode(String mobile, String digest) {
+
+        //首先验证消息摘要正确性  mobile:mobile
+        String serverDigest = HmacSHA256Utils.digest(CommonContact.HMAC256_KEY, "mobile:" + mobile);
+        if (!Objects.equals(serverDigest, digest)) {
+            return JsonUtil.getFailure("digest is error", "digest.error");
+        }
+
+        RBucket<SmsDTO> bucket = redissonClient.getBucket(getSMSMobileKey(mobile));
+        SmsDTO smsDTO = bucket.get();
+        if (smsDTO != null) { //55秒不能重复发送
+            //新建短信发送内容
+            if (smsDTO.getTime() + 55000 > System.currentTimeMillis()) {
+                return JsonUtil.getFailure("Frequent operation", "frequent.operation");
+            }
+        }
+        Map<String, Object> map = Maps.newHashMap();
         Map<String, Object> params = Maps.newHashMap();
-        params.put("companyId_eq", user.getCompanyId());
-        params.put("deleted_eq", Boolean.FALSE);
-        List<User> users = super.findAllWithNoPageNoSort(Searchable.newSearchable(params));
-        params.clear();
-        params.put("users", simpleJsonUserList(users));
-        return JsonUtil.getSuccess(MessageUtils.message(CommonContact.FETCH_SUCCESS), CommonContact.FETCH_SUCCESS, params);
+        map.put("mobile", mobile);
+        params.put("#minute#", configService.getConfigString(CommonContact.SMS_CODE_TTL_TIME).split("-")[0]);
+        params.put("#code#", getSixNumberCode());
+        map.put("tpl_id", configService.getConfigString(CommonContact.JU_HE_LOGIN_CODE_TPL_ID));
+        map.put("tpl_map", params);
+        Boolean opt = Boolean.TRUE;
+        //只有在非测试情况下才发送短信
+        if (!webContextUtils.ifTest()) {
+            opt = smsService.sendMessage(null, map);
+        }
+        if (opt) {
+            //记录redis
+            smsDTO = new SmsDTO();
+            smsDTO.setMobile(mobile);
+            smsDTO.setCode(params.get("#code#").toString());
+            smsDTO.setTime(System.currentTimeMillis());
+            String[] time = configService.getConfigString(CommonContact.SMS_CODE_TTL_TIME).split("-");
+            bucket.set(smsDTO, Long.valueOf(time[0]), TimeUnit.valueOf(time[1]));
+            return JsonUtil.getSuccess(MessageUtils.message(CommonContact.OPTION_SUCCESS), CommonContact.OPTION_SUCCESS);
+        } else {
+            return JsonUtil.getSuccess(MessageUtils.message(CommonContact.OPTION_ERROR), CommonContact.OPTION_ERROR);
+        }
     }
+
+
+    /**
+     * 使用手机验证码登陆
+     * 
+     * @param dto 登陆信息
+     * @return 登陆结果，成功登陆后会返回当前用户信息
+     */
+    public JSONResult smsCodeLogin(LoginDTO dto) {
+
+        //先在redis中获取缓存的code
+        RBucket<SmsDTO> bucket = redissonClient.getBucket(getSMSMobileKey(dto.getUsername()));
+        SmsDTO smsDTO = bucket.get();
+        if (smsDTO == null) { //为发送短信或短信已过期
+            return JsonUtil.getFailure("短信验证码已过期，请重新发送！", "messageCode.error");
+
+        }
+
+
+        return null;
+    }
+
+    /**
+     * 获取redis key
+     *
+     * @param mobile 手机号
+     * @return redis key
+     */
+    private String getSMSMobileKey(String mobile) {
+        return "sms_mobile_" + mobile;
+    }
+
 
 }

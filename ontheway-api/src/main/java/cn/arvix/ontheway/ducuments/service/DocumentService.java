@@ -102,7 +102,6 @@ public class DocumentService extends BaseServiceImpl<Document, Long> {
             }
         }
         m.setId(null);
-        m.setCompanyId(null);
         m.setDownloadNo(0);
         m.setFileUrl(m.getNewName());
         m.setUser(user);
@@ -141,20 +140,17 @@ public class DocumentService extends BaseServiceImpl<Document, Long> {
             return JsonUtil.getFailure(MessageUtils.message("document.delete.error1"), "document.delete.error1");
         User user = webContextUtils.getCheckCurrentUser();
         //如果用户拥有可以删除其他公司数据权限 也可以删除，这里等权限系统完善后加入
-        if (document.getCompanyId() != null && document.getCompanyId().equals(user.getCompanyId())) {
-            //先删除七牛端，成功后再移除本地
-            try {
-                qiniuResourceManagerUtil.deleteFile(document.getFileUrl());
-            } catch (QiniuException e) {
-                log.error("七牛文件删除错误,msg:{}", e.response.error);
-                if (webContextUtils.ifDev()) {
-                    e.printStackTrace();
-                }
+        try {
+            qiniuResourceManagerUtil.deleteFile(document.getFileUrl());
+        } catch (QiniuException e) {
+            log.error("七牛文件删除错误,msg:{}", e.response.error);
+            if (webContextUtils.ifDev()) {
+                e.printStackTrace();
             }
-            super.delete(document);
-            return JsonUtil.getSuccess(MessageUtils.message(CommonContact.DELETE_SUCCESS), CommonContact.DELETE_SUCCESS);
+            return JsonUtil.getFailure(MessageUtils.message("七牛文件操作失败"), CommonContact.OPTION_SUCCESS);
         }
-        return JsonUtil.getFailure(MessageUtils.message(CommonContact.NO_PERMISSION), CommonContact.NO_PERMISSION);
+        super.delete(document);
+        return JsonUtil.getSuccess(MessageUtils.message(CommonContact.DELETE_SUCCESS), CommonContact.DELETE_SUCCESS);
     }
 
 
@@ -201,9 +197,6 @@ public class DocumentService extends BaseServiceImpl<Document, Long> {
             sort = new Sort(direction, order);
         }
         User user = webContextUtils.getCheckCurrentUser();
-        if (user.getCompanyId() == null) {//如果账号没有saas公司信息，目前设置为不允许这样的用户请求数据，以后可以通过权限控制
-            return JsonUtil.getFailure(MessageUtils.message(CommonContact.NO_PERMISSION), CommonContact.NO_PERMISSION);
-        }
         //小于 加载文件夹
         Map<String, Object> jsonMap = Maps.newHashMap();
         if (number < 1) {
@@ -212,7 +205,6 @@ public class DocumentService extends BaseServiceImpl<Document, Long> {
         //加载文件 number == -1 全部加载 否则分页加载
         Searchable searchable = Searchable.newSearchable(null, number == -1 ? null : new PageRequest(number, size), sort);
         Map<String, Object> params = Maps.newHashMap();
-        params.put("companyId_eq", user.getCompanyId());
         DocumentDir documentDir = null;
         if (pId != null) {
             params.put("parentId_eq", pId);
@@ -314,9 +306,6 @@ public class DocumentService extends BaseServiceImpl<Document, Long> {
      */
     public JSONResult documentUrlById(Long id, String fix) {
         Document document = super.findOne(id);
-        //验证一下当前文件是否是当前公司的
-        if (!Objects.equals(document.getCompanyId(), webContextUtils.getCompanyId()))
-            return JsonUtil.getFailure(MessageUtils.message(CommonContact.NO_PERMISSION), CommonContact.NO_PERMISSION);
         //目前这里不提供公司自定义七牛云存储，以后加上
         //final String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL, webContextUtils.getCompanyId());
         String url = configService.getConfigString(CommonContact.QINIU_BUCKET_URL) + "/" + document.getFileUrl();
@@ -342,7 +331,6 @@ public class DocumentService extends BaseServiceImpl<Document, Long> {
      */
     public JSONResult documentUrlByIds(List<Long> ids, String fix) {
         Map<String, Object> params = Maps.newHashMap();
-        params.put("companyId_eq", webContextUtils.getCompanyId());
         params.put("id_in", ids);
         List<Document> documents = super.findAllWithNoPageNoSort(Searchable.newSearchable(params));
         //目前这里不提供公司自定义七牛云存储，以后加上

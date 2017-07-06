@@ -107,7 +107,6 @@ public class DocumentDirService extends BaseServiceImpl<DocumentDir, Long> {
         m.setFileNo(0);
         //用户创建
         m.setIfDelete(Boolean.TRUE);
-        m.setCompanyId(null);
         return super.save_(m);
     }
 
@@ -242,8 +241,6 @@ public class DocumentDirService extends BaseServiceImpl<DocumentDir, Long> {
             params.put("auth", user);
             params.put("opModule", 1);
         }
-        //saas公司信息
-        params.put("companyId_eq", user.getCompanyId());
         if (pId != null) { //父节点
             params.put("parentId_eq", pId);
         } else {
@@ -275,8 +272,7 @@ public class DocumentDirService extends BaseServiceImpl<DocumentDir, Long> {
      * @param user 用户信息
      */
     public DocumentDir getCompanyAttachment(User user) {
-        if (user == null || user.getCompanyId() == null) return null;
-        return getDocumentDirRepository().findByDocumentDirTypeAndCompanyId(DocumentDirType.attachment, user.getCompanyId());
+        return getDocumentDirRepository().findByDocumentDirTypeAndCompanyId(DocumentDirType.attachment);
     }
 
 }

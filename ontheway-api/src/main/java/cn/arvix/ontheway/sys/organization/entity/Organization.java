@@ -38,7 +38,7 @@ public class Organization extends BaseEntity<Long> {
      * 组织机构类型 默认 分公司
      */
     @Enumerated(EnumType.STRING)
-    private OrganizationType type = OrganizationType.branch_office;
+    private OrganizationType type = OrganizationType.admin;
     /**
      * 父路径
      */

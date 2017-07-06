@@ -62,7 +62,7 @@ public class AuthRepositoryImpl {
             }
         }
 
-        hql.append(") and companyId = :companyId and opId = 0 and opModule = 0 "); //加上saas信息 剔除单条数据权限
+        hql.append(") and opId = 0 and opModule = 0 "); //加上saas信息 剔除单条数据权限
 
         Query q = em.createQuery(hql.toString());
 
@@ -79,7 +79,6 @@ public class AuthRepositoryImpl {
         if (hasJobIds) {
             q.setParameter("jobIds", jobIds);
         }
-        q.setParameter("companyId", webContextUtils.getCompanyId());
         if (hasOrganizationJobIds) {
             int i = 0;
             for (Long[] organizationJobId : organizationJobIds) {

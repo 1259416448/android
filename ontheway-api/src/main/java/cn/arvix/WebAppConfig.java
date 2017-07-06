@@ -40,8 +40,8 @@ import java.util.List;
 @Configuration
 @EnableWebMvc
 @EnableSwagger2
-@ComponentScan(basePackages = {"cn.arvix.agilemaster.sys.*.controller," +
-        "cn.arvix.agilemaster.blog.*.controller," +
+@ComponentScan(basePackages = {"cn.arvix.ontheway.sys.*.controller," +
+        "cn.arvix.ontheway.blog.*.controller," +
         "cn.arvix.qiniu.controller"})
 @EnableCaching
 //@Import(value = ShiroConfig.class)

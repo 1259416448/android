@@ -1,8 +1,7 @@
 package cn.arvix.ontheway.sys.permission.repository;
 
-import cn.arvix.ontheway.sys.permission.entity.Role;
-import cn.arvix.ontheway.sys.permission.entity.RoleType;
 import cn.arvix.base.common.repository.BaseRepository;
+import cn.arvix.ontheway.sys.permission.entity.Role;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
 
@@ -17,21 +16,18 @@ import java.util.Set;
 public interface RoleRepository extends BaseRepository<Role, Long> {
 
     @QueryHints({@QueryHint(name = "org.hibernate.cacheable", value = "true")})
-    Role findByRoleAndCompanyId(String role, Long companyId);
+    Role findByRole(String role);
 
     @Query("select role from Role where id in (?1) and show = true")
     @QueryHints({@QueryHint(name = "org.hibernate.cacheable", value = "true")})
     List<String> findRoleByIds(Set<Long> ids);
 
-    @Query("from Role where role = ?1 and companyId =?2 and id <> ?3")
+    @Query("from Role where role = ?1 and id <> ?2")
     @QueryHints({@QueryHint(name = "org.hibernate.cacheable", value = "true")})
-    Role findByRoleAndCompanyIdNotEqId(String role, Long companyId, Long id);
+    Role findByRoleNotEqId(String role, Long id);
 
     @Query("select role from Role where show = true")
     @QueryHints({@QueryHint(name = "org.hibernate.cacheable", value = "true")})
     List<String> findRole();
 
-    @QueryHints({@QueryHint(name = "org.hibernate.cacheable", value = "true")})
-    @Query("from Role where roleType = ?1 and companyId = ?2")
-    Role findByRoleTypeAndCompanyId(RoleType roleType, Long companyId);
 }

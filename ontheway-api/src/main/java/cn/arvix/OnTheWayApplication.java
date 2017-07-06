@@ -21,16 +21,16 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableAspectJAutoProxy
 @EnableJpaRepositories(
         repositoryFactoryBeanClass = SimpleBaseRepositoryFactoryBean.class)
-public class AgilemasterApplication extends SpringBootServletInitializer {
+public class OnTheWayApplication extends SpringBootServletInitializer {
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        application.sources(AgilemasterApplication.class);
+        application.sources(OnTheWayApplication.class);
         return application;
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(AgilemasterApplication.class, args);
+        SpringApplication.run(OnTheWayApplication.class, args);
     }
 
 }

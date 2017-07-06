@@ -1,7 +1,8 @@
 package cn.arvix.ontheway.sys.organization.entity;
 
 public enum OrganizationType {
-    saas("saas默认"), bloc("集团"), branch_office("分公司"), department("部门"), group("部门小组");
+
+    user("普通平台用户"), admin("平台管理");
 
     private final String info;
 

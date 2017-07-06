@@ -22,7 +22,7 @@ import java.util.Set;
  * 给组授权 (groupId=?)
  * <p/>
  * 因此查询用户有没有权限 就是
- * where ( (orgnizationId=? and jobId=0) or (organizationId = 0 and jobId=?) or (orgnizationId=? and jobId=?) or (userId=?) or (groupId=?) ) and companyId=?
+ * where ( (orgnizationId=? and jobId=0) or (organizationId = 0 and jobId=?) or (orgnizationId=? and jobId=?) or (userId=?) or (groupId=?) )
  * <p/>
  * <p/>
  * 2、为了提高性能

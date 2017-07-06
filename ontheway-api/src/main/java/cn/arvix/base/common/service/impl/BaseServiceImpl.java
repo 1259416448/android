@@ -73,43 +73,11 @@ public abstract class BaseServiceImpl<M extends AbstractEntity, ID extends Seria
             if (StringUtils.isEmpty(username)) username = "???";
             m.setCreater(username);
         }
-        //不允许添加时外部手动设置saas标示
-        m.setCompanyId(null);
-        setCompanyId(m);
         m.setDateCreated(TimeMaker.nowSqlDate());
         //检验数据完整性
         String msg = m.checkLack();
         if (!StringUtils.isEmpty(msg)) throw new DataCheckException(msg);
         return baseRepository.save(m);
-    }
-
-    /**
-     * 保存单个实体,不自动设置company信息
-     *
-     * @param m 实体
-     * @return 返回保存的实体
-     */
-    public M saveNoCompanyId(M m) {
-        //获取当前登陆用户，并设置创建人
-        if (StringUtils.isEmpty(m.getCreater())) {
-            //获取当前登陆用户
-            String username = webContextUtils.getCurrentPrincipal();
-            if (StringUtils.isEmpty(username)) username = "???";
-            m.setCreater(username);
-        }
-        m.setDateCreated(TimeMaker.nowSqlDate());
-        //检验数据完整性
-        String msg = m.checkLack();
-        if (!StringUtils.isEmpty(msg)) throw new DataCheckException(msg);
-        return baseRepository.save(m);
-    }
-
-    //设置saas数据公司信息，更新数据前，可以加上验证当前数据是否输入当前公司
-    private void setCompanyId(M m) {
-        Long companyId = webContextUtils.getCompanyId();
-        if (companyId != null && m.getCompanyId() == null) {
-            m.setCompanyId(companyId);
-        }
     }
 
     public M saveAndFlush(M m) {
@@ -137,20 +105,6 @@ public abstract class BaseServiceImpl<M extends AbstractEntity, ID extends Seria
      * @return 返回更新的实体
      */
     public M update(M m) {
-        String msg = m.checkLack();
-        setCompanyId(m);
-        if (!StringUtils.isEmpty(msg)) throw new DataCheckException(msg);
-        m.setLastUpdated(TimeMaker.nowSqlDate());
-        return baseRepository.save(m);
-    }
-
-    /**
-     * 更新单个实体 不会设置 CompanyId 信息
-     *
-     * @param m 实体
-     * @return 返回更新的实体
-     */
-    public M updateNoCompanyId(M m) {
         String msg = m.checkLack();
         if (!StringUtils.isEmpty(msg)) throw new DataCheckException(msg);
         m.setLastUpdated(TimeMaker.nowSqlDate());

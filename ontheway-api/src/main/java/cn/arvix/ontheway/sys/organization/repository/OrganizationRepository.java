@@ -1,8 +1,7 @@
 package cn.arvix.ontheway.sys.organization.repository;
 
-import cn.arvix.ontheway.sys.organization.entity.Organization;
-import cn.arvix.ontheway.sys.organization.entity.OrganizationType;
 import cn.arvix.base.common.repository.BaseRepository;
+import cn.arvix.ontheway.sys.organization.entity.Organization;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
 
@@ -16,18 +15,10 @@ import java.util.List;
 public interface OrganizationRepository extends BaseRepository<Organization, Long> {
 
     @QueryHints({@QueryHint(name = "org.hibernate.cacheable", value = "true")})
-    List<Organization> findByParentIdAndCompanyId(Long pId, Long companyId);
+    List<Organization> findByParentId(Long pId);
 
     @Query("select count(*) from UserOrganizationJob where organization.id =?1 ")
     @QueryHints({@QueryHint(name = "org.hibernate.cacheable", value = "true")})
     Long findUserCountByOrganizationId(Long id);
-
-    @QueryHints({@QueryHint(name = "org.hibernate.cacheable", value = "true")})
-    @Query("from Organization where type = ?1 and companyId = ?2 ")
-    Organization findByTypeAndCompanyId(OrganizationType type, Long companyId);
-
-    @Query("select id from Organization where companyId = ?1")
-    @QueryHints({@QueryHint(name = "org.hibernate.cacheable", value = "true")})
-    Long[] findIdByCompanyId(Long companyId);
 
 }

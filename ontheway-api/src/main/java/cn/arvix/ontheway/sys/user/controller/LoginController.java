@@ -1,19 +1,15 @@
 package cn.arvix.ontheway.sys.user.controller;
 
-import cn.arvix.ontheway.sys.dto.InvitationDTO;
-import cn.arvix.ontheway.sys.dto.LoginDTO;
-import cn.arvix.ontheway.sys.dto.PasswordDTO;
-import cn.arvix.ontheway.sys.dto.RegisterDTO;
-import cn.arvix.ontheway.sys.user.entity.User;
-import cn.arvix.ontheway.sys.user.entity.UserStatus;
-import cn.arvix.ontheway.sys.user.service.UserService;
-import cn.arvix.ontheway.sys.utils.WebContextUtils;
 import cn.arvix.base.common.entity.JSONResult;
 import cn.arvix.base.common.utils.CommonContact;
 import cn.arvix.base.common.utils.JsonUtil;
 import cn.arvix.base.common.utils.MessageUtils;
 import cn.arvix.base.common.web.controller.ExceptionHandlerController;
-import io.swagger.annotations.ApiImplicitParam;
+import cn.arvix.ontheway.sys.dto.LoginDTO;
+import cn.arvix.ontheway.sys.dto.PasswordDTO;
+import cn.arvix.ontheway.sys.dto.RegisterDTO;
+import cn.arvix.ontheway.sys.user.service.UserService;
+import cn.arvix.ontheway.sys.utils.WebContextUtils;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
@@ -54,13 +50,6 @@ public class LoginController extends ExceptionHandlerController {
         try {
             subject.login(token);
             //记录登陆日志
-            //验证用户状态
-            User current = webContextUtils.getCheckCurrentUser();
-            if (UserStatus.unactivated.equals(current.getStatus())) {
-                return JsonUtil.getFailure(UserStatus.unactivated.toString(), UserStatus.unactivated.toString(), current.getUsername());
-            } else if (UserStatus.noteam.equals(current.getStatus())) {
-                return JsonUtil.getFailure(UserStatus.noteam.toString(), UserStatus.noteam.toString(), current.getUsername());
-            }
             //登陆成功，返回登陆用户基本信息
             userService.onLoginSuccess(dto.getRememberMe());
             return JsonUtil.getSuccess(MessageUtils.message(CommonContact.LOGIN_SUCCESS),
@@ -96,13 +85,6 @@ public class LoginController extends ExceptionHandlerController {
                 CommonContact.USERNAME_OR_PASSWORD_ERROR);
     }
 
-    @ApiOperation(value = "未登录返回数据接口", notes = "未登录返回数据接口")
-    @ResponseBody
-    @RequestMapping(value = "/no/login", method = RequestMethod.GET)
-    public JSONResult noLogin() {
-        return JsonUtil.getFailure(MessageUtils.message(CommonContact.NO_LOGIN), CommonContact.NO_LOGIN);
-    }
-
     @ApiOperation(value = "获取当前登陆用户", notes = "获取当前登陆用户")
     @ResponseBody
     @RequestMapping(value = "/login/current/user", method = RequestMethod.GET)
@@ -117,40 +99,6 @@ public class LoginController extends ExceptionHandlerController {
     public JSONResult loginOut() {
         userService.loginOut();
         return JsonUtil.getSuccess(MessageUtils.message(CommonContact.OPTION_SUCCESS), CommonContact.OPTION_SUCCESS);
-    }
-
-    @ApiOperation(value = "新saas用户初次注册", notes = "新saas用户初次注册，当前版本不提供独立域名，下次迭代添加功能，调用此接口后用户状态为未激活")
-    @ResponseBody
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public JSONResult register(@RequestBody RegisterDTO dto) {
-        return userService.register(dto);
-    }
-
-    @ApiOperation(value = "账号激活，邮件方式激活", notes = "账号激活，邮件方式,当前用户状态未添加团队")
-    @ResponseBody
-    @RequestMapping(value = "/send/activation/email/{username}", method = RequestMethod.GET)
-    public JSONResult activationSentEmail(@PathVariable String username) {
-        return userService.sendActivationEmail(username);
-    }
-
-    @ApiOperation(value = "激活账号", notes = "激活账号，邮件方式")
-    @ResponseBody
-    @RequestMapping(value = "/activation/email/{username}/{uuid}", method = RequestMethod.PUT)
-    public JSONResult activationEmail(@PathVariable String username, @PathVariable String uuid) {
-        return userService.activationEmail(username, uuid);
-    }
-
-    @ApiOperation(value = "发送邮件验证码", notes = "发送邮件验证码，一般在忘记密码时通过邮件找回密码使用")
-    @ResponseBody
-    @RequestMapping(value = "/forget/email", method = RequestMethod.GET)
-    @ApiImplicitParam(name = "username", value = "邮箱", paramType = "query")
-    public JSONResult sentEmailCode(String username) {
-        return userService.forgetEmail(username);
-    }
-
-    @ApiOperation(value = "账号激活，手机方式", notes = "账号激活，手机方式,当前用户状态未添加团队")
-    public JSONResult activationPhone() {
-        return null;
     }
 
     @ApiOperation(value = "验证用户名是否可用", notes = "返回验证情况")
@@ -188,19 +136,19 @@ public class LoginController extends ExceptionHandlerController {
         return userService.resetPassword(id);
     }
 
-    @RequestMapping(value = "/invitation", method = RequestMethod.POST)
-    @ApiOperation(value = "邀请同事", notes = "目前只支持邮箱方式，邀请同事,这里回返回一个数据，表示邀请结果")
+    @RequestMapping(value = "/login/sms/sent/{mobile}", method = RequestMethod.GET)
     @ResponseBody
-    public JSONResult invitation(@RequestBody InvitationDTO dto) {
-        return userService.invitation(dto);
+    @ApiOperation(value = "发送登陆验证码", notes = "发送登陆验证码，需要使用同一的key求消息摘要, digest 消息摘要")
+    public JSONResult sentSMSCode(@PathVariable String mobile, String digest) {
+        return userService.sentSMSCode(mobile, digest);
     }
 
-    @RequestMapping(value = "/remove/{uid}/team", method = RequestMethod.POST)
-    @ApiOperation(value = "把某个成员从当前saas中移除", notes = "传入用户id即可")
-    @ResponseBody
-    public JSONResult removeTeam(@PathVariable Long uid) {
-        return userService.removeTeam(uid);
-    }
 
+    @ApiOperation(value = "使用手机验证码登陆")
+    @ResponseBody
+    @RequestMapping(value = "/login/sms", method = RequestMethod.POST)
+    public JSONResult smsCodeLogin(LoginDTO dto) {
+        return userService.smsCodeLogin(dto);
+    }
 
 }

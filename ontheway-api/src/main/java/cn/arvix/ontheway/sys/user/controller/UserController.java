@@ -101,13 +101,6 @@ public class UserController extends BaseCRUDController<User, UserService, Long> 
         return service.updateUserImg(user);
     }
 
-    @ApiOperation(value = "通讯录初始化数据接口", notes = "通讯录初始化数据接口，返回以分组的用户数据")
-    @RequestMapping(value = "/init", method = RequestMethod.GET)
-    @ResponseBody
-    public JSONResult mailListInit() {
-        return service.mailListInit();
-    }
-
     @ApiOperation(value = "把用户由某个部门移动到某个部门下", notes = "需要原部门ID 移动到的部门ID 用户ID")
     @RequestMapping(value = "/{uId}/move/{oId}/to/{mId}", method = RequestMethod.PUT)
     @ResponseBody
@@ -115,20 +108,6 @@ public class UserController extends BaseCRUDController<User, UserService, Long> 
                            @PathVariable Long oId,
                            @PathVariable Long mId) {
         return service.move(uId, oId, mId);
-    }
-
-    @ApiOperation(value = "获取筛选条件", notes = "获取筛选条件，筛选条件包括当前用户下的所有部门，所有用户")
-    @ResponseBody
-    @RequestMapping(value = "/choose", method = RequestMethod.GET)
-    public JSONResult choose() {
-        return service.choose();
-    }
-
-    @ApiOperation(value = "获取团队中的所有用户基本信息", notes = "获取团队中的所有用户基本信息")
-    @ResponseBody
-    @RequestMapping(value = "/team", method = RequestMethod.GET)
-    public JSONResult team() {
-        return service.team();
     }
 
 }

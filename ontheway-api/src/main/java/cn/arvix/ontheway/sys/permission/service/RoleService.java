@@ -1,12 +1,5 @@
 package cn.arvix.ontheway.sys.permission.service;
 
-import cn.arvix.ontheway.sys.permission.entity.Role;
-import cn.arvix.ontheway.sys.permission.entity.RoleResource;
-import cn.arvix.ontheway.sys.permission.entity.RoleType;
-import cn.arvix.ontheway.sys.permission.repository.RoleRepository;
-import cn.arvix.ontheway.sys.permission.repository.RoleResourceRepository;
-import cn.arvix.ontheway.sys.user.entity.User;
-import cn.arvix.ontheway.sys.user.entity.UserType;
 import cn.arvix.base.common.entity.JSONResult;
 import cn.arvix.base.common.entity.search.PageRequest;
 import cn.arvix.base.common.entity.search.Searchable;
@@ -14,11 +7,15 @@ import cn.arvix.base.common.entity.search.filter.SearchFilter;
 import cn.arvix.base.common.entity.search.filter.SearchFilterHelper;
 import cn.arvix.base.common.service.impl.BaseServiceImpl;
 import cn.arvix.base.common.utils.*;
+import cn.arvix.ontheway.sys.permission.entity.Role;
+import cn.arvix.ontheway.sys.permission.entity.RoleResource;
+import cn.arvix.ontheway.sys.permission.entity.RoleType;
+import cn.arvix.ontheway.sys.permission.repository.RoleRepository;
+import cn.arvix.ontheway.sys.permission.repository.RoleResourceRepository;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -60,6 +57,7 @@ public class RoleService extends BaseServiceImpl<Role, Long> {
      * @param order     排序字段
      * @return 检索结果
      */
+    @RequiresPermissions(value = CommonPermission.SYSTEM_AUTH_AND_ROLE)
     public JSONResult search(String q, Integer number, Integer size, Sort.Direction direction, String order) {
         Checks.assertSortProperty(order);
         Sort sort = null;
@@ -67,26 +65,7 @@ public class RoleService extends BaseServiceImpl<Role, Long> {
             sort = new Sort(direction, order);
         }
         Map<String, Object> params = Maps.newHashMap();
-        //根据当前用户类型增加一些查询参数
-        User user = webContextUtils.getCheckCurrentUser();
-        Boolean a = Boolean.FALSE;
-        //saas用户只能获取当前团队下的角色信息
-        if (user.getUserType().equals(UserType.saas)
-                || (UserType.user.equals(user.getUserType())
-                && SecurityUtils.getSubject().isPermitted(CommonPermission.SYSTEM_AUTH_AND_ROLE))) {
-            params.put("companyId_eq", user.getCompanyId());
-            params.put("roleType_eq", RoleType.normal);
-        } else if (!UserType.user.equals(user.getUserType())
-                && SecurityUtils.getSubject().isPermitted(CommonPermission.SYSTEM_AUTH_AND_ROLE)) { //非user类型用户 但是拥有SYSTEM_AUTH_AND_ROLE权限
-            //companyId = null 或者 roleType = saas
-            a = Boolean.TRUE;
-        } else {
-            return JsonUtil.getFailure(MessageUtils.message(CommonContact.NO_PERMISSION), CommonContact.NO_PERMISSION);
-        }
         Searchable searchable = Searchable.newSearchable(params, new PageRequest(number, size), sort).setEnableToMap(true);
-        if (a) { //添加条件
-            searchable.or(SearchFilterHelper.newCondition("companyId_isNull", ""), SearchFilterHelper.newCondition("roleType_eq", "saas"));
-        }
         if (!StringUtils.isEmpty(q)) {
             SearchFilter searchFilter = SearchFilterHelper.newCondition("name_like", q);
             SearchFilter searchFilter1 = SearchFilterHelper.newCondition("role_like", q);
@@ -135,11 +114,10 @@ public class RoleService extends BaseServiceImpl<Role, Long> {
      * 检查role是否存在
      */
     private boolean checkRole(Role m) {
-        User user = webContextUtils.getCheckCurrentUser();
         if (m.getId() != null) {
-            return getRoleRepository().findByRoleAndCompanyIdNotEqId(m.getRole(), user.getCompanyId(), m.getId()) == null;
+            return getRoleRepository().findByRoleNotEqId(m.getRole(), m.getId()) == null;
         } else {
-            return getRoleRepository().findByRoleAndCompanyId(m.getRole(), user.getCompanyId()) == null;
+            return getRoleRepository().findByRole(m.getRole()) == null;
         }
     }
 

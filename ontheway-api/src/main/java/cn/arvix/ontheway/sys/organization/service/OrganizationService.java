@@ -47,12 +47,9 @@ public class OrganizationService extends BaseServiceImpl<Organization, Long> {
 
     private void modify(Organization m) {
         //设置父节点IDs
-        Organization parent;
+        Organization parent = null;
         if (m.getParentId() != null) {
             parent = findOne(m.getParentId());
-        } else { //自动补全上级节点
-            User user = webContextUtils.getCheckCurrentUser();
-            parent = getOrganizationRepository().findByTypeAndCompanyId(OrganizationType.saas, user.getCompanyId());
         }
         if (parent != null) {
             m.setParentId(parent.getId());
@@ -60,8 +57,8 @@ public class OrganizationService extends BaseServiceImpl<Organization, Long> {
                     parent.getSeparator() + parent.getId().toString() + parent.getSeparator() :
                     parent.getParentIds() + parent.getId() + parent.getSeparator());
         }
-        //这里目前只有2级关系 都是department类型,把缺省的参数自动补全
-        m.setType(OrganizationType.department);
+        //默认添加只会添加admin类型
+        m.setType(OrganizationType.admin);
         m.setShow(true);
         m.setSorter(5f);
     }
@@ -76,8 +73,6 @@ public class OrganizationService extends BaseServiceImpl<Organization, Long> {
         //modify(m);
         //目前这里只修改名称而已，saas类型不允许修改
         Organization organization = findOne(m.getId());
-        if (organization.getType().equals(OrganizationType.saas))
-            return JsonUtil.getFailure(MessageUtils.message(CommonContact.OPTION_ERROR), CommonContact.OPTION_SUCCESS);
 
         organization.setName(m.getName());
 
@@ -91,8 +86,6 @@ public class OrganizationService extends BaseServiceImpl<Organization, Long> {
      */
     public JSONResult tree() {
         Map<String, Object> paramsMap = Maps.newHashMap();
-        User user = webContextUtils.getCheckCurrentUser();
-        paramsMap.put("companyId_eq", user.getCompanyId());
         Searchable searchable = Searchable.newSearchable(paramsMap, new Sort(Sort.Direction.ASC, "sorter"));
         return JsonUtil.getSuccess(MessageUtils.message(CommonContact.FETCH_SUCCESS),
                 CommonContact.FETCH_SUCCESS,
@@ -109,7 +102,7 @@ public class OrganizationService extends BaseServiceImpl<Organization, Long> {
     @Transactional(rollbackFor = Exception.class)
     public JSONResult delete_(Long id) {
         User user = webContextUtils.getCheckCurrentUser();
-        deleteOne(id, user.getCompanyId());
+        deleteOne(id);
         return JsonUtil.getSuccess(MessageUtils.message(CommonContact.DELETE_SUCCESS),
                 CommonContact.DELETE_SUCCESS, id);
     }
@@ -137,13 +130,13 @@ public class OrganizationService extends BaseServiceImpl<Organization, Long> {
      *
      * @param id 主键
      */
-    private void deleteOne(Long id, Long companyId) {
+    private void deleteOne(Long id) {
         Long userCount = getOrganizationRepository().findUserCountByOrganizationId(id);
         if (userCount > 0) throw new SearchException("user.exist");
-        List<Organization> list = getOrganizationRepository().findByParentIdAndCompanyId(id, companyId);
+        List<Organization> list = getOrganizationRepository().findByParentId(id);
         if (list != null && list.size() > 0) {
             for (Organization one : list) {
-                deleteOne(one.getId(), companyId);
+                deleteOne(one.getId());
             }
         }
         super.delete(id);
@@ -158,7 +151,6 @@ public class OrganizationService extends BaseServiceImpl<Organization, Long> {
     public JSONResult select(Long id) {
         Map<String, Object> paramsMap = Maps.newHashMap();
         User user = webContextUtils.getCheckCurrentUser();
-        paramsMap.put("companyId_eq", user.getCompanyId());
         Searchable searchable = Searchable.newSearchable(paramsMap, new Sort(Sort.Direction.ASC, "sorter"));
         List<Organization> organizationList = findAllWithSort(searchable);
         List<Map<String, Object>> selectList = Lists.newArrayList();
@@ -197,25 +189,6 @@ public class OrganizationService extends BaseServiceImpl<Organization, Long> {
             sorter++;
         }
         return JsonUtil.getSuccess(MessageUtils.message(CommonContact.OPTION_SUCCESS), CommonContact.OPTION_SUCCESS);
-    }
-
-    /**
-     * 获取当前用户当前的组织
-     *
-     * @return 当前的saas组织
-     */
-    public Organization getUserCurrentOrganization() {
-        return getOrganizationRepository().findByTypeAndCompanyId(OrganizationType.saas, webContextUtils.getCompanyId());
-    }
-
-    /**
-     * 通过saas organization companyId 获取他下的所有部门Id
-     * 直接获取相同companyId的 organization即可
-     *
-     * @return 部门ID信息
-     */
-    public Long[] getOrganizationByCompanyId(Long companyId) {
-        return getOrganizationRepository().findIdByCompanyId(companyId);
     }
 
 }

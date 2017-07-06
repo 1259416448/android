@@ -121,19 +121,6 @@ public class WebContextUtils {
         return user;
     }
 
-    /**
-     * 通过登录用户获取公司ID
-     *
-     * @return saas公司ID
-     */
-    public Long getCompanyId() {
-        String principal = getCurrentPrincipal();
-        if (principal == null) return null;
-        User user = getCurrentUser(principal);
-        if (user == null) return null;
-        return user.getCompanyId();
-    }
-
     private User sysDevUser() {
         User user = new User();
         user.setUsername(configService.getConfigString(CommonContact.ROOT_NAME));

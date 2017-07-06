@@ -1,6 +1,5 @@
 package cn.arvix.ontheway.sys.resource.repository;
 
-import cn.arvix.ontheway.sys.user.entity.User;
 import cn.arvix.base.common.entity.search.Searchable;
 import cn.arvix.base.common.repository.callback.DefaultSearchCallback;
 
@@ -23,13 +22,6 @@ public class ResourceSearchCallback extends DefaultSearchCallback {
         boolean roleIds = search.containsSearchKey("roleIds");
         if (roleIds) {
             ql.append(" and exists (select 1 from RoleResource rr where role.id in (:roleIds) and x.id = rr.resourceId ) ");
-        }
-        boolean saasRole = search.containsSearchKey("saasRole");
-        if (saasRole) {
-            User user = search.getValue("saasRole");
-            ql.append(" and exists (select 1 from RoleResource rr where x.id = rr.resourceId  and role.id = " +
-                    "(select id from Role where roleType = 'saas' and companyId = ")
-                    .append(user.getCompanyId()).append("))");
         }
     }
 

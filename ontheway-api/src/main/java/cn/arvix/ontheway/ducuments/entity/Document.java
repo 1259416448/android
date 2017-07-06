@@ -150,7 +150,6 @@ public class Document extends BaseEntity<Long> {
             e.printStackTrace();
         }
         Document newDocument = new Document();
-        newDocument.setCompanyId(this.getCompanyId());
         newDocument.setName(this.getName());
         newDocument.setNewName(this.getNewName());
         newDocument.setParentId(this.getParentId());

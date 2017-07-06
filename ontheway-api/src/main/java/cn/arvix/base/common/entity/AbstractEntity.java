@@ -38,11 +38,6 @@ public abstract class AbstractEntity<ID extends Serializable> implements Persist
     private Date dateCreated;
 
     /**
-     * 添加的默认字段，saas数据入口
-     */
-    private Long companyId;
-
-    /**
      * 数据最近修改时间
      */
     @Temporal(TemporalType.TIMESTAMP)
@@ -158,11 +153,4 @@ public abstract class AbstractEntity<ID extends Serializable> implements Persist
         return ReflectionToStringBuilder.toString(this);
     }
 
-    public Long getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(Long companyId) {
-        this.companyId = companyId;
-    }
 }

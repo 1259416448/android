@@ -137,7 +137,6 @@ public class User extends BaseEntity<Long> implements LogicDeleteable {
         objectMap.put("lastUpdated", TimeMaker.toDateTimeStr(getLastUpdated()));
         List<Map> list = Lists.newArrayList();
         if (organizationJobs != null) {
-            //保证只获取到当前company下的部门
             getOrganizationJobs().forEach(x -> {
                 if (x != null) {
                     list.add(x.toMap());
@@ -172,7 +171,6 @@ public class User extends BaseEntity<Long> implements LogicDeleteable {
     public Set<Long> getOrganizationIds() {
         Set<Long> set = Sets.newHashSet();
         if (organizationJobs != null) {
-            //保证只获取到当前company下的部门
             getOrganizationJobs().forEach(x -> set.add(x.getOrganization().getId()));
         }
         return set;
@@ -289,12 +287,6 @@ public class User extends BaseEntity<Long> implements LogicDeleteable {
     }
 
     public Set<UserOrganizationJob> getOrganizationJobs() {
-        //增加过滤，只获取当前用户company下的关系
-        if (organizationJobs.size() > 0) {
-            return organizationJobs.stream()
-                    .filter(x -> Objects.equals(x.getCompanyId(), getCompanyId()))
-                    .collect(Collectors.toSet());
-        }
         return organizationJobs;
     }
 

@@ -13,6 +13,7 @@ public interface CommonContact {
     String NOT_FUND_MESSAGE = "x00001";
 
     String SUCCESS_CODE = "200";
+
     String SERVICE_ERROR_CODE = "500";
 
     //更新成功代码
@@ -109,12 +110,6 @@ public interface CommonContact {
     //默认空间文件访问地址
     String QINIU_BUCKET_URL = "qiniu.bucket.url";
 
-    //saas用户注册初次激活邮件
-    String SAAS_USER_ACTIVATION_EMAIL = "saas.user.activation.email";
-
-    //忘记密码邮件
-    String USER_FORGET_PASS_EMAIL = "user.forget.pass.email";
-
     //前端服务地址
     String HTML_SERVER_BASE_PATH = "htmlServerBasePath";
 
@@ -127,14 +122,6 @@ public interface CommonContact {
      */
     String SENT_EMAIL_TTL_TIME = "sent.email.ttl.time";
 
-    //邮件发送时间替换标示
-    String EMAIL_DATE = "#date#";
-    //邮件激活URL替换标示
-    String EMAIL_ACTIVATION_URL = "#activationUrl#";
-    //邮件验证码替换标示
-    String EMAIL_CHECK_CODE = "#checkCode#";
-    //远端文件删除失败
-    String DOCUMENT_DELETE_ERROR = "document.delete.error";
     //判断文件是否为图片正则
     String DOCUMENT_IMG_PATTERN = "(?i).+?\\.(jpg|gif|bmp|png|jpeg)";
 
@@ -159,57 +146,22 @@ public interface CommonContact {
     //默认记住我时间 毫秒
     String REMEMBER_ME_TIMEOUT = "rememberMeTimeout";
 
-    //默认排序号差值
-    Long SORTER_DEFAULT_VAL = 65536L;
-
-    //安全值
-    Long SORTER_DEFAULT_SECURITY_VAL = 10L;
-
-    //任务动态
-    String TASK_LOG_TYPE_STR_0 = "将";
-    String TASK_LOG_TYPE_STR_1 = "更新";
-    String TASK_LOG_TYPE_STR_2 = "新建";
-    String TASK_LOG_TYPE_STR_3 = "移除";
-    String TASK_LOG_TYPE_STR_4 = "为";
-    String TASK_LOG_TYPE_STR_5 = "归档";
-
-    //任务提醒邮件
-    String TASK_REMIND_HTML = "taskRemindHtml";
-
-    //任务访问地址
-    String TASK_URL = "#taskUrl#";
-
-    //提醒人名称
-    String REMIND_NAME = "#remindName#";
-
-    //任务名称
-    String TASK_NAME = "#taskName#";
-
-    //任务访问地址信息
-    String TASK_URL_FIX = "index/task-list?p={projectId}&t={taskId}";
-
-    //任务及时提示
-    String TASK_CREATE_REMIND_HTML = "taskCreateRemindHtml";
-
-    //邀请加入团队邮件
-    String INVITATION_HTML = "invitation.html";
-
-    //邀请邮件点击地址
-    String INVITATION_HTML_URL = "#url#";
-
-    //邀请团队名称
-    String INVITATION_HTML_TEAM_NAME = "#teamName#";
-
-    //邀请加入团队邮件,带初始密码
-    String INVITATION_PASSWORD_HTML = "invitation.password.html";
-
-    //邀请加入团队邮件,初始密码
-    String INVITATION_PASSWORD_HTML_PASSWORD = "#password#";
-
     //系统环境参数
     String SYSTEM_ENVIRONMENT = "systemEnvironment";
 
     //测试环境指定邮件接收邮箱
     String TEST_SENT_EMAIL_APPOINT = "testSentEmailAppoint";
+
+    //聚合数据短信发送Key
+    String JU_HE_APPKEY = "juHeAppkey";
+
+    //聚合数据登陆验证短信tpl_id
+    String JU_HE_LOGIN_CODE_TPL_ID = "juHeLoginCodeTplId";
+
+
+    String SMS_CODE_TTL_TIME = "smsCodeTtlTime";
+
+    //HMAC256 消息摘要计算key
+    String HMAC256_KEY = "15f30b0eb8804aa09408611bafeb34b5";
 
 }

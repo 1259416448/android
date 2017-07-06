@@ -1,5 +1,7 @@
 package cn.arvix.ontheway.sys.init;
 
+import cn.arvix.base.common.utils.CommonContact;
+import cn.arvix.base.common.utils.QuartzJobUtil;
 import cn.arvix.ontheway.sys.config.entity.Config;
 import cn.arvix.ontheway.sys.config.entity.ConfigValueType;
 import cn.arvix.ontheway.sys.config.service.ConfigService;
@@ -7,9 +9,6 @@ import cn.arvix.ontheway.sys.resource.entity.Resource;
 import cn.arvix.ontheway.sys.resource.entity.ResourceType;
 import cn.arvix.ontheway.sys.resource.service.ResourceService;
 import cn.arvix.ontheway.sys.utils.Email;
-import cn.arvix.base.common.entity.ScheduleJob;
-import cn.arvix.base.common.utils.CommonContact;
-import cn.arvix.base.common.utils.QuartzJobUtil;
 import com.google.common.collect.Lists;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
@@ -99,27 +98,16 @@ public class DataInitService implements ApplicationContextAware {
 //            e.printStackTrace();
 //        }
         //创建一个基础定时任务
-        ScheduleJob scheduleJob = new ScheduleJob();
-        scheduleJob.setJobName("agileBasicPolling");
-        scheduleJob.setJobId("agileBasicPolling");
-        scheduleJob.setJobGroup("agileTask");
-        scheduleJob.setJobStatus("1");
-        scheduleJob.setDesc("基础定时任务，轮询的形式添加最近1小时内需要定时发送的所有邮件或者短信");
-        scheduleJob.setCronExpression("0 0 0-23 * * ? ");
-        scheduleJob.setTargetObject("agileRemindService");
-        scheduleJob.setTargetMethod("execute");
-        quartzJobUtil.addJob(scheduleJob);
-
-        scheduleJob = new ScheduleJob();
-        scheduleJob.setJobName("agileUserRemindPolling");
-        scheduleJob.setJobId("agileUserRemindPolling");
-        scheduleJob.setJobGroup("agileUserRemind");
-        scheduleJob.setJobStatus("1");
-        scheduleJob.setDesc("基础定时任务，处理提醒信息队列，每10秒钟执行一次");
-        scheduleJob.setCronExpression("0/10 * * * * ? ");
-        scheduleJob.setTargetObject("agileUserRemindService");
-        scheduleJob.setTargetMethod("execute");
-        quartzJobUtil.addJob(scheduleJob);
+//        ScheduleJob scheduleJob = new ScheduleJob();
+//        scheduleJob.setJobName("agileBasicPolling");
+//        scheduleJob.setJobId("agileBasicPolling");
+//        scheduleJob.setJobGroup("agileTask");
+//        scheduleJob.setJobStatus("1");
+//        scheduleJob.setDesc("基础定时任务，轮询的形式添加最近1小时内需要定时发送的所有邮件或者短信");
+//        scheduleJob.setCronExpression("0 0 0-23 * * ? ");
+//        scheduleJob.setTargetObject("agileRemindService");
+//        scheduleJob.setTargetMethod("execute");
+//        quartzJobUtil.addJob(scheduleJob);
 
     }
 
@@ -329,412 +317,6 @@ public class DataInitService implements ApplicationContextAware {
             configService.save(config);
             configList.add(config);
         }
-        if (configService.checkMapName(CommonContact.SAAS_USER_ACTIVATION_EMAIL)) {
-            config = new Config();
-            config.setMapName(CommonContact.SAAS_USER_ACTIVATION_EMAIL)
-                    .setMapValue("<!DOCTYPE html>\n" +
-                            "<html lang=\"en\">\n" +
-                            "<head>\n" +
-                            "    <meta charset=\"UTF-8\">\n" +
-                            "    <title>Title</title>\n" +
-                            "</head>\n" +
-                            "<body>\n" +
-                            "<div style=\"background: #f6f8f9; padding:50px;font-family:Tahoma,Helvetica,'microsoft\\nyahei','Hiragino Sans GB',Simsun,sans-serif;\">\n" +
-                            "  <div style=\"margin: 0 auto; text-align: left;padding: 38px 50px; width: 560px; font-size: 14px;color: #606060; background: #fff; border-radius:2px; font-family:Tahoma,Helvetica,'microsoft\\nyahei','Hiragino Sans GB',Simsun,sans-serif;box-shadow: 0 0 4px rgba(0,0,0,0.2);\">\n" +
-                            "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"560\" style=\"margin: 0 auto;text-align: left; font-size: 14px; color: #606060;background: #fff; font-family: inherit;font-family:Tahoma,Helvetica,'microsoft\\nyahei','Hiragino Sans GB',Simsun,sans-serif;\">\n" +
-                            "       <tr>\n" +
-                            "        <th colspan=\"2\">\n" +
-                            "          <a href=\"http://www.arvix.cn/\"><img width=\"150\" src=\"http://o960hfmwc.bkt.clouddn.com/junjieLOGO.png\" alt=\"君捷\"></a>\n" +
-                            "          <div style=\"display: inline-block;vertical-align: top;\">\n" +
-                            "            <p>Agile Master Inc</p>\n" +
-                            "            <p>北京君捷科技有限公司</p>\n" +
-                            "          </div>\n" +
-                            "        </th>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"font-size:17px; padding: 25px 0 18px;\">\n" +
-                            "          尊敬的君捷用户：\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"line-height: 1.8;\">\n" +
-                            "          <div>欢迎使用君捷！</div>\n" +
-                            "          <div>请点击以下链接验证您的邮箱，验证成功后就可以使用君捷提供的所有服务了。</div>\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"font-size:12px; line-height: 20px; padding-top: 14px;padding-bottom: 25px; color: #909090;\">\n" +
-                            "          <div>\n" +
-                            "            <a href=\"#activationUrl#\" style=\"color: #03c5ff; word-break: break-all; text-decoration:underline;\" target=\"_blank\">#activationUrl#</a>\n" +
-                            "            <div style=\"padding-top:4px;\">(如果不能打开页面，请复制该地址到浏览器打开)</div>\n" +
-                            "          </div>\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"text-align:right; line-height: 1.8; padding-bottom: 18px;\">\n" +
-                            "          <div>君捷团队</div>\n" +
-                            "          <div style=\"color:#909090;\">#date#</div>\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"padding-top: 20px; border-top: 1px solid #e7e7e7; line-height: 1.8; font-size: 12px; color:#909090;\">\n" +
-                            "          <div>温馨提示：</div>\n" +
-                            "          <ol>\n" +
-                            "            <li>君捷官方网址为：http://www.agilemaster.com.cn/，请注意网址，防止钓鱼。</li>\n" +
-                            "            <li>本邮件为系统自动发出，请勿回复。</li>\n" +
-                            "          </ol>\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "    </table>\n" +
-                            "  </div>\n" +
-                            "</div>\n" +
-                            "</body>\n" +
-                            "</html>")
-                    .setDescription("用户邮箱激活Html")
-                    .setValueType(ConfigValueType.String)
-                    .setEditable(true)
-                    .setCreater("init");
-            configService.save(config);
-            configList.add(config);
-        }
-
-        if (configService.checkMapName(CommonContact.TASK_REMIND_HTML)) {
-            config = new Config();
-            config.setMapName(CommonContact.TASK_REMIND_HTML)
-                    .setMapValue("<!DOCTYPE html>\n" +
-                            "<html lang=\"en\">\n" +
-                            "<head>\n" +
-                            "    <meta charset=\"UTF-8\">\n" +
-                            "    <title>Title</title>\n" +
-                            "</head>\n" +
-                            "<body>\n" +
-                            "<div style=\"background: #f6f8f9; padding:50px;font-family:Tahoma,Helvetica,'microsoft\\nyahei','Hiragino Sans GB',Simsun,sans-serif;\">\n" +
-                            "  <div style=\"margin: 0 auto; text-align: left;padding: 38px 50px; width: 560px; font-size: 14px;color: #606060; background: #fff; border-radius:2px; font-family:Tahoma,Helvetica,'microsoft\\nyahei','Hiragino Sans GB',Simsun,sans-serif;box-shadow: 0 0 4px rgba(0,0,0,0.2);\">\n" +
-                            "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"560\" style=\"margin: 0 auto;text-align: left; font-size: 14px; color: #606060;background: #fff; font-family: inherit;font-family:Tahoma,Helvetica,'microsoft\\nyahei','Hiragino Sans GB',Simsun,sans-serif;\">\n" +
-                            "       <tr>\n" +
-                            "        <th colspan=\"2\">\n" +
-                            "          <a href=\"http://www.arvix.cn/\"><img width=\"150\" src=\"http://o960hfmwc.bkt.clouddn.com/junjieLOGO.png\" alt=\"君捷\"></a>\n" +
-                            "          <div style=\"display: inline-block;vertical-align: top;\">\n" +
-                            "            <p>Agile Master Inc</p>\n" +
-                            "            <p>北京君捷科技有限公司</p>\n" +
-                            "          </div>\n" +
-                            "        </th>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"font-size:17px; padding: 25px 0 18px;\">\n" +
-                            "          hi,#remindName#：\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"line-height: 1.8;\">\n" +
-                            "          <div>您的【#taskName#】任务即将到期！</div>\n" +
-                            "          <div>请点击以下链接查看详情。</div>\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"font-size:12px; line-height: 20px; padding-top: 14px;padding-bottom: 25px; color: #909090;\">\n" +
-                            "          <div>\n" +
-                            "            <a href=\"#taskUrl#\" style=\"color: #03c5ff; word-break: break-all; text-decoration:underline;\" target=\"_blank\">#taskUrl#</a>\n" +
-                            "            <div style=\"padding-top:4px;\">(如果不能打开页面，请复制该地址到浏览器打开)</div>\n" +
-                            "          </div>\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"text-align:right; line-height: 1.8; padding-bottom: 18px;\">\n" +
-                            "          <div>君捷团队</div>\n" +
-                            "          <div style=\"color:#909090;\">#date#</div>\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"padding-top: 20px; border-top: 1px solid #e7e7e7; line-height: 1.8; font-size: 12px; color:#909090;\">\n" +
-                            "          <div>温馨提示：</div>\n" +
-                            "          <ol>\n" +
-                            "            <li>君捷官方网址为：http://www.agilemaster.com.cn/，请注意网址，防止钓鱼。</li>\n" +
-                            "            <li>本邮件为系统自动发出，请勿回复。</li>\n" +
-                            "          </ol>\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "    </table>\n" +
-                            "  </div>\n" +
-                            "</div>\n" +
-                            "</body>\n" +
-                            "</html>")
-                    .setDescription("任务到期提醒邮件HTML")
-                    .setValueType(ConfigValueType.String)
-                    .setEditable(true)
-                    .setCreater("init");
-            configService.save(config);
-            configList.add(config);
-        }
-
-        if (configService.checkMapName(CommonContact.TASK_CREATE_REMIND_HTML)) {
-            config = new Config();
-            config.setMapName(CommonContact.TASK_CREATE_REMIND_HTML)
-                    .setMapValue("<!DOCTYPE html>\n" +
-                            "<html lang=\"en\">\n" +
-                            "<head>\n" +
-                            "    <meta charset=\"UTF-8\">\n" +
-                            "    <title>Title</title>\n" +
-                            "</head>\n" +
-                            "<body>\n" +
-                            "<div style=\"background: #f6f8f9; padding:50px;font-family:Tahoma,Helvetica,'microsoft\\nyahei','Hiragino Sans GB',Simsun,sans-serif;\">\n" +
-                            "  <div style=\"margin: 0 auto; text-align: left;padding: 38px 50px; width: 560px; font-size: 14px;color: #606060; background: #fff; border-radius:2px; font-family:Tahoma,Helvetica,'microsoft\\nyahei','Hiragino Sans GB',Simsun,sans-serif;box-shadow: 0 0 4px rgba(0,0,0,0.2);\">\n" +
-                            "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"560\" style=\"margin: 0 auto;text-align: left; font-size: 14px; color: #606060;background: #fff; font-family: inherit;font-family:Tahoma,Helvetica,'microsoft\\nyahei','Hiragino Sans GB',Simsun,sans-serif;\">\n" +
-                            "       <tr>\n" +
-                            "        <th colspan=\"2\">\n" +
-                            "          <a href=\"http://www.arvix.cn/\"><img width=\"150\" src=\"http://o960hfmwc.bkt.clouddn.com/junjieLOGO.png\" alt=\"君捷\"></a>\n" +
-                            "          <div style=\"display: inline-block;vertical-align: top;\">\n" +
-                            "            <p>Agile Master Inc</p>\n" +
-                            "            <p>北京君捷科技有限公司</p>\n" +
-                            "          </div>\n" +
-                            "        </th>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"font-size:17px; padding: 25px 0 18px;\">\n" +
-                            "          hi,#remindName#：\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"line-height: 1.8;\">\n" +
-                            "          <div>收到【#taskName#】任务提醒！</div>\n" +
-                            "          <div>请点击以下链接查看详情。</div>\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"font-size:12px; line-height: 20px; padding-top: 14px;padding-bottom: 25px; color: #909090;\">\n" +
-                            "          <div>\n" +
-                            "            <a href=\"#taskUrl#\" style=\"color: #03c5ff; word-break: break-all; text-decoration:underline;\" target=\"_blank\">#taskUrl#</a>\n" +
-                            "            <div style=\"padding-top:4px;\">(如果不能打开页面，请复制该地址到浏览器打开)</div>\n" +
-                            "          </div>\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"text-align:right; line-height: 1.8; padding-bottom: 18px;\">\n" +
-                            "          <div>君捷团队</div>\n" +
-                            "          <div style=\"color:#909090;\">#date#</div>\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"padding-top: 20px; border-top: 1px solid #e7e7e7; line-height: 1.8; font-size: 12px; color:#909090;\">\n" +
-                            "          <div>温馨提示：</div>\n" +
-                            "          <ol>\n" +
-                            "            <li>君捷官方网址为：http://www.agilemaster.com.cn/，请注意网址，防止钓鱼。</li>\n" +
-                            "            <li>本邮件为系统自动发出，请勿回复。</li>\n" +
-                            "          </ol>\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "    </table>\n" +
-                            "  </div>\n" +
-                            "</div>\n" +
-                            "</body>\n" +
-                            "</html>")
-                    .setDescription("任务及时提醒邮件HTML")
-                    .setValueType(ConfigValueType.String)
-                    .setEditable(true)
-                    .setCreater("init");
-            configService.save(config);
-            configList.add(config);
-        }
-
-        if (configService.checkMapName(CommonContact.USER_FORGET_PASS_EMAIL)) {
-            config = new Config();
-            config.setMapName(CommonContact.USER_FORGET_PASS_EMAIL)
-                    .setMapValue("<!DOCTYPE html>\n" +
-                            "<html lang=\"en\">\n" +
-                            "<head>\n" +
-                            "  <meta charset=\"UTF-8\">\n" +
-                            "  <title>Title</title>\n" +
-                            "</head>\n" +
-                            "<body>\n" +
-                            "<div style=\"background: #f6f8f9; padding:50px;font-family:Tahoma,Helvetica,'microsoft\\nyahei','Hiragino Sans GB',Simsun,sans-serif;\">\n" +
-                            "  <div style=\"margin: 0 auto; text-align: left;padding: 38px 50px; width: 560px; font-size: 14px;color: #606060; background: #fff; border-radius:2px; font-family:Tahoma,Helvetica,'microsoft\\nyahei','Hiragino Sans GB',Simsun,sans-serif;box-shadow: 0 0 4px rgba(0,0,0,0.2);\">\n" +
-                            "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"560\" style=\"margin: 0 auto;text-align: left; font-size: 14px; color: #606060;background: #fff; font-family: inherit;font-family:Tahoma,Helvetica,'microsoft\\nyahei','Hiragino Sans GB',Simsun,sans-serif;\">\n" +
-                            "      <tr>\n" +
-                            "        <th colspan=\"2\">\n" +
-                            "          <a href=\"http://www.arvix.cn/\"><img width=\"150\" src=\"http://o960hfmwc.bkt.clouddn.com/junjieLOGO.png\" alt=\"君捷\"></a>\n" +
-                            "          <div style=\"display: inline-block;vertical-align: top;\">\n" +
-                            "            <p>Agile Master Inc</p>\n" +
-                            "            <p>北京君捷科技有限公司</p>\n" +
-                            "          </div>\n" +
-                            "        </th>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"font-size:17px; padding: 25px 0 18px;\">\n" +
-                            "          尊敬的君捷用户：\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"line-height: 1.8;\">\n" +
-                            "          <div>欢迎使用君捷！</div>\n" +
-                            "          <div>你的验证码是：</div>\n" +
-                            "          <div style=\"font-size: 25px;color: #03c5ff;font-weight: bold;\">#checkCode#</div>\n" +
-                            "          <div style=\"font-size:12px; line-height: 20px;  color: #909090;\">（请不要告诉其他人）</div>\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"text-align:right; line-height: 1.8; padding-bottom: 18px;\">\n" +
-                            "          <div>君捷团队</div>\n" +
-                            "          <div style=\"color:#909090;\">#date#</div>\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"padding-top: 20px; border-top: 1px solid #e7e7e7; line-height: 1.8; font-size: 12px; color:#909090;\">\n" +
-                            "          <div>温馨提示：</div>\n" +
-                            "          <ol>\n" +
-                            "            <li>君捷官方网址为：http://www.agilemaster.com.cn/，请注意网址，防止钓鱼。</li>\n" +
-                            "            <li>本邮件为系统自动发出，请勿回复。</li>\n" +
-                            "          </ol>\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "    </table>\n" +
-                            "  </div>\n" +
-                            "</div>\n" +
-                            "</body>\n" +
-                            "</html>")
-                    .setDescription("邮箱验证码Html")
-                    .setValueType(ConfigValueType.String)
-                    .setEditable(true)
-                    .setCreater("init");
-            configService.save(config);
-            configList.add(config);
-        }
-        if (configService.checkMapName(CommonContact.INVITATION_HTML)) {
-            config = new Config();
-            config.setMapName(CommonContact.INVITATION_HTML)
-                    .setMapValue("<!DOCTYPE html>\n" +
-                            "<html lang=\"en\">\n" +
-                            "<head>\n" +
-                            "    <meta charset=\"UTF-8\">\n" +
-                            "    <title>Title</title>\n" +
-                            "</head>\n" +
-                            "<body>\n" +
-                            "<div style=\"background: #f6f8f9; padding:50px;font-family:Tahoma,Helvetica,'microsoft\\nyahei','Hiragino Sans GB',Simsun,sans-serif;\">\n" +
-                            "  <div style=\"margin: 0 auto; text-align: left;padding: 38px 50px; width: 560px; font-size: 14px;color: #606060; background: #fff; border-radius:2px; font-family:Tahoma,Helvetica,'microsoft\\nyahei','Hiragino Sans GB',Simsun,sans-serif;box-shadow: 0 0 4px rgba(0,0,0,0.2);\">\n" +
-                            "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"560\" style=\"margin: 0 auto;text-align: left; font-size: 14px; color: #606060;background: #fff; font-family: inherit;font-family:Tahoma,Helvetica,'microsoft\\nyahei','Hiragino Sans GB',Simsun,sans-serif;\">\n" +
-                            "       <tr>\n" +
-                            "        <th colspan=\"2\">\n" +
-                            "          <a href=\"http://www.arvix.cn/\"><img width=\"150\" src=\"http://o960hfmwc.bkt.clouddn.com/junjieLOGO.png\" alt=\"君捷\"></a>\n" +
-                            "          <div style=\"display: inline-block;vertical-align: top;\">\n" +
-                            "            <p>Agile Master Inc</p>\n" +
-                            "            <p>北京君捷科技有限公司</p>\n" +
-                            "          </div>\n" +
-                            "        </th>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"font-size:17px; padding: 25px 0 18px;\">\n" +
-                            "          hi,#remindName#：\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"line-height: 1.8;\">\n" +
-                            "          <div>您已被邀请加入【#teamName#】</div>\n" +
-                            "          <div>请点击以下链接查看详情。</div>\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"font-size:12px; line-height: 20px; padding-top: 14px;padding-bottom: 25px; color: #909090;\">\n" +
-                            "          <div>\n" +
-                            "            <a href=\"#url#\" style=\"color: #03c5ff; word-break: break-all; text-decoration:underline;\" target=\"_blank\">#url#</a>\n" +
-                            "            <div style=\"padding-top:4px;\">(如果不能打开页面，请复制该地址到浏览器打开)</div>\n" +
-                            "          </div>\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"text-align:right; line-height: 1.8; padding-bottom: 18px;\">\n" +
-                            "          <div>君捷团队</div>\n" +
-                            "          <div style=\"color:#909090;\">#date#</div>\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"padding-top: 20px; border-top: 1px solid #e7e7e7; line-height: 1.8; font-size: 12px; color:#909090;\">\n" +
-                            "          <div>温馨提示：</div>\n" +
-                            "          <ol>\n" +
-                            "            <li>君捷官方网址为：http://www.agilemaster.com.cn/，请注意网址，防止钓鱼。</li>\n" +
-                            "            <li>本邮件为系统自动发出，请勿回复。</li>\n" +
-                            "          </ol>\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "    </table>\n" +
-                            "  </div>\n" +
-                            "</div>\n" +
-                            "</body>\n" +
-                            "</html>")
-                    .setDescription("邀请加入团队Html")
-                    .setValueType(ConfigValueType.String)
-                    .setEditable(true)
-                    .setCreater("init");
-            configService.save(config);
-            configList.add(config);
-        }
-        if (configService.checkMapName(CommonContact.INVITATION_PASSWORD_HTML)) {
-            config = new Config();
-            config.setMapName(CommonContact.INVITATION_PASSWORD_HTML)
-                    .setMapValue("<!DOCTYPE html>\n" +
-                            "<html lang=\"en\">\n" +
-                            "<head>\n" +
-                            "    <meta charset=\"UTF-8\">\n" +
-                            "    <title>Title</title>\n" +
-                            "</head>\n" +
-                            "<body>\n" +
-                            "<div style=\"background: #f6f8f9; padding:50px;font-family:Tahoma,Helvetica,'microsoft\\nyahei','Hiragino Sans GB',Simsun,sans-serif;\">\n" +
-                            "  <div style=\"margin: 0 auto; text-align: left;padding: 38px 50px; width: 560px; font-size: 14px;color: #606060; background: #fff; border-radius:2px; font-family:Tahoma,Helvetica,'microsoft\\nyahei','Hiragino Sans GB',Simsun,sans-serif;box-shadow: 0 0 4px rgba(0,0,0,0.2);\">\n" +
-                            "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"560\" style=\"margin: 0 auto;text-align: left; font-size: 14px; color: #606060;background: #fff; font-family: inherit;font-family:Tahoma,Helvetica,'microsoft\\nyahei','Hiragino Sans GB',Simsun,sans-serif;\">\n" +
-                            "       <tr>\n" +
-                            "        <th colspan=\"2\">\n" +
-                            "          <a href=\"http://www.arvix.cn/\"><img width=\"150\" src=\"http://o960hfmwc.bkt.clouddn.com/junjieLOGO.png\" alt=\"君捷\"></a>\n" +
-                            "          <div style=\"display: inline-block;vertical-align: top;\">\n" +
-                            "            <p>Agile Master Inc</p>\n" +
-                            "            <p>北京君捷科技有限公司</p>\n" +
-                            "          </div>\n" +
-                            "        </th>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"font-size:17px; padding: 25px 0 18px;\">\n" +
-                            "          hi,#remindName#：\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"line-height: 1.8;\">\n" +
-                            "          <div>您已被邀请加入【#teamName#】</div>\n" +
-                            "          <div>初始密码（登陆后请及时修改密码）：<span style=\"font-size: 16px;color: orange;\">#password#<span></div>\n" +
-                            "          <div>请点击以下链接查看详情。</div>\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"font-size:12px; line-height: 20px; padding-top: 14px;padding-bottom: 25px; color: #909090;\">\n" +
-                            "          <div>\n" +
-                            "            <a href=\"#url#\" style=\"color: #03c5ff; word-break: break-all; text-decoration:underline;\" target=\"_blank\">#url#</a>\n" +
-                            "            <div style=\"padding-top:4px;\">(如果不能打开页面，请复制该地址到浏览器打开)</div>\n" +
-                            "          </div>\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"text-align:right; line-height: 1.8; padding-bottom: 18px;\">\n" +
-                            "          <div>君捷团队</div>\n" +
-                            "          <div style=\"color:#909090;\">#date#</div>\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "      <tr>\n" +
-                            "        <td colspan=\"2\" style=\"padding-top: 20px; border-top: 1px solid #e7e7e7; line-height: 1.8; font-size: 12px; color:#909090;\">\n" +
-                            "          <div>温馨提示：</div>\n" +
-                            "          <ol>\n" +
-                            "            <li>君捷官方网址为：http://www.agilemaster.com.cn/，请注意网址，防止钓鱼。</li>\n" +
-                            "            <li>本邮件为系统自动发出，请勿回复。</li>\n" +
-                            "          </ol>\n" +
-                            "        </td>\n" +
-                            "      </tr>\n" +
-                            "    </table>\n" +
-                            "  </div>\n" +
-                            "</div>\n" +
-                            "</body>\n" +
-                            "</html>")
-                    .setDescription("邀请加入团队(带密码)Html")
-                    .setValueType(ConfigValueType.String)
-                    .setEditable(true)
-                    .setCreater("init");
-            configService.save(config);
-            configList.add(config);
-        }
 
         if (configService.checkMapName(CommonContact.REMEMBER_ME_TIMEOUT)) {
             config = new Config();
@@ -770,6 +352,41 @@ public class DataInitService implements ApplicationContextAware {
             configList.add(config);
         }
 
+        if (configService.checkMapName(CommonContact.JU_HE_APPKEY)) {
+            config = new Config();
+            config.setMapName(CommonContact.JU_HE_APPKEY)
+                    .setMapValue("66a181ccc8df2aa40ae401891a13d083")
+                    .setDescription("聚合数据短信Key")
+                    .setValueType(ConfigValueType.String)
+                    .setEditable(true)
+                    .setCreater("init");
+            configService.save(config);
+            configList.add(config);
+        }
+        if (configService.checkMapName(CommonContact.JU_HE_LOGIN_CODE_TPL_ID)) {
+            config = new Config();
+            config.setMapName(CommonContact.JU_HE_LOGIN_CODE_TPL_ID)
+                    .setMapValue("39084")
+                    .setDescription("聚合数据登陆验证短信tpl_id")
+                    .setValueType(ConfigValueType.String)
+                    .setEditable(true)
+                    .setCreater("init");
+            configService.save(config);
+            configList.add(config);
+        }
+
+        if (configService.checkMapName(CommonContact.SMS_CODE_TTL_TIME)) {
+            config = new Config();
+            config.setMapName(CommonContact.SMS_CODE_TTL_TIME)
+                    .setMapValue("15-MINUTES")
+                    .setDescription("短信验证码有效时间")
+                    .setValueType(ConfigValueType.String)
+                    .setEditable(true)
+                    .setCreater("init");
+            configService.save(config);
+            configList.add(config);
+        }
+
         configService.init(configList);
     }
 
@@ -780,37 +397,6 @@ public class DataInitService implements ApplicationContextAware {
             Resource parentResource;
             Resource resource;
             Resource resourceButton;
-            //个人设置相关栏目资源
-            parentResource = initResources("个人设置", null, null, null, 1f, ResourceType.column, "text-info fa fa-address-card-o");
-            resourceService.save(parentResource);
-            resource = initResources("个人资料", null, "/index/person/profile", parentResource.getId(), 1f, ResourceType.column, null);
-            resourceService.save(resource);
-            resource = initResources("头像设置", null, "/index/person/avatar", parentResource.getId(), 2f, ResourceType.column, null);
-            resourceService.save(resource);
-            resource = initResources("修改密码", null, "/index/person/password", parentResource.getId(), 3f, ResourceType.column, null);
-            resourceService.saveAndFlush(resource);
-
-            //日报相关
-            parentResource = initResources("日报", null, null, null, 2f, ResourceType.column, "text-danger fa fa-pencil-square-o");
-            resourceService.save(parentResource);
-            resource = initResources("我的日报", null, "/index/blog/my", parentResource.getId(), 1f, ResourceType.column, null);
-            resourceService.save(resource);
-            resource = initResources("他人日报", null, "/index/blog/other", parentResource.getId(), 2f, ResourceType.column, null);
-            resourceService.save(resource);
-            resource = initResources("日报统计", null, "/index/blog/statistic", parentResource.getId(), 3f, ResourceType.column, null);
-            resourceService.saveAndFlush(resource);
-
-            //周报相关
-            parentResource = initResources("周报", null, null, null, 3f, ResourceType.column, "text-danger fa fa-pencil-square-o");
-            resourceService.save(parentResource);
-            resource = initResources("我的周报", null, "/index/blog/weekly-report", parentResource.getId(), 1f, ResourceType.column, null);
-            resourceService.save(resource);
-            resource = initResources("周报统计", null, "/index/blog/weekly-report-statistic", parentResource.getId(), 2f, ResourceType.column, null);
-            resourceService.saveAndFlush(resource);
-
-
-            //团队成员设置
-
             //系统设置
             parentResource = initResources("系统设置", null, null, null, 10f, ResourceType.column, "text-danger fa fa-cog");
             resourceService.save(parentResource);

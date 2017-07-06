@@ -24,7 +24,6 @@ public class DocumentDirSearchCallback extends DefaultSearchCallback {
             ql.append(" and ( x.documentDirType = 'common' or documentDirType = 'attachment' or exists ( select 1 from Auth a where" +
                     " ( (a.organizationId in (:organizationId) and a.jobId=0 ) " +
                     "or (a.userId=:userId) ) " +
-                    "and a.companyId=:companyId " +
                     "and a.opModule=:opModule " +
                     "and a.opId = x.id ) ) ");
         }
@@ -36,7 +35,6 @@ public class DocumentDirSearchCallback extends DefaultSearchCallback {
         if (search.containsSearchKey("auth")) {
             User user = search.getValue("auth");
             Integer opModule = search.getValue("opModule");
-            query.setParameter("companyId", user.getCompanyId());
             query.setParameter("userId", user.getId());
             query.setParameter("organizationId", user.getOrganizationIds());
             query.setParameter("opModule", opModule);
