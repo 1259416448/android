@@ -1,5 +1,5 @@
 //
-//  OTWLoginViewController.h
+//  OTWLaunchViewController.h
 //  OnTheWay
 //
 //  Created by machunyan on 2017/7/6.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OTWLoginViewController : OTWBaseViewController
+@interface OTWLaunchViewController : UIViewController
 
 @end

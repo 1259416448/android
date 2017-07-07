@@ -74,11 +74,9 @@
     personalNav.tabBarItem.image = [UIImage imageNamed:@"tab_yingyong"];
     personalNav.tabBarItem.selectedImage = [UIImage imageNamed:@"tab_yingyong_xuan"];
     personalNav.tabBarItem.title = @"我的";
-    [personalNav.navigationBar setTitleTextAttributes:titleAttri];
-    personalNav.navigationBar.translucent = YES;
-    [personalNav.navigationBar setBackgroundImage:bgImage forBarMetrics:UIBarMetricsDefault];
-    
-    self.viewControllers = @[findNav, footprintsNav, arNav, newsNav, personalVC];
+    [personalNav setNavigationBarHidden:YES animated:NO];
+  
+    self.viewControllers = @[findNav, footprintsNav, arNav, newsNav, personalNav];
 }
 
 - (void)didReceiveMemoryWarning {

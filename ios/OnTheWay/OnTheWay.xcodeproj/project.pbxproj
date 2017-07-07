@@ -30,8 +30,9 @@
 		D7F6B07E1F0DD43A0013090A /* OTWFindViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B07D1F0DD43A0013090A /* OTWFindViewController.m */; };
 		D7F6B0811F0DD44C0013090A /* OTWARViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B0801F0DD44C0013090A /* OTWARViewController.m */; };
 		D7F6B08B1F0DD5370013090A /* UIImage+Color.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B08A1F0DD5370013090A /* UIImage+Color.m */; };
-		D7F6B08F1F0DDDDF0013090A /* OTWLaunchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B08E1F0DDDDF0013090A /* OTWLaunchViewController.m */; };
 		D7F6B0931F0DDE400013090A /* OTWLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B0921F0DDE400013090A /* OTWLoginViewController.m */; };
+		D7F6B09A1F0F75510013090A /* OTWLaunchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B0971F0F75510013090A /* OTWLaunchViewController.m */; };
+		D7F6B09D1F0F75770013090A /* OTWLaunchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B09C1F0F75770013090A /* OTWLaunchManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -95,10 +96,12 @@
 		D7F6B0801F0DD44C0013090A /* OTWARViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWARViewController.m; sourceTree = "<group>"; };
 		D7F6B0891F0DD5370013090A /* UIImage+Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Color.h"; sourceTree = "<group>"; };
 		D7F6B08A1F0DD5370013090A /* UIImage+Color.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Color.m"; sourceTree = "<group>"; };
-		D7F6B08D1F0DDDDF0013090A /* OTWLaunchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWLaunchViewController.h; sourceTree = "<group>"; };
-		D7F6B08E1F0DDDDF0013090A /* OTWLaunchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWLaunchViewController.m; sourceTree = "<group>"; };
 		D7F6B0911F0DDE400013090A /* OTWLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWLoginViewController.h; sourceTree = "<group>"; };
 		D7F6B0921F0DDE400013090A /* OTWLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWLoginViewController.m; sourceTree = "<group>"; };
+		D7F6B0961F0F75510013090A /* OTWLaunchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWLaunchViewController.h; sourceTree = "<group>"; };
+		D7F6B0971F0F75510013090A /* OTWLaunchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWLaunchViewController.m; sourceTree = "<group>"; };
+		D7F6B09B1F0F75770013090A /* OTWLaunchManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWLaunchManager.h; sourceTree = "<group>"; };
+		D7F6B09C1F0F75770013090A /* OTWLaunchManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWLaunchManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -477,8 +480,9 @@
 		D7F6B08C1F0DDDC40013090A /* Launch */ = {
 			isa = PBXGroup;
 			children = (
-				D7F6B08D1F0DDDDF0013090A /* OTWLaunchViewController.h */,
-				D7F6B08E1F0DDDDF0013090A /* OTWLaunchViewController.m */,
+				D7F6B0951F0F75510013090A /* Controller */,
+				D7F6B0981F0F75510013090A /* Model */,
+				D7F6B0991F0F75510013090A /* View */,
 			);
 			path = Launch;
 			sourceTree = "<group>";
@@ -497,6 +501,31 @@
 			children = (
 			);
 			path = Network;
+			sourceTree = "<group>";
+		};
+		D7F6B0951F0F75510013090A /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				D7F6B0961F0F75510013090A /* OTWLaunchViewController.h */,
+				D7F6B0971F0F75510013090A /* OTWLaunchViewController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		D7F6B0981F0F75510013090A /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				D7F6B09B1F0F75770013090A /* OTWLaunchManager.h */,
+				D7F6B09C1F0F75770013090A /* OTWLaunchManager.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		D7F6B0991F0F75510013090A /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -636,13 +665,14 @@
 				D7F6B0931F0DDE400013090A /* OTWLoginViewController.m in Sources */,
 				D7F6B07B1F0DD41F0013090A /* OTWFootprintsViewController.m in Sources */,
 				D7F6B0431F0D39160013090A /* README.md in Sources */,
+				D7F6B09D1F0F75770013090A /* OTWLaunchManager.m in Sources */,
 				D7F6B03D1F0D39060013090A /* README.md in Sources */,
 				D7F6B0751F0DD3D90013090A /* OTWPersonalViewController.m in Sources */,
-				D7F6B08F1F0DDDDF0013090A /* OTWLaunchViewController.m in Sources */,
 				D7F6B0811F0DD44C0013090A /* OTWARViewController.m in Sources */,
 				D7F6B0371F0D38EA0013090A /* README.md in Sources */,
 				D7F6B0491F0D39390013090A /* README.md in Sources */,
 				D7F6B0781F0DD3F90013090A /* OTWNewsViewController.m in Sources */,
+				D7F6B09A1F0F75510013090A /* OTWLaunchViewController.m in Sources */,
 				D7F6B07E1F0DD43A0013090A /* OTWFindViewController.m in Sources */,
 				D7F6B05E1F0DD1D80013090A /* OTWRootViewController.m in Sources */,
 				D7F6B05B1F0DD0280013090A /* OTWBaseViewController.m in Sources */,
