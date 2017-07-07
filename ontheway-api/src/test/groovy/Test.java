@@ -19,4 +19,10 @@ public class Test {
         System.out.println(HmacSHA256Utils.digest(CommonContact.HMAC256_KEY, "mobile:18580128658"));
     }
 
+    @org.junit.Test
+    public void mobilePass() {
+        System.out.println("18580128658".substring("18580128658".length() - 6, "18580128658".length()));
+        System.out.println("18580128658".substring(0, 3) + "****" + "18580128658".substring("18580128658".length() - 4, "18580128658".length()));
+    }
+
 }

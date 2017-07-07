@@ -147,7 +147,7 @@ public class LoginController extends ExceptionHandlerController {
     @ApiOperation(value = "使用手机验证码登陆")
     @ResponseBody
     @RequestMapping(value = "/login/sms", method = RequestMethod.POST)
-    public JSONResult smsCodeLogin(LoginDTO dto) {
+    public JSONResult smsCodeLogin(@RequestBody LoginDTO dto) {
         return userService.smsCodeLogin(dto);
     }
 

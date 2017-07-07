@@ -5,6 +5,7 @@ import cn.arvix.base.common.utils.QuartzJobUtil;
 import cn.arvix.ontheway.sys.config.entity.Config;
 import cn.arvix.ontheway.sys.config.entity.ConfigValueType;
 import cn.arvix.ontheway.sys.config.service.ConfigService;
+import cn.arvix.ontheway.sys.organization.service.OrganizationService;
 import cn.arvix.ontheway.sys.resource.entity.Resource;
 import cn.arvix.ontheway.sys.resource.entity.ResourceType;
 import cn.arvix.ontheway.sys.resource.service.ResourceService;
@@ -45,6 +46,8 @@ public class DataInitService implements ApplicationContextAware {
 
     private final ResourceService resourceService;
 
+    private final OrganizationService organizationService;
+
     private QuartzJobUtil quartzJobUtil;
 
     @PersistenceContext
@@ -58,9 +61,12 @@ public class DataInitService implements ApplicationContextAware {
     private static final Logger logger = LoggerFactory.getLogger(DataInitService.class);
 
     @Autowired
-    public DataInitService(ConfigService configService, ResourceService resourceService) {
+    public DataInitService(ConfigService configService,
+                           ResourceService resourceService,
+                           OrganizationService organizationService) {
         this.configService = configService;
         this.resourceService = resourceService;
+        this.organizationService = organizationService;
     }
 
 
@@ -74,10 +80,18 @@ public class DataInitService implements ApplicationContextAware {
         try {
             initSysConfig();
             initResource();
+            initOrganization();
             createDefaultTask();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 系统初始化启动时，创建一个用户部门，用户部门在系统中只允许存在一个！
+     */
+    private void initOrganization() {
+        organizationService.createUserOrg();
     }
 
     /**

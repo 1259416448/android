@@ -158,10 +158,11 @@ public class ShiroConfig {
     @Bean
     public StatelessAuthcFilter statelessAuthcFilter() {
         StatelessAuthcFilter statelessAuthcFilter = new StatelessAuthcFilter();
-        statelessAuthcFilter.setAnnoUrls("/v2/api-docs", "/api/v1/login",
-                "/api/v1/activation/email/**", "/api/v1/register",
-                "/api/v1/send/activation/email/**", "/api/v1/forget/email",
-                "/api/v1/company/create/**", "/api/v1/check/username", "/api/v1/login/sms/sent/**");
+        statelessAuthcFilter.setAnnoUrls("/v2/api-docs",
+                "/api/v1/check/username",
+                "/api/v1/login",
+                "/api/v1/login/sms/sent/**",
+                "/api/v1/login/sms");
         return statelessAuthcFilter;
     }
 
