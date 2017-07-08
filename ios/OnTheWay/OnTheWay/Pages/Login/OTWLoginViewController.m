@@ -12,6 +12,7 @@
 
 @property (nonatomic, strong) UIView *textFeildBGView;
 @property (nonatomic, strong) UITextField *phoneNumField;
+@property (nonatomic,strong) UITextField *codeNumFileld;
 
 @end
 
@@ -32,32 +33,52 @@
 
 - (void)buildUI
 {
-    self.title = @"登录";
+    //self.title = @"登录";
     
-    self.textFeildBGView = [[UIView alloc] initWithFrame:CGRectMake(0, 64 + 10, SCREEN_WIDTH, 101)];
+    self.hiddenCustomNavigation = true;
+    
+    //大背景
+    self.view.backgroundColor = [UIColor colorWithHexString:@"f4f4f4"];
+    
+    self.textFeildBGView = [[UIView alloc] initWithFrame:CGRectMake(0, 64 + 10, SCREEN_WIDTH, 103)];
     self.textFeildBGView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.textFeildBGView];
     
-    UIView *phoneNumberBGView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.textFeildBGView.Witdh, 50)];
+    //插入一条线
+    UIView *underLineOneView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 0.5)];
+    underLineOneView.backgroundColor = [UIColor colorWithHexString:@"d5d5d5"];
+    [self.textFeildBGView addSubview:underLineOneView];
+    
+    //手机号
+    UIView *phoneNumberBGView = [[UIView alloc] initWithFrame:CGRectMake(0, 1, self.textFeildBGView.Witdh, 50)];
     [self.textFeildBGView addSubview:phoneNumberBGView];
     
-    UIImageView *phoneNumImageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 17, 13, 15)];
+    UIImageView *phoneNumImageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 17.5, 13, 15)];
     phoneNumImageView.image = [UIImage imageNamed:@"shouji"];
     [phoneNumberBGView addSubview:phoneNumImageView];
     
-    UILabel *phoneNumLabel = [[UILabel alloc] initWithFrame:CGRectMake(phoneNumImageView.MaxX + 5, 0, 58, phoneNumberBGView.Height)];
+    UILabel *phoneNumLabel = [[UILabel alloc] initWithFrame:CGRectMake(38, 0, 58, phoneNumberBGView.Height)];
     phoneNumLabel.font = [UIFont systemFontOfSize:16];
     phoneNumLabel.textColor = [UIColor colorWithHexString:@"202020"];
     phoneNumLabel.text = @"手机号";
     [phoneNumberBGView addSubview:phoneNumLabel];
     
-     self.phoneNumField= [[UITextField alloc] initWithFrame:CGRectMake(phoneNumLabel.MaxX + 5, 0, phoneNumberBGView.Witdh - phoneNumLabel.MaxX, phoneNumberBGView.Height)];
+    self.phoneNumField= [[UITextField alloc] initWithFrame:CGRectMake(96, 0, phoneNumberBGView.Witdh - phoneNumLabel.MaxX, phoneNumberBGView.Height)];
     self.phoneNumField.placeholder = @"输入正确手机号";
     self.phoneNumField.backgroundColor = [UIColor clearColor];
     self.phoneNumField.delegate = self;
+    self.phoneNumField.tag = 10000;
+    
     self.phoneNumField.font = [UIFont systemFontOfSize:14];
     self.phoneNumField.textColor = [UIColor colorWithHexString:@"979797"];
+    //只输入数字
+    self.phoneNumField.keyboardType = UIKeyboardTypeNumberPad;
+    //把定义好的UITextField 加入到上层View容器中
     [phoneNumberBGView addSubview:self.phoneNumField];
+    
+    UIView *underLineTwoView = [[UIView alloc] initWithFrame:CGRectMake(0, phoneNumberBGView.Height, SCREEN_WIDTH, 0.5)];
+    underLineTwoView.backgroundColor = [UIColor colorWithHexString:@"d5d5d5"];
+    [self.textFeildBGView addSubview:underLineTwoView];
     
     UIButton *loginButton = [UIButton buttonWithType:UIButtonTypeSystem];
     loginButton.frame = CGRectMake(30, self.textFeildBGView.MaxY + 100, SCREEN_WIDTH-30*2, 44);
@@ -67,26 +88,88 @@
     [loginButton addTarget:self action:@selector(loginButtonClick) forControlEvents:UIControlEventTouchUpInside];
     loginButton.titleLabel.font = [UIFont systemFontOfSize:16];
     loginButton.layer.cornerRadius = 4;
-    [loginButton setBackgroundImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
-    [loginButton setImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
+//    [loginButton setBackgroundImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
+//    [loginButton setImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
     
     [self.view addSubview:loginButton];
+    
+    //验证码View
+    UIView *codeNumberBGView = [[UIView alloc] initWithFrame:CGRectMake(0, underLineOneView.Height+phoneNumberBGView.Height+underLineTwoView.Height, SCREEN_WIDTH, 50)];
+    codeNumberBGView.backgroundColor = [UIColor whiteColor];
+    //加入主视图
+    [self.textFeildBGView addSubview:codeNumberBGView];
+    
+    //验证码图片View
+    UIImageView *codeImageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 17.5, 13, 15)];
+    codeImageView.image = [UIImage imageNamed:@"yanzhengma"];
+    
+    //加入验证码View中
+    [codeNumberBGView addSubview:codeImageView];
+    
+    //验证码label
+    UILabel *codeLabel = [[UILabel alloc] initWithFrame:CGRectMake(38, 0, 58, codeNumberBGView.Height)];
+    codeLabel.text = @"验证码";
+    codeLabel.font = [UIFont systemFontOfSize:16];
+    [codeNumberBGView addSubview:codeLabel];
+    
+    //验证码输入框
+    self.codeNumFileld = [[UITextField alloc] initWithFrame:CGRectMake(96, 0, 96, codeNumberBGView.Height)];
+    self.codeNumFileld.placeholder = @"验证码";
+    self.codeNumFileld.backgroundColor = [UIColor clearColor];
+    self.codeNumFileld.delegate = self;
+    self.codeNumFileld.tag = 10001;
+    
+    self.codeNumFileld.font = [UIFont systemFontOfSize:14];
+    self.codeNumFileld.textColor = [UIColor colorWithHexString:@"979797"];
+    //只输入数字
+    self.codeNumFileld.keyboardType = UIKeyboardTypeNumberPad;
+    [codeNumberBGView addSubview:_codeNumFileld];
+    
+    //获取验证码按钮
+    UIButton *codeSentButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    codeSentButton.frame = CGRectMake(SCREEN_WIDTH-15-75, 9.5, 75, 30);
+    codeSentButton.backgroundColor = [UIColor colorWithRed:229/255.0 green:8/255.0 blue:52/255.0 alpha:1/1.0];
+    [codeSentButton setTitle:@"获取验证码" forState:UIControlStateNormal];
+    [codeSentButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [codeSentButton addTarget:self action:@selector(codeSentButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    codeSentButton.titleLabel.font = [UIFont systemFontOfSize:12];
+    codeSentButton.layer.cornerRadius = 4;
+    [codeNumberBGView addSubview:codeSentButton];
+    
+    //最下面的线
+    UIView *underLineThreeView = [[UIView alloc] initWithFrame:CGRectMake(0, _textFeildBGView.Height-1, SCREEN_WIDTH, 0.5)];
+    underLineThreeView.backgroundColor = [UIColor colorWithHexString:@"d5d5d5"];
+    [self.textFeildBGView addSubview:underLineThreeView];
+    
+    
+    
+    
     
     
     
 }
 
-#pragma mark - Private methods
+#pragma mark - Private methods loginButtonClick
 
 - (void)loginButtonClick
 {
     DLog(@"登录");
+}
+#pragma mark - Private methods codeSentButtonClick
+- (void)codeSentButtonClick{
+    DLog(@"发送验证码");
 }
 
 #pragma mark - UITextFieldDelegate
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
+    //string 表示当前输入的字符
+    
+    DLog(@"string:%@",string);
+    
+    DLog(@"textField tag:%ld",textField.tag);
+    
     if (string.length > 11)
     {
         return NO;
@@ -97,6 +180,9 @@
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
     [self.phoneNumField resignFirstResponder];
+    [self.codeNumFileld resignFirstResponder];
 }
+
+
 
 @end
