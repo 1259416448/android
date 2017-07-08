@@ -7,6 +7,8 @@
 //
 
 #import "OTWLoginService.h"
+#import "HmacUtils.h"
+#import "CommonContact.h"
 
 static NSString *kLoginParams = @"/api/v1/login"; // 登录
 
@@ -25,5 +27,14 @@ static NSString *kLoginParams = @"/api/v1/login"; // 登录
     }];
     
 }
+
++ (void)sentLoginCode:(NSString *)username completion:(requestCompletionBlock)block
+{
+   NSString *digest = [HmacUtils hmac:[@"mobile:" stringByAppendingString:username]  withKey:[CommonContact getDigestKey]];
+    DLog(@"digest:%@",digest);
+    
+}
+
+
 
 @end

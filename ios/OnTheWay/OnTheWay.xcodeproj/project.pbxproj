@@ -36,6 +36,9 @@
 		D7F6B0B31F1089400013090A /* OTWLoginService.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B0B21F1089400013090A /* OTWLoginService.m */; };
 		D7F6B0B61F10AA2D0013090A /* OTWLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B0B51F10AA2D0013090A /* OTWLoginViewController.m */; };
 		D8B4FC771A533A05D5B2B46D /* libPods-OnTheWay.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 45C2D5CA9B6813E8ACAF6178 /* libPods-OnTheWay.a */; };
+		DD14F23B1F1132FE004DFE4A /* NSString+RegexCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = DD14F23A1F1132FE004DFE4A /* NSString+RegexCategory.m */; };
+		DD14F2401F113654004DFE4A /* HmacUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = DD14F23F1F113654004DFE4A /* HmacUtils.m */; };
+		DD14F2431F114436004DFE4A /* CommonContact.m in Sources */ = {isa = PBXBuildFile; fileRef = DD14F2421F114436004DFE4A /* CommonContact.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -112,6 +115,12 @@
 		D7F6B0B21F1089400013090A /* OTWLoginService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWLoginService.m; sourceTree = "<group>"; };
 		D7F6B0B41F10AA2D0013090A /* OTWLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWLoginViewController.h; sourceTree = "<group>"; };
 		D7F6B0B51F10AA2D0013090A /* OTWLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWLoginViewController.m; sourceTree = "<group>"; };
+		DD14F2391F1132FE004DFE4A /* NSString+RegexCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+RegexCategory.h"; path = "NSTring/NSString+RegexCategory.h"; sourceTree = "<group>"; };
+		DD14F23A1F1132FE004DFE4A /* NSString+RegexCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+RegexCategory.m"; path = "NSTring/NSString+RegexCategory.m"; sourceTree = "<group>"; };
+		DD14F23E1F113654004DFE4A /* HmacUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HmacUtils.h; sourceTree = "<group>"; };
+		DD14F23F1F113654004DFE4A /* HmacUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HmacUtils.m; sourceTree = "<group>"; };
+		DD14F2411F114436004DFE4A /* CommonContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonContact.h; sourceTree = "<group>"; };
+		DD14F2421F114436004DFE4A /* CommonContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonContact.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -182,11 +191,11 @@
 		D7F6AFF31F0D32FB0013090A /* OnTheWay */ = {
 			isa = PBXGroup;
 			children = (
+				D7F6B0471F0D39390013090A /* Utils */,
 				D7F6B0941F0DDE950013090A /* Network */,
 				D7F6B03E1F0D390D0013090A /* Libs */,
 				D7F6B0441F0D39320013090A /* Resources */,
 				D7F6B0341F0D38EA0013090A /* Macro */,
-				D7F6B0471F0D39390013090A /* Utils */,
 				D7F6B0381F0D39060013090A /* Common */,
 				D7F6B0411F0D39160013090A /* Pages */,
 				D7F6AFF71F0D32FB0013090A /* AppDelegate.h */,
@@ -307,10 +316,15 @@
 		D7F6B0471F0D39390013090A /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				DD0224A31F1131BC00AB65C9 /* NString */,
 				D7F6B0821F0DD4EB0013090A /* Image */,
 				D7F6B0551F0DCED20013090A /* Color */,
 				D7F6B04E1F0DCD9C0013090A /* View */,
 				D7F6B0481F0D39390013090A /* README.md */,
+				DD14F23E1F113654004DFE4A /* HmacUtils.h */,
+				DD14F23F1F113654004DFE4A /* HmacUtils.m */,
+				DD14F2411F114436004DFE4A /* CommonContact.h */,
+				DD14F2421F114436004DFE4A /* CommonContact.m */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -594,6 +608,15 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		DD0224A31F1131BC00AB65C9 /* NString */ = {
+			isa = PBXGroup;
+			children = (
+				DD14F2391F1132FE004DFE4A /* NSString+RegexCategory.h */,
+				DD14F23A1F1132FE004DFE4A /* NSString+RegexCategory.m */,
+			);
+			name = NString;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -785,8 +808,10 @@
 				D7F6B09D1F0F75770013090A /* OTWLaunchManager.m in Sources */,
 				D7F6B03D1F0D39060013090A /* README.md in Sources */,
 				D7F6B0751F0DD3D90013090A /* OTWPersonalViewController.m in Sources */,
+				DD14F23B1F1132FE004DFE4A /* NSString+RegexCategory.m in Sources */,
 				D7F6B0811F0DD44C0013090A /* OTWARViewController.m in Sources */,
 				D7F6B0B31F1089400013090A /* OTWLoginService.m in Sources */,
+				DD14F2401F113654004DFE4A /* HmacUtils.m in Sources */,
 				D7F6B0371F0D38EA0013090A /* README.md in Sources */,
 				D7F6B0491F0D39390013090A /* README.md in Sources */,
 				D7F6B0781F0DD3F90013090A /* OTWNewsViewController.m in Sources */,
@@ -797,6 +822,7 @@
 				D7F6B05E1F0DD1D80013090A /* OTWRootViewController.m in Sources */,
 				D7F6B05B1F0DD0280013090A /* OTWBaseViewController.m in Sources */,
 				D7F6B0581F0DCF040013090A /* UIColor+Utils.m in Sources */,
+				DD14F2431F114436004DFE4A /* CommonContact.m in Sources */,
 				D7F6B0461F0D39320013090A /* README.md in Sources */,
 				D7F6AFF61F0D32FB0013090A /* main.m in Sources */,
 				D7F6B08B1F0DD5370013090A /* UIImage+Color.m in Sources */,

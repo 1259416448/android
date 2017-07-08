@@ -7,12 +7,18 @@
 //
 
 #import "OTWLoginViewController.h"
+#import <MBProgressHUD.h>
+#import "NSString+RegexCategory.h"
+#import "OTWLoginService.h"
+
+
 
 @interface OTWLoginViewController () <UITextFieldDelegate>
 
 @property (nonatomic, strong) UIView *textFeildBGView;
 @property (nonatomic, strong) UITextField *phoneNumField;
 @property (nonatomic,strong) UITextField *codeNumFileld;
+@property (nonatomic,strong) UIButton *codeSentButton;
 
 @end
 
@@ -113,7 +119,7 @@
     [codeNumberBGView addSubview:codeLabel];
     
     //验证码输入框
-    self.codeNumFileld = [[UITextField alloc] initWithFrame:CGRectMake(96, 0, 96, codeNumberBGView.Height)];
+    self.codeNumFileld = [[UITextField alloc] initWithFrame:CGRectMake(96, 0, SCREEN_WIDTH-15-75-15-96, codeNumberBGView.Height)];
     self.codeNumFileld.placeholder = @"验证码";
     self.codeNumFileld.backgroundColor = [UIColor clearColor];
     self.codeNumFileld.delegate = self;
@@ -126,15 +132,15 @@
     [codeNumberBGView addSubview:_codeNumFileld];
     
     //获取验证码按钮
-    UIButton *codeSentButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    codeSentButton.frame = CGRectMake(SCREEN_WIDTH-15-75, 9.5, 75, 30);
-    codeSentButton.backgroundColor = [UIColor colorWithRed:229/255.0 green:8/255.0 blue:52/255.0 alpha:1/1.0];
-    [codeSentButton setTitle:@"获取验证码" forState:UIControlStateNormal];
-    [codeSentButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [codeSentButton addTarget:self action:@selector(codeSentButtonClick) forControlEvents:UIControlEventTouchUpInside];
-    codeSentButton.titleLabel.font = [UIFont systemFontOfSize:12];
-    codeSentButton.layer.cornerRadius = 4;
-    [codeNumberBGView addSubview:codeSentButton];
+    _codeSentButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _codeSentButton.frame = CGRectMake(SCREEN_WIDTH-15-75, 9.5, 75, 30);
+    _codeSentButton.backgroundColor = [UIColor colorWithRed:229/255.0 green:8/255.0 blue:52/255.0 alpha:1/1.0];
+    [_codeSentButton setTitle:@"获取验证码" forState:UIControlStateNormal];
+    [_codeSentButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [_codeSentButton addTarget:self action:@selector(codeSentButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    _codeSentButton.titleLabel.font = [UIFont systemFontOfSize:12];
+    _codeSentButton.layer.cornerRadius = 4;
+    [codeNumberBGView addSubview:_codeSentButton];
     
     //最下面的线
     UIView *underLineThreeView = [[UIView alloc] initWithFrame:CGRectMake(0, _textFeildBGView.Height-1, SCREEN_WIDTH, 0.5)];
@@ -158,7 +164,72 @@
 #pragma mark - Private methods codeSentButtonClick
 - (void)codeSentButtonClick{
     DLog(@"发送验证码");
+    //验证手机号是否合法
+    
+   // MBProgressHUD *hud = [[MBProgressHUD alloc] init];
+    
+    
+    //[self.view addSubview:hud];
+   // hud.label.font = [UIFont systemFontOfSize:13];
+   // hud.label.text = @"Loading...";
+    
+   // [hud showAnimated:YES];
+    
+   // [hud hideAnimated:YES afterDelay:5];
+    
+    
+    //[self openCodeCountdown];
+    
+    //验证手机号是否合法，合法调用后台接口，发送手机验证码
+    
+    DLog(@"mobile:%@",_phoneNumField.text);
+    
+    if(_phoneNumField.text.isMobileNumber){
+        //请求发送验证码接口
+        [OTWLoginService sentLoginCode:_phoneNumField.text completion:nil];
+        [self openCodeCountdown];
+        
+    }else{
+        DLog(@"输入的手机号码错误！");
+    }
 }
+
+// 开启倒计时效果
+#pragma mark - Private methods openCodeCountdown
+-(void)openCodeCountdown{
+    
+    __block NSInteger time = 59; //倒计时时间
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_source_t _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
+    
+    dispatch_source_set_timer(_timer,dispatch_walltime(NULL, 0),1.0*NSEC_PER_SEC, 0); //每秒执行
+    
+    dispatch_source_set_event_handler(_timer, ^{
+        
+        if(time <= 0){ //倒计时结束，关闭
+            
+            dispatch_source_cancel(_timer);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                //设置按钮的样式
+                [self.codeSentButton setTitle:@"重新发送" forState:UIControlStateNormal];
+                self.codeSentButton.userInteractionEnabled = YES;
+            });
+            
+        }else{
+            
+            int seconds = time % 60;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                //设置按钮显示读秒效果
+                [self.codeSentButton setTitle:[NSString stringWithFormat:@"重新发送(%.2d)", seconds] forState:UIControlStateNormal];
+                self.codeSentButton.userInteractionEnabled = NO;
+            });
+            time--;
+        }
+    });
+    dispatch_resume(_timer);
+}
+
 
 #pragma mark - UITextFieldDelegate
 
