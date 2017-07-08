@@ -30,9 +30,12 @@
 		D7F6B07E1F0DD43A0013090A /* OTWFindViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B07D1F0DD43A0013090A /* OTWFindViewController.m */; };
 		D7F6B0811F0DD44C0013090A /* OTWARViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B0801F0DD44C0013090A /* OTWARViewController.m */; };
 		D7F6B08B1F0DD5370013090A /* UIImage+Color.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B08A1F0DD5370013090A /* UIImage+Color.m */; };
-		D7F6B0931F0DDE400013090A /* OTWLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B0921F0DDE400013090A /* OTWLoginViewController.m */; };
 		D7F6B09A1F0F75510013090A /* OTWLaunchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B0971F0F75510013090A /* OTWLaunchViewController.m */; };
 		D7F6B09D1F0F75770013090A /* OTWLaunchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B09C1F0F75770013090A /* OTWLaunchManager.m */; };
+		D7F6B0A91F1081850013090A /* OTWNetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B0A81F1081850013090A /* OTWNetworkManager.m */; };
+		D7F6B0B31F1089400013090A /* OTWLoginService.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B0B21F1089400013090A /* OTWLoginService.m */; };
+		D7F6B0B61F10AA2D0013090A /* OTWLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B0B51F10AA2D0013090A /* OTWLoginViewController.m */; };
+		D8B4FC771A533A05D5B2B46D /* libPods-OnTheWay.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 45C2D5CA9B6813E8ACAF6178 /* libPods-OnTheWay.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +56,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		45C2D5CA9B6813E8ACAF6178 /* libPods-OnTheWay.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnTheWay.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B8637730B7A7E4B6ADD9FEE /* Pods-OnTheWay.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnTheWay.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OnTheWay/Pods-OnTheWay.debug.xcconfig"; sourceTree = "<group>"; };
+		68C4FF114BC411D8C8AADB56 /* Pods-OnTheWay.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnTheWay.release.xcconfig"; path = "Pods/Target Support Files/Pods-OnTheWay/Pods-OnTheWay.release.xcconfig"; sourceTree = "<group>"; };
 		D7F6AFF11F0D32FB0013090A /* OnTheWay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheWay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7F6AFF51F0D32FB0013090A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D7F6AFF71F0D32FB0013090A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -96,12 +102,16 @@
 		D7F6B0801F0DD44C0013090A /* OTWARViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWARViewController.m; sourceTree = "<group>"; };
 		D7F6B0891F0DD5370013090A /* UIImage+Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Color.h"; sourceTree = "<group>"; };
 		D7F6B08A1F0DD5370013090A /* UIImage+Color.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Color.m"; sourceTree = "<group>"; };
-		D7F6B0911F0DDE400013090A /* OTWLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWLoginViewController.h; sourceTree = "<group>"; };
-		D7F6B0921F0DDE400013090A /* OTWLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWLoginViewController.m; sourceTree = "<group>"; };
 		D7F6B0961F0F75510013090A /* OTWLaunchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWLaunchViewController.h; sourceTree = "<group>"; };
 		D7F6B0971F0F75510013090A /* OTWLaunchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWLaunchViewController.m; sourceTree = "<group>"; };
 		D7F6B09B1F0F75770013090A /* OTWLaunchManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWLaunchManager.h; sourceTree = "<group>"; };
 		D7F6B09C1F0F75770013090A /* OTWLaunchManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWLaunchManager.m; sourceTree = "<group>"; };
+		D7F6B0A71F1081850013090A /* OTWNetworkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWNetworkManager.h; sourceTree = "<group>"; };
+		D7F6B0A81F1081850013090A /* OTWNetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWNetworkManager.m; sourceTree = "<group>"; };
+		D7F6B0B11F1089400013090A /* OTWLoginService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWLoginService.h; sourceTree = "<group>"; };
+		D7F6B0B21F1089400013090A /* OTWLoginService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWLoginService.m; sourceTree = "<group>"; };
+		D7F6B0B41F10AA2D0013090A /* OTWLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWLoginViewController.h; sourceTree = "<group>"; };
+		D7F6B0B51F10AA2D0013090A /* OTWLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWLoginViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +119,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D8B4FC771A533A05D5B2B46D /* libPods-OnTheWay.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,6 +140,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9E536E53A17984A468176170 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				45C2D5CA9B6813E8ACAF6178 /* libPods-OnTheWay.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A7181D9EC4E6E5AE1EFAD194 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				4B8637730B7A7E4B6ADD9FEE /* Pods-OnTheWay.debug.xcconfig */,
+				68C4FF114BC411D8C8AADB56 /* Pods-OnTheWay.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		D7F6AFE81F0D32FA0013090A = {
 			isa = PBXGroup;
 			children = (
@@ -136,6 +164,8 @@
 				D7F6B00D1F0D32FB0013090A /* OnTheWayTests */,
 				D7F6B0181F0D32FB0013090A /* OnTheWayUITests */,
 				D7F6AFF21F0D32FB0013090A /* Products */,
+				A7181D9EC4E6E5AE1EFAD194 /* Pods */,
+				9E536E53A17984A468176170 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -490,8 +520,12 @@
 		D7F6B0901F0DDE300013090A /* Login */ = {
 			isa = PBXGroup;
 			children = (
-				D7F6B0911F0DDE400013090A /* OTWLoginViewController.h */,
-				D7F6B0921F0DDE400013090A /* OTWLoginViewController.m */,
+				D7F6B0B41F10AA2D0013090A /* OTWLoginViewController.h */,
+				D7F6B0B51F10AA2D0013090A /* OTWLoginViewController.m */,
+				D7F6B0AE1F1089130013090A /* Service */,
+				D7F6B0AA1F1089130013090A /* Controller */,
+				D7F6B0AD1F1089130013090A /* Model */,
+				D7F6B0AF1F1089130013090A /* View */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -499,6 +533,8 @@
 		D7F6B0941F0DDE950013090A /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				D7F6B0A71F1081850013090A /* OTWNetworkManager.h */,
+				D7F6B0A81F1081850013090A /* OTWNetworkManager.m */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -528,6 +564,36 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		D7F6B0AA1F1089130013090A /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		D7F6B0AD1F1089130013090A /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		D7F6B0AE1F1089130013090A /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				D7F6B0B11F1089400013090A /* OTWLoginService.h */,
+				D7F6B0B21F1089400013090A /* OTWLoginService.m */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		D7F6B0AF1F1089130013090A /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -535,9 +601,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D7F6B01E1F0D32FB0013090A /* Build configuration list for PBXNativeTarget "OnTheWay" */;
 			buildPhases = (
+				00F4EB1065C34469AAB278BC /* [CP] Check Pods Manifest.lock */,
 				D7F6AFED1F0D32FA0013090A /* Sources */,
 				D7F6AFEE1F0D32FA0013090A /* Frameworks */,
 				D7F6AFEF1F0D32FA0013090A /* Resources */,
+				EA28F1191C604F5C08F8BD34 /* [CP] Embed Pods Frameworks */,
+				E88E1A3932BA049627020712 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -656,6 +725,54 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		00F4EB1065C34469AAB278BC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		E88E1A3932BA049627020712 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OnTheWay/Pods-OnTheWay-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EA28F1191C604F5C08F8BD34 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OnTheWay/Pods-OnTheWay-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		D7F6AFED1F0D32FA0013090A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -663,16 +780,18 @@
 			files = (
 				D7F6B0401F0D390D0013090A /* README.md in Sources */,
 				D7F6AFF91F0D32FB0013090A /* AppDelegate.m in Sources */,
-				D7F6B0931F0DDE400013090A /* OTWLoginViewController.m in Sources */,
 				D7F6B07B1F0DD41F0013090A /* OTWFootprintsViewController.m in Sources */,
 				D7F6B0431F0D39160013090A /* README.md in Sources */,
 				D7F6B09D1F0F75770013090A /* OTWLaunchManager.m in Sources */,
 				D7F6B03D1F0D39060013090A /* README.md in Sources */,
 				D7F6B0751F0DD3D90013090A /* OTWPersonalViewController.m in Sources */,
 				D7F6B0811F0DD44C0013090A /* OTWARViewController.m in Sources */,
+				D7F6B0B31F1089400013090A /* OTWLoginService.m in Sources */,
 				D7F6B0371F0D38EA0013090A /* README.md in Sources */,
 				D7F6B0491F0D39390013090A /* README.md in Sources */,
 				D7F6B0781F0DD3F90013090A /* OTWNewsViewController.m in Sources */,
+				D7F6B0A91F1081850013090A /* OTWNetworkManager.m in Sources */,
+				D7F6B0B61F10AA2D0013090A /* OTWLoginViewController.m in Sources */,
 				D7F6B09A1F0F75510013090A /* OTWLaunchViewController.m in Sources */,
 				D7F6B07E1F0DD43A0013090A /* OTWFindViewController.m in Sources */,
 				D7F6B05E1F0DD1D80013090A /* OTWRootViewController.m in Sources */,
@@ -823,11 +942,13 @@
 		};
 		D7F6B01F1F0D32FB0013090A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4B8637730B7A7E4B6ADD9FEE /* Pods-OnTheWay.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = SEMAPEJ292;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/OnTheWay/PrefixHeader.pch";
 				INFOPLIST_FILE = OnTheWay/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.WeiHuan.OnTheWay;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -836,11 +957,13 @@
 		};
 		D7F6B0201F0D32FB0013090A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 68C4FF114BC411D8C8AADB56 /* Pods-OnTheWay.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = SEMAPEJ292;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/OnTheWay/PrefixHeader.pch";
 				INFOPLIST_FILE = OnTheWay/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.WeiHuan.OnTheWay;
 				PRODUCT_NAME = "$(TARGET_NAME)";

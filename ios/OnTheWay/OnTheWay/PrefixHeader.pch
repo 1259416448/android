@@ -18,5 +18,6 @@
 #import "UIImage+Color.h"
 
 #import "OTWBaseViewController.h"
+#import "OTWNetworkManager.h"
 
 #endif /* PrefixHeader_pch */
