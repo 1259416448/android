@@ -43,7 +43,7 @@ public class ShiroLoginService {
         if (Objects.equals(EndecryptUtils.encrytBase64(usernamePasswordToken.getUsername()), rootName)) {
             User user = new User();
             user.setUsername(rootName);
-            user.setSalt("cn/arvix");
+            user.setSalt("arvix");
             user.setUserType(UserType.dev);
             user.setId(configService.getConfigBigDecimal(CommonContact.ROOT_ID).longValue());
             user.setPassword(configService.getConfigString(CommonContact.ROOT_PASSWORD));

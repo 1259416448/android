@@ -80,6 +80,14 @@ public class User extends BaseEntity<Long> implements LogicDeleteable {
     @Enumerated(EnumType.STRING)
     private UserType userType;
 
+    @Enumerated(EnumType.STRING)
+    private UserGender gender = UserGender.secrecy;
+
+
+    public enum UserGender {
+        secrecy, man, woman
+    }
+
     /**
      * 用户 组织机构 工作职务关联表
      */
@@ -129,10 +137,9 @@ public class User extends BaseEntity<Long> implements LogicDeleteable {
         objectMap.put("headImgYuan_", headImgYuan);
         objectMap.put("name", name);
         objectMap.put("status", status);
+        objectMap.put("gender", gender);
         objectMap.put("creater", getCreater());
         objectMap.put("deleted", deleted);
-        objectMap.put("job", job);
-        objectMap.put("userType", userType);
         objectMap.put("dateCreated", TimeMaker.toDateTimeStr(getDateCreated()));
         objectMap.put("lastUpdated", TimeMaker.toDateTimeStr(getLastUpdated()));
         List<Map> list = Lists.newArrayList();
@@ -151,17 +158,14 @@ public class User extends BaseEntity<Long> implements LogicDeleteable {
     public Map<String, Object> toSimpleMap() {
         Map<String, Object> jsonMap = Maps.newHashMap();
         jsonMap.put("id", getId());
-        jsonMap.put("username", getUsername());
-        jsonMap.put("email", getEmail());
+        jsonMap.put("username", username);
+        jsonMap.put("name", getName());
         jsonMap.put("mobilePhoneNumber", getMobilePhoneNumber());
         jsonMap.put("headImg", getReallyHeadImg());
-        jsonMap.put("name", getName());
-        jsonMap.put("status", getStatus());
-        jsonMap.put("job", getJob());
-        jsonMap.put("userType", getUserType());
+        jsonMap.put("headImgYuan", getReallyHeadImgYuan());
+        jsonMap.put("gender", gender);
         return jsonMap;
     }
-
 
     /**
      * 逻辑删除flag
@@ -174,6 +178,14 @@ public class User extends BaseEntity<Long> implements LogicDeleteable {
             getOrganizationJobs().forEach(x -> set.add(x.getOrganization().getId()));
         }
         return set;
+    }
+
+    public UserGender getGender() {
+        return gender;
+    }
+
+    public void setGender(UserGender gender) {
+        this.gender = gender;
     }
 
     public String getUsername() {

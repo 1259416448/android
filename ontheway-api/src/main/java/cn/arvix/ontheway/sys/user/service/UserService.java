@@ -7,20 +7,15 @@ import cn.arvix.base.common.entity.search.filter.SearchFilter;
 import cn.arvix.base.common.entity.search.filter.SearchFilterHelper;
 import cn.arvix.base.common.repository.hibernate.HibernateUtils;
 import cn.arvix.base.common.service.impl.BaseServiceImpl;
-import cn.arvix.base.common.utils.CommonContact;
-import cn.arvix.base.common.utils.JsonUtil;
-import cn.arvix.base.common.utils.MessageUtils;
-import cn.arvix.base.common.utils.TimeMaker;
+import cn.arvix.base.common.utils.*;
 import cn.arvix.ontheway.sys.config.service.ConfigService;
 import cn.arvix.ontheway.sys.dto.*;
 import cn.arvix.ontheway.sys.organization.entity.Organization;
 import cn.arvix.ontheway.sys.organization.service.OrganizationService;
+import cn.arvix.ontheway.sys.shiro.token.AutoLoginToken;
 import cn.arvix.ontheway.sys.shiro.web.mgt.HeaderRememberMeManager;
 import cn.arvix.ontheway.sys.sms.SMSService;
-import cn.arvix.ontheway.sys.user.entity.TokenInfo;
-import cn.arvix.ontheway.sys.user.entity.User;
-import cn.arvix.ontheway.sys.user.entity.UserOrganizationJob;
-import cn.arvix.ontheway.sys.user.entity.UserType;
+import cn.arvix.ontheway.sys.user.entity.*;
 import cn.arvix.ontheway.sys.user.exception.UserException;
 import cn.arvix.ontheway.sys.user.repository.UserOrganizationJobRepository;
 import cn.arvix.ontheway.sys.user.repository.UserRepository;
@@ -225,7 +220,6 @@ public class UserService extends BaseServiceImpl<User, Long> {
     private void saveUserOrganization(User user, Long[] organizationIds) {
         List<UserOrganizationJob> list = Lists.newArrayList();
         Date date = TimeMaker.nowSqlDate();
-        User currentUser = webContextUtils.getCheckCurrentUser();
         //创建用户
         for (Long organizationId : organizationIds) {
             UserOrganizationJob userOrganizationJob = new UserOrganizationJob(organizationId, null);
@@ -537,7 +531,7 @@ public class UserService extends BaseServiceImpl<User, Long> {
         //首先验证消息摘要正确性  mobile:mobile
         String serverDigest = HmacSHA256Utils.digest(CommonContact.HMAC256_KEY, "mobile:" + mobile);
         if (!Objects.equals(serverDigest, digest)) {
-            return JsonUtil.getFailure("digest is error", "digest.error");
+            return JsonUtil.getFailure("消息摘要错误", CommonErrorCode.DIGEST_ERROR);
         }
 
         RBucket<SmsDTO> bucket = redissonClient.getBucket(getSMSMobileKey(mobile));
@@ -545,7 +539,7 @@ public class UserService extends BaseServiceImpl<User, Long> {
         if (smsDTO != null) { //55秒不能重复发送
             //新建短信发送内容
             if (smsDTO.getTime() + 55000 > System.currentTimeMillis()) {
-                return JsonUtil.getFailure("Frequent operation", "frequent.operation");
+                return JsonUtil.getFailure("短信验证码发送操作频繁", CommonErrorCode.FREQUENT_OPERATION);
             }
         }
         Map<String, Object> map = Maps.newHashMap();
@@ -570,29 +564,97 @@ public class UserService extends BaseServiceImpl<User, Long> {
             bucket.set(smsDTO, Long.valueOf(time[0]), TimeUnit.valueOf(time[1]));
             return JsonUtil.getSuccess(MessageUtils.message(CommonContact.OPTION_SUCCESS), CommonContact.OPTION_SUCCESS);
         } else {
-            return JsonUtil.getSuccess(MessageUtils.message(CommonContact.OPTION_ERROR), CommonContact.OPTION_ERROR);
+            return JsonUtil.getSuccess(MessageUtils.message("短信验证码发送错误"), CommonErrorCode.SMS_CODE_SENT_ERROR);
         }
     }
 
 
     /**
      * 使用手机验证码登陆
-     * 
+     *
      * @param dto 登陆信息
      * @return 登陆结果，成功登陆后会返回当前用户信息
      */
+    @Transactional(rollbackFor = Exception.class)
     public JSONResult smsCodeLogin(LoginDTO dto) {
-
         //先在redis中获取缓存的code
         RBucket<SmsDTO> bucket = redissonClient.getBucket(getSMSMobileKey(dto.getUsername()));
         SmsDTO smsDTO = bucket.get();
         if (smsDTO == null) { //为发送短信或短信已过期
-            return JsonUtil.getFailure("短信验证码已过期，请重新发送！", "messageCode.error");
-
+            return JsonUtil.getFailure("短信验证码已过期，请重新发送", CommonErrorCode.SMS_CODE_TIMEOUT);
         }
+        //比对验证码是否正确
+        if (!Objects.equals(smsDTO.getCode(), dto.getPassword())) {
+            return JsonUtil.getFailure("短信验证码错误", CommonErrorCode.SMS_CODE_ERROR);
+        }
+        //通过手机号获取当前用户信息
+        User user = getUserRepository().findByMobilePhoneNumber(dto.getUsername());
+        JSONResult jsonResult;
+        if (user == null) { //执行用户自动注册
+            jsonResult = registerByMobile(dto.getUsername());
+            if (!jsonResult.ifSuccess()) return jsonResult;
+        } else {
+            jsonResult = JsonUtil.getSuccess("登录成功", CommonContact.LOGIN_SUCCESS, user.toSimpleMap());
+        }
+        //执行自动登录
+        String username = ((Map) jsonResult.getBody()).get("username").toString();
+        AutoLoginToken autoLoginToken = new AutoLoginToken(username, username);
+        SecurityUtils.getSubject().login(autoLoginToken);
+        //执行rememberMe 设置 x-auth-token 信息
+        onLoginSuccess(dto.getRememberMe());
+        //移除redis中的缓存记录
+        redissonClient.getKeys().delete(getSMSMobileKey(dto.getUsername()));
+        //返回登陆结果
+        return jsonResult;
+    }
 
+    /**
+     * 此方法只能通过手机号进行注册
+     * 执行注册，用户初始化昵称使用手机号隐藏中间4位
+     * 新注册的用户默认密码使用手机号后六位
+     *
+     * @return 注册结果
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public JSONResult registerByMobile(String mobile) {
+        // 检查手机号是否使用过
+        User user = getUserRepository().findByMobilePhoneNumber(mobile);
+        if (user != null) {
+            return JsonUtil.getFailure("注册手机号已被使用", CommonErrorCode.REGISTER_MOBILE_USED);
+        }
+        //添加用户
+        user = new User();
+        user.setUsername(UUID.randomUUID().toString().replace("-", ""));
+        user.setMobilePhoneNumber(mobile);
+        user.setPassword(getUserPass(mobile));
+        user.setName(getNickname(mobile));
+        user.setStatus(UserStatus.normal);
+        user.setUserType(UserType.user);
+        this.save_(user);
+        //获取平台的用户部门
+        Organization organization = organizationService.getUserOrg();
+        //建立用户与部门之间的关系
+        removeOrAddOrganization(user.getId(), organization.getId());
+        return JsonUtil.getSuccess("注册成功", "register.success", user.toSimpleMap());
+    }
 
-        return null;
+    /**
+     * 获取默认昵称
+     *
+     * @return 昵称
+     */
+    private String getNickname(String mobile) {
+        return mobile.substring(0, 3) + "****" + mobile.substring(mobile.length() - 4, mobile.length());
+    }
+
+    /**
+     * 获取默认密码
+     *
+     * @return 默认密码
+     */
+
+    private String getUserPass(String mobile) {
+        return mobile.substring(mobile.length() - 6, mobile.length());
     }
 
     /**

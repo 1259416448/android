@@ -2,6 +2,7 @@ package cn.arvix.ontheway.sys.organization.repository;
 
 import cn.arvix.base.common.repository.BaseRepository;
 import cn.arvix.ontheway.sys.organization.entity.Organization;
+import cn.arvix.ontheway.sys.organization.entity.OrganizationType;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
 
@@ -20,5 +21,8 @@ public interface OrganizationRepository extends BaseRepository<Organization, Lon
     @Query("select count(*) from UserOrganizationJob where organization.id =?1 ")
     @QueryHints({@QueryHint(name = "org.hibernate.cacheable", value = "true")})
     Long findUserCountByOrganizationId(Long id);
+
+    @QueryHints({@QueryHint(name = "org.hibernate.cacheable", value = "true")})
+    Organization findByType(OrganizationType type);
 
 }

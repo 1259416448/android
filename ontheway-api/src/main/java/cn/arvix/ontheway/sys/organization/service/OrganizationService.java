@@ -191,4 +191,29 @@ public class OrganizationService extends BaseServiceImpl<Organization, Long> {
         return JsonUtil.getSuccess(MessageUtils.message(CommonContact.OPTION_SUCCESS), CommonContact.OPTION_SUCCESS);
     }
 
+    /**
+     * 创建用户部门
+     */
+    public Organization createUserOrg() {
+        Organization organization = getOrganizationRepository().findByType(OrganizationType.user);
+        if (organization == null) {
+            organization = new Organization();
+            organization.setType(OrganizationType.user);
+            organization.setName("用户部门");
+            organization.setSorter(0f);
+            organization.setShow(Boolean.TRUE);
+            super.save(organization);
+        }
+        return organization;
+    }
+
+    /**
+     * 获取用户部门
+     *
+     * @return 用户部门
+     */
+    public Organization getUserOrg() {
+        return createUserOrg();
+    }
+
 }
