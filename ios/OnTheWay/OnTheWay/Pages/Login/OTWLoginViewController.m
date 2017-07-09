@@ -187,6 +187,7 @@
     if(_phoneNumField.text.isMobileNumber){
         //请求发送验证码接口
         [OTWLoginService sentLoginCode:_phoneNumField.text completion:nil];
+        
         [self openCodeCountdown];
         
     }else{
@@ -217,7 +218,6 @@
             });
             
         }else{
-            
             int seconds = time % 60;
             dispatch_async(dispatch_get_main_queue(), ^{
                 //设置按钮显示读秒效果
