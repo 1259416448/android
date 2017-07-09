@@ -17,7 +17,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor color_eff1ee];
+    self.view.backgroundColor = [UIColor whiteColor];
     self.navigationController.interactivePopGestureRecognizer.delegate = self;
     WeakSelf(self);
     _customNavigationBar = [[OTWCustomNavigationBar alloc] init];
@@ -28,7 +28,7 @@
     _customNavigationBar.rightButtonClicked = ^{
         [weakself rightNavigaionButtonClicked];
     };
-    
+    _customNavigationBar.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:_customNavigationBar];
     
 }

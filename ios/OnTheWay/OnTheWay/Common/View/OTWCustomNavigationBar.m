@@ -25,7 +25,10 @@
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
-    self = [super initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 75)];
+    self = [super initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 64)];
+    self.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.layer.shadowOffset = CGSizeMake(0, 1);
+    self.layer.shadowOpacity = 0.1;
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
         [self buildUI];
@@ -66,7 +69,7 @@
     [self addSubview:self.titleLabel];
     CGFloat width = [title sizeWithFont:self.titleLabel.font].width;
     CGFloat xOff = (self.Witdh - width)/2;
-    self.titleLabel.frame = CGRectMake(xOff, 36.5, width, 20);
+    self.titleLabel.frame = CGRectMake(xOff, 30, width, 20);
 }
 
 - (void)setLeftImage:(UIImage *)leftImage {
@@ -78,7 +81,7 @@
     CGFloat wid = leftImage.size.width;
     CGFloat hei = leftImage.size.height;
     
-    self.leftButton.frame = CGRectMake(0, 39, wid + 23.5 , hei + 6);
+    self.leftButton.frame = CGRectMake(0, 29, wid + 23.5 , hei + 6);
     self.leftButton.imageEdgeInsets = UIEdgeInsetsMake(3, 13.5, 3, 10);
 }
 
@@ -171,8 +174,8 @@
 - (UILabel*)titleLabel {
     if (!_titleLabel) {
         _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 0, 20)];
-        _titleLabel.font = [UIFont systemFontOfSize:18];
-        _titleLabel.textColor = [UIColor whiteColor];
+        _titleLabel.font = [UIFont systemFontOfSize:17];
+        _titleLabel.textColor = [UIColor color_202020];
     }
     return _titleLabel;
 }

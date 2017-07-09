@@ -117,6 +117,7 @@
 		D7F6B0B21F1089400013090A /* OTWLoginService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWLoginService.m; sourceTree = "<group>"; };
 		D7F6B0B41F10AA2D0013090A /* OTWLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWLoginViewController.h; sourceTree = "<group>"; };
 		D7F6B0B51F10AA2D0013090A /* OTWLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWLoginViewController.m; sourceTree = "<group>"; };
+		DD02EB7B1F125A3000841AB5 /* OTWPersonalEditNickname.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPersonalEditNickname.h; sourceTree = "<group>"; };
 		DD14F2391F1132FE004DFE4A /* NSString+RegexCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+RegexCategory.h"; path = "NSTring/NSString+RegexCategory.h"; sourceTree = "<group>"; };
 		DD14F23A1F1132FE004DFE4A /* NSString+RegexCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+RegexCategory.m"; path = "NSTring/NSString+RegexCategory.m"; sourceTree = "<group>"; };
 		DD14F23E1F113654004DFE4A /* HmacUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HmacUtils.h; sourceTree = "<group>"; };
@@ -502,6 +503,7 @@
 			children = (
 				D7F6B0731F0DD3D90013090A /* OTWPersonalViewController.h */,
 				D7F6B0741F0DD3D90013090A /* OTWPersonalViewController.m */,
+				DD02EB7B1F125A3000841AB5 /* OTWPersonalEditNickname.h */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
