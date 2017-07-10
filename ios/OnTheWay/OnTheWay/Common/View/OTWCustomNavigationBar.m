@@ -107,7 +107,7 @@
     [self addSubview:self.rightButton];
     
     CGFloat width = [rightTitle sizeWithFont:self.rightButton.titleLabel.font].width;
-    self.rightButton.frame = CGRectMake(self.Witdh - width - 17.5, 40, width + 17.5, 16);
+    self.rightButton.frame = CGRectMake(SCREEN_WIDTH - width - 18, 30, width + 10, 22.5);
     
 }
 
@@ -120,7 +120,7 @@
     [self addSubview:self.leftButton];
     
     CGFloat width = [leftTitle sizeWithFont:self.leftButton.titleLabel.font].width;
-    self.rightButton.frame = CGRectMake(13.5, 40, width, 16);
+    self.rightButton.frame = CGRectMake(13.5, 31, width, 16);
 }
 
 #pragma mark public method
@@ -183,7 +183,7 @@
 - (UIButton*)leftButton {
     if (!_leftButton) {
         _leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        _leftButton.titleLabel.font = [UIFont systemFontOfSize:14];
+        _leftButton.titleLabel.font = [UIFont systemFontOfSize:16];
         [_leftButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_leftButton addTarget:self action:@selector(leftButtonClickedAction) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -193,8 +193,8 @@
 - (UIButton*)rightButton {
     if (!_rightButton) {
         _rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        _rightButton.titleLabel.font = [UIFont systemFontOfSize:14];
-        [_rightButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        _rightButton.titleLabel.font = [UIFont systemFontOfSize:16];
+        [_rightButton setTitleColor:[UIColor color_e50834] forState:UIControlStateNormal];
         [_rightButton addTarget:self action:@selector(rightButtonClickedAction) forControlEvents:UIControlEventTouchUpInside];
     }
     return _rightButton;

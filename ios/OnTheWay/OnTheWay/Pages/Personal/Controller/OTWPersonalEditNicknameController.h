@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OTWPersonalEditNickname : UIViewController
+@interface OTWPersonalEditNicknameController : OTWBaseViewController
 
 @end

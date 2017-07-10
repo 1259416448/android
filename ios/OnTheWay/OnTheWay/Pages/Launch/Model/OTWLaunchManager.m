@@ -9,11 +9,15 @@
 #import "OTWLaunchManager.h"
 #import "OTWLoginViewController.h"
 #import "OTWRootViewController.h"
+#import "OTWPersonalInfoController.h"
+#import "OTWPersonalEditNicknameController.h"
 
 @interface OTWLaunchManager ()
 
 @property (nonatomic, strong) UINavigationController *loginViewController;
+@property (nonatomic, strong) UINavigationController *personalEditNicknameController;
 @property (nonatomic, strong) OTWRootViewController *mainTabViewController;
+@property (nonatomic,strong) UINavigationController *personalInfoController;
 
 @end
 
@@ -40,6 +44,20 @@
     });
 }
 
+- (void)showPersonalEditNicknameView
+{
+    GCDMain(^{
+        [[UIApplication sharedApplication].keyWindow setRootViewController:self.personalEditNicknameController];
+        self.mainTabViewController = nil;
+    });
+}
+- (void)showPersonalInfoView{
+    GCDMain(^{
+        [[UIApplication sharedApplication].keyWindow setRootViewController:self.personalInfoController];
+        self.mainTabViewController = nil;
+    })
+}
+
 - (void)showMainTabView
 {
     GCDMain(^{
@@ -58,6 +76,24 @@
     }
     
     return _loginViewController;
+}
+
+- (UINavigationController*)personalEditNicknameController
+{
+    if(!_personalEditNicknameController){
+        OTWPersonalEditNicknameController *personalEditNicknameVC = [[OTWPersonalEditNicknameController alloc] init];
+        _personalEditNicknameController = [[UINavigationController alloc] initWithRootViewController:personalEditNicknameVC];
+    }
+    return _personalEditNicknameController;
+}
+
+
+- (UINavigationController*)personalInfoController{
+    if(!_personalInfoController){
+        OTWPersonalInfoController *personalInfoVC = [[OTWPersonalInfoController alloc] init];
+        _personalInfoController = [[UINavigationController alloc] initWithRootViewController:personalInfoVC];
+    }
+    return _personalInfoController;
 }
 
 - (OTWRootViewController*)mainTabViewController

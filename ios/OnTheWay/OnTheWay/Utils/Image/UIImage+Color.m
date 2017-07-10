@@ -138,5 +138,4 @@
     UIGraphicsEndImageContext();
     return  result;
 }
-
 @end

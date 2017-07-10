@@ -14,5 +14,7 @@
 
 - (void)showMainTabView;
 - (void)showLoginView;
+- (void)showPersonalEditNicknameView;
+- (void)showPersonalInfoView;
 
 @end
