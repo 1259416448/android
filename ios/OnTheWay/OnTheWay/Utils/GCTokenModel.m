@@ -20,4 +20,21 @@
     return self;
 }
 
+- (instancetype)initWithCoder:(NSCoder *)coder{
+    self = [super self];
+    if(self){
+        self.xAuthToken = [coder decodeObjectForKey:@"xAuthToken"];
+        self.rememberMe = [coder decodeObjectForKey:@"rememberMe"];
+        self.rememberMeTime = [coder decodeObjectForKey:@"rememberMeTime"];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder{
+    [coder encodeObject:_xAuthToken forKey:@"xAuthToken"];
+    [coder encodeObject:_rememberMe forKey:@"rememberMe"];
+    [coder encodeObject:_rememberMeTime forKey:@"rememberMeTime"];
+}
+
+
 @end

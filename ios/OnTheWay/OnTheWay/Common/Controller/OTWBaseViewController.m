@@ -8,6 +8,7 @@
 
 #import "OTWBaseViewController.h"
 #import "OTWCustomNavigationBar.h"
+#import <MBProgressHUD.h>
 
 @interface OTWBaseViewController ()<UIGestureRecognizerDelegate>
 
@@ -107,6 +108,24 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)netWorkErrorTips:(NSError*)error{
+    DLog(@"请求失败>>>>：%@",error);
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    hud.mode = MBProgressHUDModeText;
+    if(error.code == -1004){
+        hud.label.text =@"服务端繁忙，请稍后";
+    }else if(error.code == -1001){
+        hud.label.text =@"请求超时";
+    }else if(error.code== -1009){
+        hud.label.text =@"网络访问错误";
+    }else{
+        hud.label.text =@"服务端繁忙，请稍后";
+    }
+    hud.label.textColor = [UIColor whiteColor];
+    hud.bezelView.color = [UIColor blackColor];
+    [hud hideAnimated:YES afterDelay:2];
 }
 
 @end

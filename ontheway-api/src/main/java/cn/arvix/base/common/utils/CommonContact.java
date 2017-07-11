@@ -132,7 +132,7 @@ public interface CommonContact {
     String AUTHORIZATION_CACHE = "authorizationCache";
 
     //用户头像裁剪参数
-    String USER_HEAD_IMG_FIX = "imageView2/1/w/80/h/80";
+    String USER_HEAD_IMG_FIX = "imageView2/1/w/160/h/160";
 
     //必填参数丢失
     String REQUIRE_PARAMS_MISS = "require.params.miss";

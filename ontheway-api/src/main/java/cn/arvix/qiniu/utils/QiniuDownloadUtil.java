@@ -98,4 +98,12 @@ public class QiniuDownloadUtil {
         String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL) + "/";
         return getDownloadToken(urlFix + url, time);
     }
+
+    /**
+     * 获取共有文件下载地址
+     */
+    public String getNormalDownload(String url){
+        String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL) + "/";
+        return urlFix+url;
+    }
 }

@@ -206,7 +206,7 @@ public class User extends BaseEntity<Long> implements LogicDeleteable {
             QiniuDownloadUtil qiniuDownloadUtil = SpringUtils.getBean(QiniuDownloadUtil.class);
             //这里用户头像有效时间设置长一些
             return qiniuDownloadUtil.
-                    getDownloadTokenAuto(headImg + (headImg.contains("?") ? "|" : "?") + CommonContact.USER_HEAD_IMG_FIX, 360000);
+                    getNormalDownload(headImg + (headImg.contains("?") ? "|" : "?") + CommonContact.USER_HEAD_IMG_FIX);
         }
         return headImg;
     }
@@ -217,7 +217,7 @@ public class User extends BaseEntity<Long> implements LogicDeleteable {
             QiniuDownloadUtil qiniuDownloadUtil = SpringUtils.getBean(QiniuDownloadUtil.class);
             //这里用户头像有效时间设置长一些
             return qiniuDownloadUtil.
-                    getDownloadTokenAuto(headImgYuan, 360000);
+                    getNormalDownload(headImgYuan);
         }
         return headImgYuan;
     }
