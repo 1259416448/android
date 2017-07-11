@@ -12,6 +12,7 @@
 #import "OTWPersonalInfoController.h"
 #import "OTWPersonalEditNicknameController.h"
 #import "OTWPersonalSiteController.h"
+#import "OTWPersonalMyController.h"
 
 @interface OTWLaunchManager ()
 
@@ -20,6 +21,7 @@
 @property (nonatomic, strong) OTWRootViewController *mainTabViewController;
 @property (nonatomic,strong) UINavigationController *personalInfoController;
 @property (nonatomic,strong) UINavigationController *personalSiteController;
+@property (nonatomic,strong) UINavigationController *personalMyController;
 
 @end
 
@@ -66,6 +68,12 @@
     })
 }
 
+- (void)showPersonalMyView{
+    GCDMain(^{
+        [[UIApplication sharedApplication].keyWindow setRootViewController:self.personalMyController];
+        self.mainTabViewController = nil;
+    })
+}
 - (void)showMainTabView
 {
     GCDMain(^{
@@ -110,6 +118,14 @@
         _personalSiteController = [[UINavigationController alloc] initWithRootViewController:personaSiteVC];
     }
     return _personalSiteController;
+}
+
+- (UINavigationController*)personalMyController{
+    if(!_personalMyController){
+        OTWPersonalMyController *personaMyVC = [[OTWPersonalMyController alloc] init];
+        _personalMyController = [[UINavigationController alloc] initWithRootViewController:personaMyVC];
+    }
+    return _personalMyController;
 }
 
 - (OTWRootViewController*)mainTabViewController

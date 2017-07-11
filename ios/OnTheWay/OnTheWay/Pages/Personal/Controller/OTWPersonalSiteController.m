@@ -129,6 +129,8 @@
         _personalSiteTableView.dataSource = self;
         _personalSiteTableView.delegate = self;
         _personalSiteTableView.backgroundColor = [UIColor color_f4f4f4];
+        // 设置边框颜色
+        _personalSiteTableView.separatorColor= [UIColor color_d5d5d5];
     }
     return _personalSiteTableView;
 }
