@@ -57,7 +57,8 @@
     personalInfoTableView.dataSource = self;
     personalInfoTableView.delegate = self;
     personalInfoTableView.backgroundColor = [UIColor color_f4f4f4];
-    
+    // 设置边框颜色
+    personalInfoTableView.separatorColor= [UIColor color_d5d5d5];
     [self.view addSubview:personalInfoTableView];
     
 }

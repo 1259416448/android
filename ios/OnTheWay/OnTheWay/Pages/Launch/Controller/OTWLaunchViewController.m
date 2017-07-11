@@ -46,6 +46,8 @@
     [[OTWLaunchManager sharedManager] showLoginView];
     //[[OTWLaunchManager sharedManager] showMainTabView];
     //[[OTWLaunchManager sharedManager] showPersonalInfoView];
+    //[[OTWLaunchManager sharedManager] showPersonalSiteView];
+    [[OTWLaunchManager sharedManager] showPersonalMyView];
 }
 
 @end

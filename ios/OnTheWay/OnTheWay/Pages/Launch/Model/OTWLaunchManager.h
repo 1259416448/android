@@ -16,5 +16,7 @@
 - (void)showLoginView;
 - (void)showPersonalEditNicknameView;
 - (void)showPersonalInfoView;
+- (void)showPersonalSiteView;
+- (void)showPersonalMyView;
 
 @end
