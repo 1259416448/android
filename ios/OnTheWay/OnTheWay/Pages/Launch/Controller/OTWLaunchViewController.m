@@ -45,7 +45,8 @@
     //[[OTWLaunchManager sharedManager] showPersonalEditNicknameView];
     //[[OTWLaunchManager sharedManager] showLoginView];
     //[[OTWLaunchManager sharedManager] showMainTabView];
-    [[OTWLaunchManager sharedManager] showPersonalInfoView];
+    //[[OTWLaunchManager sharedManager] showPersonalInfoView];
+    [[OTWLaunchManager sharedManager] showPersonalSiteView];
 }
 
 @end

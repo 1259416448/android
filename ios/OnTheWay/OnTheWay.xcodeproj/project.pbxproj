@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		18B034B91F139C1500F53461 /* OTWPersonalSiteController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B034B81F139C1500F53461 /* OTWPersonalSiteController.m */; };
 		D7F6AFF61F0D32FB0013090A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6AFF51F0D32FB0013090A /* main.m */; };
 		D7F6AFF91F0D32FB0013090A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6AFF81F0D32FB0013090A /* AppDelegate.m */; };
 		D7F6B0011F0D32FB0013090A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D7F6B0001F0D32FB0013090A /* Assets.xcassets */; };
@@ -63,6 +64,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		18B034B71F139BE000F53461 /* OTWPersonalSiteController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTWPersonalSiteController.h; sourceTree = "<group>"; };
+		18B034B81F139C1500F53461 /* OTWPersonalSiteController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPersonalSiteController.m; sourceTree = "<group>"; };
 		45C2D5CA9B6813E8ACAF6178 /* libPods-OnTheWay.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnTheWay.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B8637730B7A7E4B6ADD9FEE /* Pods-OnTheWay.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnTheWay.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OnTheWay/Pods-OnTheWay.debug.xcconfig"; sourceTree = "<group>"; };
 		68C4FF114BC411D8C8AADB56 /* Pods-OnTheWay.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnTheWay.release.xcconfig"; path = "Pods/Target Support Files/Pods-OnTheWay/Pods-OnTheWay.release.xcconfig"; sourceTree = "<group>"; };
@@ -512,6 +515,8 @@
 				DDABAA4A1F12801E00010532 /* OTWPersonalEditNicknameController.m */,
 				DDB8C2981F1320990091E7B0 /* OTWPersonalInfoController.h */,
 				DDB8C2991F1320B90091E7B0 /* OTWPersonalInfoController.m */,
+				18B034B71F139BE000F53461 /* OTWPersonalSiteController.h */,
+				18B034B81F139C1500F53461 /* OTWPersonalSiteController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -828,6 +833,7 @@
 				DDABAA4B1F12801E00010532 /* OTWPersonalEditNicknameController.m in Sources */,
 				D7F6B0431F0D39160013090A /* README.md in Sources */,
 				D7F6B09D1F0F75770013090A /* OTWLaunchManager.m in Sources */,
+				18B034B91F139C1500F53461 /* OTWPersonalSiteController.m in Sources */,
 				D7F6B03D1F0D39060013090A /* README.md in Sources */,
 				D7F6B0751F0DD3D90013090A /* OTWPersonalViewController.m in Sources */,
 				DD14F23B1F1132FE004DFE4A /* NSString+RegexCategory.m in Sources */,
