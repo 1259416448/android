@@ -8,6 +8,7 @@
 
 #import "OTWPersonalInfoController.h"
 #import "OTWCustomNavigationBar.h"
+#import <AFNetworking/UIImageView+AFNetworking.h>
 
 @interface OTWPersonalInfoController() <UITableViewDataSource,UITableViewDelegate>
 
@@ -21,9 +22,6 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    self.customNavigationBar.leftButtonClicked=^{
-        DLog(@"点击了返回按钮");
-    };
     _arrowImge = [UIImage imageNamed:@"arrow_right"];
     [self buildUI];
     [self initData];
@@ -105,47 +103,47 @@
     
     if(!cell){
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
-    }
-    cell.textLabel.text =_tableViewLabelArray[indexPath.row] ;
-    cell.textLabel.textColor = [UIColor color_202020];
-    cell.textLabel.font = [UIFont systemFontOfSize:17];
-    cell.backgroundColor = [UIColor whiteColor];
-    
-    if(indexPath.row != 4){
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    }else{
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    }
-    if(indexPath.row == 0){
-        UIView *personalHeadImageBGView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 73, 55)];
-        NSURL *url = [NSURL URLWithString:@"https://sources.cc520.me/share/img/o_1b4t0srq81sm31g699lk1ob1e7r3t4.jpg?imageView2/1/w/78/h/78"];
-        UIImageView *personalHeadImageView = [[UIImageView alloc] init];
-        personalHeadImageView.frame = CGRectMake(0, 0, 55, 55);
-        personalHeadImageView.layer.cornerRadius = personalHeadImageView.Witdh/2.0;
-        personalHeadImageView.layer.masksToBounds = YES;
-        UIImage *personalHeadImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
-        [personalHeadImageView setImage:personalHeadImage];
-        
-        UIImageView *backImageView = [[UIImageView alloc] initWithFrame:CGRectMake(55+10, (personalHeadImageBGView.Height-15)/2 , 8, 15)];
-        
-        [backImageView setImage: _arrowImge ];
-        
-        [personalHeadImageBGView addSubview: backImageView];
-        
-        [personalHeadImageBGView addSubview:personalHeadImageView];
-        
-        cell.accessoryView = personalHeadImageBGView;
-    }else{
-        cell.detailTextLabel.text = @"测试";
-        cell.detailTextLabel.textColor = [UIColor color_202020];
+        cell.textLabel.text =_tableViewLabelArray[indexPath.row] ;
+        cell.textLabel.textColor = [UIColor color_202020];
+        cell.textLabel.font = [UIFont systemFontOfSize:17];
+        cell.backgroundColor = [UIColor whiteColor];
         
         if(indexPath.row != 4){
-            UIImageView *backImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0 , 8, 15)];
-            [backImageView setImage: _arrowImge ];
-            cell.accessoryView =backImageView;
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        }else{
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
+        if(indexPath.row == 0){
+            UIView *personalHeadImageBGView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 73, 55)];
+            NSURL *url = [NSURL URLWithString:@"https://sources.cc520.me/share/img/o_1b4t0srq81sm31g699lk1ob1e7r3t4.jpg?imageView2/1/w/78/h/78"];
+            UIImageView *personalHeadImageView = [[UIImageView alloc] init];
+            personalHeadImageView.frame = CGRectMake(0, 0, 55, 55);
+            personalHeadImageView.layer.cornerRadius = personalHeadImageView.Witdh/2.0;
+            personalHeadImageView.layer.masksToBounds = YES;
+            //UIImage *personalHeadImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
+            [personalHeadImageView setImageWithURL:url];
+            
+            UIImageView *backImageView = [[UIImageView alloc] initWithFrame:CGRectMake(55+10, (personalHeadImageBGView.Height-15)/2 , 8, 15)];
+            
+            [backImageView setImage: _arrowImge ];
+            
+            [personalHeadImageBGView addSubview: backImageView];
+            
+            [personalHeadImageBGView addSubview:personalHeadImageView];
+            
+            cell.accessoryView = personalHeadImageBGView;
+        }else{
+            cell.detailTextLabel.text = @"测试";
+            cell.detailTextLabel.textColor = [UIColor color_202020];
+            
+            if(indexPath.row != 4){
+                UIImageView *backImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0 , 8, 15)];
+                [backImageView setImage: _arrowImge ];
+                cell.accessoryView =backImageView;
+            }
+        }
+
     }
-    
     
     return cell;
 }
