@@ -27,9 +27,6 @@
 @implementation OTWPersonalSiteController
 -(void)viewDidLoad {
     [super viewDidLoad];
-    self.customNavigationBar.leftButtonClicked=^{
-        DLog(@"点击了后退按钮");
-    };
      _arrowImge = [UIImage imageNamed:@"arrow_right"];
     [self buildUI];
     [self initData];

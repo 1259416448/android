@@ -1,13 +1,13 @@
 //
-//  OTWPersonalViewController.h
+//  OTWPersonalMyController.h
 //  OnTheWay
 //
-//  Created by machunyan on 2017/7/6.
+//  Created by apple on 2017/7/11.
 //  Copyright © 2017年 WeiHuan. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@interface OTWPersonalViewController : UIViewController
+@interface OTWPersonalViewController : OTWBaseViewController
 
 @end

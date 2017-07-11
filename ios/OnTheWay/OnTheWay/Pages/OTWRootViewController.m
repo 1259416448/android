@@ -22,6 +22,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    
+    
     NSDictionary * titleAttri = @{
                                   NSFontAttributeName: [UIFont systemFontOfSize:18],
                                   NSForegroundColorAttributeName:[UIColor whiteColor]
@@ -71,12 +73,23 @@
     OTWPersonalViewController *personalVC = [[OTWPersonalViewController alloc] init];
     
     UINavigationController * personalNav = [[UINavigationController alloc] initWithRootViewController:personalVC];
-    personalNav.tabBarItem.image = [UIImage imageNamed:@"tab_yingyong"];
-    personalNav.tabBarItem.selectedImage = [UIImage imageNamed:@"tab_yingyong_xuan"];
+    personalNav.tabBarItem.image = [UIImage imageNamed:@"wode"];
+    personalNav.tabBarItem.selectedImage = [[UIImage imageNamed:@"wode_click"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     personalNav.tabBarItem.title = @"我的";
+    
     [personalNav setNavigationBarHidden:YES animated:NO];
   
     self.viewControllers = @[findNav, footprintsNav, arNav, newsNav, personalNav];
+    
+    [self.tabBar setBackgroundColor:[UIColor whiteColor]];
+    [self.tabBar setTintColor:[UIColor color_202020]];
+    
+    self.tabBar.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.tabBar.layer.shadowOffset = CGSizeMake(0, -1);
+    self.tabBar.layer.shadowOpacity = 0.1;
+    self.tabBar.layer.borderColor = [UIColor clearColor].CGColor;
+    self.tabBar.layer.borderWidth = 0;
+    
 }
 
 - (void)didReceiveMemoryWarning {
