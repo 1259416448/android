@@ -22,6 +22,10 @@
 @property (nonatomic,strong) UIButton *personalSiteOutButton;
 
 @property (nonatomic,strong) UIView *underLineBottomView;
+
+@property(nonatomic,strong) UIView *personalSiteTableViewFooter;
+
+@property(nonatomic,strong) UIView *contentView;
 @end
 
 @implementation OTWPersonalSiteController
@@ -57,15 +61,9 @@
     //UITableView 列表
      [self.view addSubview:self.personalSiteTableView];
     
-    //第一条线
-    [self.view addSubview:self.underLineTopView];
-    
-    // 退出button
-    [self.view addSubview:self.personalSiteOutButton];
-    
+    //设置tableview的第一行显示内容
+    self.personalSiteTableView.tableFooterView=self.personalSiteTableViewFooter;
 
-    //第二条线
-     [self.view addSubview:self.underLineBottomView];
   
 }
 
@@ -137,7 +135,7 @@
 
 -(UIView*)underLineTopView{
     if(!_underLineTopView){
-        _underLineTopView = [[UIView alloc] initWithFrame:CGRectMake(0, 270, SCREEN_WIDTH, 0.5)];
+        _underLineTopView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 0.5)];
         _underLineTopView.backgroundColor = [UIColor color_d5d5d5];
     }
     return _underLineTopView;
@@ -147,7 +145,7 @@
     if(!_personalSiteOutButton){
         _personalSiteOutButton = [UIButton buttonWithType:UIButtonTypeSystem];
         _personalSiteOutButton.backgroundColor = [UIColor whiteColor];
-        _personalSiteOutButton.frame = CGRectMake(0, 270.5, SCREEN_WIDTH, 50);
+        _personalSiteOutButton.frame = CGRectMake(0, 0, SCREEN_WIDTH, 50);
         [_personalSiteOutButton setTitle:@"退出登录" forState:UIControlStateNormal];
         [_personalSiteOutButton setTitleColor:[UIColor color_e50834] forState:UIControlStateNormal];
         _personalSiteOutButton.titleLabel.font = [UIFont systemFontOfSize:16];
@@ -159,11 +157,39 @@
 
 -(UIView*)underLineBottomView{
     if(!_underLineBottomView){
-        _underLineBottomView = [[UIView alloc] initWithFrame:CGRectMake(0, 271+50, SCREEN_WIDTH, 0.5)];
+        _underLineBottomView = [[UIView alloc] initWithFrame:CGRectMake(0, 50, SCREEN_WIDTH, 0.5)];
         _underLineBottomView.backgroundColor = [UIColor color_d5d5d5];
     }
     return _underLineBottomView;
 }
 
+-(UIView*)personalSiteTableViewFooter{
+    if(!_personalSiteTableViewFooter){
+        //设置header的背景
+        _personalSiteTableViewFooter=[[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 50)];
+        _personalSiteTableViewFooter.backgroundColor=[UIColor color_f4f4f4];
+        
+        //设置header 内容的背景
+        [_personalSiteTableViewFooter addSubview:self.contentView];
+        
+        // 退出button
+        [self.contentView addSubview:self.personalSiteOutButton];
+        
+        //第一条线
+        [self.contentView addSubview:self.underLineTopView];
+        
+        //第二条线
+        [self.contentView addSubview:self.underLineBottomView];
+    }
+    return _personalSiteTableViewFooter;
+}
+
+-(UIView*)contentView{
+    if(!_contentView){
+        _contentView=[[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 50)];
+        _personalSiteTableViewFooter.backgroundColor=[UIColor whiteColor];
+    }
+    return _contentView;
+}
 @end
 
