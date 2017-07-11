@@ -8,6 +8,7 @@
 
 #import "OTWPersonalEditNicknameController.h"
 #import "OTWCustomNavigationBar.h"
+#import "OTWUserModel.h"
 
 @interface OTWPersonalEditNicknameController()
 
@@ -19,16 +20,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    self.customNavigationBar.leftButtonClicked=^{
-        DLog(@"点击了返回按钮");
-    };
     WeakSelf(self);
     self.customNavigationBar.rightButtonClicked=^{
         DLog(@"点击了保存按钮");
         [weakself saveNickname];
     };
-    
     [self buildUI];
 }
 
@@ -54,12 +50,7 @@
     [self.view addSubview:nicknameEditView];
     
     //nickname输入框
-    _nicknameTextField = [[UITextField alloc] initWithFrame:CGRectMake(15, 15, SCREEN_WIDTH-15*2, 20)];
-    _nicknameTextField.font = [UIFont systemFontOfSize:16];
-    _nicknameTextField.textColor = [UIColor color_202020];
-    _nicknameTextField.text = @"想一个很长的名字";
-    
-    [nicknameEditView addSubview:_nicknameTextField];
+    [nicknameEditView addSubview:self.nicknameTextField];
     
     //第二条线
     UIView *underLineButtonView = [[UIView alloc] initWithFrame:CGRectMake(0, 74+0.5+50, SCREEN_WIDTH, 0.5)];
@@ -72,6 +63,24 @@
 {
    DLog(@"点击了保存按钮，当前的nickname：%@", self.nicknameTextField.text);
 }
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [self.nicknameTextField resignFirstResponder];
+}
+
+#pragma mark - Setter Getter
+
+-(UITextField*)nicknameTextField{
+    if(!_nicknameTextField){
+        _nicknameTextField = [[UITextField alloc] initWithFrame:CGRectMake(15, 15, SCREEN_WIDTH-15*2, 20)];
+        _nicknameTextField.font = [UIFont systemFontOfSize:16];
+        _nicknameTextField.textColor = [UIColor color_202020];
+        _nicknameTextField.text = [OTWUserModel shared].name;
+    }
+    return _nicknameTextField;
+}
+
 
 @end
 

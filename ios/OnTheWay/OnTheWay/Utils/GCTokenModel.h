@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface GCTokenModel : NSObject
+@interface GCTokenModel : NSObject <NSCoding>
 
 @property(nonatomic,copy)NSString *xAuthToken;
 @property(nonatomic,copy)NSString *rememberMe;

@@ -11,6 +11,7 @@
 #import "NSString+RegexCategory.h"
 #import "OTWLoginService.h"
 #import "OTWCustomNavigationBar.h"
+#import "OTWUserModel.h"
 
 //test
 #import "OTWPersonalInfoController.h"
@@ -40,6 +41,9 @@
 @property (nonatomic,strong) UIButton *wechatLoginButton;
 @property (nonatomic,strong) UIButton *qqLoginButton;
 @property (nonatomic,strong) UIButton *weiboLoginButton;
+@property (nonatomic,strong) UIActivityIndicatorView *sentCodebuttonActivityIndicatorView;
+@property (nonatomic,strong) UILabel *messageTipsLabel;
+
 
 @end
 
@@ -117,6 +121,9 @@
     //最下面的线
     [self.textFeildBGView addSubview:self.underLineThreeView];
     
+    //普通操作提示
+    [self.view addSubview:self.messageTipsLabel];
+    
     //登陆按钮
     [self.view addSubview:self.loginButton];
     
@@ -166,49 +173,87 @@
 - (void)loginButtonClick
 {
     DLog(@"登录");
-    OTWPersonalInfoController *personalInfoVC = [[OTWPersonalInfoController alloc] init];
-    [self.navigationController pushViewController:personalInfoVC animated:YES];
+    //验证 验证手机号 和 输入的验证码
     
+    self.messageTipsLabel.text = @"";
+    
+    if(!self.phoneNumField.text.isMobileNumber){
+        DLog(@"输入的手机号码错误！");
+        self.messageTipsLabel.text = @"输入的手机号错误";
+        return ;
+        
+    }
+    if(self.codeNumFileld.text.length!=6){
+        DLog(@"输入的合法验证码！");
+        self.messageTipsLabel.text = @"请输入合法验证码";
+        return ;
+    }
+    //关闭键盘
+    [self.phoneNumField resignFirstResponder];
+    [self.codeNumFileld resignFirstResponder];
+    
+    //登陆按钮变更为登陆中
+    [self.loginButton setTitle:@"登录中..." forState:UIControlStateNormal];
+    self.loginButton.userInteractionEnabled = NO;
+    //请求用户登陆接口
+    [OTWLoginService loginRquest:_phoneNumField.text password:_codeNumFileld.text completion:^(id result, NSError *error) {
+        if(result){
+            if([[NSString stringWithFormat:@"%@", result[@"code"]] isEqualToString:@"0"]){
+                //保存用户信息
+                [OTWUserModel shared].userId = result[@"body"][@"id"];
+                [OTWUserModel shared].gender = result[@"body"][@"gender"];
+                [OTWUserModel shared].headImgYuan = result[@"body"][@"headImgYuan"];
+                [OTWUserModel shared].username = result[@"body"][@"username"];
+                [OTWUserModel shared].mobilePhoneNumber = result[@"body"][@"mobilePhoneNumber"];
+                [OTWUserModel shared].headImg = result[@"body"][@"headImg"];
+                [OTWUserModel shared].name = result[@"body"][@"name"];
+                [[OTWUserModel shared] dump];
+                //登陆成功
+                OTWPersonalInfoController *personalInfoVC = [[OTWPersonalInfoController alloc] init];
+                [self.navigationController pushViewController:personalInfoVC animated:YES];
+            }else{
+                [self.loginButton setTitle:@"登陆" forState:UIControlStateNormal];
+                self.loginButton.userInteractionEnabled = YES;
+                self.messageTipsLabel.text = result[@"message"];
+            }
+        }else{
+            [self netWorkErrorTips:error];
+            [self.loginButton setTitle:@"登陆" forState:UIControlStateNormal];
+            self.loginButton.userInteractionEnabled = YES;
+        }
+    }];
 }
 
 #pragma mark - Private methods codeSentButtonClick
 - (void)codeSentButtonClick{
     DLog(@"发送验证码");
-    //验证手机号是否合法
-    
-    // MBProgressHUD *hud = [[MBProgressHUD alloc] init];
-    
-    
-    //[self.view addSubview:hud];
-    // hud.label.font = [UIFont systemFontOfSize:13];
-    // hud.label.text = @"Loading...";
-    
-    // [hud showAnimated:YES];
-    
-    // [hud hideAnimated:YES afterDelay:5];
-    
-    
-    //[self openCodeCountdown];
-    
     //验证手机号是否合法，合法调用后台接口，发送手机验证码
     
     DLog(@"mobile:%@",_phoneNumField.text);
     
     if(_phoneNumField.text.isMobileNumber){
-        
-        //[MBProgressHUD showHUDAddedTo:self.codeSentButton animated:YES];
-        
+        self.messageTipsLabel.text = @"";
+        [self.codeSentButton setTitle:@"" forState:UIControlStateNormal];
+        [self.sentCodebuttonActivityIndicatorView startAnimating];
+        [self.phoneNumField resignFirstResponder];
         //请求发送验证码接口
-        [OTWLoginService sentLoginCode:_phoneNumField.text completion:nil];
-        
-        [self openCodeCountdown];
-        
+        [OTWLoginService sentLoginCode:_phoneNumField.text completion:^(id result, NSError *error){
+            [self.sentCodebuttonActivityIndicatorView stopAnimating];
+            if(result){ //请求成功，需要判断code 是否等于 0
+                if([[NSString stringWithFormat:@"%@", result[@"code"]] isEqualToString:@"0"]){
+                    [self openCodeCountdown];
+                }else{
+                    [self.codeSentButton setTitle:@"获取验证码" forState:UIControlStateNormal];
+                    self.messageTipsLabel.text = result[@"message"];
+                }
+            }else{ //请求失败，弹出请求失败结果
+                [self netWorkErrorTips:error];
+                [self.codeSentButton setTitle:@"获取验证码" forState:UIControlStateNormal];
+            }
+        }];
     }else{
-        DLog(@"输入的手机号码错误！");
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        hud.mode = MBProgressHUDModeAnnularDeterminate;
-        hud.label.text = @"输入的手机号码错误";
-        [hud hideAnimated:YES afterDelay:3];
+        DLog(@"输入的手机号错误！");
+        self.messageTipsLabel.text = @"输入的手机号错误";
     }
 }
 
@@ -250,20 +295,20 @@
 
 #pragma mark - UITextFieldDelegate
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
-{
-    //string 表示当前输入的字符
-    
-    DLog(@"string:%@",string);
-    
-    DLog(@"textField tag:%ld",textField.tag);
-    
-    if (string.length > 11)
-    {
-        return NO;
-    }
-    return YES;
-}
+//- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+//{
+//    //string 表示当前输入的字符
+//
+//    DLog(@"string:%@",string);
+//
+//    DLog(@"textField tag:%ld",textField.tag);
+//
+//    if (string.length > 11)
+//    {
+//        return NO;
+//    }
+//    return YES;
+//}
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
@@ -405,6 +450,10 @@
         [_codeSentButton addTarget:self action:@selector(codeSentButtonClick) forControlEvents:UIControlEventTouchUpInside];
         _codeSentButton.titleLabel.font = [UIFont systemFontOfSize:12];
         _codeSentButton.layer.cornerRadius = 4;
+        self.sentCodebuttonActivityIndicatorView.frame = _codeSentButton.bounds;
+        [_codeSentButton addSubview:self.sentCodebuttonActivityIndicatorView];
+        
+        
     }
     return _codeSentButton;
 }
@@ -412,7 +461,7 @@
 -(UIButton*)loginButton
 {
     if(!_loginButton){
-        _loginButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        _loginButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _loginButton.frame = CGRectMake(30, self.textFeildBGView.MaxY + 50, SCREEN_WIDTH-30*2, 44);
         _loginButton.backgroundColor = [UIColor color_e50834];
         [_loginButton setTitle:@"登录" forState:UIControlStateNormal];
@@ -483,4 +532,22 @@
     return _weiboLoginButton;
 }
 
+-(UIActivityIndicatorView*)sentCodebuttonActivityIndicatorView{
+    if(!_sentCodebuttonActivityIndicatorView){
+        _sentCodebuttonActivityIndicatorView = [[UIActivityIndicatorView alloc] init];
+        [_sentCodebuttonActivityIndicatorView setUserInteractionEnabled:YES]; //点击不传递button事件
+        [_sentCodebuttonActivityIndicatorView setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhite];
+    }
+    return _sentCodebuttonActivityIndicatorView;
+}
+
+-(UILabel*)messageTipsLabel{
+    if(!_messageTipsLabel){
+        _messageTipsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, (224-50)+(50-20)/2, SCREEN_WIDTH, 20)];
+        _messageTipsLabel.textColor = [UIColor color_e50834];
+        _messageTipsLabel.font = [UIFont systemFontOfSize:14];
+        _messageTipsLabel.textAlignment = NSTextAlignmentCenter;
+    }
+    return _messageTipsLabel;
+}
 @end

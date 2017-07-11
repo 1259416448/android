@@ -12,7 +12,7 @@
 #import "AFNetworkActivityIndicatorManager.h"
 
 #ifdef DEBUG
-#define kServerURL @"http://localhost:9100/"
+#define kServerURL @"http://192.168.5.120:9100/"
 #else
 #define kServerURL @""
 #endif
@@ -155,7 +155,7 @@ static BOOL _isOpenLog;   // 是否已开启日志打印
         [self setValue:token.rememberMe forHTTPHeaderField:rememberMeKey];
         [self setValue:token.rememberMeTime.description forHTTPHeaderField:rememberMeTimeKey];
     }
-    return [self GET:URL parameters:parameters responseCache:responseCache success:success failure:failure];
+    return [self GET:[self configeURL:URL] parameters:parameters responseCache:responseCache success:success failure:failure];
 }
 
 + (__kindof NSURLSessionTask *)doPOST:(NSString *)URL
@@ -163,7 +163,7 @@ static BOOL _isOpenLog;   // 是否已开启日志打印
                             success:(OTWHttpRequestSuccess)success
                             failure:(PPHttpRequestFailed)failure
 {
-    return [self doPOST:URL parameters:parameters responseCache:nil success:success failure:failure];
+    return [self doPOST:[self configeURL:URL] parameters:parameters responseCache:nil success:success failure:failure];
 }
 
 + (__kindof NSURLSessionTask *)doPOST:(NSString *)URL
@@ -178,7 +178,8 @@ static BOOL _isOpenLog;   // 是否已开启日志打印
         [self setValue:token.rememberMe forHTTPHeaderField:rememberMeKey];
         [self setValue:token.rememberMeTime.description forHTTPHeaderField:rememberMeTimeKey];
     }
-    return [self POST:URL parameters:parameters responseCache:responseCache success:success failure:failure];
+    [self setRequestSerializer:PPRequestSerializerJSON];
+    return [self POST:[self configeURL:URL] parameters:parameters responseCache:responseCache success:success failure:failure];
 }
 
 #pragma mark - 上传文件

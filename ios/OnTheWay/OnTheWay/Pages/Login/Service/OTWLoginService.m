@@ -12,21 +12,23 @@
 
 static NSString *kLoginParams = @"/api/v1/login/sms"; // 登录
 static NSString *kSentLoginCodeParams = @"/api/v1/login/sms/sent/{mobile}";
+static NSString *currentUser = @"/api/v1/login/current/user";
 
 @implementation OTWLoginService
 
 + (void)loginRquest:(NSString*)username password:(NSString*)password completion:(requestCompletionBlock)block
 {
-    NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:
-                         username, @"",
-                         password, @"", nil];
-    
+    NSDictionary *dic = @{@"username":username,@"password":password,@"rememberMe":@"true"};
     [OTWNetworkManager doPOST:kLoginParams parameters:dic success:^(id responseObject) {
-        DLog(@"登录成功:%@", responseObject);
+        //登陆成功，保存用户信息
+        if(block){
+            block(responseObject,nil);
+        }
     } failure:^(NSError *error) {
-        DLog(@"登录失败:%@", error);
+        if(block){
+            block(nil,error);
+        }
     }];
-    
 }
 
 + (void)sentLoginCode:(NSString *)username completion:(requestCompletionBlock)block
@@ -34,15 +36,15 @@ static NSString *kSentLoginCodeParams = @"/api/v1/login/sms/sent/{mobile}";
    //构建后端请求消息摘要
     NSString *digest = [HmacUtils hmac:[@"mobile:" stringByAppendingString:username]  withKey:[CommonContact getDigestKey]];
     DLog(@"digest:%@",digest);
-    
     NSDictionary *params = @{@"digest":digest};
-    
     [OTWNetworkManager doGET:[kSentLoginCodeParams stringByReplacingOccurrencesOfString:@"{mobile}" withString:username] parameters:params success:^(id responseObject) {
-        //打印返回的数据
-        DLog(@"执行结果:%@", responseObject);
-
+        if(block){
+            block(responseObject,nil);
+        }
     } failure:^(NSError *error) {
-        
+        if(block){
+            block(nil,error);
+        }
     }];
     
 }

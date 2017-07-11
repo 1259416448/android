@@ -34,4 +34,6 @@
 - (void)setCustomNavigationRightView:(UIView*)view;
 - (void)setCustomNavigationCenterView:(UIView*)view;
 
+- (void)netWorkErrorTips:(NSError*)error;
+
 @end
