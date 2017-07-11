@@ -15,13 +15,20 @@
 
 @property (nonatomic,strong) NSMutableArray *tableViewLabelArray;
 
+@property (nonatomic,strong) UITableView *personalSiteTableView;
+
+@property (nonatomic,strong) UIView *underLineTopView;
+
+@property (nonatomic,strong) UIButton *personalSiteOutButton;
+
+@property (nonatomic,strong) UIView *underLineBottomView;
 @end
 
 @implementation OTWPersonalSiteController
 -(void)viewDidLoad {
     [super viewDidLoad];
     self.customNavigationBar.leftButtonClicked=^{
-        DLog(@"点击了关闭按钮");
+        DLog(@"点击了后退按钮");
     };
      _arrowImge = [UIImage imageNamed:@"arrow_right"];
     [self buildUI];
@@ -48,34 +55,18 @@
     self.view.backgroundColor=[UIColor color_f4f4f4];
     
     //UITableView 列表
-    UITableView *personalSiteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 65,SCREEN_WIDTH, SCREEN_HEIGHT-74) style:UITableViewStyleGrouped];
-    personalSiteTableView.dataSource = self;
-    personalSiteTableView.delegate = self;
-    personalSiteTableView.backgroundColor = [UIColor color_f4f4f4];
-    
-    [self.view addSubview:personalSiteTableView];
+     [self.view addSubview:self.personalSiteTableView];
     
     //第一条线
-    UIView *underLineTopView = [[UIView alloc] initWithFrame:CGRectMake(0, 270, SCREEN_WIDTH, 0.5)];
-    underLineTopView.backgroundColor = [UIColor color_d5d5d5];
-    [self.view addSubview:underLineTopView];
+    [self.view addSubview:self.underLineTopView];
     
     // 退出button
-    UIButton *personalSiteOutButton=[UIButton buttonWithType:UIButtonTypeSystem];
-    personalSiteOutButton.backgroundColor=[UIColor whiteColor];
-    personalSiteOutButton.frame = CGRectMake(0, 270.5, SCREEN_WIDTH, 50);
-    [personalSiteOutButton setTitle:@"退出登录" forState:UIControlStateNormal];
-    [personalSiteOutButton setTitleColor:[UIColor color_e50834] forState:UIControlStateNormal];
-    personalSiteOutButton.titleLabel.font = [UIFont systemFontOfSize:16];
-    personalSiteOutButton.layer.cornerRadius = 4;
-    [personalSiteOutButton addTarget:self action:@selector(OutButtonClick) forControlEvents:UIControlEventTouchUpInside];
-//    personalSiteOutButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-    [self.view addSubview:personalSiteOutButton];
+    [self.view addSubview:self.personalSiteOutButton];
+    
 
     //第二条线
-    UIView *underLineBottomView = [[UIView alloc] initWithFrame:CGRectMake(0, 271+50, SCREEN_WIDTH, 0.5)];
-    underLineBottomView.backgroundColor = [UIColor color_d5d5d5];
-    [self.view addSubview:underLineBottomView];
+     [self.view addSubview:self.underLineBottomView];
+  
 }
 
 #pragma mark 这一组里面有多少行
@@ -115,6 +106,7 @@
         cell.textLabel.textColor = [UIColor color_202020];
         cell.textLabel.font = [UIFont systemFontOfSize:17];
         cell.backgroundColor = [UIColor whiteColor];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
         if(indexPath.row != 2){
             UIImageView *backImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0 , 8, 15)];
@@ -131,4 +123,45 @@
     DLog(@"点击退出");
 }
 
+-(UITableView*)personalSiteTableView{
+    if(!_personalSiteTableView){
+        _personalSiteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 65,SCREEN_WIDTH, SCREEN_HEIGHT-74) style:UITableViewStyleGrouped];
+        _personalSiteTableView.dataSource = self;
+        _personalSiteTableView.delegate = self;
+        _personalSiteTableView.backgroundColor = [UIColor color_f4f4f4];
+    }
+    return _personalSiteTableView;
+}
+
+-(UIView*)underLineTopView{
+    if(!_underLineTopView){
+        _underLineTopView = [[UIView alloc] initWithFrame:CGRectMake(0, 270, SCREEN_WIDTH, 0.5)];
+        _underLineTopView.backgroundColor = [UIColor color_d5d5d5];
+    }
+    return _underLineTopView;
+}
+
+-(UIButton*)personalSiteOutButton{
+    if(!_personalSiteOutButton){
+        _personalSiteOutButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        _personalSiteOutButton.backgroundColor = [UIColor whiteColor];
+        _personalSiteOutButton.frame = CGRectMake(0, 270.5, SCREEN_WIDTH, 50);
+        [_personalSiteOutButton setTitle:@"退出登录" forState:UIControlStateNormal];
+        [_personalSiteOutButton setTitleColor:[UIColor color_e50834] forState:UIControlStateNormal];
+        _personalSiteOutButton.titleLabel.font = [UIFont systemFontOfSize:16];
+        _personalSiteOutButton.layer.cornerRadius = 4;
+        [_personalSiteOutButton addTarget:self action:@selector(OutButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _personalSiteOutButton;
+}
+
+-(UIView*)underLineBottomView{
+    if(!_underLineBottomView){
+        _underLineBottomView = [[UIView alloc] initWithFrame:CGRectMake(0, 271+50, SCREEN_WIDTH, 0.5)];
+        _underLineBottomView.backgroundColor = [UIColor color_d5d5d5];
+    }
+    return _underLineBottomView;
+}
+
 @end
+
