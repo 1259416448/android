@@ -42,7 +42,6 @@
 		DD14F2431F114436004DFE4A /* CommonContact.m in Sources */ = {isa = PBXBuildFile; fileRef = DD14F2421F114436004DFE4A /* CommonContact.m */; };
 		DD14F2451F11CB5F004DFE4A /* GCTokenManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DD14F2441F11CB5F004DFE4A /* GCTokenManager.m */; };
 		DD14F2481F11CDCA004DFE4A /* GCTokenModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DD14F2471F11CDCA004DFE4A /* GCTokenModel.m */; };
-		DD9452EA1F15C0B9004EDDED /* OTWFindType.m in Sources */ = {isa = PBXBuildFile; fileRef = DD9452E91F15C0B9004EDDED /* OTWFindType.m */; };
 		DD9452EE1F15CC29004EDDED /* OTWFootprintListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DD9452ED1F15CC29004EDDED /* OTWFootprintListModel.m */; };
 		DD9452F01F15D139004EDDED /* OTWFootprintListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DD9452EF1F15D139004EDDED /* OTWFootprintListTableViewCell.m */; };
 		DD9452F31F15DE23004EDDED /* OTWFootprintListFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = DD9452F21F15DE23004EDDED /* OTWFootprintListFrame.m */; };
@@ -139,8 +138,6 @@
 		DD14F2461F11CC21004DFE4A /* GCTokenManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCTokenManager.h; sourceTree = "<group>"; };
 		DD14F2471F11CDCA004DFE4A /* GCTokenModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GCTokenModel.m; path = OnTheWay/Utils/GCTokenModel.m; sourceTree = SOURCE_ROOT; };
 		DD14F24D1F120EBD004DFE4A /* GCTokenModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCTokenModel.h; path = OnTheWay/Utils/GCTokenModel.h; sourceTree = SOURCE_ROOT; };
-		DD9452E81F15C0A6004EDDED /* OTWFindType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWFindType.h; sourceTree = "<group>"; };
-		DD9452E91F15C0B9004EDDED /* OTWFindType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWFindType.m; sourceTree = "<group>"; };
 		DD9452EB1F15CA28004EDDED /* OTWFootprintListTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTWFootprintListTableViewCell.h; sourceTree = "<group>"; };
 		DD9452EC1F15CC13004EDDED /* OTWFootprintListModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTWFootprintListModel.h; sourceTree = "<group>"; };
 		DD9452ED1F15CC29004EDDED /* OTWFootprintListModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWFootprintListModel.m; sourceTree = "<group>"; };
@@ -437,8 +434,6 @@
 		D7F6B0651F0DD3690013090A /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				DD9452E81F15C0A6004EDDED /* OTWFindType.h */,
-				DD9452E91F15C0B9004EDDED /* OTWFindType.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -880,7 +875,6 @@
 				DDB8C29F1F14AF230091E7B0 /* OTWUserModel.m in Sources */,
 				D7F6B09A1F0F75510013090A /* OTWLaunchViewController.m in Sources */,
 				D7F6B07E1F0DD43A0013090A /* OTWFindViewController.m in Sources */,
-				DD9452EA1F15C0B9004EDDED /* OTWFindType.m in Sources */,
 				D7F6B05E1F0DD1D80013090A /* OTWRootViewController.m in Sources */,
 				D7F6B05B1F0DD0280013090A /* OTWBaseViewController.m in Sources */,
 				D7F6B0581F0DCF040013090A /* UIColor+Utils.m in Sources */,
