@@ -133,5 +133,10 @@
 + (UIColor *)color_e50834 {
     return [UIColor colorWithHexString:@"e50834"];
 }
-
++ (UIColor *)color_545454 {
+    return [UIColor colorWithHexString:@"545454"];
+}
++ (UIColor *)color_757575 {
+    return [UIColor colorWithHexString:@"757575"];
+}
 @end

@@ -18,5 +18,6 @@
 - (void)showPersonalInfoView;
 - (void)showPersonalSiteView;
 - (void)showPersonalMyView;
+- (void)showFootprintView;
 
 @end

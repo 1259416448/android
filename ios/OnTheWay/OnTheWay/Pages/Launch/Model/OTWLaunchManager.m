@@ -12,6 +12,7 @@
 #import "OTWPersonalInfoController.h"
 #import "OTWPersonalEditNicknameController.h"
 #import "OTWPersonalSiteController.h"
+#import "OTWFootprintsViewController.h"
 
 @interface OTWLaunchManager ()
 
@@ -21,6 +22,7 @@
 @property (nonatomic,strong) UINavigationController *personalInfoController;
 @property (nonatomic,strong) UINavigationController *personalSiteController;
 @property (nonatomic,strong) UINavigationController *personalMyController;
+@property (nonatomic,strong) UINavigationController *footprintsViewController;
 
 @end
 
@@ -81,6 +83,14 @@
     });
 }
 
+- (void)showFootprintView
+{
+    GCDMain(^{
+        [[UIApplication sharedApplication].keyWindow setRootViewController:self.footprintsViewController];
+        self.loginViewController = nil;
+    });
+}
+
 #pragma mark - Getter & Setter
 
 - (UINavigationController*)loginViewController
@@ -118,6 +128,15 @@
     }
     return _personalSiteController;
 }
+
+-(UINavigationController*)footprintsViewController{
+    if(!_footprintsViewController){
+        OTWFootprintsViewController *footprintsVC = [[OTWFootprintsViewController alloc] init];
+        _footprintsViewController = [[UINavigationController alloc] initWithRootViewController:footprintsVC];
+    }
+    return _footprintsViewController;
+}
+
 
 - (OTWRootViewController*)mainTabViewController
 {
