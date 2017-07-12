@@ -40,8 +40,9 @@
     if(![OTWUserModel shared].username
        ||[[OTWUserModel shared].username isEqualToString:@""]){
         //打开登陆
-        OTWLoginViewController *loginVC = [[OTWLoginViewController alloc] init];
-        [self.navigationController presentViewController:loginVC animated:YES completion:nil];
+        [[OTWLaunchManager sharedManager] showLoginView];
+        //OTWLoginViewController *loginVC = [[OTWLoginViewController alloc] init];
+        //[self.navigationController presentViewController:loginVC animated:YES completion:nil];
     }
     [self buildUI];
     [self initData];

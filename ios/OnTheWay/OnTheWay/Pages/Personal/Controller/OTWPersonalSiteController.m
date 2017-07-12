@@ -122,8 +122,8 @@
     DLog(@"点击退出");
     [[OTWUserModel shared] logout];
     [GCTokenManager cleanToken];
-    //跳页
-    [self.view.window setRootViewController:[[OTWRootViewController alloc] init]];
+    // 退出到登录页
+    [[OTWLaunchManager sharedManager] showLoginView];;
 }
 
 -(UITableView*)personalSiteTableView{
