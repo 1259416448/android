@@ -11,8 +11,12 @@
 #import <AFNetworking/UIImageView+AFNetworking.h>
 #import "OTWUserModel.h"
 #import "OTWPersonalEditNicknameController.h"
+#import "OTWAlbumSelectHelper.h"
 
 @interface OTWPersonalInfoController() <UITableViewDataSource,UITableViewDelegate>
+{
+    UIImageView *personalHeadImageView;
+}
 
 @property (nonatomic,strong) UIImage *arrowImge;
 
@@ -85,10 +89,25 @@
 #pragma mark 点击行
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     DLog(@"我点击了：%ld",indexPath.row);
-    if(indexPath.row==1){
-//        [tableView deselectRowAtIndexPath:indexPath animated:YES];
-        OTWPersonalEditNicknameController *personalEditNicknameVC = [[OTWPersonalEditNicknameController alloc] init];
-        [self.navigationController pushViewController:personalEditNicknameVC animated:YES];
+    
+    switch (indexPath.row) {
+        case 0: // 头像
+        {
+            DLog(@"点击了头像");
+            [[OTWAlbumSelectHelper shared] showInViewController:self imageBlock:^(UIImage *image) {
+                personalHeadImageView.image = image;
+            }];
+        }
+            break;
+        case 1:
+        {
+            OTWPersonalEditNicknameController *personalEditNicknameVC = [[OTWPersonalEditNicknameController alloc] init];
+            [self.navigationController pushViewController:personalEditNicknameVC animated:YES];
+        }
+            break;
+            
+        default:
+            break;
     }
 }
 
@@ -127,7 +146,7 @@
             }else{
                 url = [NSURL URLWithString:[OTWUserModel shared].headImg];
             }
-            UIImageView *personalHeadImageView = [[UIImageView alloc] init];
+            personalHeadImageView = [[UIImageView alloc] init];
             personalHeadImageView.frame = CGRectMake(0, 0, 55, 55);
             personalHeadImageView.layer.cornerRadius = personalHeadImageView.Witdh/2.0;
             personalHeadImageView.layer.masksToBounds = YES;
