@@ -14,6 +14,13 @@
 #import "OTWPersonalSiteController.h"
 #import "OTWFootprintsViewController.h"
 
+#import "OTWTabBarController.h"
+#import "OTWFindViewController.h"
+#import "OTWFootprintsViewController.h"
+#import "OTWARViewController.h"
+#import "OTWNewsViewController.h"
+#import "OTWPersonalViewController.h"
+
 @interface OTWLaunchManager ()
 
 @property (nonatomic, strong) UINavigationController *loginViewController;
@@ -23,6 +30,8 @@
 @property (nonatomic,strong) UINavigationController *personalSiteController;
 @property (nonatomic,strong) UINavigationController *personalMyController;
 @property (nonatomic,strong) UINavigationController *footprintsViewController;
+
+@property (nonatomic, strong) OTWTabBarController *mainTabController;
 
 @end
 
@@ -45,7 +54,7 @@
 {
     GCDMain(^{
         [[UIApplication sharedApplication].keyWindow setRootViewController:self.loginViewController];
-        self.mainTabViewController = nil;
+        self.mainTabController = nil;
     });
 }
 
@@ -53,32 +62,32 @@
 {
     GCDMain(^{
         [[UIApplication sharedApplication].keyWindow setRootViewController:self.personalEditNicknameController];
-        self.mainTabViewController = nil;
+        self.mainTabController = nil;
     });
 }
 - (void)showPersonalInfoView{
     GCDMain(^{
         [[UIApplication sharedApplication].keyWindow setRootViewController:self.personalInfoController];
-        self.mainTabViewController = nil;
+        self.mainTabController = nil;
     })
 }
 - (void)showPersonalSiteView{
     GCDMain(^{
         [[UIApplication sharedApplication].keyWindow setRootViewController:self.personalSiteController];
-        self.mainTabViewController = nil;
+        self.mainTabController = nil;
     })
 }
 
 - (void)showPersonalMyView{
     GCDMain(^{
         [[UIApplication sharedApplication].keyWindow setRootViewController:self.personalMyController];
-        self.mainTabViewController = nil;
+        self.mainTabController = nil;
     })
 }
 - (void)showMainTabView
 {
     GCDMain(^{
-        [[UIApplication sharedApplication].keyWindow setRootViewController:self.mainTabViewController];
+        [[UIApplication sharedApplication].keyWindow setRootViewController:self.mainTabController];
         self.loginViewController = nil;
     });
 }
@@ -145,6 +154,40 @@
     }
     
     return _mainTabViewController;
+}
+
+- (OTWTabBarController*)mainTabController
+{
+    if (!_mainTabController) {
+        _mainTabController = [OTWTabBarController createTabBarController:^OTWTabBarConfig *(OTWTabBarConfig *config) {
+            
+            OTWFindViewController *findVC = [[OTWFindViewController alloc] init];
+            UINavigationController * findNav = [[UINavigationController alloc] initWithRootViewController:findVC]; // 发现
+            
+            OTWFootprintsViewController *footprintsVC = [[OTWFootprintsViewController alloc] init];
+            UINavigationController * footprintsNav = [[UINavigationController alloc] initWithRootViewController:footprintsVC]; // 足迹
+            
+            OTWARViewController * arVC = [[OTWARViewController alloc] init];
+            UINavigationController * arNav = [[UINavigationController alloc] initWithRootViewController:arVC]; // AR
+            
+            OTWFootprintsViewController *newsVC = [[OTWFootprintsViewController alloc] init];
+            UINavigationController * newsNav = [[UINavigationController alloc] initWithRootViewController:newsVC]; // 消息
+            
+            OTWPersonalViewController *personalVC = [[OTWPersonalViewController alloc] init];
+            UINavigationController * personalNav = [[UINavigationController alloc] initWithRootViewController:personalVC]; // 我的
+            
+            config.viewControllers = @[findNav, footprintsNav, arNav, newsNav, personalNav];
+            config.normalImages = @[@"tab_faxian", @"tab_zuji", @"tab_AR", @"tab_xiaoxi", @"tab_wode"];
+            config.selectedImages = @[@"tab_faxian_click", @"tab_zuji", @"tab_AR", @"tab_xiaoxi_click", @"tab_wode_click"];
+            config.titles = @[@"发现", @"足迹", @"AR", @"消息", @"我的"];
+            config.selectedColor = [UIColor colorWithHexString:@"262626"];
+            config.normalColor = [UIColor colorWithHexString:@"9b9b9b"];
+            
+            return config;
+        }];
+    }
+    
+    return _mainTabController;
 }
 
 @end

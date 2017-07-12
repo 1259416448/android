@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OTWFindViewController : UIViewController
+@interface OTWFindViewController : OTWBaseViewController
 
 @end

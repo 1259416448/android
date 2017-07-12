@@ -19,5 +19,6 @@
 
 #import "OTWBaseViewController.h"
 #import "OTWNetworkManager.h"
+#import "OTWLaunchManager.h"
 
 #endif /* PrefixHeader_pch */
