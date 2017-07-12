@@ -12,7 +12,6 @@
 #import "OTWPersonalInfoController.h"
 #import "OTWPersonalEditNicknameController.h"
 #import "OTWPersonalSiteController.h"
-#import "OTWPersonalMyController.h"
 
 #import "OTWTabBarController.h"
 #import "OTWFindViewController.h"
@@ -127,14 +126,6 @@
         _personalSiteController = [[UINavigationController alloc] initWithRootViewController:personaSiteVC];
     }
     return _personalSiteController;
-}
-
-- (UINavigationController*)personalMyController{
-    if(!_personalMyController){
-        OTWPersonalMyController *personaMyVC = [[OTWPersonalMyController alloc] init];
-        _personalMyController = [[UINavigationController alloc] initWithRootViewController:personaMyVC];
-    }
-    return _personalMyController;
 }
 
 - (OTWRootViewController*)mainTabViewController

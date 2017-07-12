@@ -53,10 +53,10 @@
     
     self.view.backgroundColor = [UIColor color_f4f4f4];
     //使用UITableView，展示基本信息
-    UITableView *personalInfoTableView = [[UITableView alloc] initWithFrame:CGRectMake(0,66, SCREEN_WIDTH, SCREEN_HEIGHT-74) style:UITableViewStyleGrouped];
+    UITableView *personalInfoTableView = [[UITableView alloc] initWithFrame:CGRectMake(0,65, SCREEN_WIDTH, SCREEN_HEIGHT-65) style:UITableViewStyleGrouped];
     personalInfoTableView.dataSource = self;
     personalInfoTableView.delegate = self;
-    personalInfoTableView.backgroundColor = [UIColor color_f4f4f4];
+    personalInfoTableView.backgroundColor = [UIColor clearColor];
     // 设置边框颜色
     personalInfoTableView.separatorColor= [UIColor color_d5d5d5];
     [self.view addSubview:personalInfoTableView];
@@ -86,7 +86,7 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     DLog(@"我点击了：%ld",indexPath.row);
     if(indexPath.row==1){
-        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+//        [tableView deselectRowAtIndexPath:indexPath animated:YES];
         OTWPersonalEditNicknameController *personalEditNicknameVC = [[OTWPersonalEditNicknameController alloc] init];
         [self.navigationController pushViewController:personalEditNicknameVC animated:YES];
     }
@@ -109,18 +109,15 @@
     static NSString *cellIdentifier=@"UITableViewCellIdentifierKey1";
     
     cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    
     if(!cell){
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
         cell.textLabel.text =_tableViewLabelArray[indexPath.row] ;
         cell.textLabel.textColor = [UIColor color_202020];
         cell.textLabel.font = [UIFont systemFontOfSize:17];
         cell.backgroundColor = [UIColor whiteColor];
-        
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         if(indexPath.row != _tableViewLabelArray.count-1){
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        }else{
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
         if(indexPath.row == 0){
             UIView *personalHeadImageBGView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 73, 55)];

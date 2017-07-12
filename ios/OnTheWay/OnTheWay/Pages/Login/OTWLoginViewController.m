@@ -51,11 +51,15 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    WeakSelf(self)
     self.customNavigationBar.leftButtonClicked=^{
-        DLog(@"点击了关闭按钮");
+        [weakself.presentingViewController dismissViewControllerAnimated:YES completion:^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"loginCancel" object:weakself];
+        }];
+        //关闭键盘
+        [weakself.phoneNumField resignFirstResponder];
+        [weakself.codeNumFileld resignFirstResponder];
     };
-    
     [self buildUI];
 }
 
@@ -209,8 +213,9 @@
                 [OTWUserModel shared].name = result[@"body"][@"name"];
                 [[OTWUserModel shared] dump];
                 //登陆成功
-                OTWPersonalInfoController *personalInfoVC = [[OTWPersonalInfoController alloc] init];
-                [self.navigationController pushViewController:personalInfoVC animated:YES];
+                [self.presentingViewController dismissViewControllerAnimated:YES completion:^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"loginSuccess" object:self];
+                }];
             }else{
                 [self.loginButton setTitle:@"登陆" forState:UIControlStateNormal];
                 self.loginButton.userInteractionEnabled = YES;
