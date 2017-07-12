@@ -630,6 +630,10 @@ public class UserService extends BaseServiceImpl<User, Long> {
         user.setName(getNickname(mobile));
         user.setStatus(UserStatus.normal);
         user.setUserType(UserType.user);
+        //设置默认头像
+        Random random = new Random();
+        user.setHeadImg("b"+random.nextInt(14)+".jpg");
+        user.setHeadImgYuan("b"+random.nextInt(14)+".jpg");
         this.save_(user);
         //获取平台的用户部门
         Organization organization = organizationService.getUserOrg();

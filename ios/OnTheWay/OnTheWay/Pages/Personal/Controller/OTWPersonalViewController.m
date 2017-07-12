@@ -12,6 +12,8 @@
 #import <AFNetworking/UIImageView+AFNetworking.h>
 #import "OTWPersonalInfoController.h"
 #import "OTWPersonalSiteController.h"
+#import "OTWLoginViewController.h"
+#import "OTWRootViewController.h"
 
 @interface OTWPersonalViewController() <UITableViewDataSource,UITableViewDelegate>
 
@@ -33,7 +35,14 @@
 -(void)viewDidLoad {
     [super viewDidLoad];
     _arrowImge = [UIImage imageNamed:@"arrow_right"];
-    [[OTWUserModel shared] load];    
+    [[OTWUserModel shared] load];
+    //检查是否存在用户信息
+    if(![OTWUserModel shared].username
+       ||[[OTWUserModel shared].username isEqualToString:@""]){
+        //打开登陆
+        OTWLoginViewController *loginVC = [[OTWLoginViewController alloc] init];
+        [self.navigationController presentViewController:loginVC animated:YES completion:nil];
+    }
     [self buildUI];
     [self initData];
 }
@@ -48,6 +57,45 @@
     [_tableViewLabelArray addObject:@[@"我的卡券",@"wodekaquan"]];
     [_tableViewLabelArray addObject:@[@"设置",@"shezhi"]];
     //获取用户数据
+}
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    DLog(@"执行了viewWillAppear");
+    [[NSNotificationCenter defaultCenter] addObserver:self
+           selector:@selector(handleColorChange:)
+               name:@"loginCancel"
+             object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+           selector:@selector(handleColorChangeLoginSuccess:)
+               name:@"loginSuccess"
+             object:nil];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+//登陆被关闭，说明用户没有登陆，直接跳转到首页
+-(void)handleColorChange:(NSNotification*)sender
+{
+    DLog(@"执行了loginCancel");
+    [self.view.window setRootViewController:[[OTWRootViewController alloc] init]];
+}
+
+-(void)handleColorChangeLoginSuccess:(NSNotification*)sender
+{
+    [[OTWUserModel shared] load];
+    DLog(@"执行了loginSuccess");
+    NSURL *url ;
+    if(![OTWUserModel shared].headImg){
+        url = [NSURL URLWithString:@"https://sources.cc520.me/share/img/o_1b4t0srq81sm31g699lk1ob1e7r3t4.jpg?imageView2/1/w/78/h/78"];
+    }else{
+        url = [NSURL URLWithString:[OTWUserModel shared].headImg];
+    }
+    [self.personalHeadImageView setImageWithURL:url];
+    self.userName.text=[OTWUserModel shared].name;
 }
 
 -(void)buildUI {

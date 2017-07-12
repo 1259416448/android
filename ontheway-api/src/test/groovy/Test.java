@@ -1,6 +1,7 @@
 import cn.arvix.base.common.utils.CommonContact;
 import cn.arvix.ontheway.sys.utils.HmacSHA256Utils;
 
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -25,4 +26,13 @@ public class Test {
         System.out.println("18580128658".substring(0, 3) + "****" + "18580128658".substring("18580128658".length() - 4, "18580128658".length()));
     }
 
+    @org.junit.Test
+    public void headImg(){
+        Random random = new Random();
+        int i = 0;
+        while (i<100){
+            System.out.println(random.nextInt(14));
+            i++;
+        }
+    }
 }

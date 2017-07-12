@@ -8,6 +8,9 @@
 
 #import "OTWPersonalSiteController.h"
 #import "OTWCustomNavigationBar.h"
+#import "OTWUserModel.h"
+#import "GCTokenManager.h"
+#import "OTWRootViewController.h"
 
 @interface OTWPersonalSiteController() <UITableViewDataSource,UITableViewDelegate>
 
@@ -57,6 +60,7 @@
     
     //UITableView 列表
      [self.view addSubview:self.personalSiteTableView];
+    
     
     //设置tableview的第一行显示内容
     self.personalSiteTableView.tableFooterView=self.personalSiteTableViewFooter;
@@ -116,14 +120,18 @@
 }
 -(void)OutButtonClick {
     DLog(@"点击退出");
+    [[OTWUserModel shared] logout];
+    [GCTokenManager cleanToken];
+    //跳页
+    [self.view.window setRootViewController:[[OTWRootViewController alloc] init]];
 }
 
 -(UITableView*)personalSiteTableView{
     if(!_personalSiteTableView){
-        _personalSiteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 65,SCREEN_WIDTH, SCREEN_HEIGHT-74) style:UITableViewStyleGrouped];
+        _personalSiteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 65,SCREEN_WIDTH, SCREEN_HEIGHT-65) style:UITableViewStyleGrouped];
         _personalSiteTableView.dataSource = self;
         _personalSiteTableView.delegate = self;
-        _personalSiteTableView.backgroundColor = [UIColor color_f4f4f4];
+        _personalSiteTableView.backgroundColor = [UIColor clearColor];
         // 设置边框颜色
         _personalSiteTableView.separatorColor= [UIColor color_d5d5d5];
     }
@@ -163,9 +171,8 @@
 -(UIView*)personalSiteTableViewFooter{
     if(!_personalSiteTableViewFooter){
         //设置header的背景
-        _personalSiteTableViewFooter=[[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 50)];
-        _personalSiteTableViewFooter.backgroundColor=[UIColor color_f4f4f4];
-        
+        _personalSiteTableViewFooter=[[UIView alloc] initWithFrame:CGRectMake(0, 50, SCREEN_WIDTH, 50)];
+        _personalSiteTableViewFooter.backgroundColor=[UIColor clearColor];
         //设置header 内容的背景
         [_personalSiteTableViewFooter addSubview:self.contentView];
         
@@ -183,8 +190,8 @@
 
 -(UIView*)contentView{
     if(!_contentView){
-        _contentView=[[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 50)];
-        _personalSiteTableViewFooter.backgroundColor=[UIColor whiteColor];
+        _contentView=[[UIView alloc] initWithFrame:CGRectMake(0, 25, SCREEN_WIDTH, 50)];
+        _contentView.backgroundColor=[UIColor whiteColor];
     }
     return _contentView;
 }
