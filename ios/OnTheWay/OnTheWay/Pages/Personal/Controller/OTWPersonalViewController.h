@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OTWPersonalViewController : UIViewController
+@interface OTWPersonalViewController : OTWBaseViewController
 
 @end
