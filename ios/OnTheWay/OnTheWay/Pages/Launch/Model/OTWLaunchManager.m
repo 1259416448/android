@@ -51,6 +51,7 @@
 
 - (void)showLoginViewWithController:(UIViewController*)viewController
 {
+    if (!viewController) return;
     [viewController presentViewController:self.loginViewController animated:YES completion:nil];
 }
 
