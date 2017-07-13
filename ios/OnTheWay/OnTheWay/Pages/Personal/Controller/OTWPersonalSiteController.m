@@ -11,6 +11,8 @@
 #import "OTWUserModel.h"
 #import "GCTokenManager.h"
 #import "OTWRootViewController.h"
+#import "OTWLaunchManager.h"
+#import "OTWTabBarController.h"
 
 @interface OTWPersonalSiteController() <UITableViewDataSource,UITableViewDelegate>
 
@@ -38,6 +40,12 @@
     [self buildUI];
     [self initData];
     
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
 }
 
 #pragma mark - initData
@@ -123,7 +131,7 @@
     [[OTWUserModel shared] logout];
     [GCTokenManager cleanToken];
     // 退出到登录页
-    [[OTWLaunchManager sharedManager] showLoginView];;
+    [[OTWLaunchManager sharedManager] showMainTabView];
 }
 
 -(UITableView*)personalSiteTableView{

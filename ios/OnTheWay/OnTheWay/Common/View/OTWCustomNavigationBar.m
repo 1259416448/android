@@ -17,7 +17,6 @@
 @property (nonatomic,strong) UIButton *leftButton;
 @property (nonatomic,strong) UIButton *rightButton;
 @property (nonatomic,strong) UIImageView * backgroungImageView;
-@property (nonatomic,strong) UIView *underLineView;
 
 @end
 
@@ -128,7 +127,6 @@
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor {
     self.backgroungImageView.backgroundColor = backgroundColor;
-    self.underLineView.backgroundColor = backgroundColor;
 }
 
 - (void)setBackgroundImage:(UIImage *)image {
@@ -165,10 +163,6 @@
     _backgroungImageView = [[UIImageView alloc] initWithFrame:self.bounds];
     _backgroungImageView.backgroundColor = [UIColor color_22b2e7];
     [self addSubview:_backgroungImageView];
-    
-    _underLineView = [[UIView alloc] initWithFrame:CGRectMake(0, 74.5, self.Witdh, 0.5)];
-    _underLineView.backgroundColor = [UIColor color_22b2e7];
-    [self addSubview:_underLineView];
 }
 
 - (UILabel*)titleLabel {

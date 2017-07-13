@@ -7,8 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "OTWTabBarController.h"
 
 @interface OTWLaunchManager : NSObject
+
+@property (nonatomic, strong) OTWTabBarController *mainTabController;
 
 + (instancetype)sharedManager;
 
@@ -18,6 +21,7 @@
 - (void)showPersonalInfoView;
 - (void)showPersonalSiteView;
 - (void)showPersonalMyView;
+- (void)showFootprintView;
 
 - (void)showLoginViewWithController:(UIViewController*)viewController;
 
