@@ -36,9 +36,10 @@
 -(void)viewDidLoad {
     [super viewDidLoad];
     _arrowImge = [UIImage imageNamed:@"arrow_right"];
-    [[OTWUserModel shared] load];
+
     [self buildUI];
     [self initData];
+    [self showLoginView];
 }
 
 #pragma mark - initData
@@ -55,19 +56,18 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [[OTWLaunchManager sharedManager].mainTabController showTabBarWithAnimation:YES];
     
-    //检查是否存在用户信息
-    if(![OTWUserModel shared].username
-       ||[[OTWUserModel shared].username isEqualToString:@""]){
-        //打开登陆
-        //        [[OTWLaunchManager sharedManager] showLoginView];
-        OTWLoginViewController *loginVC = [[OTWLoginViewController alloc] init];
-        //必须登录的消息，登录页面接收到消息后，如果用户点击了关闭按钮，直接设置为首页，并关闭登录页
-        [self.navigationController presentViewController:loginVC animated:YES completion:^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"requiredLogin" object:self];
-        }];
-    }
+//    //检查是否存在用户信息
+//    if(![OTWUserModel shared].username
+//       ||[[OTWUserModel shared].username isEqualToString:@""]){
+//        //打开登陆
+//        //        [[OTWLaunchManager sharedManager] showLoginView];
+//        OTWLoginViewController *loginVC = [[OTWLoginViewController alloc] init];
+//        //必须登录的消息，登录页面接收到消息后，如果用户点击了关闭按钮，直接设置为首页，并关闭登录页
+//        [self.navigationController presentViewController:loginVC animated:YES completion:^{
+//            [[NSNotificationCenter defaultCenter] postNotificationName:@"requiredLogin" object:self];
+//        }];
+//    }
     DLog(@"执行了viewWillAppear");
     [[NSNotificationCenter defaultCenter] addObserver:self
            selector:@selector(handleColorChangeLoginSuccess:)
@@ -84,7 +84,7 @@
 -(void)handleColorChange:(NSNotification*)sender
 {
     DLog(@"执行了loginCancel");
-    [[OTWLaunchManager sharedManager] showMainTabView];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void)handleColorChangeLoginSuccess:(NSNotification*)sender
@@ -114,6 +114,17 @@
     
     //设置tableview的第一行显示内容
     self.personalMyTableView.tableHeaderView=self.personalMyTableViewHeader;
+}
+
+- (void)showLoginView
+{
+    [[OTWUserModel shared] load];
+    //检查是否存在用户信息
+    if(![OTWUserModel shared].username
+       ||[[OTWUserModel shared].username isEqualToString:@""]){
+        
+        [[OTWLaunchManager sharedManager] showLoginViewWithController:self];
+    }
 }
 
 #pragma mark 这一组里面有多少行

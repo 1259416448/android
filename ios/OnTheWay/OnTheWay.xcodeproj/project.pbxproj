@@ -42,6 +42,7 @@
 		D7F6B0BC1F14E9E00013090A /* OTWCustomTabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B0BB1F14E9E00013090A /* OTWCustomTabBarItem.m */; };
 		D7F6B0BF1F15C09E0013090A /* OTWTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B0BE1F15C09E0013090A /* OTWTabBarController.m */; };
 		D7F6B0C61F160E590013090A /* OTWAlbumSelectHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B0C51F160E590013090A /* OTWAlbumSelectHelper.m */; };
+		D7F6B0CB1F1627000013090A /* OTWNewsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B0CA1F1627000013090A /* OTWNewsCell.m */; };
 		D8B4FC771A533A05D5B2B46D /* libPods-OnTheWay.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 45C2D5CA9B6813E8ACAF6178 /* libPods-OnTheWay.a */; };
 		DD14F23B1F1132FE004DFE4A /* NSString+RegexCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = DD14F23A1F1132FE004DFE4A /* NSString+RegexCategory.m */; };
 		DD14F2401F113654004DFE4A /* HmacUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = DD14F23F1F113654004DFE4A /* HmacUtils.m */; };
@@ -145,6 +146,8 @@
 		D7F6B0BE1F15C09E0013090A /* OTWTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWTabBarController.m; sourceTree = "<group>"; };
 		D7F6B0C41F160E590013090A /* OTWAlbumSelectHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWAlbumSelectHelper.h; sourceTree = "<group>"; };
 		D7F6B0C51F160E590013090A /* OTWAlbumSelectHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWAlbumSelectHelper.m; sourceTree = "<group>"; };
+		D7F6B0C91F1627000013090A /* OTWNewsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWNewsCell.h; sourceTree = "<group>"; };
+		D7F6B0CA1F1627000013090A /* OTWNewsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWNewsCell.m; sourceTree = "<group>"; };
 		DD02EB7B1F125A3000841AB5 /* OTWPersonalEditNicknameController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPersonalEditNicknameController.h; sourceTree = "<group>"; };
 		DD14F2391F1132FE004DFE4A /* NSString+RegexCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+RegexCategory.h"; path = "NSTring/NSString+RegexCategory.h"; sourceTree = "<group>"; };
 		DD14F23A1F1132FE004DFE4A /* NSString+RegexCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+RegexCategory.m"; path = "NSTring/NSString+RegexCategory.m"; sourceTree = "<group>"; };
@@ -516,9 +519,9 @@
 		D7F6B06B1F0DD3800013090A /* News */ = {
 			isa = PBXGroup;
 			children = (
+				D7F6B0C71F1626E60013090A /* Model */,
+				D7F6B0C81F1626E60013090A /* View */,
 				D7F6B06C1F0DD3800013090A /* Controller */,
-				D7F6B06D1F0DD3800013090A /* Model */,
-				D7F6B06E1F0DD3800013090A /* View */,
 			);
 			path = News;
 			sourceTree = "<group>";
@@ -530,20 +533,6 @@
 				D7F6B0771F0DD3F90013090A /* OTWNewsViewController.m */,
 			);
 			path = Controller;
-			sourceTree = "<group>";
-		};
-		D7F6B06D1F0DD3800013090A /* Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
-		D7F6B06E1F0DD3800013090A /* View */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = View;
 			sourceTree = "<group>";
 		};
 		D7F6B06F1F0DD3860013090A /* Personal */ = {
@@ -692,6 +681,22 @@
 				D7F6B0C51F160E590013090A /* OTWAlbumSelectHelper.m */,
 			);
 			path = Helper;
+			sourceTree = "<group>";
+		};
+		D7F6B0C71F1626E60013090A /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		D7F6B0C81F1626E60013090A /* View */ = {
+			isa = PBXGroup;
+			children = (
+				D7F6B0C91F1627000013090A /* OTWNewsCell.h */,
+				D7F6B0CA1F1627000013090A /* OTWNewsCell.m */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		DD0224A31F1131BC00AB65C9 /* NString */ = {
@@ -918,6 +923,7 @@
 				18B034BF1F15C9BD00F53461 /* OTWFindViewCell.m in Sources */,
 				D7F6B07E1F0DD43A0013090A /* OTWFindViewController.m in Sources */,
 				D7F6B05E1F0DD1D80013090A /* OTWRootViewController.m in Sources */,
+				D7F6B0CB1F1627000013090A /* OTWNewsCell.m in Sources */,
 				D7F6B05B1F0DD0280013090A /* OTWBaseViewController.m in Sources */,
 				D7F6B0581F0DCF040013090A /* UIColor+Utils.m in Sources */,
 				DD9452F31F15DE23004EDDED /* OTWFootprintListFrame.m in Sources */,

@@ -7,5 +7,6 @@ target 'OnTheWay' do
   pod 'MJRefresh'
   pod 'IQKeyboardManager'
   pod 'PPNetworkHelper'
+  pod 'YSCategorys'
 end
 

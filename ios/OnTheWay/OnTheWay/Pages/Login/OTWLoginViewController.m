@@ -53,14 +53,8 @@
     [super viewDidLoad];
     WeakSelf(self)
     self.customNavigationBar.leftButtonClicked=^{
-        //关闭按钮 打印一下
-        DLog(@"requiredLogin:%d",weakself.requiredLogin);
-        if(weakself.requiredLogin){
-            [[OTWLaunchManager sharedManager].mainTabController setSelectedIndex:0];
-        }
-        [weakself.presentingViewController dismissViewControllerAnimated:!weakself.requiredLogin completion:^{
-            //如果 requiredLogin = YES 跳转首页
-            [[OTWLaunchManager sharedManager] showMainTabView];
+        [weakself dismissViewControllerAnimated:YES completion:^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"loginCancel" object:weakself];
         }];
         //关闭键盘
         [weakself.phoneNumField resignFirstResponder];

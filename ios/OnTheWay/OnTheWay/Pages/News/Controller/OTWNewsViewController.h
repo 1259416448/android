@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OTWNewsViewController : UIViewController
+@interface OTWNewsViewController : OTWBaseViewController
 
 @end

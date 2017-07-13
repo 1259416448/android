@@ -23,4 +23,6 @@
 - (void)showPersonalMyView;
 - (void)showFootprintView;
 
+- (void)showLoginViewWithController:(UIViewController*)viewController;
+
 @end
