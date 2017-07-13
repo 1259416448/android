@@ -43,7 +43,7 @@
 @property (nonatomic,strong) UIButton *weiboLoginButton;
 @property (nonatomic,strong) UIActivityIndicatorView *sentCodebuttonActivityIndicatorView;
 @property (nonatomic,strong) UILabel *messageTipsLabel;
-
+@property (nonatomic,assign) BOOL requiredLogin;;
 
 @end
 
@@ -53,8 +53,14 @@
     [super viewDidLoad];
     WeakSelf(self)
     self.customNavigationBar.leftButtonClicked=^{
-        [weakself.presentingViewController dismissViewControllerAnimated:YES completion:^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"loginCancel" object:weakself];
+        //关闭按钮 打印一下
+        DLog(@"requiredLogin:%d",weakself.requiredLogin);
+        if(weakself.requiredLogin){
+            [[OTWLaunchManager sharedManager].mainTabController setSelectedIndex:0];
+        }
+        [weakself.presentingViewController dismissViewControllerAnimated:!weakself.requiredLogin completion:^{
+            //如果 requiredLogin = YES 跳转首页
+            [[OTWLaunchManager sharedManager] showMainTabView];
         }];
         //关闭键盘
         [weakself.phoneNumField resignFirstResponder];
@@ -66,6 +72,28 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    DLog(@"执行了viewWillAppear loginConroller");
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleColorChange:)
+                                                 name:@"requiredLogin"
+                                               object:nil];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+//处理接口的通知，把必须登录设置为TRUE
+-(void)handleColorChange:(NSNotification*)sender
+{
+    DLog(@"执行了viewWillAppear loginConroller handleColorChange");
+    _requiredLogin = YES;
 }
 
 #pragma mark - UI
@@ -214,8 +242,11 @@
                 [[OTWUserModel shared] dump];
                 
                 //登陆成功
-                [[OTWLaunchManager sharedManager] showMainTabView];
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"loginSuccess" object:self];
+                //[[OTWLaunchManager sharedManager] showMainTabView];
+                [self.presentingViewController dismissViewControllerAnimated:YES completion:^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"loginSuccess" object:self];
+                }];
+                //[[NSNotificationCenter defaultCenter] postNotificationName:@"loginSuccess" object:self];
             }else{
                 [self.loginButton setTitle:@"登陆" forState:UIControlStateNormal];
                 self.loginButton.userInteractionEnabled = YES;

@@ -28,7 +28,7 @@
     
     //用户名称
     CGFloat userNicknameFX = userHeadImgFX+userHeadImgFW+10;
-    CGFloat userNicknameFY = 16;
+    CGFloat userNicknameFY = 18;
     CGFloat userNicknameFW = SCREEN_WIDTH - padding *2 - userNicknameFX - 15;
     CGFloat userNicknameFH = 18;
     _userNicknameF = CGRectMake(userNicknameFX, userNicknameFY, userNicknameFW, userNicknameFH);
@@ -47,7 +47,7 @@
     
     //图片 只有有图片时，才增加
     if(_footprint.footprintPhoto && ![_footprint.footprintPhoto isEqualToString:@""]){
-        CGFloat footprintPhotoImgFX = SCREEN_WIDTH - 15 - 46;
+        CGFloat footprintPhotoImgFX = SCREEN_WIDTH - 15 - 46 - padding*2;
         CGFloat footprintPhotoImgFY = 45;
         CGFloat footprintPhotoImgFW = 46;
         CGFloat footprintPhotoImgFH = 46;
@@ -73,14 +73,15 @@
     DLog(@"textSize w :%f",textSize.width);
     
     //时间图标
-    CGFloat dataCreatedImageFX = SCREEN_WIDTH - 15 - textSize.width - 3 - 10 ;
+    CGFloat dataCreatedImageFX = SCREEN_WIDTH - 14 -padding*2 - textSize.width - 3 - 10 ;
     CGFloat dataCreatedImageFY = 96.5;
     CGFloat dataCreatedImageFW = 10;
     CGFloat dataCreatedImageFH = 10;
     _dataCreatedImageF = CGRectMake(dataCreatedImageFX, dataCreatedImageFY,dataCreatedImageFW,dataCreatedImageFH);
+    
     //时间文字
-    CGFloat dataCreatedFX = SCREEN_WIDTH - 15 - textSize.width;
-    CGFloat dataCreatedFY = 101;
+    CGFloat dataCreatedFX = SCREEN_WIDTH - 14 - padding*2 - textSize.width;
+    CGFloat dataCreatedFY = 96;
     CGFloat dataCreatedFW = textSize.width;
     CGFloat dataCreatedFH = 12;
     _dataCreatedF = CGRectMake(dataCreatedFX, dataCreatedFY, dataCreatedFW, dataCreatedFH);

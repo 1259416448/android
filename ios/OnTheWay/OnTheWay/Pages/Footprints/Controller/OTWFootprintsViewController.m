@@ -53,7 +53,7 @@
 #pragma mark - 代理方法
 #pragma mark 设置分组标题内容高度
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    return 10;
+    return 1;
 }
 
 #pragma mark 设置每行高度（每行高度可以不一样）
@@ -68,20 +68,18 @@
 #pragma mark 返回第indexPath这行对应的内容
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    OTWFootprintListTableViewCell *cell = [OTWFootprintListTableViewCell cellWithTableView:tableView];
-    cell.footprintListFrame = self.footprintFrames[indexPath.row];
-    return cell;
+    return [OTWFootprintListTableViewCell cellWithTableView:tableView footprintListFrame:self.footprintFrames[indexPath.row]];
 }
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 -(NSMutableArray*)footprintFrames{
     if(!_footprintFrames){

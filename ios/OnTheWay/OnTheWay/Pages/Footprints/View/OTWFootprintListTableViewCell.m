@@ -50,12 +50,14 @@
 
 @implementation OTWFootprintListTableViewCell
 
-+ (instancetype)cellWithTableView:(UITableView *)tableView
++ (instancetype)cellWithTableView:(UITableView *)tableView footprintListFrame:(OTWFootprintListFrame *) frame
 {
     static NSString *identifier = @"OTWFootprintListTableViewCellStatus";
     OTWFootprintListTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if(cell == nil){
         cell = [[OTWFootprintListTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        [cell setFootprintListFrame:frame];
     }
     return cell;
 }
@@ -97,6 +99,7 @@
     [self.footprintAddressLabel setText:model.footprintAddress];
     [self.dateCreatedLabel setText:model.dateCreatedStr];
     if(model.footprintPhoto && ![model.footprintPhoto isEqualToString:@""]){
+        DLog(@"_footprint.footprintPhoto:%@",model.footprintPhoto);
         [self.footprintPhotoImgView setImageWithURL:[NSURL URLWithString:[model.footprintPhoto stringByAppendingString:@"?imageView2/1/w/160/h/160"]]];
     }else{
         self.footprintPhotoImgView.hidden = YES;
@@ -111,7 +114,6 @@
     self.footprintBGView.frame = self.footprintListFrame.footprintBGF;
     self.userheadImgBGView.frame = self.footprintListFrame.userHeadImgF;
     self.userheadImgBGView.layer.cornerRadius = self.userheadImgBGView.Witdh/2.0;
-    //self.userheadImgBGView.layer.masksToBounds = YES;
     self.userNicknameLabel.frame = self.footprintListFrame.userNicknameF;
     self.footprintContentLabel.frame = self.footprintListFrame.footprintContentF;
     self.footprintPhotoImgView.frame = self.footprintListFrame.footprintPhotoImgF;
@@ -154,6 +156,7 @@
         _footprintContentLabel = [[UILabel alloc] init];
         _footprintContentLabel.font = OTWFootprintTextFont;
         _footprintContentLabel.textColor = [UIColor color_202020];
+        _footprintContentLabel.numberOfLines = 0;
     }
     return _footprintContentLabel;
 }

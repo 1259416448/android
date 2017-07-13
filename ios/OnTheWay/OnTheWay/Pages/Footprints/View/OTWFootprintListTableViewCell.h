@@ -13,6 +13,6 @@
 
 @property (nonatomic,strong) OTWFootprintListFrame *footprintListFrame;
 
-+ (instancetype)cellWithTableView:(UITableView *)tableView;
++ (instancetype)cellWithTableView:(UITableView *)tableView footprintListFrame:(OTWFootprintListFrame *) frame;
 
 @end

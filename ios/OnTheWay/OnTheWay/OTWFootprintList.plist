@@ -16,7 +16,7 @@
 		<key>dateCreatedStr</key>
 		<string>57分钟前</string>
 		<key>footprintPhoto</key>
-		<string>http://osx4pwgde.bkt.clouddn.com/c0ab21ab26b4694769b6e904788b3590630777.jpg?imageView2/1/w/160/h/160</string>
+		<string>http://osx4pwgde.bkt.clouddn.com/c0ab21ab26b4694769b6e904788b3590630777.jpg</string>
 		<key>footprintId</key>
 		<integer>1</integer>
 		<key>footprintType</key>
@@ -36,7 +36,7 @@
 		<key>dateCreatedStr</key>
 		<string>2小时前</string>
 		<key>footprintPhoto</key>
-		<string>http://osx4pwgde.bkt.clouddn.com/c0ab21ab26b4694769b6e904788b3590630777.jpg?imageView2/1/w/160/h/160</string>
+		<string>http://osx4pwgde.bkt.clouddn.com/c0ab21ab26b4694769b6e904788b3590630777.jpg</string>
 		<key>footprintId</key>
 		<integer>1</integer>
 		<key>footprintType</key>
@@ -96,7 +96,7 @@
 		<key>dateCreatedStr</key>
 		<string>1小时前</string>
 		<key>footprintPhoto</key>
-		<string>http://osx4pwgde.bkt.clouddn.com/1d4320a0fb289aa1b86dd63b2591eb75138052.jpg?imageView2/1/w/160/h/160</string>
+		<string>http://osx4pwgde.bkt.clouddn.com/1d4320a0fb289aa1b86dd63b2591eb75138052.jpg</string>
 		<key>footprintId</key>
 		<integer>1</integer>
 		<key>footprintType</key>

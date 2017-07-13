@@ -9,10 +9,12 @@
 #import "OTWTabBarController.h"
 #import "OTWCustomTabBar.h"
 #import "OTWCustomTabBarItem.h"
+#import "OTWUserModel.h"
+#import "OTWLoginViewController.h"
 
 static CGFloat otwCustomTabBarHeight = 49.0;
 
-@interface OTWTabBarController () <OTWCustomTabBarDelegate>
+@interface OTWTabBarController () <OTWCustomTabBarDelegate,UITabBarControllerDelegate>
 
 @property (nonatomic, strong) OTWCustomTabBar *customTabBar;
 @property (nonatomic, strong) OTWTabBarConfig *config;
@@ -30,7 +32,6 @@ static CGFloat otwCustomTabBarHeight = 49.0;
     dispatch_once(&onceToken, ^{
         tabBar = [[OTWTabBarController alloc] initWithBlock:block];
     });
-    
     return tabBar;
 }
 
@@ -198,7 +199,6 @@ static CGFloat otwCustomTabBarHeight = 49.0;
 
 - (void)tabBar:(OTWCustomTabBar *)tab didSelectItem:(OTWCustomTabBarItem *)item atIndex:(NSInteger)index
 {
-    
     NSMutableArray *items = [NSMutableArray arrayWithCapacity:0];
     for (UIView *view in tab.subviews) {
         if ([view isKindOfClass:[OTWCustomTabBarItem class]]) {
@@ -228,6 +228,14 @@ static CGFloat otwCustomTabBarHeight = 49.0;
     }
     
     self.selectedIndex = index;
+}
+
+#pragma mark - UITabBarControllerDelegate
+- (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
+{
+    DLog("###");
+    
+    return YES;
 }
 
 // 屏幕旋转时调整tabbar

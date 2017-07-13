@@ -7,8 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "OTWTabBarController.h"
 
 @interface OTWLaunchManager : NSObject
+
+@property (nonatomic, strong) OTWTabBarController *mainTabController;
 
 + (instancetype)sharedManager;
 

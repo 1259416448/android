@@ -14,7 +14,6 @@
 #import "OTWPersonalSiteController.h"
 #import "OTWFootprintsViewController.h"
 
-#import "OTWTabBarController.h"
 #import "OTWFindViewController.h"
 #import "OTWFootprintsViewController.h"
 #import "OTWARViewController.h"
@@ -31,7 +30,7 @@
 @property (nonatomic,strong) UINavigationController *personalMyController;
 @property (nonatomic,strong) UINavigationController *footprintsViewController;
 
-@property (nonatomic, strong) OTWTabBarController *mainTabController;
+
 
 @end
 

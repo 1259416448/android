@@ -14,6 +14,7 @@
 #import "OTWPersonalSiteController.h"
 #import "OTWLoginViewController.h"
 #import "OTWRootViewController.h"
+#import "OTWTabBarController.h"
 
 @interface OTWPersonalViewController() <UITableViewDataSource,UITableViewDelegate>
 
@@ -36,14 +37,6 @@
     [super viewDidLoad];
     _arrowImge = [UIImage imageNamed:@"arrow_right"];
     [[OTWUserModel shared] load];
-    //检查是否存在用户信息
-    if(![OTWUserModel shared].username
-       ||[[OTWUserModel shared].username isEqualToString:@""]){
-        //打开登陆
-        [[OTWLaunchManager sharedManager] showLoginView];
-        //OTWLoginViewController *loginVC = [[OTWLoginViewController alloc] init];
-        //[self.navigationController presentViewController:loginVC animated:YES completion:nil];
-    }
     [self buildUI];
     [self initData];
 }
@@ -62,11 +55,20 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [[OTWLaunchManager sharedManager].mainTabController showTabBarWithAnimation:YES];
+    
+    //检查是否存在用户信息
+    if(![OTWUserModel shared].username
+       ||[[OTWUserModel shared].username isEqualToString:@""]){
+        //打开登陆
+        //        [[OTWLaunchManager sharedManager] showLoginView];
+        OTWLoginViewController *loginVC = [[OTWLoginViewController alloc] init];
+        //必须登录的消息，登录页面接收到消息后，如果用户点击了关闭按钮，直接设置为首页，并关闭登录页
+        [self.navigationController presentViewController:loginVC animated:YES completion:^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"requiredLogin" object:self];
+        }];
+    }
     DLog(@"执行了viewWillAppear");
-    [[NSNotificationCenter defaultCenter] addObserver:self
-           selector:@selector(handleColorChange:)
-               name:@"loginCancel"
-             object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
            selector:@selector(handleColorChangeLoginSuccess:)
                name:@"loginSuccess"
@@ -82,7 +84,7 @@
 -(void)handleColorChange:(NSNotification*)sender
 {
     DLog(@"执行了loginCancel");
-    [self.view.window setRootViewController:[[OTWRootViewController alloc] init]];
+    [[OTWLaunchManager sharedManager] showMainTabView];
 }
 
 -(void)handleColorChangeLoginSuccess:(NSNotification*)sender
