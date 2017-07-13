@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		18B034B91F139C1500F53461 /* OTWPersonalSiteController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B034B81F139C1500F53461 /* OTWPersonalSiteController.m */; };
 		18B034BC1F14A42800F53461 /* OTWPersonalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B034BB1F14A42800F53461 /* OTWPersonalViewController.m */; };
+		18B034BF1F15C9BD00F53461 /* OTWFindViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B034BE1F15C9BD00F53461 /* OTWFindViewCell.m */; };
+		18B034C21F15CC3F00F53461 /* OTWFindModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B034C11F15CC3F00F53461 /* OTWFindModel.m */; };
 		D7F6AFF61F0D32FB0013090A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6AFF51F0D32FB0013090A /* main.m */; };
 		D7F6AFF91F0D32FB0013090A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6AFF81F0D32FB0013090A /* AppDelegate.m */; };
 		D7F6B0011F0D32FB0013090A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D7F6B0001F0D32FB0013090A /* Assets.xcassets */; };
@@ -69,6 +71,10 @@
 		18B034B81F139C1500F53461 /* OTWPersonalSiteController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPersonalSiteController.m; sourceTree = "<group>"; };
 		18B034BA1F14A41A00F53461 /* OTWPersonalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTWPersonalViewController.h; sourceTree = "<group>"; };
 		18B034BB1F14A42800F53461 /* OTWPersonalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPersonalViewController.m; sourceTree = "<group>"; };
+		18B034BD1F15C9AD00F53461 /* OTWFindViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTWFindViewCell.h; path = OnTheWay/Pages/Personal/Controller/OTWFindViewCell.h; sourceTree = SOURCE_ROOT; };
+		18B034BE1F15C9BD00F53461 /* OTWFindViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTWFindViewCell.m; path = OnTheWay/Pages/Personal/Controller/OTWFindViewCell.m; sourceTree = SOURCE_ROOT; };
+		18B034C01F15CC3300F53461 /* OTWFindModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTWFindModel.h; path = OnTheWay/Pages/Personal/Controller/OTWFindModel.h; sourceTree = SOURCE_ROOT; };
+		18B034C11F15CC3F00F53461 /* OTWFindModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTWFindModel.m; path = OnTheWay/Pages/Personal/Controller/OTWFindModel.m; sourceTree = SOURCE_ROOT; };
 		45C2D5CA9B6813E8ACAF6178 /* libPods-OnTheWay.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnTheWay.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B8637730B7A7E4B6ADD9FEE /* Pods-OnTheWay.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnTheWay.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OnTheWay/Pods-OnTheWay.debug.xcconfig"; sourceTree = "<group>"; };
 		68C4FF114BC411D8C8AADB56 /* Pods-OnTheWay.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnTheWay.release.xcconfig"; path = "Pods/Target Support Files/Pods-OnTheWay/Pods-OnTheWay.release.xcconfig"; sourceTree = "<group>"; };
@@ -422,6 +428,8 @@
 		D7F6B0651F0DD3690013090A /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				18B034C01F15CC3300F53461 /* OTWFindModel.h */,
+				18B034C11F15CC3F00F53461 /* OTWFindModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -429,6 +437,8 @@
 		D7F6B0661F0DD3690013090A /* View */ = {
 			isa = PBXGroup;
 			children = (
+				18B034BD1F15C9AD00F53461 /* OTWFindViewCell.h */,
+				18B034BE1F15C9BD00F53461 /* OTWFindViewCell.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -853,6 +863,7 @@
 				D7F6B0B61F10AA2D0013090A /* OTWLoginViewController.m in Sources */,
 				DDB8C29F1F14AF230091E7B0 /* OTWUserModel.m in Sources */,
 				D7F6B09A1F0F75510013090A /* OTWLaunchViewController.m in Sources */,
+				18B034BF1F15C9BD00F53461 /* OTWFindViewCell.m in Sources */,
 				D7F6B07E1F0DD43A0013090A /* OTWFindViewController.m in Sources */,
 				D7F6B05E1F0DD1D80013090A /* OTWRootViewController.m in Sources */,
 				D7F6B05B1F0DD0280013090A /* OTWBaseViewController.m in Sources */,
@@ -863,6 +874,7 @@
 				D7F6B08B1F0DD5370013090A /* UIImage+Color.m in Sources */,
 				DD14F2481F11CDCA004DFE4A /* GCTokenModel.m in Sources */,
 				D7F6B04C1F0DCB9D0013090A /* OTWCustomNavigationBar.m in Sources */,
+				18B034C21F15CC3F00F53461 /* OTWFindModel.m in Sources */,
 				D7F6B0541F0DCE420013090A /* UIView+Frame.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

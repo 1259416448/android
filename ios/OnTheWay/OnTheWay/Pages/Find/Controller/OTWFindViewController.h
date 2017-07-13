@@ -10,4 +10,6 @@
 
 @interface OTWFindViewController : UIViewController
 
+@property (assign,nonatomic) CGFloat height;
+
 @end
