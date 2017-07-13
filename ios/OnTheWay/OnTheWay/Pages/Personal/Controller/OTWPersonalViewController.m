@@ -36,10 +36,8 @@
 -(void)viewDidLoad {
     [super viewDidLoad];
     _arrowImge = [UIImage imageNamed:@"arrow_right"];
-
     [self buildUI];
     [self initData];
-    [self showLoginView];
 }
 
 #pragma mark - initData
@@ -56,28 +54,9 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-//    //检查是否存在用户信息
-//    if(![OTWUserModel shared].username
-//       ||[[OTWUserModel shared].username isEqualToString:@""]){
-//        //打开登陆
-//        //        [[OTWLaunchManager sharedManager] showLoginView];
-//        OTWLoginViewController *loginVC = [[OTWLoginViewController alloc] init];
-//        //必须登录的消息，登录页面接收到消息后，如果用户点击了关闭按钮，直接设置为首页，并关闭登录页
-//        [self.navigationController presentViewController:loginVC animated:YES completion:^{
-//            [[NSNotificationCenter defaultCenter] postNotificationName:@"requiredLogin" object:self];
-//        }];
-//    }
+    [[OTWLaunchManager sharedManager].mainTabController showTabBarWithAnimation:YES];
     DLog(@"执行了viewWillAppear");
-    [[NSNotificationCenter defaultCenter] addObserver:self
-           selector:@selector(handleColorChangeLoginSuccess:)
-               name:@"loginSuccess"
-             object:nil];
-}
-
--(void)viewWillDisappear:(BOOL)animated
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self buildPersonalInfo];
 }
 
 //登陆被关闭，说明用户没有登陆，直接跳转到首页
@@ -87,10 +66,9 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
--(void)handleColorChangeLoginSuccess:(NSNotification*)sender
+-(void)buildPersonalInfo
 {
     [[OTWUserModel shared] load];
-    DLog(@"执行了loginSuccess");
     NSURL *url ;
     if(![OTWUserModel shared].headImg){
         url = [NSURL URLWithString:@"https://sources.cc520.me/share/img/o_1b4t0srq81sm31g699lk1ob1e7r3t4.jpg?imageView2/1/w/78/h/78"];
@@ -114,17 +92,6 @@
     
     //设置tableview的第一行显示内容
     self.personalMyTableView.tableHeaderView=self.personalMyTableViewHeader;
-}
-
-- (void)showLoginView
-{
-    [[OTWUserModel shared] load];
-    //检查是否存在用户信息
-    if(![OTWUserModel shared].username
-       ||[[OTWUserModel shared].username isEqualToString:@""]){
-        
-        [[OTWLaunchManager sharedManager] showLoginViewWithController:self];
-    }
 }
 
 #pragma mark 这一组里面有多少行

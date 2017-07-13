@@ -41,6 +41,11 @@ typedef OTWTabBarConfig*(^tabBarBlock)(OTWTabBarConfig *config);
  */
 - (void)showTabBarWithAnimation:(BOOL)isAnimation;
 
+/**
+ * 通过索引位置设置tabBarItem为选中
+ */
+- (void) didSelectedItemByIndex:(NSUInteger)selectedIndex;
+
 @end
 
 @interface OTWTabBarConfig : NSObject

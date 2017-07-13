@@ -8,5 +8,6 @@ target 'OnTheWay' do
   pod 'IQKeyboardManager'
   pod 'PPNetworkHelper'
   pod 'YSCategorys'
+  pod 'STPopup'
 end
 

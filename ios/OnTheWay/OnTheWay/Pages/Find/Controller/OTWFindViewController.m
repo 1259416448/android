@@ -26,24 +26,21 @@
     [self initData];
     
     [self buildUI];
-    //创建一个分组样式的UITableView
-    _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     
-    _tableView.dataSource = self;
     
-    _tableView.delegate = self;
-    
-    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;//将边框去掉
-    
-    [self.view addSubview:_tableView];
-    
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [[OTWLaunchManager sharedManager].mainTabController showTabBarWithAnimation:YES];
 }
 
 #pragma mark 构造数据
 -(void)initData{
 
     _status = [[NSMutableArray alloc] init];
-    NSDictionary *dic=@{@"Id":@(1),@"FindTpyeBackgroundImageUrl":@"http://img04.tooopen.com/thumbnails/20130701/x_20083555.jpg",@"FindTpyeName":@"餐饮",@"FindTpyeContentList":@[@[@"自助餐",@"zizhucan"],@[@"咖啡",@"kafei"],@[@"火锅",@"huoguo"]]};
+    NSDictionary *dic=@{@"Id":@(1),@"FindTpyeBackgroundImageUrl":@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg?imageView2/2/w/1035/h/390",@"FindTpyeName":@"餐饮",@"FindTpyeContentList":@[@[@"自助餐",@"zizhucan"],@[@"咖啡",@"kafei"],@[@"火锅",@"huoguo"]]};
     
     NSDictionary *dic2=@{@"Id":@(2),@"FindTpyeBackgroundImageUrl":@"http://img02.tooopen.com/images/20141229/sl_107003776898.jpg",@"FindTpyeName":@"商店",@"FindTpyeContentList":@[@[@"购物",@"gouwu"],@[@"书店",@"shudian"],@[@"便利店",@"bianlidian"]]};
     
@@ -88,6 +85,20 @@
     
     //大背景
     self.view.backgroundColor=[UIColor color_f4f4f4];
+    
+    //创建一个分组样式的UITableView
+    _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0,65, SCREEN_WIDTH, SCREEN_HEIGHT-65-20) style:UITableViewStyleGrouped];
+    
+    _tableView.dataSource = self;
+    
+    _tableView.delegate = self;
+    
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;//将边框去掉
+    
+    _tableView.backgroundColor = [UIColor clearColor];
+
+    
+    [self.view addSubview:_tableView];
 
 }
 
@@ -114,8 +125,7 @@
 #pragma mark返回每行的单元格
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
-    static NSString *cellIdentifier=@"UITableViewCellIdentifierKey1";
+    static NSString *cellIdentifier=@"findViewCellIdentifierKey1";
     OTWFindViewCell *cell;
     cell=[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if(!cell){
@@ -123,10 +133,10 @@
         cell.contentView.backgroundColor = [UIColor clearColor];
         cell.backgroundColor = [UIColor clearColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        //在此模块，以便重新布局
+        OTWFindStatus *status=_status[indexPath.row];
+        cell.status=status;
     }
-    //在此模块，以便重新布局
-    OTWFindStatus *status=_status[indexPath.row];
-    cell.status=status;
     return cell;
 }
 
@@ -135,10 +145,6 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 140;
-}
-#pragma mark 重写状态样式方法
--(UIStatusBarStyle)preferredStatusBarStyle{
-    return UIStatusBarStyleLightContent;
 }
 
 @end

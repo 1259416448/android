@@ -11,9 +11,9 @@
 
 @interface OTWLaunchManager : NSObject
 
-@property (nonatomic, strong) OTWTabBarController *mainTabController;
+@property (nonatomic, strong) OTWTabBarController * _Nullable mainTabController;
 
-+ (instancetype)sharedManager;
++ (instancetype _Nullable )sharedManager;
 
 - (void)showMainTabView;
 - (void)showLoginView;
@@ -22,7 +22,8 @@
 - (void)showPersonalSiteView;
 - (void)showPersonalMyView;
 - (void)showFootprintView;
+- (void)deallocLoginViewController;
 
-- (void)showLoginViewWithController:(UIViewController*)viewController;
+- (BOOL)showLoginViewWithController:(UIViewController*_Nullable)viewController completion:(void (^ __nullable)(void))completion NS_AVAILABLE_IOS(5_0);
 
 @end

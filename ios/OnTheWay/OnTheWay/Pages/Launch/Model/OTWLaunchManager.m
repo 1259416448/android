@@ -19,6 +19,7 @@
 #import "OTWARViewController.h"
 #import "OTWNewsViewController.h"
 #import "OTWPersonalViewController.h"
+#import "OTWUserModel.h"
 
 @interface OTWLaunchManager ()
 
@@ -49,10 +50,18 @@
 
 #pragma mark - Private methods
 
-- (void)showLoginViewWithController:(UIViewController*)viewController
+- (BOOL)showLoginViewWithController:(UIViewController*)viewController completion:(void (^ __nullable)(void))completion NS_AVAILABLE_IOS(5_0)
 {
-    if (!viewController) return;
-    [viewController presentViewController:self.loginViewController animated:YES completion:nil];
+    if (!viewController) return NO;
+    //判断用户信息
+    [[OTWUserModel shared] load];
+    //检查是否存在用户信息
+    if(![OTWUserModel shared].username
+       ||[[OTWUserModel shared].username isEqualToString:@""]){
+       [viewController presentViewController:self.loginViewController animated:YES completion:completion];
+        return YES;
+    }
+    return NO;
 }
 
 - (void)showLoginView
@@ -103,6 +112,11 @@
         [[UIApplication sharedApplication].keyWindow setRootViewController:self.footprintsViewController];
         self.loginViewController = nil;
     });
+}
+
+-(void) deallocLoginViewController
+{
+    _loginViewController = nil;
 }
 
 #pragma mark - Getter & Setter
@@ -191,7 +205,6 @@
             return config;
         }];
     }
-    
     return _mainTabController;
 }
 

@@ -13,6 +13,7 @@
 #import "OTWRootViewController.h"
 #import "OTWLaunchManager.h"
 #import "OTWTabBarController.h"
+#import <STPopup/STPopup.h>
 
 @interface OTWPersonalSiteController() <UITableViewDataSource,UITableViewDelegate>
 
@@ -24,13 +25,15 @@
 
 @property (nonatomic,strong) UIView *underLineTopView;
 
-@property (nonatomic,strong) UIButton *personalSiteOutButton;
-
 @property (nonatomic,strong) UIView *underLineBottomView;
 
-@property(nonatomic,strong) UIView *personalSiteTableViewFooter;
+@property (nonatomic,strong) UIView *personalSiteTableViewFooter;
 
-@property(nonatomic,strong) UIView *contentView;
+@property (nonatomic,strong) UIView *contentView;
+
+//退出登陆提示
+@property (nonatomic,strong) UIAlertController *alertController;
+
 @end
 
 @implementation OTWPersonalSiteController
@@ -72,7 +75,6 @@
     
     //设置tableview的第一行显示内容
     self.personalSiteTableView.tableFooterView=self.personalSiteTableViewFooter;
-
   
 }
 
@@ -128,11 +130,34 @@
 }
 -(void)OutButtonClick {
     DLog(@"点击退出");
-    [[OTWUserModel shared] logout];
-    [GCTokenManager cleanToken];
+    [self presentViewController:self.alertController animated:YES completion:nil];
+    
+    
+//    [[OTWUserModel shared] logout];
+//    [GCTokenManager cleanToken];
     // 退出到登录页
-    [[OTWLaunchManager sharedManager] showMainTabView];
+//    [[OTWLaunchManager sharedManager] deallocLoginViewController];
+//    [[OTWLaunchManager sharedManager].mainTabController didSelectedItemByIndex:0];
+//    [self.navigationController popToRootViewControllerAnimated: NO];
 }
+
+-(UIAlertController*)alertController
+{
+    if(!_alertController){
+        _alertController = [UIAlertController alertControllerWithTitle:@"" message:@"退出后不会删除任何历史数据，下次登录依然可以使用本账号。" preferredStyle:UIAlertControllerStyleActionSheet];
+        [_alertController addAction:[UIAlertAction actionWithTitle:@"退出登录" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            [[OTWUserModel shared] logout];
+            [GCTokenManager cleanToken];
+            [[OTWLaunchManager sharedManager] deallocLoginViewController];
+            [[OTWLaunchManager sharedManager].mainTabController didSelectedItemByIndex:0];
+            [self.navigationController popToRootViewControllerAnimated: NO];
+            
+        }]];
+        [_alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    }
+    return _alertController;
+}
+
 
 -(UITableView*)personalSiteTableView{
     if(!_personalSiteTableView){
@@ -154,20 +179,6 @@
     return _underLineTopView;
 }
 
--(UIButton*)personalSiteOutButton{
-    if(!_personalSiteOutButton){
-        _personalSiteOutButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        _personalSiteOutButton.backgroundColor = [UIColor whiteColor];
-        _personalSiteOutButton.frame = CGRectMake(0, 0, SCREEN_WIDTH, 50);
-        [_personalSiteOutButton setTitle:@"退出登录" forState:UIControlStateNormal];
-        [_personalSiteOutButton setTitleColor:[UIColor color_e50834] forState:UIControlStateNormal];
-        _personalSiteOutButton.titleLabel.font = [UIFont systemFontOfSize:16];
-        _personalSiteOutButton.layer.cornerRadius = 4;
-        [_personalSiteOutButton addTarget:self action:@selector(OutButtonClick) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _personalSiteOutButton;
-}
-
 -(UIView*)underLineBottomView{
     if(!_underLineBottomView){
         _underLineBottomView = [[UIView alloc] initWithFrame:CGRectMake(0, 50, SCREEN_WIDTH, 0.5)];
@@ -179,29 +190,29 @@
 -(UIView*)personalSiteTableViewFooter{
     if(!_personalSiteTableViewFooter){
         //设置header的背景
-        _personalSiteTableViewFooter=[[UIView alloc] initWithFrame:CGRectMake(0, 50, SCREEN_WIDTH, 50)];
+        _personalSiteTableViewFooter=[[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 75)];
         _personalSiteTableViewFooter.backgroundColor=[UIColor clearColor];
-        //设置header 内容的背景
-        [_personalSiteTableViewFooter addSubview:self.contentView];
+        UIView *tableViewFooterContentView = [[UIView alloc] initWithFrame:CGRectMake(0, 25, SCREEN_WIDTH, 50)];
         
-        // 退出button
-        [self.contentView addSubview:self.personalSiteOutButton];
+        UITapGestureRecognizer *tapGesturRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(OutButtonClick)];
+        [tableViewFooterContentView addGestureRecognizer:tapGesturRecognizer];
         
+        tableViewFooterContentView.backgroundColor = [UIColor whiteColor];
+        UILabel *outSizeLabel = [[UILabel alloc] initWithFrame:CGRectMake((SCREEN_WIDTH - 66)/2, 15+0.5, 66, 20)];
+        outSizeLabel.text = @"退出登陆";
+        outSizeLabel.textColor = [UIColor color_e50834];
+        outSizeLabel.font = [UIFont systemFontOfSize:16];
+        
+        [_personalSiteTableViewFooter addSubview:tableViewFooterContentView];
+        
+        [tableViewFooterContentView addSubview:outSizeLabel];
         //第一条线
-        [self.contentView addSubview:self.underLineTopView];
+        [tableViewFooterContentView addSubview:self.underLineTopView];
         
         //第二条线
-        [self.contentView addSubview:self.underLineBottomView];
+        [tableViewFooterContentView addSubview:self.underLineBottomView];
     }
     return _personalSiteTableViewFooter;
-}
-
--(UIView*)contentView{
-    if(!_contentView){
-        _contentView=[[UIView alloc] initWithFrame:CGRectMake(0, 25, SCREEN_WIDTH, 50)];
-        _contentView.backgroundColor=[UIColor whiteColor];
-    }
-    return _contentView;
 }
 @end
 
