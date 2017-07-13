@@ -22,7 +22,7 @@
 
 @interface OTWLaunchManager ()
 
-@property (nonatomic, strong) UINavigationController *loginViewController;
+@property (nonatomic, strong) OTWLoginViewController *loginViewController;
 @property (nonatomic, strong) UINavigationController *personalEditNicknameController;
 @property (nonatomic, strong) OTWRootViewController *mainTabViewController;
 @property (nonatomic,strong) UINavigationController *personalInfoController;
@@ -47,6 +47,11 @@
 }
 
 #pragma mark - Private methods
+
+- (void)showLoginViewWithController:(UIViewController*)viewController
+{
+    [viewController presentViewController:self.loginViewController animated:YES completion:nil];
+}
 
 - (void)showLoginView
 {
@@ -92,11 +97,11 @@
 
 #pragma mark - Getter & Setter
 
-- (UINavigationController*)loginViewController
+- (OTWLoginViewController*)loginViewController
 {
     if (!_loginViewController) {
-        OTWLoginViewController *loginVC = [[OTWLoginViewController alloc] init];
-        _loginViewController = [[UINavigationController alloc] initWithRootViewController:loginVC];
+        _loginViewController = [[OTWLoginViewController alloc] init];
+        //_loginViewController = [[UINavigationController alloc] initWithRootViewController:loginVC];
     }
     
     return _loginViewController;
@@ -151,7 +156,7 @@
             OTWARViewController * arVC = [[OTWARViewController alloc] init];
             UINavigationController * arNav = [[UINavigationController alloc] initWithRootViewController:arVC]; // AR
             
-            OTWFootprintsViewController *newsVC = [[OTWFootprintsViewController alloc] init];
+            OTWNewsViewController *newsVC = [[OTWNewsViewController alloc] init];
             UINavigationController * newsNav = [[UINavigationController alloc] initWithRootViewController:newsVC]; // 消息
             
             OTWPersonalViewController *personalVC = [[OTWPersonalViewController alloc] init];

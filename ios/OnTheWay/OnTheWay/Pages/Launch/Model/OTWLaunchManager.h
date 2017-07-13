@@ -19,4 +19,6 @@
 - (void)showPersonalSiteView;
 - (void)showPersonalMyView;
 
+- (void)showLoginViewWithController:(UIViewController*)viewController;
+
 @end

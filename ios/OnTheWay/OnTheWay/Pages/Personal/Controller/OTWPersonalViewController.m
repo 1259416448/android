@@ -35,14 +35,18 @@
 -(void)viewDidLoad {
     [super viewDidLoad];
     _arrowImge = [UIImage imageNamed:@"arrow_right"];
+    
+    [[OTWLaunchManager sharedManager] showLoginViewWithController:self];
+    
     [[OTWUserModel shared] load];
     //检查是否存在用户信息
     if(![OTWUserModel shared].username
        ||[[OTWUserModel shared].username isEqualToString:@""]){
         //打开登陆
-        [[OTWLaunchManager sharedManager] showLoginView];
+        //[[OTWLaunchManager sharedManager] showLoginView];
         //OTWLoginViewController *loginVC = [[OTWLoginViewController alloc] init];
         //[self.navigationController presentViewController:loginVC animated:YES completion:nil];
+        [[OTWLaunchManager sharedManager] showLoginViewWithController:self];
     }
     [self buildUI];
     [self initData];
@@ -82,7 +86,7 @@
 -(void)handleColorChange:(NSNotification*)sender
 {
     DLog(@"执行了loginCancel");
-    [self.view.window setRootViewController:[[OTWRootViewController alloc] init]];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void)handleColorChangeLoginSuccess:(NSNotification*)sender

@@ -53,7 +53,7 @@
     [super viewDidLoad];
     WeakSelf(self)
     self.customNavigationBar.leftButtonClicked=^{
-        [weakself.presentingViewController dismissViewControllerAnimated:YES completion:^{
+        [weakself dismissViewControllerAnimated:YES completion:^{
             [[NSNotificationCenter defaultCenter] postNotificationName:@"loginCancel" object:weakself];
         }];
         //关闭键盘
