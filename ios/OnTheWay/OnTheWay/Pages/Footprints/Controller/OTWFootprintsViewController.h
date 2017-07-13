@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OTWFootprintsViewController : UIViewController
+@interface OTWFootprintsViewController : OTWBaseViewController
 
 @end

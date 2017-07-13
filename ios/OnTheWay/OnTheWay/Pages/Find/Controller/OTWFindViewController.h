@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OTWFindViewController : UIViewController
+@interface OTWFindViewController : OTWBaseViewController
 
 @property (assign,nonatomic) CGFloat height;
 

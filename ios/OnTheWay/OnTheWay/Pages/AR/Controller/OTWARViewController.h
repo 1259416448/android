@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OTWARViewController : UIViewController
+@interface OTWARViewController : OTWBaseViewController
 
 @end

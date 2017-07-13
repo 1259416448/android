@@ -212,10 +212,10 @@
                 [OTWUserModel shared].headImg = result[@"body"][@"headImg"];
                 [OTWUserModel shared].name = result[@"body"][@"name"];
                 [[OTWUserModel shared] dump];
+                
                 //登陆成功
-                [self.presentingViewController dismissViewControllerAnimated:YES completion:^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"loginSuccess" object:self];
-                }];
+                [[OTWLaunchManager sharedManager] showMainTabView];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"loginSuccess" object:self];
             }else{
                 [self.loginButton setTitle:@"登陆" forState:UIControlStateNormal];
                 self.loginButton.userInteractionEnabled = YES;
