@@ -10,6 +10,7 @@
 #import "OTWFootprintListModel.h"
 #import "OTWFootprintListFrame.h"
 #import "OTWFootprintListTableViewCell.h"
+#import <MJRefresh.h>
 
 
 @interface OTWFootprintsViewController () <UITableViewDataSource,UITableViewDelegate>
@@ -41,8 +42,23 @@
     [self setLeftNavigationImage:[UIImage imageNamed:@"back_2"]];
     //大背景
     self.view.backgroundColor=[UIColor color_f4f4f4];
+    
+    //默认【下拉刷新】
+    self.footprintTableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(refresh)];
+    //默认【上拉加载】
+    self.footprintTableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMore)];
+    
     [self.view addSubview:self.footprintTableView];
     
+}
+
+-(void)refresh
+{
+    DLog(@"refresh");
+}
+-(void)loadMore
+{
+    DLog(@"loadMore");
 }
 
 #pragma mark 这一组里面有多少行

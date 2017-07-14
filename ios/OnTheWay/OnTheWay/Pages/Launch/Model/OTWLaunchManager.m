@@ -19,10 +19,11 @@
 #import "OTWARViewController.h"
 #import "OTWNewsViewController.h"
 #import "OTWPersonalViewController.h"
+#import "OTWUserModel.h"
 
 @interface OTWLaunchManager ()
 
-@property (nonatomic, strong) UINavigationController *loginViewController;
+@property (nonatomic, strong) OTWLoginViewController *loginViewController;
 @property (nonatomic, strong) UINavigationController *personalEditNicknameController;
 @property (nonatomic, strong) OTWRootViewController *mainTabViewController;
 @property (nonatomic,strong) UINavigationController *personalInfoController;
@@ -48,6 +49,20 @@
 }
 
 #pragma mark - Private methods
+
+- (BOOL)showLoginViewWithController:(UIViewController*)viewController completion:(void (^ __nullable)(void))completion NS_AVAILABLE_IOS(5_0)
+{
+    if (!viewController) return NO;
+    //判断用户信息
+    [[OTWUserModel shared] load];
+    //检查是否存在用户信息
+    if(![OTWUserModel shared].username
+       ||[[OTWUserModel shared].username isEqualToString:@""]){
+       [viewController presentViewController:self.loginViewController animated:YES completion:completion];
+        return YES;
+    }
+    return NO;
+}
 
 - (void)showLoginView
 {
@@ -99,13 +114,18 @@
     });
 }
 
+-(void) deallocLoginViewController
+{
+    _loginViewController = nil;
+}
+
 #pragma mark - Getter & Setter
 
-- (UINavigationController*)loginViewController
+- (OTWLoginViewController*)loginViewController
 {
     if (!_loginViewController) {
-        OTWLoginViewController *loginVC = [[OTWLoginViewController alloc] init];
-        _loginViewController = [[UINavigationController alloc] initWithRootViewController:loginVC];
+        _loginViewController = [[OTWLoginViewController alloc] init];
+        //_loginViewController = [[UINavigationController alloc] initWithRootViewController:loginVC];
     }
     
     return _loginViewController;
@@ -169,7 +189,7 @@
             OTWARViewController * arVC = [[OTWARViewController alloc] init];
             UINavigationController * arNav = [[UINavigationController alloc] initWithRootViewController:arVC]; // AR
             
-            OTWFootprintsViewController *newsVC = [[OTWFootprintsViewController alloc] init];
+            OTWNewsViewController *newsVC = [[OTWNewsViewController alloc] init];
             UINavigationController * newsNav = [[UINavigationController alloc] initWithRootViewController:newsVC]; // 消息
             
             OTWPersonalViewController *personalVC = [[OTWPersonalViewController alloc] init];
@@ -185,7 +205,6 @@
             return config;
         }];
     }
-    
     return _mainTabController;
 }
 

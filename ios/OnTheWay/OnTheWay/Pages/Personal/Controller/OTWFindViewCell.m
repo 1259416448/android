@@ -9,6 +9,8 @@
 
 #import "OTWFindModel.h"
 
+#import <AFNetworking/UIImageView+AFNetworking.h>
+
 #define FindTableViewCellControlSpacing 10 //控件间距
 
 #define FindTableViewBackImageHeight 130  //每个模块背景图片的高
@@ -40,6 +42,9 @@
     _FindTpyeName=[[UILabel alloc]init];
     _FindTpyeName.textColor=[UIColor whiteColor];
     _FindTpyeName.font=[UIFont systemFontOfSize:25];
+    _FindTpyeName.layer.shadowColor = [UIColor blackColor].CGColor;
+    _FindTpyeName.layer.shadowOpacity = 0.3;
+    _FindTpyeName.layer.shadowOffset = CGSizeMake(0, 1);
     [self.contentView addSubview:_FindTpyeName];
     //图标列表
     _FindTpyeContentList=[[UIView alloc]init];
@@ -51,12 +56,11 @@
 #pragma mark 设置模块
 -(void)setStatus:(OTWFindStatus *)status{
     //设置背景大小和位置
-     NSData *url ;
     CGRect avatarRect=CGRectMake(15, 0,  SCREEN_WIDTH-30, FindTableViewBackImageHeight);
-      url = [NSData dataWithContentsOfURL:[NSURL URLWithString:status.FindTpyeBackgroundImageUrl]];
-    _FindTpyeBackgroundImageUrl.image=[UIImage imageWithData:url];
+    [_FindTpyeBackgroundImageUrl setImageWithURL:[NSURL URLWithString:status.FindTpyeBackgroundImageUrl]];
     _FindTpyeBackgroundImageUrl.frame=avatarRect;
-    
+    _FindTpyeBackgroundImageUrl.layer.cornerRadius = 3;
+    _FindTpyeBackgroundImageUrl.layer.masksToBounds = YES;
     //根据名称计算占用空间大小
     CGSize userNameSize=[status.FindTpyeName sizeWithAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:25]}];
     CGRect userNameRect=CGRectMake( SCREEN_WIDTH-20-userNameSize.width-15, 32,userNameSize.width,userNameSize.height);

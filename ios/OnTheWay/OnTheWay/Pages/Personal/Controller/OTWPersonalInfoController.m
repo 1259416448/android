@@ -34,6 +34,12 @@
     [self buildUI];
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
+}
+
 #pragma mark - initData
 - (void) initData
 {

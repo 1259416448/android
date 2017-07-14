@@ -100,10 +100,8 @@ static CGFloat otwCustomTabBarHeight = 49.0;
                 [vcs addObject:vc];
             }
         }
-        
         self.viewControllers = [vcs copy];
     } else {
-        
         self.viewControllers = [_config.viewControllers copy];
     }
 }
@@ -195,20 +193,44 @@ static CGFloat otwCustomTabBarHeight = 49.0;
     // Dispose of any resources that can be recreated.
 }
 
+
+#pragma mark - didSelectedItemByIndex
+
+-(void)didSelectedItemByIndex:(NSUInteger)selectedIndex
+{
+    NSMutableArray *items = [NSMutableArray arrayWithCapacity:0];
+    for (UIView *view in self.customTabBar.subviews) {
+        if ([view isKindOfClass:[OTWCustomTabBarItem class]]) {
+            [items addObject:view];
+        }
+    }
+    OTWCustomTabBarItem *item = (OTWCustomTabBarItem*)items[selectedIndex];
+    if(item){
+        [self tabBar:[self customTabBar] didSelectItem:item atIndex:selectedIndex];
+    }
+}
+
+
 #pragma mark - OTWCustomTabBarDelegate
 
 - (void)tabBar:(OTWCustomTabBar *)tab didSelectItem:(OTWCustomTabBarItem *)item atIndex:(NSInteger)index
 {
+    DLog(@"view:%@",tab);
+    if(index == 4){
+        if([[OTWLaunchManager sharedManager] showLoginViewWithController:self completion:^{
+             [[NSNotificationCenter defaultCenter] postNotificationName:@"personalViewController" object:self];
+        }]){
+            return ;
+        };
+    }
     NSMutableArray *items = [NSMutableArray arrayWithCapacity:0];
     for (UIView *view in tab.subviews) {
         if ([view isKindOfClass:[OTWCustomTabBarItem class]]) {
-            
             [items addObject:view];
         }
     }
     
     for (int i = 0; i < items.count; i++) {
-        
         UIView *view = items[i];
         if ([view isKindOfClass:[OTWCustomTabBarItem class]]) {
             OTWCustomTabBarItem *item = (OTWCustomTabBarItem*)view;
@@ -228,14 +250,6 @@ static CGFloat otwCustomTabBarHeight = 49.0;
     }
     
     self.selectedIndex = index;
-}
-
-#pragma mark - UITabBarControllerDelegate
-- (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
-{
-    DLog("###");
-    
-    return YES;
 }
 
 // 屏幕旋转时调整tabbar
