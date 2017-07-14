@@ -104,7 +104,7 @@
         NSMutableArray *models = [NSMutableArray arrayWithCapacity:dictArray.count];
         for (NSDictionary *dict in dictArray) {
             // 创建模型
-            OTWFootprintListModel *model = [OTWFootprintListModel footprintWithDict:dict];
+            OTWFootprintListModel *model = [OTWFootprintListModel initWithDict:dict];
             // 根据模型数据创建frame模型
             OTWFootprintListFrame *frame = [[OTWFootprintListFrame alloc] init];
             [frame setFootprint:model];

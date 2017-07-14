@@ -29,8 +29,15 @@
 //足迹附件类型 图片 或者 视频
 @property (nonatomic,copy) NSString *footprintType;
 
-- (id) initWithDict:(NSDictionary *)dict;
+//足迹所有图片,只有获取详情时，才会加载参数
+@property (nonatomic,copy) NSArray<NSString *> *footprintPhotoArray;
 
-+ (id) footprintWithDict:(NSDictionary *)dict;
+//足迹总评论数,只有获取详情时，才会加载参数
+@property (nonatomic,assign) NSInteger footprintCommentNum;
+
+//足迹总点赞数,只有获取详情时，才会加载参数
+@property (nonatomic,assign) NSInteger footprintLikeNum;
+
++ (id) initWithDict:(NSDictionary *)dict;
 
 @end

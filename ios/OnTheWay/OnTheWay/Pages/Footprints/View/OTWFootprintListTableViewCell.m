@@ -112,8 +112,12 @@
 - (void)setttingFrame
 {
     self.footprintBGView.frame = self.footprintListFrame.footprintBGF;
+    self.footprintBGView.layer.shadowPath = [UIBezierPath bezierPathWithRect:_footprintBGView.bounds].CGPath;
     self.userheadImgBGView.frame = self.footprintListFrame.userHeadImgF;
     self.userheadImgBGView.layer.cornerRadius = self.userheadImgBGView.Witdh/2.0;
+    struct CGPath *path = CGPathCreateMutable();
+    CGPathAddArc(path, nil, 17 , 17, 17, 0, M_PI*2, true);
+    self.userheadImgBGView.layer.shadowPath = path;
     self.userNicknameLabel.frame = self.footprintListFrame.userNicknameF;
     self.footprintContentLabel.frame = self.footprintListFrame.footprintContentF;
     self.footprintPhotoImgView.frame = self.footprintListFrame.footprintPhotoImgF;
