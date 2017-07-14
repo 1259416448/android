@@ -7,21 +7,13 @@
 //
 
 #import "OTWFootprintListModel.h"
+#import <MJExtension.h>
 
 @implementation OTWFootprintListModel
 
-- (id) initWithDict:(NSDictionary *)dict
++ (id) initWithDict:(NSDictionary *)dict
 {
-    self = [super init];
-    if (self) {
-        [self setValuesForKeysWithDictionary:dict];
-    }
-    return self;
-}
-
-+ (id) footprintWithDict:(NSDictionary *)dict
-{
-    return [[self alloc] initWithDict:dict];
+    return [OTWFootprintListModel mj_objectWithKeyValues:dict];
 }
 
 @end
