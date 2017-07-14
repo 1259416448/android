@@ -11,6 +11,10 @@
 		18B034BC1F14A42800F53461 /* OTWPersonalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B034BB1F14A42800F53461 /* OTWPersonalViewController.m */; };
 		18B034BF1F15C9BD00F53461 /* OTWFindViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B034BE1F15C9BD00F53461 /* OTWFindViewCell.m */; };
 		18B034C21F15CC3F00F53461 /* OTWFindModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B034C11F15CC3F00F53461 /* OTWFindModel.m */; };
+		18B034C51F171BC100F53461 /* OTWFindBusinessmenController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B034C41F171BC100F53461 /* OTWFindBusinessmenController.m */; };
+		18B034C81F171BE400F53461 /* OTWFindBusinessmenModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B034C71F171BE400F53461 /* OTWFindBusinessmenModel.m */; };
+		18B034CB1F171C0900F53461 /* OTWFindBusinessmenViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B034CA1F171C0900F53461 /* OTWFindBusinessmenViewCell.m */; };
+		18B034CD1F171ED300F53461 /* OTWFindBusinessmen.plist in Resources */ = {isa = PBXBuildFile; fileRef = 18B034CC1F171ED300F53461 /* OTWFindBusinessmen.plist */; };
 		D7F6AFF61F0D32FB0013090A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6AFF51F0D32FB0013090A /* main.m */; };
 		D7F6AFF91F0D32FB0013090A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6AFF81F0D32FB0013090A /* AppDelegate.m */; };
 		D7F6B0011F0D32FB0013090A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D7F6B0001F0D32FB0013090A /* Assets.xcassets */; };
@@ -88,6 +92,13 @@
 		18B034BE1F15C9BD00F53461 /* OTWFindViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTWFindViewCell.m; path = OnTheWay/Pages/Personal/Controller/OTWFindViewCell.m; sourceTree = SOURCE_ROOT; };
 		18B034C01F15CC3300F53461 /* OTWFindModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTWFindModel.h; path = OnTheWay/Pages/Personal/Controller/OTWFindModel.h; sourceTree = SOURCE_ROOT; };
 		18B034C11F15CC3F00F53461 /* OTWFindModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTWFindModel.m; path = OnTheWay/Pages/Personal/Controller/OTWFindModel.m; sourceTree = SOURCE_ROOT; };
+		18B034C31F171BA900F53461 /* OTWFindBusinessmenController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTWFindBusinessmenController.h; sourceTree = "<group>"; };
+		18B034C41F171BC100F53461 /* OTWFindBusinessmenController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWFindBusinessmenController.m; sourceTree = "<group>"; };
+		18B034C61F171BD800F53461 /* OTWFindBusinessmenModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OTWFindBusinessmenModel.h; path = OnTheWay/Pages/Find/Controller/OTWFindBusinessmenModel.h; sourceTree = SOURCE_ROOT; };
+		18B034C71F171BE400F53461 /* OTWFindBusinessmenModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTWFindBusinessmenModel.m; path = OnTheWay/Pages/Find/Controller/OTWFindBusinessmenModel.m; sourceTree = SOURCE_ROOT; };
+		18B034C91F171BFD00F53461 /* OTWFindBusinessmenViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OTWFindBusinessmenViewCell.h; path = OnTheWay/Pages/Find/Controller/OTWFindBusinessmenViewCell.h; sourceTree = SOURCE_ROOT; };
+		18B034CA1F171C0900F53461 /* OTWFindBusinessmenViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTWFindBusinessmenViewCell.m; path = OnTheWay/Pages/Find/Controller/OTWFindBusinessmenViewCell.m; sourceTree = SOURCE_ROOT; };
+		18B034CC1F171ED300F53461 /* OTWFindBusinessmen.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = OTWFindBusinessmen.plist; sourceTree = "<group>"; };
 		45C2D5CA9B6813E8ACAF6178 /* libPods-OnTheWay.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnTheWay.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B8637730B7A7E4B6ADD9FEE /* Pods-OnTheWay.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnTheWay.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OnTheWay/Pods-OnTheWay.debug.xcconfig"; sourceTree = "<group>"; };
 		68C4FF114BC411D8C8AADB56 /* Pods-OnTheWay.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnTheWay.release.xcconfig"; path = "Pods/Target Support Files/Pods-OnTheWay/Pods-OnTheWay.release.xcconfig"; sourceTree = "<group>"; };
@@ -276,6 +287,7 @@
 				D7F6AFF51F0D32FB0013090A /* main.m */,
 				D7F6B04D1F0DCC470013090A /* PrefixHeader.pch */,
 				DD9452F41F160CD7004EDDED /* OTWFootprintList.plist */,
+				18B034CC1F171ED300F53461 /* OTWFindBusinessmen.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -469,6 +481,8 @@
 			children = (
 				D7F6B07C1F0DD43A0013090A /* OTWFindViewController.h */,
 				D7F6B07D1F0DD43A0013090A /* OTWFindViewController.m */,
+				18B034C31F171BA900F53461 /* OTWFindBusinessmenController.h */,
+				18B034C41F171BC100F53461 /* OTWFindBusinessmenController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -478,6 +492,8 @@
 			children = (
 				18B034C01F15CC3300F53461 /* OTWFindModel.h */,
 				18B034C11F15CC3F00F53461 /* OTWFindModel.m */,
+				18B034C61F171BD800F53461 /* OTWFindBusinessmenModel.h */,
+				18B034C71F171BE400F53461 /* OTWFindBusinessmenModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -487,6 +503,8 @@
 			children = (
 				18B034BD1F15C9AD00F53461 /* OTWFindViewCell.h */,
 				18B034BE1F15C9BD00F53461 /* OTWFindViewCell.m */,
+				18B034C91F171BFD00F53461 /* OTWFindBusinessmenViewCell.h */,
+				18B034CA1F171C0900F53461 /* OTWFindBusinessmenViewCell.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -839,6 +857,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D7F6B0041F0D32FB0013090A /* LaunchScreen.storyboard in Resources */,
+				18B034CD1F171ED300F53461 /* OTWFindBusinessmen.plist in Resources */,
 				D7F6B0011F0D32FB0013090A /* Assets.xcassets in Resources */,
 				DD9452F51F160CD7004EDDED /* OTWFootprintList.plist in Resources */,
 			);
@@ -957,13 +976,16 @@
 				D7F6B05B1F0DD0280013090A /* OTWBaseViewController.m in Sources */,
 				D7F6B0581F0DCF040013090A /* UIColor+Utils.m in Sources */,
 				DD9452F31F15DE23004EDDED /* OTWFootprintListFrame.m in Sources */,
+				18B034CB1F171C0900F53461 /* OTWFindBusinessmenViewCell.m in Sources */,
 				DD14F2431F114436004DFE4A /* CommonContact.m in Sources */,
 				DD3520961F186E0700E8D725 /* OTWFootprintDetailModel.m in Sources */,
 				D7F6B0461F0D39320013090A /* README.md in Sources */,
 				D7F6AFF61F0D32FB0013090A /* main.m in Sources */,
+				18B034C51F171BC100F53461 /* OTWFindBusinessmenController.m in Sources */,
 				D7F6B08B1F0DD5370013090A /* UIImage+Color.m in Sources */,
 				DD14F2481F11CDCA004DFE4A /* GCTokenModel.m in Sources */,
 				D7F6B0BF1F15C09E0013090A /* OTWTabBarController.m in Sources */,
+				18B034C81F171BE400F53461 /* OTWFindBusinessmenModel.m in Sources */,
 				D7F6B04C1F0DCB9D0013090A /* OTWCustomNavigationBar.m in Sources */,
 				18B034C21F15CC3F00F53461 /* OTWFindModel.m in Sources */,
 				D7F6B0541F0DCE420013090A /* UIView+Frame.m in Sources */,
