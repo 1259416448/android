@@ -11,6 +11,14 @@
 @interface OTWFootprintDetailViewCell()
 
 @property (nonatomic,strong) UIView *footprintDetailBGView;
+@property (nonatomic,strong) UIImageView *userHeadImgImageView;
+@property (nonatomic,strong) UILabel *userNicknameLabel;
+@property (nonatomic,strong) UILabel *footprintDatecreateLabel;
+@property (nonatomic,strong) UIView *footprintPhotoView;
+@property (nonatomic,strong) UILabel *footprintContentLabel;
+@property (nonatomic,strong) UIImageView *footprintAddressImageView;
+@property (nonatomic,strong) UILabel *footprintAddressLabel;
+
 
 @end
 
@@ -54,7 +62,14 @@
 
 #pragma mark - Getter Setter
 
-
+- (UIView *) footprintDetailBGView
+{
+    if(!_footprintDetailBGView){
+        _footprintDetailBGView = [[UIView alloc] init];
+        _footprintDetailBGView.backgroundColor = [UIColor whiteColor];
+    }
+    return _footprintDetailBGView;
+}
 
 /**
  *  计算文本的宽高
