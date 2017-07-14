@@ -107,7 +107,6 @@
     //设置标题
     self.title = @"1234个商家";
     [self setLeftNavigationImage:[UIImage imageNamed:@"back_2"]];
-    
     //大背景
     self.view.backgroundColor=[UIColor color_f4f4f4];
 
@@ -133,7 +132,6 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 70;
 }
-
 #pragma mark 点击行
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     DLog(@"我点击了：%ld",indexPath.row);
@@ -157,10 +155,7 @@
     return cell;
 
 }
-#pragma mark 重写状态样式方法
--(UIStatusBarStyle)preferredStatusBarStyle{
-    return UIStatusBarStyleLightContent;
-}
+
 
 /*
  #pragma mark - Navigation
