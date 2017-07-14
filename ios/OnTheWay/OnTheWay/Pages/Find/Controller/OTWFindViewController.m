@@ -10,6 +10,7 @@
 #import "OTWFindViewCell.h"
 #import "OTWFindViewController.h"
 #import "OTWFindModel.h"
+#import "OTWFindBusinessmenController.h"
 
 @interface OTWFindViewController ()<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>{
     UITableView *_tableView;
@@ -109,6 +110,9 @@
 #pragma mark 点击行
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     DLog(@"我点击了：%ld",indexPath.row);
+    OTWFindBusinessmenViewController *FindBusinessmenVC = [[OTWFindBusinessmenViewController alloc] init];
+    [self.navigationController pushViewController:FindBusinessmenVC animated:YES];
+
 }
 
 #pragma mark返回每行的单元格
