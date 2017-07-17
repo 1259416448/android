@@ -45,7 +45,7 @@
     
     NSDictionary *dic2=@{@"Id":@(2),@"FindTpyeBackgroundImageUrl":@"http://img02.tooopen.com/images/20141229/sl_107003776898.jpg",@"FindTpyeName":@"商店",@"FindTpyeContentList":@[@[@"购物",@"gouwu"],@[@"书店",@"shudian"],@[@"便利店",@"bianlidian"]]};
     
-    NSDictionary *dic3=@{@"Id":@(2),@"FindTpyeBackgroundImageUrl":@"http://img05.tooopen.com/images/20150201/sl_109938035874.jpg",@"FindTpyeName":@"文娱",@"FindTpyeContentList":@[@[@"电影院",@"dianyingyuan"],@[@"博物馆",@"bowuguan"]]};
+    NSDictionary *dic3=@{@"Id":@(2),@"FindTpyeBackgroundImageUrl":@"http://img.ivsky.com/img/tupian/li/201701/08/haitan_yimao_fushi-006.jpg",@"FindTpyeName":@"文娱",@"FindTpyeContentList":@[@[@"电影院",@"dianyingyuan"],@[@"博物馆",@"bowuguan"]]};
     
     NSDictionary *dic4=@{@"Id":@(2),@"FindTpyeBackgroundImageUrl":@"http://img06.tooopen.com/images/20170514/tooopen_sl_210122172463.jpg",@"FindTpyeName":@"交通",@"FindTpyeContentList":@[@[@"巴士",@"bashi"],@[@"地铁",@"ditie"],@[@"出租",@"chuzu"],@[@"飞机",@"feiji"]]};
     
