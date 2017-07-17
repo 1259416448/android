@@ -2,13 +2,13 @@
 //  OTWFindViewController.m
 //  OnTheWay
 //
-//  Created by machunyan on 2017/7/6.
+//  Created by apple on 2017/7/17.
 //  Copyright © 2017年 WeiHuan. All rights reserved.
 //
 
+#import "OTWFindViewController.h"
 #import "OTWCustomNavigationBar.h"
 #import "OTWFindViewCell.h"
-#import "OTWFindViewController.h"
 #import "OTWFindModel.h"
 #import "OTWFindBusinessmenController.h"
 
@@ -16,19 +16,19 @@
     UITableView *_tableView;
     NSMutableArray *_status;
 }
+
 @end
 
 @implementation OTWFindViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    // Do any additional setup after loading the view.
     
     //初始化数据
     [self initData];
     
     [self buildUI];
-    
-    
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -36,10 +36,9 @@
     [super viewWillAppear:animated];
     [[OTWLaunchManager sharedManager].mainTabController showTabBarWithAnimation:YES];
 }
-
 #pragma mark 构造数据
 -(void)initData{
-
+    
     _status = [[NSMutableArray alloc] init];
     NSDictionary *dic=@{@"Id":@(1),@"FindTpyeBackgroundImageUrl":@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg?imageView2/2/w/1035/h/390",@"FindTpyeName":@"餐饮",@"FindTpyeContentList":@[@[@"自助餐",@"zizhucan"],@[@"咖啡",@"kafei"],@[@"火锅",@"huoguo"]]};
     
@@ -57,12 +56,12 @@
     [_status addObject:model2];
     [_status addObject:model3];
     [_status addObject:model4];
-
-//    _status = [[NSMutableArray alloc] init];
-//    [_status addObject:@[@"1",@"wodezuji",@"餐饮",@"333"]];
-//    [_status addObject:@[@"2",@"wodeshoucang",@"商店"]];
-//    [_status addObject:@[@"3",@"faxianshangjia",@"文娱"]];
-//    [_status addObject:@[@"3",@"wodekaquan",@"交通"]];
+    
+    //    _status = [[NSMutableArray alloc] init];
+    //    [_status addObject:@[@"1",@"wodezuji",@"餐饮",@"333"]];
+    //    [_status addObject:@[@"2",@"wodeshoucang",@"商店"]];
+    //    [_status addObject:@[@"3",@"faxianshangjia",@"文娱"]];
+    //    [_status addObject:@[@"3",@"wodekaquan",@"交通"]];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -97,10 +96,10 @@
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;//将边框去掉
     
     _tableView.backgroundColor = [UIColor clearColor];
-
+    
     
     [self.view addSubview:_tableView];
-
+    
 }
 
 #pragma mark - 数据源方法
@@ -123,7 +122,7 @@
     DLog(@"我点击了：%ld",indexPath.row);
     OTWFindBusinessmenViewController *FindBusinessmenVC = [[OTWFindBusinessmenViewController alloc] init];
     [self.navigationController pushViewController:FindBusinessmenVC animated:YES];
-
+    
 }
 
 #pragma mark返回每行的单元格
@@ -150,5 +149,7 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 140;
 }
+
+
 
 @end

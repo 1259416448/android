@@ -2,10 +2,11 @@
 //  OTWFindViewController.h
 //  OnTheWay
 //
-//  Created by machunyan on 2017/7/6.
+//  Created by apple on 2017/7/17.
 //  Copyright © 2017年 WeiHuan. All rights reserved.
 //
 
+#import "OTWBaseViewController.h"
 #import <UIKit/UIKit.h>
 
 @interface OTWFindViewController : OTWBaseViewController

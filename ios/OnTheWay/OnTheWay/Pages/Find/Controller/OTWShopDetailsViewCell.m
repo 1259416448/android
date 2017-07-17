@@ -2,7 +2,7 @@
 //  OTWShopDetailsViewCell.m
 //  OnTheWay
 //
-//  Created by apple on 2017/7/14.
+//  Created by apple on 2017/7/17.
 //  Copyright © 2017年 WeiHuan. All rights reserved.
 //
 
@@ -26,7 +26,7 @@
 
 #define ShopDetailsCommentTimeFont 12//评论时间的文字大小
 
-@interface OTWShopDetailsViewCell(){
+@interface OTWShopDetailsViewCell (){
     UIImageView *_ShopDetailsHeaderImg;//头像
     UILabel *_ShopDetailsUserName;//头像名称
     UILabel *_ShopDetailsCommentTime;//评论时间
@@ -56,42 +56,43 @@
 #pragma mark 初始化视图
 -(void)initSubView{
     
-        //头像控件
-        _ShopDetailsHeaderImg=[[UIImageView alloc]init];
-        [self.contentView addSubview:_ShopDetailsHeaderImg];
-        //头像名称
-        _ShopDetailsUserName=[[UILabel alloc]init];
-        _ShopDetailsUserName.textColor=[UIColor color_202020];
-        _ShopDetailsUserName.font=[UIFont systemFontOfSize:ShopDetailsHeadNameFont];
-        [self.contentView addSubview:_ShopDetailsUserName];
-        //评论时间
-        _ShopDetailsCommentTime=[[UILabel alloc]init];
-        _ShopDetailsCommentTime.textColor=[UIColor color_979797];
-        _ShopDetailsCommentTime.font=[UIFont systemFontOfSize:ShopDetailsCommentTimeFont];
-        [self.contentView addSubview:_ShopDetailsCommentTime];
+    //头像控件
+    _ShopDetailsHeaderImg=[[UIImageView alloc]init];
+    [self.contentView addSubview:_ShopDetailsHeaderImg];
+    //头像名称
+    _ShopDetailsUserName=[[UILabel alloc]init];
+    _ShopDetailsUserName.textColor=[UIColor color_202020];
+    _ShopDetailsUserName.font=[UIFont systemFontOfSize:ShopDetailsHeadNameFont];
+    [self.contentView addSubview:_ShopDetailsUserName];
+    //评论时间
+    _ShopDetailsCommentTime=[[UILabel alloc]init];
+    _ShopDetailsCommentTime.textColor=[UIColor color_979797];
+    _ShopDetailsCommentTime.font=[UIFont systemFontOfSize:ShopDetailsCommentTimeFont];
+    [self.contentView addSubview:_ShopDetailsCommentTime];
     
-        //评论内容
-        _ShopDetailsCommentConten=[[UILabel alloc] init];
-        _ShopDetailsCommentConten.textColor=[UIColor color_202020];
-        _ShopDetailsCommentConten.font=[UIFont systemFontOfSize:ShopDetailsCommentFont];
-        [self.contentView addSubview:_ShopDetailsCommentConten];
-
-        //图标列表
-        _ShopDetailsIconList=[[UIView alloc] init];
-        [self.contentView addSubview:_ShopDetailsIconList];
-
-        //评论图片列表
-        _ShopDetailsCommentImgList=[[UIView alloc]init];
-        [self.contentView addSubview:_ShopDetailsCommentImgList];
+    //评论内容
+    _ShopDetailsCommentConten=[[UILabel alloc] init];
+    _ShopDetailsCommentConten.textColor=[UIColor color_202020];
+    _ShopDetailsCommentConten.font=[UIFont systemFontOfSize:ShopDetailsCommentFont];
+    [self.contentView addSubview:_ShopDetailsCommentConten];
     
-        //cell的边框
-        _CellBottomBorder=[[UIView alloc] init];
-        _CellBottomBorder.layer.borderColor=[UIColor color_d5d5d5].CGColor;
-        _CellBottomBorder.layer.borderWidth=0.5;
-        [self.contentView addSubview:_CellBottomBorder];
-
-
+    //图标列表
+    _ShopDetailsIconList=[[UIView alloc] init];
+    [self.contentView addSubview:_ShopDetailsIconList];
+    
+    //评论图片列表
+    _ShopDetailsCommentImgList=[[UIView alloc]init];
+    [self.contentView addSubview:_ShopDetailsCommentImgList];
+    
+    //cell的边框
+    _CellBottomBorder=[[UIView alloc] init];
+    _CellBottomBorder.layer.borderColor=[UIColor color_d5d5d5].CGColor;
+    _CellBottomBorder.layer.borderWidth=0.5;
+    [self.contentView addSubview:_CellBottomBorder];
+    
+    
 }
+
 #pragma mark 设置模块
 -(void)setStatus:(OTWFootprintListModel *)status{
     //设置头像的大小和位置
@@ -106,13 +107,13 @@
     _ShopDetailsUserName.frame=ShopDetailsUserNameRect;
     _ShopDetailsUserName.text=status.userNickname;
     
-     //评论时间
+    //评论时间
     CGRect ShopDetailsCommentTimeRect=CGRectMake(55, 35, SCREEN_WIDTH-55-15, 10);
     _ShopDetailsCommentTime.text=status.dateCreatedStr;
     _ShopDetailsCommentTime.frame=ShopDetailsCommentTimeRect;
     
     //评论内容
-
+    
     CGRect ShopDetailsCommentContenRect=CGRectMake(55, 55, SCREEN_WIDTH-55-15, 15);
     _ShopDetailsCommentConten.frame=ShopDetailsCommentContenRect;
     _ShopDetailsCommentConten.text=status.footprintContent;
@@ -171,10 +172,10 @@
     [_PinglunImageView addTarget:self action:@selector(PinglunClick) forControlEvents:UIControlEventTouchUpInside];
     [_FenxiangImageView addTarget:self action:@selector(FenxiangClick) forControlEvents:UIControlEventTouchUpInside];
     
-       _CellBottomBorder.frame=CGRectMake(0, CGRectGetMaxY(_ShopDetailsIconList.frame)+14, SCREEN_WIDTH, 0.5);
- 
+    _CellBottomBorder.frame=CGRectMake(0, CGRectGetMaxY(_ShopDetailsIconList.frame)+14, SCREEN_WIDTH, 0.5);
+    
     [self setFrame:CGRectMake(0, 0, SCREEN_WIDTH, CGRectGetMaxY(_ShopDetailsIconList.frame)+15)];
-
+    
 }
 
 -(UIButton*)ZanImageView{
@@ -221,4 +222,6 @@
     }
     return _photoH;
 }
+
+
 @end
