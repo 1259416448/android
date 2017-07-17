@@ -83,7 +83,9 @@
          couponsView.frame=couponsViewRec;
     }
    
-    
+    for (UIImageView *imageView in  couponsView.subviews) {//移除加载的图片
+        [imageView removeFromSuperview];
+    }
     //循环显示图标
     for (int i = 0; i < status.coupons.count; i ++) {
         //显示图标
