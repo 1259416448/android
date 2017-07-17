@@ -40,4 +40,10 @@
 
 + (id) initWithDict:(NSDictionary *)dict;
 
+#pragma mark 根据字典初始化模块对象
+-(OTWFootprintListModel *)initWithDictionary:(NSDictionary *)dic;
+
+#pragma mark 初始化模块对象（静态方法）
++(OTWFootprintListModel *)statusWithDictionary:(NSDictionary *)dic;
+
 @end

@@ -9,5 +9,6 @@ target 'OnTheWay' do
   pod 'PPNetworkHelper'
   pod 'YSCategorys'
   pod 'STPopup'
+  pod 'SDCycleScrollView'
 end
 

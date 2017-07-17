@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>footprintDetail</key>
+	<dict>
+		<key>footprintPhotoArray</key>
+		<array>
+			<string>http://osx4pwgde.bkt.clouddn.com/c0ab21ab26b4694769b6e904788b3590630777.jpg</string>
+			<string>http://osx4pwgde.bkt.clouddn.com/c0ab21ab26b4694769b6e904788b3590630777.jpg</string>
+		</array>
+		<key>userHeadImg</key>
+		<string>http://osx4pwgde.bkt.clouddn.com/b4.jpg?imageView2/1/w/160/h/160</string>
+		<key>userNickname</key>
+		<string>软软的糯米糍饿了</string>
+		<key>footprintContent</key>
+		<string>清粥小菜，服务很好，环境干净，菜是一般，有名气，开了很连接店。建议你去看看</string>
+		<key>footprintAddress</key>
+		<string>成都市菁蓉国际广场A1栋</string>
+		<key>dateCreated</key>
+		<real>1499846462587</real>
+		<key>dateCreatedStr</key>
+		<string>57分钟前</string>
+		<key>footprintPhoto</key>
+		<string>http://osx4pwgde.bkt.clouddn.com/c0ab21ab26b4694769b6e904788b3590630777.jpg</string>
+		<key>footprintId</key>
+		<integer>1</integer>
+		<key>footprintType</key>
+		<string>photo</string>
+		<key>footprintCommentNum</key>
+		<integer>0</integer>
+		<key>footprintLikeNum</key>
+		<integer>0</integer>
+	</dict>
+	<key>comments</key>
+	<array>
+		<dict>
+			<key>dateCreated</key>
+			<string>1,499,846,462,587</string>
+			<key>dateCreatedStr</key>
+			<string>19:03</string>
+			<key>userHeadImg</key>
+			<string>http://osx4pwgde.bkt.clouddn.com/b4.jpg?imageView2/1/w/160/h/160</string>
+			<key>userNickname</key>
+			<string>想起一个很长的名字</string>
+			<key>commentContent</key>
+			<string>这么晚了，居然还去这个地方，有意思，有意思！</string>
+		</dict>
+		<dict>
+			<key>dateCreated</key>
+			<string>1,499,846,462,587</string>
+			<key>dateCreatedStr</key>
+			<string>19:03</string>
+			<key>userHeadImg</key>
+			<string>http://osx4pwgde.bkt.clouddn.com/b4.jpg?imageView2/1/w/160/h/160</string>
+			<key>userNickname</key>
+			<string>想起一个很长的名字</string>
+			<key>commentContent</key>
+			<string>清粥小菜，服务很好，环境干净，菜是一般，有名气，开了很连接店。建议你去看看！</string>
+		</dict>
+	</array>
+</dict>
+</plist>

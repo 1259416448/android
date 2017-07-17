@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "OTWTabBarController.h"
+#import "OTWFootprintDetailController.h"
 
 @interface OTWLaunchManager : NSObject
 
@@ -25,5 +26,6 @@
 - (void)deallocLoginViewController;
 
 - (BOOL)showLoginViewWithController:(UIViewController*_Nullable)viewController completion:(void (^ __nullable)(void))completion NS_AVAILABLE_IOS(5_0);
+- (OTWFootprintDetailController *_Nullable) footprintDetailController;
 
 @end
