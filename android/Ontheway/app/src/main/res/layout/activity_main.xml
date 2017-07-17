@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:weightSum="1"
+    tools:context="arvix.cn.ontheway.MainActivity">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1.22"
+        android:scrollbars="none"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1.22"
+                android:orientation="horizontal"
+                android:scrollbarAlwaysDrawVerticalTrack="true"
+                android:scrollbars="none">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/index_item_w"
+                    android:layout_marginTop="10dp">
+
+                    <RelativeLayout
+                        android:id="@+id/item_one"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/index_item_h"
+                        android:layout_marginLeft="@dimen/index_item_m_left"
+                        android:textAlignment="center">
+
+                        <ImageView
+                            android:id="@+id/index_item_one"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentTop="true"
+                            android:background="@android:color/darker_gray"
+                            app:srcCompat="@android:color/darker_gray" />
+
+                        <ImageButton
+                            android:id="@+id/index_item_one_btn_one"
+                            android:layout_width="@dimen/index_item_btn_w"
+                            android:layout_height="@dimen/index_item_btn_h"
+                            android:layout_marginBottom="28dp"
+                            android:layout_marginLeft="190dp"
+                            android:layout_marginTop="67dp"
+                            app:srcCompat="@drawable/zizhucan" />
+
+                        <TextView
+                            android:id="@+id/index_item_one_text_one"
+                            android:layout_width="36dp"
+                            android:layout_height="15dp"
+                            android:layout_marginLeft="189.5dp"
+                            android:layout_marginTop="105dp"
+                            android:text="自助餐"
+                            android:textColor="#ffffff"
+                            android:textSize="12sp" />
+
+                        <ImageButton
+                            android:id="@+id/index_item_one_btn_two"
+                            android:layout_width="@dimen/index_item_btn_w"
+                            android:layout_height="@dimen/index_item_btn_h"
+                            android:layout_marginLeft="240dp"
+                            android:layout_marginTop="67dp"
+                            app:srcCompat="@drawable/kafei" />
+
+                        <TextView
+                            android:id="@+id/index_item_one_text_two"
+                            android:layout_width="24dp"
+                            android:layout_height="15dp"
+                            android:layout_marginLeft="245.5dp"
+                            android:layout_marginTop="105dp"
+                            android:text="咖啡"
+                            android:textColor="#ffffff"
+                            android:textSize="12sp" />
+
+                        <ImageButton
+                            android:id="@+id/index_item_one_btn_three"
+                            android:layout_width="@dimen/index_item_btn_w"
+                            android:layout_height="@dimen/index_item_btn_h"
+                            android:layout_marginLeft="290dp"
+                            android:layout_marginTop="67dp"
+                            app:srcCompat="@drawable/huoguo" />
+
+                        <TextView
+                            android:id="@+id/index_item_one_text_three"
+                            android:layout_width="24dp"
+                            android:layout_height="15dp"
+                            android:layout_marginLeft="295.5dp"
+                            android:layout_marginTop="105dp"
+                            android:text="火锅"
+                            android:textColor="#ffffff"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/index_item_one_text"
+                            android:layout_width="50dp"
+                            android:layout_height="25dp"
+                            android:layout_marginLeft="275dp"
+                            android:layout_marginTop="32dp"
+                            android:text="餐饮"
+                            android:textColor="#ffffff"
+                            android:textSize="25sp" />
+
+                    </RelativeLayout>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/index_item_w"
+                    android:layout_marginTop="10dp">
+
+                    <RelativeLayout
+                        android:id="@+id/item_two"
+                        android:layout_width="@dimen/index_item_w"
+                        android:layout_height="@dimen/index_item_h"
+                        android:layout_marginLeft="@dimen/index_item_m_left"
+                        android:textAlignment="center">
+
+                        <ImageView
+                            android:id="@+id/index_item_two"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentTop="true"
+                            android:background="@android:color/darker_gray"
+                            app:srcCompat="@android:color/darker_gray" />
+
+                        <ImageButton
+                            android:id="@+id/index_item_two_btn_one"
+                            android:layout_width="@dimen/index_item_btn_w"
+                            android:layout_height="@dimen/index_item_btn_h"
+                            android:layout_marginBottom="28dp"
+                            android:layout_marginLeft="190dp"
+                            android:layout_marginTop="67dp"
+                            app:srcCompat="@drawable/gouwu" />
+
+                        <TextView
+                            android:id="@+id/index_item_two_text_one"
+                            android:layout_width="36dp"
+                            android:layout_height="15dp"
+                            android:layout_marginLeft="195dp"
+                            android:layout_marginTop="105dp"
+                            android:text="购物"
+                            android:textColor="#ffffff"
+                            android:textSize="12sp" />
+
+                        <ImageButton
+                            android:id="@+id/index_item_two_btn_two"
+                            android:layout_width="@dimen/index_item_btn_w"
+                            android:layout_height="@dimen/index_item_btn_h"
+                            android:layout_marginLeft="240dp"
+                            android:layout_marginTop="67dp"
+                            app:srcCompat="@drawable/shudian" />
+
+                        <TextView
+                            android:id="@+id/index_item_two_text_two"
+                            android:layout_width="24dp"
+                            android:layout_height="15dp"
+                            android:layout_marginLeft="245.5dp"
+                            android:layout_marginTop="105dp"
+                            android:text="书店"
+                            android:textColor="#ffffff"
+                            android:textSize="12sp" />
+
+                        <ImageButton
+                            android:id="@+id/index_item_two_btn_three"
+                            android:layout_width="@dimen/index_item_btn_w"
+                            android:layout_height="@dimen/index_item_btn_h"
+                            android:layout_marginLeft="290dp"
+                            android:layout_marginTop="67dp"
+                            app:srcCompat="@drawable/bianlidian" />
+
+                        <TextView
+                            android:id="@+id/index_item_two_text_three"
+                            android:layout_width="36dp"
+                            android:layout_height="15dp"
+                            android:layout_marginLeft="289dp"
+                            android:layout_marginTop="105dp"
+                            android:text="便利店"
+                            android:textColor="#ffffff"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/index_item_two_text"
+                            android:layout_width="50dp"
+                            android:layout_height="25dp"
+                            android:layout_marginLeft="275dp"
+                            android:layout_marginTop="32dp"
+                            android:text="商店"
+                            android:textColor="#ffffff"
+                            android:textSize="25sp" />
+
+                    </RelativeLayout>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/index_item_w"
+                    android:layout_marginTop="10dp">
+
+                    <RelativeLayout
+                        android:id="@+id/item_three"
+                        android:layout_width="@dimen/index_item_w"
+                        android:layout_height="@dimen/index_item_h"
+                        android:layout_marginLeft="@dimen/index_item_m_left"
+                        android:textAlignment="center">
+
+                        <ImageView
+                            android:id="@+id/index_item_three"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentTop="true"
+                            android:background="@android:color/darker_gray"
+                            app:srcCompat="@android:color/darker_gray" />
+
+
+                        <ImageButton
+                            android:id="@+id/index_item_three_btn_two"
+                            android:layout_width="@dimen/index_item_btn_w"
+                            android:layout_height="@dimen/index_item_btn_h"
+                            android:layout_marginLeft="240dp"
+                            android:layout_marginTop="67dp"
+                            app:srcCompat="@drawable/dianyingyuan" />
+
+                        <TextView
+                            android:id="@+id/index_item_three_text_two"
+                            android:layout_width="36dp"
+                            android:layout_height="15dp"
+                            android:layout_marginLeft="239.5dp"
+                            android:layout_marginTop="105dp"
+                            android:text="电影院"
+                            android:textColor="#ffffff"
+                            android:textSize="12sp" />
+
+                        <ImageButton
+                            android:id="@+id/index_item_three_btn_three"
+                            android:layout_width="@dimen/index_item_btn_w"
+                            android:layout_height="@dimen/index_item_btn_h"
+                            android:layout_marginLeft="290dp"
+                            android:layout_marginTop="67dp"
+                            app:srcCompat="@drawable/huoguo" />
+
+                        <TextView
+                            android:id="@+id/index_item_three_text_three"
+                            android:layout_width="36dp"
+                            android:layout_height="15dp"
+                            android:layout_marginLeft="289.5dp"
+                            android:layout_marginTop="105dp"
+                            android:text="博物馆"
+                            android:textColor="#ffffff"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/index_item_three_text"
+                            android:layout_width="50dp"
+                            android:layout_height="25dp"
+                            android:layout_marginLeft="275dp"
+                            android:layout_marginTop="32dp"
+                            android:text="文娱"
+                            android:textColor="#ffffff"
+                            android:textSize="25sp" />
+
+                    </RelativeLayout>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/index_item_w"
+                    android:layout_marginTop="10dp">
+
+                    <RelativeLayout
+                        android:id="@+id/item_four"
+                        android:layout_width="@dimen/index_item_w"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/index_item_m_left"
+                        android:textAlignment="center">
+
+                        <ImageView
+                            android:id="@+id/index_item_four"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentTop="true"
+                            android:background="@android:color/darker_gray"
+                            app:srcCompat="@android:color/darker_gray" />
+
+
+                        <ImageButton
+                            android:id="@+id/index_item_four_btn_zero"
+                            android:layout_width="@dimen/index_item_btn_w"
+                            android:layout_height="@dimen/index_item_btn_h"
+                            android:layout_marginBottom="28dp"
+                            android:layout_marginLeft="139.5dp"
+                            android:layout_marginTop="67dp"
+                            app:srcCompat="@drawable/bashi" />
+
+                        <TextView
+                            android:id="@+id/index_item_four_text_zero"
+                            android:layout_width="24dp"
+                            android:layout_height="15dp"
+                            android:layout_marginLeft="145dp"
+                            android:layout_marginTop="105dp"
+                            android:text="巴士"
+                            android:textColor="#ffffff"
+                            android:textSize="12sp" />
+
+                        <ImageButton
+                            android:id="@+id/index_item_four_btn_one"
+                            android:layout_width="@dimen/index_item_btn_w"
+                            android:layout_height="@dimen/index_item_btn_h"
+                            android:layout_marginBottom="28dp"
+                            android:layout_marginLeft="190dp"
+                            android:layout_marginTop="67dp"
+                            app:srcCompat="@drawable/ditie" />
+
+                        <TextView
+                            android:id="@+id/index_item_four_text_one"
+                            android:layout_width="24dp"
+                            android:layout_height="15dp"
+                            android:layout_marginLeft="195dp"
+                            android:layout_marginTop="105dp"
+                            android:text="地铁"
+                            android:textColor="#ffffff"
+                            android:textSize="12sp" />
+
+                        <ImageButton
+                            android:id="@+id/index_item_four_btn_two"
+                            android:layout_width="@dimen/index_item_btn_w"
+                            android:layout_height="@dimen/index_item_btn_h"
+                            android:layout_marginLeft="240dp"
+                            android:layout_marginTop="67dp"
+                            app:srcCompat="@drawable/chuzu" />
+
+                        <TextView
+                            android:id="@+id/index_item_four_text_two"
+                            android:layout_width="24dp"
+                            android:layout_height="15dp"
+                            android:layout_marginLeft="245.5dp"
+                            android:layout_marginTop="105dp"
+                            android:text="出租"
+                            android:textColor="#ffffff"
+                            android:textSize="12sp" />
+
+                        <ImageButton
+                            android:id="@+id/index_item_four_btn_three"
+                            android:layout_width="@dimen/index_item_btn_w"
+                            android:layout_height="@dimen/index_item_btn_h"
+                            android:layout_marginLeft="290dp"
+                            android:layout_marginTop="67dp"
+                            app:srcCompat="@drawable/feiji" />
+
+                        <TextView
+                            android:id="@+id/index_item_four_text_three"
+                            android:layout_width="24dp"
+                            android:layout_height="15dp"
+                            android:layout_marginLeft="295.5dp"
+                            android:layout_marginTop="105dp"
+                            android:text="飞机"
+                            android:textColor="#ffffff"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/index_item_four_text"
+                            android:layout_width="50dp"
+                            android:layout_height="25dp"
+                            android:layout_marginLeft="275dp"
+                            android:layout_marginTop="32dp"
+                            android:text="交通"
+                            android:textColor="#ffffff"
+                            android:textSize="25sp" />
+
+                    </RelativeLayout>
+                </TableRow>
+
+            </TableLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="?android:attr/windowBackground"
+        app:menu="@menu/navigation" />
+
+</LinearLayout>
