@@ -7,8 +7,56 @@
 //
 
 #import "OTWFootprintDetailController.h"
+#import "OTWFootprintDetailModel.h"
+#import "OTWFootprintDetailViewCell.h"
+#import "OTWCommentModel.h"
+#import "OTWFootprintDetailFrame.h"
+#import "OTWCommentFrame.h"
+
+#import <SDCycleScrollView.h>
+#import <AFNetworking/UIImageView+AFNetworking.h>
+
+#define footprintContentFont [UIFont systemFontOfSize:17]
+#define padding 15
+
+@interface OTWFootprintDetailController () <UITableViewDataSource,UITableViewDelegate,SDCycleScrollViewDelegate>
+
+@property (nonatomic,strong) OTWFootprintDetailModel *model;
+
+@property (nonatomic,strong) UITableView *tableView;
+//详情
+@property (nonatomic,strong) OTWFootprintDetailFrame *detailFrame;
+
+//评论数据
+@property (nonatomic,strong) NSMutableArray<OTWCommentFrame *> *commentFrameArray;
+
+//评论填写区域
+@property (nonatomic,strong) UIView *commentBGView;
+
+//足迹详情 start
+
+@property (nonatomic,strong) UIView *tableHeaderView;
+@property (nonatomic,strong) UIView *footprintDetailBGView;
+@property (nonatomic,strong) UIImageView *userHeadImgImageView;
+@property (nonatomic,strong) UILabel *userNicknameLabel;
+@property (nonatomic,strong) UILabel *footprintDateCreateLabel;
+@property (nonatomic,strong) UIView *footprintPhotoView;
+@property (nonatomic,strong) UILabel *footprintContentLabel;
+@property (nonatomic,strong) UIImageView *footprintAddressImageView;
+@property (nonatomic,strong) UILabel *footprintAddressLabel;
+@property (nonatomic,strong) UIView *topLine;
+@property (nonatomic,strong) UIView *bottomLine;
+@property (nonatomic,strong) SDCycleScrollView *photoScrollView;
+@property (nonatomic,strong) UILabel *photoPageControllerLabel;
+
+//足迹详情 end
+
+
+@end
 
 @implementation OTWFootprintDetailController
+
+static NSString *imageView2Params = @"?imageView2/1/w/690/h/500";
 
 - (void)viewDidLoad
 {
@@ -16,17 +64,304 @@
     [self buildUI];
 }
 
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
+}
+
 - (void)buildUI
 {
+    //设置标题
+    self.title = @"足迹详情";
+    [self setLeftNavigationImage:[UIImage imageNamed:@"back_2"]];
+    //大背景
+    self.view.backgroundColor=[UIColor color_f4f4f4];
     //先通过上一界面传递的id数据   获取足迹详情和加载最近评论信息,在构建页面
+    [self model];
+     //表格的初始化需要等数据请求完毕
+    [self.view addSubview:self.tableView];
+    self.tableView.tableHeaderView = [self buildTableHeaderView];
+    [self.view addSubview:self.commentBGView];
     
+}
+
+- (UIView *) buildTableHeaderView
+{
+    [self.tableHeaderView addSubview:self.footprintDetailBGView];
+    [self.footprintDetailBGView addSubview:self.topLine];
+    [self.footprintDetailBGView addSubview:self.userHeadImgImageView];
+    [self.footprintDetailBGView addSubview:self.userNicknameLabel];
+    [self.footprintDetailBGView addSubview:self.footprintDateCreateLabel];
+    if(self.detailFrame.footprintDetailModel.footprintPhotoArray && self.detailFrame.footprintDetailModel.footprintPhotoArray.count>0){
+        [self.footprintDetailBGView addSubview:self.footprintPhotoView];
+        [self.footprintPhotoView addSubview:self.photoScrollView];
+        self.photoScrollView.delegate = self;
+    }
+    [self.footprintDetailBGView addSubview:self.footprintContentLabel];
+    [self.footprintDetailBGView addSubview:self.footprintAddressImageView];
+    [self.footprintDetailBGView addSubview:self.footprintAddressLabel];
+    [self.footprintDetailBGView addSubview:self.bottomLine];
     
+    [self.userHeadImgImageView setImageWithURL:[NSURL URLWithString:_detailFrame.footprintDetailModel.userHeadImg]];
+    self.userNicknameLabel.text = _detailFrame.footprintDetailModel.userNickname;
+    self.footprintDateCreateLabel.text = _detailFrame.footprintDetailModel.dateCreatedStr;
+    self.footprintContentLabel.text = _detailFrame.footprintDetailModel.footprintContent;
+    self.footprintAddressLabel.text = _detailFrame.footprintDetailModel.footprintAddress;
+    return self.tableHeaderView;
+}
+
+- (OTWFootprintDetailModel *) model
+{
+    if(!_model){
+        NSString *fullPath = [[NSBundle mainBundle] pathForResource:@"OTWFootprintDetail.plist" ofType:nil];
+        NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:fullPath];
+        _model = [OTWFootprintDetailModel initWithDict:dict];
+        _detailFrame = [[OTWFootprintDetailFrame alloc] init];
+        [_detailFrame setFootprintDetailModel: _model.footprintDetail];
+        _commentFrameArray = [[NSMutableArray alloc] init];
+        if(_model.comments){
+            for (OTWCommentModel *commentModel in _model.comments) {
+                OTWCommentFrame *commentFrame = [[OTWCommentFrame alloc] init];
+                [commentFrame setCommentModel:commentModel];
+                [_commentFrameArray addObject:commentFrame];
+            }
+        }
+    }
+    return _model;
+}
+
+- (UITableView*) tableView
+{
+    if(!_tableView){
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, self.navigationHeight, SCREEN_WIDTH, SCREEN_HEIGHT - self.navigationHeight-49) style:UITableViewStylePlain];
+        //_tableView.frame = CGRectMake(0, self.navigationHeight, SCREEN_WIDTH, SCREEN_HEIGHT - self.navigationHeight);
+        _tableView.dataSource = self;
+        _tableView.delegate = self;
+        _tableView.backgroundColor = [UIColor clearColor];
+        _tableView.separatorStyle  = UITableViewCellSelectionStyleNone;
+    }
+    return _tableView;
+}
+
+#pragma mark 这一组里面有多少行
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    if(_commentFrameArray){
+        return _commentFrameArray.count;
+    }
+    return 0;
+}
+
+#pragma mark - 代理方法
+#pragma mark 设置分组标题内容高度
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return 0;
+}
+
+#pragma mark 设置每行高度（每行高度可以不一样）
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if(_commentFrameArray){
+        return [_commentFrameArray objectAtIndex:indexPath.row].cellHeight;
+    }
+    return 0;
+}
+#pragma mark 点击行
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    DLog(@"我点击了：%ld",indexPath.row);
+}
+
+#pragma mark 返回第indexPath这行对应的内容
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return [OTWFootprintDetailViewCell cellWithTableView:tableView data:[_commentFrameArray objectAtIndex:indexPath.row]];
+}
+
+- (UIView *) commentBGView
+{
+    if(!_commentBGView){
+        _commentBGView = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT-49, SCREEN_WIDTH, 49)];
+        _commentBGView.backgroundColor = [UIColor whiteColor];
+        UIView *topLine = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 0.5)];
+        topLine.backgroundColor = [UIColor color_d5d5d5];
+        [_commentBGView addSubview:topLine];
+    }
+    return _commentBGView;
+}
+
+
+- (UIView *) footprintDetailBGView
+{
+    if(!_footprintDetailBGView){
+        _footprintDetailBGView = [[UIView alloc] init];
+        _footprintDetailBGView.backgroundColor = [UIColor whiteColor];
+        _footprintDetailBGView.frame = CGRectMake(0, 10, SCREEN_WIDTH, _detailFrame.cellHeight - 10);
+    }
+    return _footprintDetailBGView;
+}
+
+- (UIImageView *) userHeadImgImageView{
+    if(!_userHeadImgImageView){
+        _userHeadImgImageView = [[UIImageView alloc] init];
+        //设置frame
+        _userHeadImgImageView.frame = CGRectMake(padding, 15, 45, 45);
+        _userHeadImgImageView.layer.cornerRadius = _userHeadImgImageView.Witdh/2.0;
+        _userHeadImgImageView.layer.masksToBounds = YES;
+    }
+    return _userHeadImgImageView;
+}
+
+- (UILabel *) userNicknameLabel{
+    if(!_userNicknameLabel){
+        _userNicknameLabel = [[UILabel alloc] init];
+        CGFloat X = self.userHeadImgImageView.MaxX+10;
+        CGFloat W = SCREEN_WIDTH - X - padding;
+        _userNicknameLabel.frame = CGRectMake(X, 17.5, W, 20);
+        _userNicknameLabel.textColor = [UIColor color_202020];
+        _userNicknameLabel.font = [UIFont systemFontOfSize:16];
+    }
+    return _userNicknameLabel;
+}
+
+- (UILabel *) footprintDateCreateLabel{
+    if(!_footprintDateCreateLabel){
+        _footprintDateCreateLabel = [[UILabel alloc] init];
+        CGFloat Y = self.userNicknameLabel.MaxY + 5;
+        _footprintDateCreateLabel.frame = CGRectMake(self.userNicknameLabel.X, Y , self.userNicknameLabel.Witdh, 15);
+        _footprintDateCreateLabel.textColor = [UIColor color_979797];
+        _footprintDateCreateLabel.font = [UIFont systemFontOfSize:12];
+    }
+    return _footprintDateCreateLabel;
+}
+
+- (UIView *) footprintPhotoView
+{
+    if(!_footprintPhotoView){
+        _footprintPhotoView = [[UIView alloc] init];
+        _footprintPhotoView.frame = CGRectMake(padding, self.userHeadImgImageView.MaxY + 15, SCREEN_WIDTH-padding*2, _detailFrame.photoViewH);
+    }
+    return _footprintPhotoView;
+}
+
+- (UILabel *) footprintContentLabel
+{
+    if(!_footprintContentLabel){
+        _footprintContentLabel = [[UILabel alloc] init];
+        _footprintContentLabel.textColor = [UIColor color_202020];
+        _footprintContentLabel.font = footprintContentFont;
+        _footprintContentLabel.numberOfLines = 0;
+        //需计算文字高度
+        if(_detailFrame){
+            CGFloat W = SCREEN_WIDTH - padding *2;
+            _footprintContentLabel.frame = CGRectMake(padding, self.footprintPhotoView.MaxY+10, W, _detailFrame.contentH);
+        }
+    }
+    return _footprintContentLabel;
+}
+
+- (UIImageView *) footprintAddressImageView
+{
+    if(!_footprintAddressImageView){
+        _footprintAddressImageView = [[UIImageView alloc] init];
+        _footprintAddressImageView.frame = CGRectMake(padding, self.footprintContentLabel.MaxY+16, 9.8, 9.8);
+        _footprintAddressImageView.image = [UIImage imageNamed:@"dinwgei_2"];
+    }
+    return _footprintAddressImageView;
+}
+
+- (UILabel *) footprintAddressLabel
+{
+    if(!_footprintAddressLabel){
+        _footprintAddressLabel = [[UILabel alloc] init];
+        _footprintAddressLabel.textColor = [UIColor color_979797];
+        _footprintAddressLabel.font = [UIFont systemFontOfSize:13];
+        CGFloat W = SCREEN_WIDTH-self.footprintAddressImageView.MaxX-padding-5;
+        _footprintAddressLabel.frame = CGRectMake(_footprintAddressImageView.MaxX+4, self.footprintContentLabel.MaxY+15, W, 12);
+    }
+    return _footprintAddressLabel;
+}
+
+- (UIView *) topLine
+{
+    if(!_topLine){
+        _topLine = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 0.5)];
+        _topLine.backgroundColor = [UIColor color_d5d5d5];
+    }
+    return _topLine;
+}
+
+- (UIView *) bottomLine
+{
+    if(!_bottomLine){
+        _bottomLine = [[UIView alloc] initWithFrame:CGRectMake(0, self.footprintDetailBGView.Height+0.5, SCREEN_WIDTH, 0.5)];
+        _bottomLine.backgroundColor = [UIColor color_d5d5d5];
+    }
+    return _bottomLine;
+}
+
+- (UIView *) tableHeaderView
+{
+    if(!_tableHeaderView){
+        _tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, _detailFrame.cellHeight)];
+        _tableHeaderView.backgroundColor = [UIColor clearColor];
+        //        _tableHeaderView.layer.shadowColor = [UIColor blackColor].CGColor;
+        //        _tableHeaderView.layer.shadowOpacity = 0.1;
+        //        _tableHeaderView.layer.shadowOffset = CGSizeMake(0, -0.5);
+        //        _tableHeaderView.layer.shadowRadius = 0.5;
+    }
+    return _tableHeaderView;
+}
+
+- (SDCycleScrollView *) photoScrollView
+{
+    if(!_photoScrollView){
+        NSMutableArray *imageUrlStringsGroup = [[NSMutableArray alloc] init];
+        for (NSString *url in _detailFrame.footprintDetailModel.footprintPhotoArray) {
+            //增加图片处理参数
+            [imageUrlStringsGroup addObject:[url stringByAppendingString:imageView2Params]];
+        }
+        _photoScrollView = [SDCycleScrollView cycleScrollViewWithFrame:CGRectMake(0, 0, self.footprintPhotoView.Witdh, self.footprintPhotoView.Height) imageURLStringsGroup:imageUrlStringsGroup];
+        _photoScrollView.autoScroll = NO;
+        _photoScrollView.showPageControl = NO;
+        //增加分页控制信息
+        UIView *pageControllerBGView = [[UIView alloc] initWithFrame:CGRectMake(_photoScrollView.Witdh - 10 - 30, _photoScrollView.Height - 10 - 20 , 30 , 20)];
+        pageControllerBGView.backgroundColor = [UIColor blackColor];
+        pageControllerBGView.layer.cornerRadius = 1;
+        pageControllerBGView.layer.opacity = 0.6;
+        [_photoScrollView addSubview:pageControllerBGView];
+        [_photoScrollView addSubview:self.photoPageControllerLabel];
+        self.photoPageControllerLabel.text = [@"1/" stringByAppendingString:[NSString stringWithFormat:@"%lu", (unsigned long)imageUrlStringsGroup.count]];
+        //self.photoPageControllerLabel.text = @"9/9";
+    }
+    return _photoScrollView;
+}
+
+- (UILabel *) photoPageControllerLabel
+{
+    if(!_photoPageControllerLabel){
+        _photoPageControllerLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.footprintPhotoView.Witdh - 10 - 30, self.footprintPhotoView.Height - 13 - 13.5, 30 , 13)];
+        _photoPageControllerLabel.textColor = [UIColor whiteColor];
+        _photoPageControllerLabel.font = [UIFont systemFontOfSize:13];
+        _photoPageControllerLabel.textAlignment = NSTextAlignmentCenter;
+    }
+    return _photoPageControllerLabel;
+}
+
+#pragma mark - SDCycleScrollViewDelegate
+
+- (void)cycleScrollView:(SDCycleScrollView *)cycleScrollView didSelectItemAtIndex:(NSInteger)index
+{
+    DLog(@"点击图片了");
+}
+
+- (void)cycleScrollView:(SDCycleScrollView *)cycleScrollView didScrollToIndex:(NSInteger)index
+{
+    //改变photoPageControllerLabel
+    self.photoPageControllerLabel.text = [[[NSString stringWithFormat:@"%ld",(long)(index + 1)] stringByAppendingString:@"/"] stringByAppendingString:[NSString stringWithFormat:@"%lu", (unsigned long)self.photoScrollView.imageURLStringsGroup.count]];
     
 }
 

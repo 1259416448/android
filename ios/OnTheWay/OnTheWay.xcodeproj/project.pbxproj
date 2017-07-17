@@ -64,6 +64,9 @@
 		DDABAA4B1F12801E00010532 /* OTWPersonalEditNicknameController.m in Sources */ = {isa = PBXBuildFile; fileRef = DDABAA4A1F12801E00010532 /* OTWPersonalEditNicknameController.m */; };
 		DDB8C29A1F1320B90091E7B0 /* OTWPersonalInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = DDB8C2991F1320B90091E7B0 /* OTWPersonalInfoController.m */; };
 		DDB8C29F1F14AF230091E7B0 /* OTWUserModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DDB8C29E1F14AF230091E7B0 /* OTWUserModel.m */; };
+		DDD4AB4B1F1AFC6900D42CF3 /* OTWFootprintDetailFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = DDD4AB4A1F1AFC6900D42CF3 /* OTWFootprintDetailFrame.m */; };
+		DDD4AB4E1F1B020400D42CF3 /* OTWCommentFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = DDD4AB4D1F1B020400D42CF3 /* OTWCommentFrame.m */; };
+		DDFE0F001F1A002900D159C5 /* OTWFootprintDetail.plist in Resources */ = {isa = PBXBuildFile; fileRef = DDFE0EFF1F1A002900D159C5 /* OTWFootprintDetail.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -178,8 +181,8 @@
 		DD3520931F18670800E8D725 /* OTWFootprintDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWFootprintDetailController.m; sourceTree = "<group>"; };
 		DD3520951F186E0700E8D725 /* OTWFootprintDetailModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWFootprintDetailModel.m; sourceTree = "<group>"; };
 		DD3520971F186E2200E8D725 /* OTWFootprintDetailModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTWFootprintDetailModel.h; sourceTree = "<group>"; };
-		DD3520981F18714000E8D725 /* OTWCommentModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTWCommentModel.h; sourceTree = "<group>"; };
-		DD3520991F18715400E8D725 /* OTWCommentModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWCommentModel.m; sourceTree = "<group>"; };
+		DD3520981F18714000E8D725 /* OTWCommentModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OTWCommentModel.h; path = ../../../Common/Model/OTWCommentModel.h; sourceTree = "<group>"; };
+		DD3520991F18715400E8D725 /* OTWCommentModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTWCommentModel.m; path = ../../../Common/Model/OTWCommentModel.m; sourceTree = "<group>"; };
 		DD35209B1F188FAF00E8D725 /* OTWFootprintDetailViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTWFootprintDetailViewCell.h; sourceTree = "<group>"; };
 		DD35209C1F188FBF00E8D725 /* OTWFootprintDetailViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWFootprintDetailViewCell.m; sourceTree = "<group>"; };
 		DD9452EB1F15CA28004EDDED /* OTWFootprintListTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTWFootprintListTableViewCell.h; sourceTree = "<group>"; };
@@ -194,6 +197,11 @@
 		DDB8C2991F1320B90091E7B0 /* OTWPersonalInfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPersonalInfoController.m; sourceTree = "<group>"; };
 		DDB8C29D1F14AF0D0091E7B0 /* OTWUserModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWUserModel.h; sourceTree = "<group>"; };
 		DDB8C29E1F14AF230091E7B0 /* OTWUserModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWUserModel.m; sourceTree = "<group>"; };
+		DDD4AB491F1AFC4300D42CF3 /* OTWFootprintDetailFrame.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTWFootprintDetailFrame.h; sourceTree = "<group>"; };
+		DDD4AB4A1F1AFC6900D42CF3 /* OTWFootprintDetailFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWFootprintDetailFrame.m; sourceTree = "<group>"; };
+		DDD4AB4C1F1B01D500D42CF3 /* OTWCommentFrame.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTWCommentFrame.h; sourceTree = "<group>"; };
+		DDD4AB4D1F1B020400D42CF3 /* OTWCommentFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWCommentFrame.m; sourceTree = "<group>"; };
+		DDFE0EFF1F1A002900D159C5 /* OTWFootprintDetail.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = OTWFootprintDetail.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -288,6 +296,7 @@
 				D7F6B04D1F0DCC470013090A /* PrefixHeader.pch */,
 				DD9452F41F160CD7004EDDED /* OTWFootprintList.plist */,
 				18B034CC1F171ED300F53461 /* OTWFindBusinessmen.plist */,
+				DDFE0EFF1F1A002900D159C5 /* OTWFootprintDetail.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -345,8 +354,6 @@
 		D7F6B03A1F0D39060013090A /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				DD3520981F18714000E8D725 /* OTWCommentModel.h */,
-				DD3520991F18715400E8D725 /* OTWCommentModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -533,6 +540,8 @@
 		D7F6B0691F0DD36E0013090A /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				DD3520981F18714000E8D725 /* OTWCommentModel.h */,
+				DD3520991F18715400E8D725 /* OTWCommentModel.m */,
 				DD9452EC1F15CC13004EDDED /* OTWFootprintListModel.h */,
 				DD9452ED1F15CC29004EDDED /* OTWFootprintListModel.m */,
 				DD3520971F186E2200E8D725 /* OTWFootprintDetailModel.h */,
@@ -550,6 +559,10 @@
 				DD9452F21F15DE23004EDDED /* OTWFootprintListFrame.m */,
 				DD35209B1F188FAF00E8D725 /* OTWFootprintDetailViewCell.h */,
 				DD35209C1F188FBF00E8D725 /* OTWFootprintDetailViewCell.m */,
+				DDD4AB491F1AFC4300D42CF3 /* OTWFootprintDetailFrame.h */,
+				DDD4AB4A1F1AFC6900D42CF3 /* OTWFootprintDetailFrame.m */,
+				DDD4AB4C1F1B01D500D42CF3 /* OTWCommentFrame.h */,
+				DDD4AB4D1F1B020400D42CF3 /* OTWCommentFrame.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -859,6 +872,7 @@
 				D7F6B0041F0D32FB0013090A /* LaunchScreen.storyboard in Resources */,
 				18B034CD1F171ED300F53461 /* OTWFindBusinessmen.plist in Resources */,
 				D7F6B0011F0D32FB0013090A /* Assets.xcassets in Resources */,
+				DDFE0F001F1A002900D159C5 /* OTWFootprintDetail.plist in Resources */,
 				DD9452F51F160CD7004EDDED /* OTWFootprintList.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -943,6 +957,7 @@
 				DD14F2451F11CB5F004DFE4A /* GCTokenManager.m in Sources */,
 				D7F6AFF91F0D32FB0013090A /* AppDelegate.m in Sources */,
 				18B034BC1F14A42800F53461 /* OTWPersonalViewController.m in Sources */,
+				DDD4AB4E1F1B020400D42CF3 /* OTWCommentFrame.m in Sources */,
 				D7F6B07B1F0DD41F0013090A /* OTWFootprintsViewController.m in Sources */,
 				DD9452EE1F15CC29004EDDED /* OTWFootprintListModel.m in Sources */,
 				DDABAA4B1F12801E00010532 /* OTWPersonalEditNicknameController.m in Sources */,
@@ -963,6 +978,7 @@
 				D7F6B0781F0DD3F90013090A /* OTWNewsViewController.m in Sources */,
 				D7F6B0C61F160E590013090A /* OTWAlbumSelectHelper.m in Sources */,
 				D7F6B0A91F1081850013090A /* OTWNetworkManager.m in Sources */,
+				DDD4AB4B1F1AFC6900D42CF3 /* OTWFootprintDetailFrame.m in Sources */,
 				D7F6B0B91F14E5C60013090A /* OTWCustomTabBar.m in Sources */,
 				D7F6B0B61F10AA2D0013090A /* OTWLoginViewController.m in Sources */,
 				DDB8C29F1F14AF230091E7B0 /* OTWUserModel.m in Sources */,

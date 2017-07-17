@@ -7,86 +7,137 @@
 //
 
 #import "OTWFootprintDetailViewCell.h"
+#import "OTWCommentModel.h"
+#import <AFNetworking/UIImageView+AFNetworking.h>
 
 @interface OTWFootprintDetailViewCell()
 
-@property (nonatomic,strong) UIView *footprintDetailBGView;
-@property (nonatomic,strong) UIImageView *userHeadImgImageView;
-@property (nonatomic,strong) UILabel *userNicknameLabel;
-@property (nonatomic,strong) UILabel *footprintDatecreateLabel;
-@property (nonatomic,strong) UIView *footprintPhotoView;
-@property (nonatomic,strong) UILabel *footprintContentLabel;
-@property (nonatomic,strong) UIImageView *footprintAddressImageView;
-@property (nonatomic,strong) UILabel *footprintAddressLabel;
+//评论相关 start
+@property (nonatomic,strong) UIView *commentBGView;
+@property (nonatomic,strong) UIImageView *commentUserHeadImgView;
+@property (nonatomic,strong) UILabel *commentUserNicknameLabel;
+@property (nonatomic,strong) UILabel *commentDateCreatedLabel;
+@property (nonatomic,strong) UILabel *commentContentLabel;
+@property (nonatomic,strong) UIView *bottomLine;
+//评论相关 end
 
+//当indexPath > 0 时，内容都为评论内容
+@property (nonatomic,copy) OTWCommentFrame *commentFrame;
 
 @end
 
 #define footprintContentFont [UIFont systemFontOfSize:17]
+#define commentContentFont [UIFont systemFontOfSize:15]
+#define padding 15
 
 @implementation OTWFootprintDetailViewCell
 
-+ (instancetype)cellWithTableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath data:(id *)data
++ (instancetype)cellWithTableView:(UITableView *)tableView data:(OTWCommentFrame *)data
 {
     static NSString *identifier = @"OTWFootprintDetail";
     OTWFootprintDetailViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-    if(cell){
-        cell = [[OTWFootprintDetailViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier cellForRowAtIndexPath:indexPath];
+    if(!cell){
+        cell = [[OTWFootprintDetailViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier data:data];
     }
     return cell;
 }
 
 //重写cell生成方法
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier data:(OTWCommentFrame *)data
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if(self){
-        //判断一下 indexPath ，如果 = 0 表示 展示详情信息
-        
-        
-        
-        //其他展示评论信息
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
+        self.backgroundColor = [UIColor clearColor];
+        _commentFrame = data;
+        [self buildComment];
     }
     return self;
 }
 
-- (void)buildFootprintDetail
+- (void)buildComment
 {
-    
-}
-
-- (void)bulidComment
-{
-    
+    [self addSubview:self.commentBGView];
+    [self.commentBGView addSubview:self.commentUserHeadImgView];
+    [self.commentBGView addSubview:self.commentUserNicknameLabel];
+    [self.commentBGView addSubview:self.commentDateCreatedLabel];
+    [self.commentBGView addSubview:self.commentContentLabel];
+    [self.commentBGView addSubview:self.bottomLine];
+    //设值
+    [self.commentUserHeadImgView setImageWithURL:[NSURL URLWithString:_commentFrame.commentModel.userHeadImg]];
+    self.commentUserNicknameLabel.text = _commentFrame.commentModel.userNickname;
+    self.commentDateCreatedLabel.text = _commentFrame.commentModel.dateCreatedStr;
+    self.commentContentLabel.text = _commentFrame.commentModel.commentContent;
 }
 
 #pragma mark - Getter Setter
 
-- (UIView *) footprintDetailBGView
-{
-    if(!_footprintDetailBGView){
-        _footprintDetailBGView = [[UIView alloc] init];
-        _footprintDetailBGView.backgroundColor = [UIColor whiteColor];
+- (UIView *) commentBGView{
+    if(!_commentBGView){
+        _commentBGView = [[UIView alloc] init];
+        _commentBGView.backgroundColor = [UIColor whiteColor];
+        _commentBGView.frame = CGRectMake(0, 0, SCREEN_WIDTH, _commentFrame.cellHeight);
     }
-    return _footprintDetailBGView;
+    return _commentBGView;
 }
 
-/**
- *  计算文本的宽高
- *
- *  @param str     需要计算的文本
- *  @param font    文本显示的字体
- *  @param maxSize 文本显示的范围
- *
- *  @return 文本占用的真实宽高
- */
-- (CGSize)sizeWithString:(NSString *)str font:(UIFont *)font maxSize:(CGSize)maxSize
+- (UIImageView *) commentUserHeadImgView
 {
-    NSDictionary *dict = @{NSFontAttributeName : font};
-    // 如果将来计算的文字的范围超出了指定的范围,返回的就是指定的范围
-    // 如果将来计算的文字的范围小于指定的范围, 返回的就是真实的范围
-    CGSize size =  [str boundingRectWithSize:maxSize options:NSStringDrawingUsesLineFragmentOrigin attributes:dict context:nil].size;
-    return size;
+    if(!_commentUserHeadImgView){
+        _commentUserHeadImgView = [[UIImageView alloc] init];
+        _commentUserHeadImgView.frame = CGRectMake(padding, 15, 30, 30);
+        //设置图片原型
+        _commentUserHeadImgView.layer.cornerRadius = _commentUserHeadImgView.Witdh/2.0;
+        _commentUserHeadImgView.layer.masksToBounds = YES;
+    }
+    return _commentUserHeadImgView;
+}
+
+- (UILabel *) commentUserNicknameLabel
+{
+    if(!_commentUserNicknameLabel){
+        _commentUserNicknameLabel = [[UILabel alloc] init];
+        _commentUserNicknameLabel.textColor = [UIColor color_202020];
+        _commentUserNicknameLabel.font = [UIFont systemFontOfSize:14];
+        CGFloat X = self.commentUserHeadImgView.MaxX+10;
+        CGFloat W = SCREEN_WIDTH - padding - X;
+        _commentUserNicknameLabel.frame = CGRectMake(X, 16, W, 15);
+    }
+    return _commentUserNicknameLabel;
+}
+
+- (UILabel *) commentDateCreatedLabel
+{
+    if(!_commentDateCreatedLabel){
+        _commentDateCreatedLabel = [[UILabel alloc] init];
+        _commentDateCreatedLabel.textColor = [UIColor color_979797];
+        _commentDateCreatedLabel.font = [UIFont systemFontOfSize:12];
+        _commentDateCreatedLabel.frame = CGRectMake(self.commentUserNicknameLabel.MinX, self.commentUserNicknameLabel.MaxY+3, self.commentUserNicknameLabel.Witdh, 10);
+    }
+    return _commentDateCreatedLabel;
+}
+
+- (UILabel *) commentContentLabel
+{
+    if(!_commentContentLabel){
+        _commentContentLabel = [[UILabel alloc] init];
+        _commentContentLabel.textColor = [UIColor color_202020];
+        _commentContentLabel.font = commentContentFont;
+        _commentContentLabel.numberOfLines = 0;
+        CGFloat X = self.commentUserNicknameLabel.MinX;
+        CGFloat W = SCREEN_WIDTH - X - padding;
+        _commentContentLabel.frame = CGRectMake(X, self.commentDateCreatedLabel.MaxY+10, W, _commentFrame.contentH);
+    }
+    return _commentContentLabel;
+}
+
+- (UIView *) bottomLine
+{
+    if(!_bottomLine){
+        _bottomLine = [[UIView alloc] initWithFrame:CGRectMake(0, self.commentBGView.Height+0.5, SCREEN_WIDTH, 0.5)];
+        _bottomLine.backgroundColor = [UIColor color_d5d5d5];
+    }
+    return _bottomLine;
 }
 
 @end

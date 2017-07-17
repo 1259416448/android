@@ -57,12 +57,12 @@
     //定位图标
     CGFloat footprintAddressImageFX = 15 ;
     CGFloat footprintAddressImageFY = 97 - 46  + footprintContentH ; //为了以后可以适配内容高度变化
-    CGFloat footprintAddressImageFW = 8;
-    CGFloat footprintAddressImageFH = 10;
+    CGFloat footprintAddressImageFW = 9.8;
+    CGFloat footprintAddressImageFH = 9.8;
     _footprintAddressImageF = CGRectMake(footprintAddressImageFX, footprintAddressImageFY, footprintAddressImageFW, footprintAddressImageFH);
     
     //定位label
-    CGFloat footprintAddressFX = 26;
+    CGFloat footprintAddressFX = 26+1.8;
     CGFloat footprintAddressFY = 96 - 46  + footprintContentH;
     CGFloat footprintAddressFW = SCREEN_WIDTH - padding*2 - 15 - 80;
     CGFloat footprintAddressFH = 12;

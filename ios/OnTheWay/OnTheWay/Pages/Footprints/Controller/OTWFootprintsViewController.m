@@ -12,7 +12,6 @@
 #import "OTWFootprintListTableViewCell.h"
 #import <MJRefresh.h>
 
-
 @interface OTWFootprintsViewController () <UITableViewDataSource,UITableViewDelegate>
 
 @property (nonatomic,strong) UITableView *footprintTableView;
@@ -33,6 +32,12 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [[OTWLaunchManager sharedManager].mainTabController showTabBarWithAnimation:YES];
 }
 
 -(void)buildUI
@@ -78,6 +83,10 @@
 }
 #pragma mark 点击行
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    //跳转
+    [self.navigationController pushViewController:[[OTWLaunchManager sharedManager] footprintDetailController] animated:YES];
+    
     DLog(@"我点击了：%ld",indexPath.row);
 }
 

@@ -56,7 +56,7 @@
 #pragma mark 设置模块
 -(void)setStatus:(OTWFindStatus *)status{
     //设置背景大小和位置
-    CGRect avatarRect=CGRectMake(15, 0,  SCREEN_WIDTH-30, FindTableViewBackImageHeight);
+    CGRect avatarRect=CGRectMake(15, FindTableViewCellControlSpacing,  SCREEN_WIDTH-30, FindTableViewBackImageHeight);
     [_FindTpyeBackgroundImageUrl setImageWithURL:[NSURL URLWithString:status.FindTpyeBackgroundImageUrl]];
     _FindTpyeBackgroundImageUrl.frame=avatarRect;
     _FindTpyeBackgroundImageUrl.layer.cornerRadius = 3;
