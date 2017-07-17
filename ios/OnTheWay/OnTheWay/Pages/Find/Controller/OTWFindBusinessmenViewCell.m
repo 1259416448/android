@@ -68,21 +68,22 @@
 -(void)setStatus:(FindBusinessmenModel *)status{
     
     //根据名称计算占用空间大小
-       CGSize userNameLabelSize=[status.BusinessmenName  sizeWithAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:11]}];
-    CGRect userNameLabelRect=CGRectMake(15, 15,SCREEN_WIDTH-40-status.coupons.count*20-30,18);
+//       CGSize userNameLabelSize=[status.BusinessmenName  sizeWithAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:11]}];
     userNameLabel.text=status.BusinessmenName;
-    userNameLabel.frame=userNameLabelRect;
+    userNameLabel.font=[UIFont systemFontOfSize:17];
+    [userNameLabel sizeToFit];
+    if((userNameLabel .frame.size.width+status.coupons.count*20+70)>SCREEN_WIDTH){
+        CGRect userNameLabelRect=CGRectMake(15, 15,SCREEN_WIDTH-40-status.coupons.count*20-30,18);
+        userNameLabel.frame=userNameLabelRect;
+    }else{
+        CGRect userNameLabelRect=CGRectMake(15, 15,userNameLabel .frame.size.width,18);
+        userNameLabel.frame=userNameLabelRect;
+    }
 
     //根据list个数来计算图标模块的大小
-    if(userNameLabel.Witdh>userNameLabelSize.width)
-    {
-        CGRect couponsViewRec=CGRectMake(SCREEN_WIDTH-40-status.coupons.count*20-75,15,status.coupons.count*20,15);
-         couponsView.frame=couponsViewRec;
-    }else{
-        CGRect couponsViewRec=CGRectMake(userNameLabel.Witdh+10,15,status.coupons.count*20,15);
-         couponsView.frame=couponsViewRec;
-    }
-   
+    CGRect couponsViewRec=CGRectMake(userNameLabel .frame.size.width+15,15,status.coupons.count*20,15);
+    couponsView.frame=couponsViewRec;
+    
     for (UIImageView *imageView in  couponsView.subviews) {//移除加载的图片
         [imageView removeFromSuperview];
     }
