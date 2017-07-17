@@ -95,7 +95,7 @@
 -(void)setStatus:(OTWFootprintListModel *)status{
     //设置头像的大小和位置
     CGRect avatarRect=CGRectMake(15, 15,  ShopDetailsHeadImgWidth, ShopDetailsHeadImgWidth);
-    [_ShopDetailsHeaderImg setImageWithURL:[NSURL URLWithString:status.userHeadImg]];
+    [_ShopDetailsHeaderImg setImageWithURL:[NSURL URLWithString:[status.userHeadImg stringByAppendingString:@"?imageView2/1/w/60/h/60"]]];
     _ShopDetailsHeaderImg.frame=avatarRect;
     _ShopDetailsHeaderImg.layer.cornerRadius = ShopDetailsHeadImgWidth/2;
     _ShopDetailsHeaderImg.layer.masksToBounds = YES;
@@ -137,10 +137,10 @@
             _ShopDetailsIconList.frame=CGRectMake(SCREEN_WIDTH-126, CGRectGetMaxY(_ShopDetailsCommentImgList.frame)+15, 126, ShopDetailsIcon);
             for (int i = 0; i < status.footprintPhotoArray.count / 3; i ++) {
                 for (int j = 0; j < 3; j ++) {
-                    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(j*(SCREEN_WIDTH-55-15)/3+7, i*(78+5), (SCREEN_WIDTH-55-14-15)/3, 78)];
+                    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(j*(SCREEN_WIDTH-55-15)/3, i*(78+5), (SCREEN_WIDTH-55-14-15)/3, 78)];
                     imageView.layer.masksToBounds = YES;
                     imageView.contentMode = UIViewContentModeScaleAspectFill;
-                    [imageView setImageWithURL:[NSURL URLWithString:status.footprintPhotoArray[i]]];
+                    [imageView setImageWithURL:[NSURL URLWithString:[status.footprintPhotoArray[i] stringByAppendingString:@"?imageView2/1/w/194/h/156"]]];
                     [_ShopDetailsCommentImgList addSubview:imageView];
                 }
             }
@@ -149,7 +149,7 @@
             _ShopDetailsIconList.frame=CGRectMake(SCREEN_WIDTH-126, CGRectGetMaxY(_ShopDetailsCommentImgList.frame)+15, 126, ShopDetailsIcon);
             for (int i = 0; i < status.footprintPhotoArray.count / 3 + 1; i ++) {
                 for (int j = 0; j < 3; j ++) {
-                    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(j*(SCREEN_WIDTH-55-14)/3+7, i*(78+5), (SCREEN_WIDTH-55-14-15)/3, 78)];
+                    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(j*(SCREEN_WIDTH-55-14)/3, i*(78+5), (SCREEN_WIDTH-55-14-15)/3, 78)];
                     [imageView setImageWithURL:[NSURL URLWithString:status.footprintPhotoArray[i]]];
                     imageView.layer.masksToBounds = YES;
                     imageView.contentMode = UIViewContentModeScaleAspectFill;

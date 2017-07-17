@@ -114,10 +114,10 @@
 
 -(void)initData{
       _status = [[NSMutableArray alloc] init];
-    NSDictionary *dic=@{@"userNickname":@"高世奇",@"userHeadImg":@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg?imageView2/2/w/1035/h/390",@"footprintContent":@"他家菜的味道不错，量也很大就是有点小贵，下次考虑还来",@"footprintPhotoArray":@[@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg?imageView2/2/w/1035/h/390",@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg?imageView2/2/w/1035/h/390",@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg?imageView2/2/w/1035/h/390",@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg?imageView2/2/w/1035/h/390"],@"dateCreatedStr":@"13:09"};
-      NSDictionary *dic2=@{@"userNickname":@"高世奇",@"userHeadImg":@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg?imageView2/2/w/1035/h/390",@"footprintContent":@"他家菜的味道不错，量也很大就是有点小贵，下次考虑还来",@"footprintPhotoArray":@[@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg?imageView2/2/w/1035/h/390"],@"dateCreatedStr":@"13:09"};
-       NSDictionary *dic3=@{@"userNickname":@"高世奇",@"userHeadImg":@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg?imageView2/2/w/1035/h/390",@"footprintContent":@"围绕着我的卑微 也许能消退 其实我并不在意 有很多机会像巨人一样的无畏放纵我心里的鬼",@"footprintPhotoArray":@[],@"dateCreatedStr":@"13:09"};
-        NSDictionary *dic4=@{@"userNickname":@"高世奇",@"userHeadImg":@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg?imageView2/2/w/1035/h/390",@"footprintContent":@"围绕着我的卑微 也",@"footprintPhotoArray":@[],@"dateCreatedStr":@"13:09"};
+    NSDictionary *dic=@{@"userNickname":@"高世奇",@"userHeadImg":@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"footprintContent":@"他家菜的味道不错，量也很大就是有点小贵，下次考虑还来",@"footprintPhotoArray":@[@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg"],@"dateCreatedStr":@"13:09"};
+      NSDictionary *dic2=@{@"userNickname":@"高世奇",@"userHeadImg":@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"footprintContent":@"他家菜的味道不错，量也很大就是有点小贵，下次考虑还来",@"footprintPhotoArray":@[@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg"],@"dateCreatedStr":@"13:09"};
+       NSDictionary *dic3=@{@"userNickname":@"高世奇",@"userHeadImg":@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"footprintContent":@"围绕着我的卑微 也许能消退 其实我并不在意 有很多机会像巨人一样的无畏放纵我心里的鬼",@"footprintPhotoArray":@[],@"dateCreatedStr":@"13:09"};
+        NSDictionary *dic4=@{@"userNickname":@"高世奇",@"userHeadImg":@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"footprintContent":@"围绕着我的卑微 也",@"footprintPhotoArray":@[],@"dateCreatedStr":@"13:09"};
     OTWFootprintListModel *model = [OTWFootprintListModel statusWithDictionary:dic];
     OTWFootprintListModel *model2= [OTWFootprintListModel statusWithDictionary:dic2];
     OTWFootprintListModel *model3= [OTWFootprintListModel statusWithDictionary:dic3];
@@ -157,7 +157,7 @@
         
         //商店图片
         UIImageView *shopImg=[[UIImageView alloc] initWithFrame:CGRectMake(15, 10, 111, 80)];
-        [shopImg sd_setImageWithURL:[NSURL URLWithString:@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg?imageView2/2/w/1035/h/390"] ];
+        [shopImg sd_setImageWithURL:[NSURL URLWithString:[@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg" stringByAppendingString:@"?imageView2/1/w/222/h/160"] ]];
         [_ShopDetailsTopTableViewHeader addSubview:shopImg];
         
            //商店名称
