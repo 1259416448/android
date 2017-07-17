@@ -39,6 +39,7 @@
 @property (nonatomic,strong) UIButton * ZanImageView;
 @property (nonatomic,strong) UIButton * PinglunImageView;
 @property (nonatomic,strong) UIButton * FenxiangImageView;
+@property (nonatomic,assign) CGFloat photoH;
 
 @end
 
@@ -133,11 +134,11 @@
     }else{
         if(status.footprintPhotoArray.count%3==0){
             
-            _ShopDetailsCommentImgList.frame=CGRectMake(55, CGRectGetMaxY(_ShopDetailsCommentConten.frame) + 5, SCREEN_WIDTH-55-15, status.footprintPhotoArray.count/3*78 +(status.footprintPhotoArray.count/3-1)*5 );
+            _ShopDetailsCommentImgList.frame=CGRectMake(55, CGRectGetMaxY(_ShopDetailsCommentConten.frame) + 5, SCREEN_WIDTH-55-15, status.footprintPhotoArray.count/3*self.photoH +(status.footprintPhotoArray.count/3-1)*5 );
             _ShopDetailsIconList.frame=CGRectMake(SCREEN_WIDTH-126, CGRectGetMaxY(_ShopDetailsCommentImgList.frame)+15, 126, ShopDetailsIcon);
             for (int i = 0; i < status.footprintPhotoArray.count / 3; i ++) {
                 for (int j = 0; j < 3; j ++) {
-                    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(j*(SCREEN_WIDTH-55-15)/3, i*(78+5), (SCREEN_WIDTH-55-14-15)/3, 78)];
+                    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(j*(SCREEN_WIDTH-55-15)/3, i*(self.photoH+5), (SCREEN_WIDTH-55-14-15)/3, self.photoH)];
                     imageView.layer.masksToBounds = YES;
                     imageView.contentMode = UIViewContentModeScaleAspectFill;
                     [imageView setImageWithURL:[NSURL URLWithString:[status.footprintPhotoArray[i] stringByAppendingString:@"?imageView2/1/w/194/h/156"]]];
@@ -145,11 +146,11 @@
                 }
             }
         }else{
-            _ShopDetailsCommentImgList.frame=CGRectMake(55, CGRectGetMaxY(_ShopDetailsCommentConten.frame) + 5, SCREEN_WIDTH-55-15, (status.footprintPhotoArray.count/3+1)*78 +status.footprintPhotoArray.count/3*5 );
+            _ShopDetailsCommentImgList.frame=CGRectMake(55, CGRectGetMaxY(_ShopDetailsCommentConten.frame) + 5, SCREEN_WIDTH-55-15, (status.footprintPhotoArray.count/3+1)*self.photoH +status.footprintPhotoArray.count/3*5 );
             _ShopDetailsIconList.frame=CGRectMake(SCREEN_WIDTH-126, CGRectGetMaxY(_ShopDetailsCommentImgList.frame)+15, 126, ShopDetailsIcon);
             for (int i = 0; i < status.footprintPhotoArray.count / 3 + 1; i ++) {
                 for (int j = 0; j < 3; j ++) {
-                    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(j*(SCREEN_WIDTH-55-14)/3, i*(78+5), (SCREEN_WIDTH-55-14-15)/3, 78)];
+                    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(j*(SCREEN_WIDTH-55-14)/3, i*(self.photoH+5), (SCREEN_WIDTH-55-14-15)/3, self.photoH)];
                     [imageView setImageWithURL:[NSURL URLWithString:status.footprintPhotoArray[i]]];
                     imageView.layer.masksToBounds = YES;
                     imageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -214,4 +215,10 @@
     DLog(@"我点击了FenxiangClick");
 }
 
+-(CGFloat)photoH{
+    if(!_photoH || _photoH == 0){
+        _photoH=(SCREEN_WIDTH-55-15-14) /3  *78 /97;
+    }
+    return _photoH;
+}
 @end
