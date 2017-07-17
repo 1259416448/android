@@ -24,6 +24,7 @@
 @interface OTWLaunchManager ()
 
 @property (nonatomic, strong) OTWLoginViewController *loginViewController;
+@property (nonatomic, strong) OTWFootprintDetailController *footprintDetailController;
 @property (nonatomic, strong) UINavigationController *personalEditNicknameController;
 @property (nonatomic, strong) OTWRootViewController *mainTabViewController;
 @property (nonatomic,strong) UINavigationController *personalInfoController;
@@ -174,6 +175,15 @@
     
     return _mainTabViewController;
 }
+
+- (OTWFootprintDetailController *) footprintDetailController
+{
+    if(!_footprintDetailController){
+        _footprintDetailController = [[OTWFootprintDetailController alloc] init];
+    }
+    return _footprintDetailController;
+}
+
 
 - (OTWTabBarController*)mainTabController
 {

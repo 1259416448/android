@@ -12,8 +12,8 @@
 
 @interface OTWFootprintDetailModel : NSObject
 
-@property (nonatomic,copy) OTWFootprintListModel *footprintDetail;
-@property (nonatomic,copy) NSMutableArray<OTWCommentModel *> *comments;
+@property (nonatomic,strong) OTWFootprintListModel *footprintDetail;
+@property (nonatomic,strong) NSMutableArray<OTWCommentModel *> *comments;
 
 + (id) initWithDict:(NSDictionary *)dict;
 

@@ -16,4 +16,10 @@
     return [OTWFootprintDetailModel mj_objectWithKeyValues:dict];
 }
 
++ (NSDictionary *) objectClassInArray{
+    return @{
+             @"comments" : @"OTWCommentModel"
+           };
+}
+
 @end

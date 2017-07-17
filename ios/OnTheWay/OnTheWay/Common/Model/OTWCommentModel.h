@@ -13,7 +13,7 @@
 @property (nonatomic,copy) NSNumber *dateCreated;
 
 //评论发布时间字符串
-@property (nonatomic,copy) NSNumber *dateCreatedStr;
+@property (nonatomic,copy) NSString *dateCreatedStr;
 
 //用户头像
 @property (nonatomic,copy) NSString *userHeadImg;

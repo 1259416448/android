@@ -54,7 +54,7 @@
 }
 
 - (CGFloat)navigationHeight {
-    return 75.0;
+    return 65.0;
 }
 
 - (void)setCustomNavigationLeftView:(UIView*)view {

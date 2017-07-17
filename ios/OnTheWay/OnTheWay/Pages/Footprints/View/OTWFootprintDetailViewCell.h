@@ -7,13 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OTWFootprintDetailModel.h"
+#import "OTWCommentFrame.h"
 
 @interface OTWFootprintDetailViewCell : UITableViewCell
-
 /**
  *创建cell
  */
-+ (instancetype)cellWithTableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath data:(id *)data;
++ (instancetype)cellWithTableView:(UITableView *)tableView data:(OTWCommentFrame *)data;
 
 @end
