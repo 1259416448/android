@@ -62,16 +62,16 @@
     _status = [[NSMutableArray alloc] init];
     NSDictionary *dic=@{@"BusinessmenAddress":@"东城区东直门内大街233",@"BusinessmenName":@"胡大饭馆（东直门总店）",@"BusinessmenNeedTime":@"步行约8分钟",@"BusinessmenDistance":@"432m",@"coupons":@[@"faxianshangjia",@"faxianshangjia",@"faxianshangjia"]};
     
-    NSDictionary *dic2=@{@"BusinessmenAddress":@"东城区东直门内大街233",@"BusinessmenName":@"胡大饭馆（东直门总店）",@"BusinessmenNeedTime":@"步行约8分钟",@"BusinessmenDistance":@"432m",@"coupons":@[@"faxianshangjia",@"faxianshangjia",@"faxianshangjia"]};
+    NSDictionary *dic2=@{@"BusinessmenAddress":@"东城区东直门内大街233",@"BusinessmenName":@"胡大饭馆胡大饭馆",@"BusinessmenNeedTime":@"步行约8分钟",@"BusinessmenDistance":@"432m",@"coupons":@[@"faxianshangjia",@"faxianshangjia",@"faxianshangjia"]};
     
-    NSDictionary *dic3=@{@"BusinessmenAddress":@"东城区东直门内大街233",@"BusinessmenName":@"胡大饭馆（东直门总店）",@"BusinessmenNeedTime":@"步行约8分钟",@"BusinessmenDistance":@"432m",@"coupons":@[@"faxianshangjia",@"faxianshangjia",@"faxianshangjia"]};
-        NSDictionary *dic4=@{@"BusinessmenAddress":@"东城区东直门内大街233",@"BusinessmenName":@"胡大饭馆（东直门总店）",@"BusinessmenNeedTime":@"步行约8分钟",@"BusinessmenDistance":@"432m",@"coupons":@[@"faxianshangjia",@"faxianshangjia",@"faxianshangjia"]};
+    NSDictionary *dic3=@{@"BusinessmenAddress":@"东城区东直门内大街233",@"BusinessmenName":@"胡大饭馆胡大饭馆胡大饭馆胡大饭馆",@"BusinessmenNeedTime":@"步行约8分钟",@"BusinessmenDistance":@"432m",@"coupons":@[@"faxianshangjia",@"faxianshangjia",@"faxianshangjia",@"faxianshangjia",@"faxianshangjia"]};
+        NSDictionary *dic4=@{@"BusinessmenAddress":@"东城区东直门内大街233",@"BusinessmenName":@"胡大饭馆（东直门总店）",@"BusinessmenNeedTime":@"步行约8分钟",@"BusinessmenDistance":@"432m",@"coupons":@[]};
         NSDictionary *dic5=@{@"BusinessmenAddress":@"东城区东直门内大街233",@"BusinessmenName":@"胡大饭馆（东直门总店）",@"BusinessmenNeedTime":@"步行约8分钟",@"BusinessmenDistance":@"432m",@"coupons":@[@"faxianshangjia",@"faxianshangjia",@"faxianshangjia"]};
         NSDictionary *dic6=@{@"BusinessmenAddress":@"东城区东直门内大街233",@"BusinessmenName":@"胡大饭馆（东直门总店）",@"BusinessmenNeedTime":@"步行约8分钟",@"BusinessmenDistance":@"432m",@"coupons":@[@"faxianshangjia",@"faxianshangjia",@"faxianshangjia"]};
         NSDictionary *dic7=@{@"BusinessmenAddress":@"东城区东直门内大街233",@"BusinessmenName":@"胡大饭馆（东直门总店）",@"BusinessmenNeedTime":@"步行约8分钟",@"BusinessmenDistance":@"432m",@"coupons":@[@"faxianshangjia",@"faxianshangjia",@"faxianshangjia"]};
         NSDictionary *dic8=@{@"BusinessmenAddress":@"东城区东直门内大街233",@"BusinessmenName":@"胡大饭馆（东直门总店）",@"BusinessmenNeedTime":@"步行约8分钟",@"BusinessmenDistance":@"432m",@"coupons":@[@"faxianshangjia",@"faxianshangjia",@"faxianshangjia"]};
     
-    NSDictionary *dic9=@{@"BusinessmenAddress":@"东城区东直门内大街东城区东直门内大街区东直门内大街233",@"BusinessmenName":@"胡大饭馆（东直门总店）胡大饭馆（东直门总店）",@"BusinessmenNeedTime":@"步行约8分步行约8分钟",@"BusinessmenDistance":@"432m",@"coupons":@[@"faxianshangjia",@"faxianshangjia",@"faxianshangjia",@"faxianshangjia",@"faxianshangjia",@"faxianshangjia",@"faxianshangjia",@"faxianshangjia"]};
+    NSDictionary *dic9=@{@"BusinessmenAddress":@"东城区东直门内大街东城区东直门内大街区东直门内大街233",@"BusinessmenName":@"胡大饭馆胡大饭馆（东直门总店）",@"BusinessmenNeedTime":@"步行约8分步行约8分钟",@"BusinessmenDistance":@"432m",@"coupons":@[@"faxianshangjia",@"faxianshangjia",@"faxianshangjia",@"faxianshangjia",@"faxianshangjia",@"faxianshangjia",@"faxianshangjia",@"faxianshangjia"]};
     
     FindBusinessmenModel *model = [FindBusinessmenModel statusWithDictionary:dic];
     FindBusinessmenModel *model2= [FindBusinessmenModel statusWithDictionary:dic2];
