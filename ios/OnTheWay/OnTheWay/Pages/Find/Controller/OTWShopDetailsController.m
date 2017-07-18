@@ -171,6 +171,17 @@
         [shopImg sd_setImageWithURL:[NSURL URLWithString:[@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg" stringByAppendingString:@"?imageView2/1/w/222/h/160"] ]];
         [_ShopDetailsTopTableViewHeader addSubview:shopImg];
         
+        //商店评论条数
+        UILabel *shopCommentCount=[[UILabel alloc] init];
+        shopCommentCount.text=@"123";
+        shopCommentCount.font=[UIFont systemFontOfSize:12];
+        [shopCommentCount sizeToFit];
+        shopCommentCount.frame=CGRectMake(shopImg.width-10-shopCommentCount .frame.size.width-5,  shopImg.Height-20, shopCommentCount .frame.size.width+10,15+2.5);
+        shopCommentCount.backgroundColor=[[UIColor blackColor]colorWithAlphaComponent:0.6f];
+        shopCommentCount.textColor=[UIColor whiteColor];
+        shopCommentCount.textAlignment=NSTextAlignmentCenter;
+        [shopImg addSubview:shopCommentCount];
+        
         //商店名称
         UILabel *shopName=[[UILabel alloc] initWithFrame:CGRectMake(111+10+15, 10, SCREEN_WIDTH-15-19-111-20-25, 20)];
         shopName.font=[UIFont systemFontOfSize:16];
