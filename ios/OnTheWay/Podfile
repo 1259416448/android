@@ -11,5 +11,6 @@ target 'OnTheWay' do
   pod 'STPopup'
   pod 'SDCycleScrollView'
   pod 'YYImage'
+  pod 'KSPhotoBrowser'
 end
 
