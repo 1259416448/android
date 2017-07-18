@@ -55,15 +55,7 @@
 {
     [super viewWillAppear:animated];
     [[OTWLaunchManager sharedManager].mainTabController showTabBarWithAnimation:YES];
-    DLog(@"执行了viewWillAppear");
     [self buildPersonalInfo];
-}
-
-//登陆被关闭，说明用户没有登陆，直接跳转到首页
--(void)handleColorChange:(NSNotification*)sender
-{
-    DLog(@"执行了loginCancel");
-    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void)buildPersonalInfo

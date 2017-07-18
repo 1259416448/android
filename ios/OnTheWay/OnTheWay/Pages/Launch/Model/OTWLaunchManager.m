@@ -176,8 +176,16 @@
     return _mainTabViewController;
 }
 
-- (OTWFootprintDetailController *) footprintDetailController
+- (OTWFootprintDetailController *) footprintDetailController:(BOOL) newFootprint
 {
+    if(newFootprint&&_footprintDetailController){
+        [_footprintDetailController moveDelegate];
+        //[_footprintDetailController.view removeFromSuperview];
+        //_footprintDetailController.view = nil;
+        _footprintDetailController = nil;
+        DLog(@"_footprintDetailController >>>>>%@",_footprintDetailController)
+    }
+    
     if(!_footprintDetailController){
         _footprintDetailController = [[OTWFootprintDetailController alloc] init];
     }

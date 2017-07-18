@@ -9,6 +9,6 @@
 
 @interface  OTWFootprintDetailController : OTWBaseViewController
 
-
+- (void) moveDelegate;
 
 @end

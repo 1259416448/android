@@ -26,6 +26,6 @@
 - (void)deallocLoginViewController;
 
 - (BOOL)showLoginViewWithController:(UIViewController*_Nullable)viewController completion:(void (^ __nullable)(void))completion NS_AVAILABLE_IOS(5_0);
-- (OTWFootprintDetailController *_Nullable) footprintDetailController;
+- (OTWFootprintDetailController *_Nullable) footprintDetailController:(BOOL) newFootprint;
 
 @end

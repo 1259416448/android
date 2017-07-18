@@ -16,6 +16,7 @@
 #import <SDCycleScrollView.h>
 #import <AFNetworking/UIImageView+AFNetworking.h>
 #import <IQKeyboardManager.h>
+#import <IQKeyboardReturnKeyHandler.h>
 
 #define footprintContentFont [UIFont systemFontOfSize:17]
 #define padding 15
@@ -56,9 +57,10 @@
 @property (nonatomic,strong) UIView *bottomLine;
 @property (nonatomic,strong) SDCycleScrollView *photoScrollView;
 @property (nonatomic,strong) UILabel *photoPageControllerLabel;
+@property (nonatomic,assign) BOOL wasKeyboardManagerEnabled;
 
 //足迹详情 end
-
+@property (nonatomic, strong) IQKeyboardReturnKeyHandler  *returnKeyHandler;
 
 @end
 
@@ -72,6 +74,73 @@ static NSString *imageView2Params = @"?imageView2/1/w/690/h/500";
     [IQKeyboardManager sharedManager].enableAutoToolbar = NO;
     [IQKeyboardManager sharedManager].shouldResignOnTouchOutside = YES;
     [self buildUI];
+    //监听键盘的通知
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    self.returnKeyHandler = [[IQKeyboardReturnKeyHandler alloc] initWithViewController:self];
+    self.returnKeyHandler.lastTextFieldReturnKeyType = UIReturnKeySend;
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    //[self.writeCommentField resignFirstResponder];
+    [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeFrameNotify:) name:UIKeyboardWillChangeFrameNotification object:nil];
+    _wasKeyboardManagerEnabled = [[IQKeyboardManager sharedManager] isEnabled];
+    [[IQKeyboardManager sharedManager] setEnable:NO];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[IQKeyboardManager sharedManager] setEnable:_wasKeyboardManagerEnabled];
+    [self.writeCommentField resignFirstResponder];
+    [[IQKeyboardManager sharedManager] resignFirstResponder];
+    [self.view endEditing:YES];
+    
+}
+-(void)dealloc
+{
+    self.returnKeyHandler = nil;
+    NSLog(@"%@ dealloc",NSStringFromClass([self class]));
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    DLog(@">>>>>>>>>");
+    return YES;
+}
+    /**
+     *  当键盘改变了frame(位置和尺寸)的时候调用
+     */
+- (void) keyboardWillChangeFrameNotify:(NSNotification*)notify
+{
+        // 0.取出键盘动画的时间
+        CGFloat duration = [notify.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+        // 1.取得键盘最后的frame
+        CGRect keyboardFrame = [notify.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+        // 2.计算控制器的view需要平移的距离
+        CGFloat transformY = keyboardFrame.origin.y - self.view.frame.size.height;
+        // 3.执行动画
+        [UIView animateWithDuration:duration animations:^{
+            self.tableView.frame = CGRectMake(0, self.navigationHeight, SCREEN_WIDTH, SCREEN_HEIGHT + transformY - self.commentBGView.Height-self.navigationHeight);
+            //self.tableViewBottomConstraint.constant = -transformY + self.commentBGView.Height;// tableView的bottom距父视图bottom的距离
+            self.commentBGView.transform = CGAffineTransformMakeTranslation(0, transformY);
+            [self scrollTableViewToBottom];
+        }];
+}
+
+/**
+ *  tableView快速滚动到底部
+ */
+#pragma mark - tableView快速滚动到底部 请一定不要使用动画 animated:NO 使用动画会出现评论cell渲染错乱！！！
+- (void)scrollTableViewToBottom
+{
+    if (self.commentFrameArray.count) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:(self.commentFrameArray.count - 1) inSection:0];
+        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -79,11 +148,6 @@ static NSString *imageView2Params = @"?imageView2/1/w/690/h/500";
     // Dispose of any resources that can be recreated.
 }
 
--(void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
-}
 
 - (void)buildUI
 {
@@ -463,16 +527,18 @@ static NSString *imageView2Params = @"?imageView2/1/w/690/h/500";
     
 }
 
-#pragma mark - UITextFieldDelegate
-
-- ( void )textFieldDidBeginEditing:( UITextField*)textField
+#pragma mark - 移除所有delegate
+- (void) moveDelegate
 {
-    DLog(@"键盘打开");
-}
-
-- ( void )textFieldDidEndEditing:( UITextField *)textField
-{
-    DLog(@"键盘关闭");
+    self.tableView.dataSource = nil;
+    self.tableView.delegate = nil;
+    self.photoScrollView.delegate = nil;
+    _writeCommentField.delegate = nil;
+    _writeCommentField = nil;
+    self.tableView = nil;
+    [self.view removeFromSuperview];
+    self.view = nil;
+    DLog(@"self moveDelegate");
 }
 
 @end

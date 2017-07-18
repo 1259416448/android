@@ -73,6 +73,7 @@
 		DDB8C29F1F14AF230091E7B0 /* OTWUserModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DDB8C29E1F14AF230091E7B0 /* OTWUserModel.m */; };
 		DDD4AB4B1F1AFC6900D42CF3 /* OTWFootprintDetailFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = DDD4AB4A1F1AFC6900D42CF3 /* OTWFootprintDetailFrame.m */; };
 		DDD4AB4E1F1B020400D42CF3 /* OTWCommentFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = DDD4AB4D1F1B020400D42CF3 /* OTWCommentFrame.m */; };
+		DDDAE08F1F1CFA5B00981E60 /* OTWFootprintDetail.plist in Resources */ = {isa = PBXBuildFile; fileRef = DDDAE08E1F1CFA5B00981E60 /* OTWFootprintDetail.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -220,6 +221,7 @@
 		DDD4AB4A1F1AFC6900D42CF3 /* OTWFootprintDetailFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWFootprintDetailFrame.m; sourceTree = "<group>"; };
 		DDD4AB4C1F1B01D500D42CF3 /* OTWCommentFrame.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTWCommentFrame.h; sourceTree = "<group>"; };
 		DDD4AB4D1F1B020400D42CF3 /* OTWCommentFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWCommentFrame.m; sourceTree = "<group>"; };
+		DDDAE08E1F1CFA5B00981E60 /* OTWFootprintDetail.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = OTWFootprintDetail.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -307,6 +309,7 @@
 		D7F6AFF41F0D32FB0013090A /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				DDDAE08E1F1CFA5B00981E60 /* OTWFootprintDetail.plist */,
 				D7F6B0001F0D32FB0013090A /* Assets.xcassets */,
 				D7F6B0021F0D32FB0013090A /* LaunchScreen.storyboard */,
 				D7F6B0051F0D32FB0013090A /* Info.plist */,
@@ -899,6 +902,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DDDAE08F1F1CFA5B00981E60 /* OTWFootprintDetail.plist in Resources */,
 				D7F6B0041F0D32FB0013090A /* LaunchScreen.storyboard in Resources */,
 				18B034CD1F171ED300F53461 /* OTWFindBusinessmen.plist in Resources */,
 				B13ADA281F1C9932008E889C /* OTWSystemNews.plist in Resources */,

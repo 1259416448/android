@@ -16,6 +16,7 @@
 
 @property (nonatomic,strong) UITableView *footprintTableView;
 @property (nonatomic,strong) NSMutableArray *footprintFrames;
+@property (nonatomic,assign) NSInteger selectedIndex;
 
 @end
 
@@ -83,10 +84,9 @@
 }
 #pragma mark 点击行
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    
     //跳转
-    [self.navigationController pushViewController:[[OTWLaunchManager sharedManager] footprintDetailController] animated:YES];
-    
+    [self.navigationController pushViewController:[[OTWLaunchManager sharedManager] footprintDetailController:self.selectedIndex != indexPath.row] animated:YES];
+    _selectedIndex = indexPath.row;
     DLog(@"我点击了：%ld",indexPath.row);
 }
 
