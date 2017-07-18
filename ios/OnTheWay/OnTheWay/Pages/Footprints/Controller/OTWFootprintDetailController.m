@@ -15,11 +15,13 @@
 
 #import <SDCycleScrollView.h>
 #import <AFNetworking/UIImageView+AFNetworking.h>
+#import <IQKeyboardManager.h>
+#import <IQKeyboardReturnKeyHandler.h>
 
 #define footprintContentFont [UIFont systemFontOfSize:17]
 #define padding 15
 
-@interface OTWFootprintDetailController () <UITableViewDataSource,UITableViewDelegate,SDCycleScrollViewDelegate>
+@interface OTWFootprintDetailController () <UITableViewDataSource,UITableViewDelegate,SDCycleScrollViewDelegate,UITextFieldDelegate>
 
 @property (nonatomic,strong) OTWFootprintDetailModel *model;
 
@@ -30,8 +32,15 @@
 //评论数据
 @property (nonatomic,strong) NSMutableArray<OTWCommentFrame *> *commentFrameArray;
 
-//评论填写区域
+//评论填写区域 start
 @property (nonatomic,strong) UIView *commentBGView;
+@property (nonatomic,strong) UILabel *commentSunLabel;
+@property (nonatomic,strong) UIImageView *likeImageView;
+@property (nonatomic,strong) UIImageView *shareImageView;
+@property (nonatomic,strong) UIView *writeCommentView;
+@property (nonatomic,strong) UIImageView *writeCommentImageView;
+@property (nonatomic,strong) UITextField *writeCommentField;
+//评论填写区域 end
 
 //足迹详情 start
 
@@ -48,9 +57,10 @@
 @property (nonatomic,strong) UIView *bottomLine;
 @property (nonatomic,strong) SDCycleScrollView *photoScrollView;
 @property (nonatomic,strong) UILabel *photoPageControllerLabel;
+@property (nonatomic,assign) BOOL wasKeyboardManagerEnabled;
 
 //足迹详情 end
-
+@property (nonatomic, strong) IQKeyboardReturnKeyHandler  *returnKeyHandler;
 
 @end
 
@@ -61,7 +71,76 @@ static NSString *imageView2Params = @"?imageView2/1/w/690/h/500";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [IQKeyboardManager sharedManager].enableAutoToolbar = NO;
+    [IQKeyboardManager sharedManager].shouldResignOnTouchOutside = YES;
     [self buildUI];
+    //监听键盘的通知
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    self.returnKeyHandler = [[IQKeyboardReturnKeyHandler alloc] initWithViewController:self];
+    self.returnKeyHandler.lastTextFieldReturnKeyType = UIReturnKeySend;
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    //[self.writeCommentField resignFirstResponder];
+    [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeFrameNotify:) name:UIKeyboardWillChangeFrameNotification object:nil];
+    _wasKeyboardManagerEnabled = [[IQKeyboardManager sharedManager] isEnabled];
+    [[IQKeyboardManager sharedManager] setEnable:NO];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[IQKeyboardManager sharedManager] setEnable:_wasKeyboardManagerEnabled];
+    [self.writeCommentField resignFirstResponder];
+    [[IQKeyboardManager sharedManager] resignFirstResponder];
+    [self.view endEditing:YES];
+    
+}
+-(void)dealloc
+{
+    self.returnKeyHandler = nil;
+    NSLog(@"%@ dealloc",NSStringFromClass([self class]));
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    DLog(@">>>>>>>>>");
+    return YES;
+}
+    /**
+     *  当键盘改变了frame(位置和尺寸)的时候调用
+     */
+- (void) keyboardWillChangeFrameNotify:(NSNotification*)notify
+{
+        // 0.取出键盘动画的时间
+        CGFloat duration = [notify.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+        // 1.取得键盘最后的frame
+        CGRect keyboardFrame = [notify.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+        // 2.计算控制器的view需要平移的距离
+        CGFloat transformY = keyboardFrame.origin.y - self.view.frame.size.height;
+        // 3.执行动画
+        [UIView animateWithDuration:duration animations:^{
+            self.tableView.frame = CGRectMake(0, self.navigationHeight, SCREEN_WIDTH, SCREEN_HEIGHT + transformY - self.commentBGView.Height-self.navigationHeight);
+            //self.tableViewBottomConstraint.constant = -transformY + self.commentBGView.Height;// tableView的bottom距父视图bottom的距离
+            self.commentBGView.transform = CGAffineTransformMakeTranslation(0, transformY);
+            [self scrollTableViewToBottom];
+        }];
+}
+
+/**
+ *  tableView快速滚动到底部
+ */
+#pragma mark - tableView快速滚动到底部 请一定不要使用动画 animated:NO 使用动画会出现评论cell渲染错乱！！！
+- (void)scrollTableViewToBottom
+{
+    if (self.commentFrameArray.count) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:(self.commentFrameArray.count - 1) inSection:0];
+        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -69,11 +148,6 @@ static NSString *imageView2Params = @"?imageView2/1/w/690/h/500";
     // Dispose of any resources that can be recreated.
 }
 
--(void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
-}
 
 - (void)buildUI
 {
@@ -87,8 +161,15 @@ static NSString *imageView2Params = @"?imageView2/1/w/690/h/500";
      //表格的初始化需要等数据请求完毕
     [self.view addSubview:self.tableView];
     self.tableView.tableHeaderView = [self buildTableHeaderView];
+    //增加底部评论信息
     [self.view addSubview:self.commentBGView];
-    
+    [self.commentBGView addSubview:self.writeCommentView];
+    [self.writeCommentView addSubview:self.writeCommentImageView];
+    [self.commentBGView addSubview:self.commentSunLabel];
+    [self.commentBGView addSubview:self.likeImageView];
+    [self.commentBGView addSubview:self.shareImageView];
+    [self.writeCommentView addSubview:self.writeCommentField];
+    self.commentSunLabel.text = [[NSString stringWithFormat:@"%ld",(long)_detailFrame.footprintDetailModel.footprintCommentNum] stringByAppendingString:@"条评论"];
 }
 
 - (UIView *) buildTableHeaderView
@@ -175,12 +256,14 @@ static NSString *imageView2Params = @"?imageView2/1/w/690/h/500";
     DLog(@"我点击了：%ld",indexPath.row);
 }
 
-#pragma mark 返回第indexPath这行对应的内容
+#pragma mark - 返回第indexPath这行对应的内容
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return [OTWFootprintDetailViewCell cellWithTableView:tableView data:[_commentFrameArray objectAtIndex:indexPath.row]];
 }
 
+
+#pragma mark - 底部评论布局
 - (UIView *) commentBGView
 {
     if(!_commentBGView){
@@ -193,7 +276,86 @@ static NSString *imageView2Params = @"?imageView2/1/w/690/h/500";
     return _commentBGView;
 }
 
+- (UIView *) writeCommentView
+{
+    if(!_writeCommentView){
+        CGFloat W = SCREEN_WIDTH - 173;
+        _writeCommentView = [[UIView alloc] initWithFrame:CGRectMake(padding, 7, W , 33)];
+        _writeCommentView.layer.cornerRadius = _writeCommentView.Height / 2.0;
+        _writeCommentView.backgroundColor = [UIColor color_f4f4f4];
+    }
+    return _writeCommentView;
+}
 
+- (UITextField *) writeCommentField
+{
+    if(!_writeCommentField){
+        _writeCommentField = [[UITextField alloc] initWithFrame:CGRectMake(self.writeCommentImageView.MaxX+5, 6.5, self.writeCommentView.Witdh - 33 - 15 , 20)];
+        _writeCommentField.placeholder = @"写评论";
+        [_writeCommentField setValue:[UIColor color_979797] forKeyPath:@"_placeholderLabel.textColor"];
+        _writeCommentField.font = [UIFont systemFontOfSize:15];
+        _writeCommentField.textColor = [UIColor color_202020];
+        _writeCommentField.delegate = self;
+    }
+    return _writeCommentField;
+}
+
+- (UIImageView *) writeCommentImageView
+{
+    if(!_writeCommentImageView){
+        _writeCommentImageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 10, 13, 13)];
+        _writeCommentImageView.image = [UIImage imageNamed:@"xiepinglun"];
+    }
+    return _writeCommentImageView;
+}
+
+- (UILabel *) commentSunLabel
+{
+    if(!_commentSunLabel){
+        _commentSunLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.writeCommentView.MaxX + 10, 17.5, 70, 15)];
+        _commentSunLabel.font = [UIFont systemFontOfSize:11];
+        _commentSunLabel.textColor = [UIColor color_979797];
+    }
+    return _commentSunLabel;
+}
+
+- (UIImageView *) likeImageView
+{
+    if(!_likeImageView){
+        _likeImageView = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 62 - 17, 15, 17, 17)];
+        UITapGestureRecognizer *tapGesturRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapLikeAction)];
+        [_likeImageView addGestureRecognizer:tapGesturRecognizer];
+        _likeImageView.image = [UIImage imageNamed:@"zan"];
+    }
+    return _likeImageView;
+}
+
+- (UIImageView *) shareImageView
+{
+    if(!_shareImageView){
+        _shareImageView = [[UIImageView alloc] initWithFrame:CGRectMake(self.likeImageView.MaxX + 30 , 16.8, 17, 15)];
+        _shareImageView.image = [UIImage imageNamed:@"fenxiang"];
+        UITapGestureRecognizer *tapGesturRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapShareAction)];
+        [_shareImageView addGestureRecognizer:tapGesturRecognizer];
+    }
+    return _shareImageView;
+}
+
+#pragma mark - like tap
+
+- (void) tapLikeAction
+{
+    DLog(@"点击了点赞按钮");
+}
+
+#pragma mark - share tap
+- (void) tapShareAction
+{
+    DLog(@"点击了分享按钮");
+}
+
+
+#pragma mark - 足迹详情布局
 - (UIView *) footprintDetailBGView
 {
     if(!_footprintDetailBGView){
@@ -363,6 +525,20 @@ static NSString *imageView2Params = @"?imageView2/1/w/690/h/500";
     //改变photoPageControllerLabel
     self.photoPageControllerLabel.text = [[[NSString stringWithFormat:@"%ld",(long)(index + 1)] stringByAppendingString:@"/"] stringByAppendingString:[NSString stringWithFormat:@"%lu", (unsigned long)self.photoScrollView.imageURLStringsGroup.count]];
     
+}
+
+#pragma mark - 移除所有delegate
+- (void) moveDelegate
+{
+    self.tableView.dataSource = nil;
+    self.tableView.delegate = nil;
+    self.photoScrollView.delegate = nil;
+    _writeCommentField.delegate = nil;
+    _writeCommentField = nil;
+    self.tableView = nil;
+    [self.view removeFromSuperview];
+    self.view = nil;
+    DLog(@"self moveDelegate");
 }
 
 @end
