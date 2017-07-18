@@ -7,7 +7,6 @@
 //
 
 #import "OTWFootprintDetailController.h"
-#import "OTWFootprintDetailModel.h"
 #import "OTWFootprintDetailViewCell.h"
 #import "OTWCommentModel.h"
 #import "OTWFootprintDetailFrame.h"
@@ -90,6 +89,13 @@ static NSString *imageView2Params = @"?imageView2/1/w/690/h/500";
     [[IQKeyboardManager sharedManager] setEnable:NO];
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    
+}
+
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
@@ -108,7 +114,7 @@ static NSString *imageView2Params = @"?imageView2/1/w/690/h/500";
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    DLog(@">>>>>>>>>");
+    DLog(@">>>>>>>>>:%@", textField.text);
     return YES;
 }
     /**
@@ -528,17 +534,17 @@ static NSString *imageView2Params = @"?imageView2/1/w/690/h/500";
 }
 
 #pragma mark - 移除所有delegate
-- (void) moveDelegate
-{
-    self.tableView.dataSource = nil;
-    self.tableView.delegate = nil;
-    self.photoScrollView.delegate = nil;
-    _writeCommentField.delegate = nil;
-    _writeCommentField = nil;
-    self.tableView = nil;
-    [self.view removeFromSuperview];
-    self.view = nil;
-    DLog(@"self moveDelegate");
-}
+//- (void) moveDelegate
+//{
+//    self.tableView.dataSource = nil;
+//    self.tableView.delegate = nil;
+//    self.photoScrollView.delegate = nil;
+//    _writeCommentField.delegate = nil;
+//    _writeCommentField = nil;
+//    self.tableView = nil;
+//    [self.view removeFromSuperview];
+//    self.view = nil;
+//    DLog(@"self moveDelegate");
+//}
 
 @end
