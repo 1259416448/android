@@ -76,7 +76,6 @@
 		DDD4AB4B1F1AFC6900D42CF3 /* OTWFootprintDetailFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = DDD4AB4A1F1AFC6900D42CF3 /* OTWFootprintDetailFrame.m */; };
 		DDD4AB4E1F1B020400D42CF3 /* OTWCommentFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = DDD4AB4D1F1B020400D42CF3 /* OTWCommentFrame.m */; };
 		DDDAE08F1F1CFA5B00981E60 /* OTWFootprintDetail.plist in Resources */ = {isa = PBXBuildFile; fileRef = DDDAE08E1F1CFA5B00981E60 /* OTWFootprintDetail.plist */; };
-		DDDAE0911F1DDE6900981E60 /* OTWUserFootprintList.plist in Resources */ = {isa = PBXBuildFile; fileRef = DDDAE0901F1DDE6900981E60 /* OTWUserFootprintList.plist */; };
 		DDDAE0931F1F0D4C00981E60 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DDDAE0921F1F0D4C00981E60 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -231,7 +230,6 @@
 		DDD4AB4C1F1B01D500D42CF3 /* OTWCommentFrame.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTWCommentFrame.h; sourceTree = "<group>"; };
 		DDD4AB4D1F1B020400D42CF3 /* OTWCommentFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWCommentFrame.m; sourceTree = "<group>"; };
 		DDDAE08E1F1CFA5B00981E60 /* OTWFootprintDetail.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = OTWFootprintDetail.plist; sourceTree = "<group>"; };
-		DDDAE0901F1DDE6900981E60 /* OTWUserFootprintList.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = OTWUserFootprintList.plist; sourceTree = "<group>"; };
 		DDDAE0921F1F0D4C00981E60 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -329,7 +327,6 @@
 				DD9452F41F160CD7004EDDED /* OTWFootprintList.plist */,
 				18B034CC1F171ED300F53461 /* OTWFindBusinessmen.plist */,
 				B13ADA271F1C9932008E889C /* OTWSystemNews.plist */,
-				DDDAE0901F1DDE6900981E60 /* OTWUserFootprintList.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -933,7 +930,6 @@
 				18B034CD1F171ED300F53461 /* OTWFindBusinessmen.plist in Resources */,
 				B13ADA281F1C9932008E889C /* OTWSystemNews.plist in Resources */,
 				DDDAE0931F1F0D4C00981E60 /* Assets.xcassets in Resources */,
-				DDDAE0911F1DDE6900981E60 /* OTWUserFootprintList.plist in Resources */,
 				DD9452F51F160CD7004EDDED /* OTWFootprintList.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
