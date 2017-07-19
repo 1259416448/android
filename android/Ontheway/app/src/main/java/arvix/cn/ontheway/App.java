@@ -4,7 +4,10 @@ import android.app.Application;
 
 import com.baidu.mapapi.SDKInitializer;
 
+import org.xutils.x;
+
 import arvix.cn.ontheway.data.UserPreference;
+import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.UIUtils;
 
 /**
@@ -22,6 +25,8 @@ public class App extends Application {
         SDKInitializer.initialize(self);
         if(UIUtils.isMainProcess(self)){
             user = new UserPreference(self);
+            OnthewayApplication.init();
+            x.Ext.init(this);
         }
     }
 }

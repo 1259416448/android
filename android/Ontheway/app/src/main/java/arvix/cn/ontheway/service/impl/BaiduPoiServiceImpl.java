@@ -17,7 +17,6 @@ import arvix.cn.ontheway.service.inter.BaiduPoiServiceInterface;
 public class BaiduPoiServiceImpl implements BaiduPoiServiceInterface {
     private static String logTag = BaiduPoiServiceImpl.class.getName();
 
-
     @Override
     public void search(double lat,double lon,String keyword, int radius, OnGetPoiSearchResultListener poiListener) {
         PoiSearch poiSearch = PoiSearch.newInstance();
