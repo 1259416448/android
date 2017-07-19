@@ -21,6 +21,8 @@
 		18B034CD1F171ED300F53461 /* OTWFindBusinessmen.plist in Resources */ = {isa = PBXBuildFile; fileRef = 18B034CC1F171ED300F53461 /* OTWFindBusinessmen.plist */; };
 		18B034E11F1CE42700F53461 /* OTWFindViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B034E01F1CE42700F53461 /* OTWFindViewController.m */; };
 		18B034E41F1CE6B300F53461 /* OTWShopDetailsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B034E31F1CE6B300F53461 /* OTWShopDetailsController.m */; };
+		18BC9E441F1F716F00C7B6C1 /* OTWPersonalFootprintMonthDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BC9E421F1F716F00C7B6C1 /* OTWPersonalFootprintMonthDataModel.m */; };
+		18BC9E461F1F71B900C7B6C1 /* OTWUserFootprintList.plist in Resources */ = {isa = PBXBuildFile; fileRef = 18BC9E451F1F71B900C7B6C1 /* OTWUserFootprintList.plist */; };
 		B13ADA1D1F1B23DA008E889C /* OTWSystemNewsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B13ADA1C1F1B23DA008E889C /* OTWSystemNewsViewController.m */; };
 		B13ADA201F1C5508008E889C /* OTWSystemNewsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B13ADA1F1F1C5508008E889C /* OTWSystemNewsCell.m */; };
 		B13ADA231F1C5660008E889C /* OTWSystemNewsCellFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = B13ADA221F1C5660008E889C /* OTWSystemNewsCellFrame.m */; };
@@ -124,6 +126,9 @@
 		18B034E01F1CE42700F53461 /* OTWFindViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWFindViewController.m; sourceTree = "<group>"; };
 		18B034E21F1CE6B300F53461 /* OTWShopDetailsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWShopDetailsController.h; sourceTree = "<group>"; };
 		18B034E31F1CE6B300F53461 /* OTWShopDetailsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWShopDetailsController.m; sourceTree = "<group>"; };
+		18BC9E421F1F716F00C7B6C1 /* OTWPersonalFootprintMonthDataModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPersonalFootprintMonthDataModel.m; sourceTree = "<group>"; };
+		18BC9E431F1F716F00C7B6C1 /* OTWPersonalFootprintMonthDataModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPersonalFootprintMonthDataModel.h; sourceTree = "<group>"; };
+		18BC9E451F1F71B900C7B6C1 /* OTWUserFootprintList.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = OTWUserFootprintList.plist; sourceTree = "<group>"; };
 		45C2D5CA9B6813E8ACAF6178 /* libPods-OnTheWay.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnTheWay.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B8637730B7A7E4B6ADD9FEE /* Pods-OnTheWay.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnTheWay.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OnTheWay/Pods-OnTheWay.debug.xcconfig"; sourceTree = "<group>"; };
 		68C4FF114BC411D8C8AADB56 /* Pods-OnTheWay.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnTheWay.release.xcconfig"; path = "Pods/Target Support Files/Pods-OnTheWay/Pods-OnTheWay.release.xcconfig"; sourceTree = "<group>"; };
@@ -653,6 +658,8 @@
 		D7F6B0711F0DD3860013090A /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				18BC9E421F1F716F00C7B6C1 /* OTWPersonalFootprintMonthDataModel.m */,
+				18BC9E431F1F716F00C7B6C1 /* OTWPersonalFootprintMonthDataModel.h */,
 				DDB8C29D1F14AF0D0091E7B0 /* OTWUserModel.h */,
 				DDB8C29E1F14AF230091E7B0 /* OTWUserModel.m */,
 				189954CA1F1DAD5E004CCEBE /* OTWPersonalFootprintsListModel.h */,
@@ -1072,6 +1079,7 @@
 				B13ADA231F1C5660008E889C /* OTWSystemNewsCellFrame.m in Sources */,
 				18B034C21F15CC3F00F53461 /* OTWFindModel.m in Sources */,
 				D7F6B0541F0DCE420013090A /* UIView+Frame.m in Sources */,
+				18BC9E441F1F716F00C7B6C1 /* OTWPersonalFootprintMonthDataModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

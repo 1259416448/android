@@ -15,6 +15,7 @@
 #import "OTWLoginViewController.h"
 #import "OTWRootViewController.h"
 #import "OTWTabBarController.h"
+#import "OTWPersonalFootprintsListController.h"
 
 @interface OTWPersonalViewController() <UITableViewDataSource,UITableViewDelegate>
 
@@ -108,6 +109,11 @@
     if(indexPath.row==4){
         OTWPersonalSiteController *personalSiteVC = [[OTWPersonalSiteController alloc] init];
         [self.navigationController pushViewController:personalSiteVC animated:YES];
+    }
+    if(indexPath.row==0){
+        OTWPersonalFootprintsListController *personalSiteVC = [[OTWPersonalFootprintsListController alloc] init];
+        [self.navigationController pushViewController:personalSiteVC animated:YES];
+
     }
 }
 

@@ -6,8 +6,14 @@
 //  Copyright © 2017年 WeiHuan. All rights reserved.
 //
 
-#import "OTWCommentModel.h"
+#import <Foundation/Foundation.h>
+#import "OTWPersonalFootprintMonthDataModel.h"
 
-@interface OTWPersonalFootprintsListModel : OTWCommentModel
+@interface OTWPersonalFootprintsListModel  : NSObject
+
+@property (nonatomic,strong) NSString  *month;
+@property (nonatomic,strong) NSMutableArray<OTWPersonalFootprintMonthDataModel *>  *monthData;
+
++ (instancetype) initWithDict:(NSDictionary *) dict;
 
 @end
