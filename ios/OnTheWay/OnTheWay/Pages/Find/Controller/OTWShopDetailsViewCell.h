@@ -2,9 +2,11 @@
 //  OTWShopDetailsViewCell.h
 //  OnTheWay
 //
-//  Created by apple on 2017/7/14.
+//  Created by apple on 2017/7/17.
 //  Copyright © 2017年 WeiHuan. All rights reserved.
 //
+
+#import "OTWBaseViewController.h"
 
 @class OTWFootprintListModel;
 
@@ -17,4 +19,3 @@
 @property (assign,nonatomic) CGFloat height;
 
 @end
-

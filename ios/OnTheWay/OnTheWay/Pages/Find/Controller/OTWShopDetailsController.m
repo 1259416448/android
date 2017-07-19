@@ -2,7 +2,7 @@
 //  OTWShopDetailsController.m
 //  OnTheWay
 //
-//  Created by apple on 2017/7/14.
+//  Created by apple on 2017/7/17.
 //  Copyright © 2017年 WeiHuan. All rights reserved.
 //
 
@@ -11,7 +11,7 @@
 #import "OTWFootprintListModel.h"
 #import "OTWShopDetailsViewCell.h"
 
-@interface OTWShopDetailsController()<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>{
+@interface OTWShopDetailsController ()<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>{
     UITableView *_tableView;
     NSMutableArray *_status;
 }
@@ -26,14 +26,15 @@
 @end
 
 @implementation OTWShopDetailsController
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
     //初始化数据
     [self initData];
     
     [self buildUI];
-    
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -41,7 +42,6 @@
     [super viewWillAppear:animated];
     [[OTWLaunchManager sharedManager].mainTabController showTabBarWithAnimation:YES];
 }
-
 
 -(void)buildUI{
     //设置标题
@@ -107,17 +107,17 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     
     OTWShopDetailsViewCell *cell = (OTWShopDetailsViewCell *)[self tableView:tableView
-                                                                   cellForRowAtIndexPath:indexPath];
+                                                       cellForRowAtIndexPath:indexPath];
     return cell.frame.size.height;
 }
 
 
 -(void)initData{
-      _status = [[NSMutableArray alloc] init];
+    _status = [[NSMutableArray alloc] init];
     NSDictionary *dic=@{@"userNickname":@"高世奇",@"userHeadImg":@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"footprintContent":@"他家菜的味道不错，量也很大就是有点小贵，下次考虑还来",@"footprintPhotoArray":@[@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg"],@"dateCreatedStr":@"13:09"};
-      NSDictionary *dic2=@{@"userNickname":@"高世奇",@"userHeadImg":@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"footprintContent":@"他家菜的味道不错，量也很大就是有点小贵，下次考虑还来",@"footprintPhotoArray":@[@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg"],@"dateCreatedStr":@"13:09"};
-       NSDictionary *dic3=@{@"userNickname":@"高世奇",@"userHeadImg":@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"footprintContent":@"围绕着我的卑微 也许能消退 其实我并不在意 有很多机会像巨人一样的无畏放纵我心里的鬼",@"footprintPhotoArray":@[],@"dateCreatedStr":@"13:09"};
-        NSDictionary *dic4=@{@"userNickname":@"高世奇",@"userHeadImg":@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"footprintContent":@"围绕着我的卑微 也",@"footprintPhotoArray":@[],@"dateCreatedStr":@"13:09"};
+    NSDictionary *dic2=@{@"userNickname":@"高世奇",@"userHeadImg":@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"footprintContent":@"他家菜的味道不错，量也很大就是有点小贵，下次考虑还来",@"footprintPhotoArray":@[@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg"],@"dateCreatedStr":@"13:09"};
+    NSDictionary *dic3=@{@"userNickname":@"高世奇",@"userHeadImg":@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"footprintContent":@"围绕着我的卑微 也许能消退 其实我并不在意 有很多机会像巨人一样的无畏放纵我心里的鬼",@"footprintPhotoArray":@[],@"dateCreatedStr":@"13:09"};
+    NSDictionary *dic4=@{@"userNickname":@"高世奇",@"userHeadImg":@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"footprintContent":@"围绕着我的卑微 也",@"footprintPhotoArray":@[],@"dateCreatedStr":@"13:09"};
     OTWFootprintListModel *model = [OTWFootprintListModel statusWithDictionary:dic];
     OTWFootprintListModel *model2= [OTWFootprintListModel statusWithDictionary:dic2];
     OTWFootprintListModel *model3= [OTWFootprintListModel statusWithDictionary:dic3];
@@ -128,10 +128,21 @@
     [_status addObject:model4];
 }
 
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
 -(UIView*)ShopDetailsTableViewHeader{
     if(!_ShopDetailsTableViewHeader){
         //设置header的背景
@@ -139,10 +150,10 @@
         _ShopDetailsTableViewHeader.backgroundColor=[UIColor clearColor];
         
         //商家信息uiview
-       [_ShopDetailsTableViewHeader addSubview: self.ShopDetailsTopTableViewHeader] ;
+        [_ShopDetailsTableViewHeader addSubview: self.ShopDetailsTopTableViewHeader] ;
         
         // 大家说uiview
-       [_ShopDetailsTableViewHeader addSubview: self.ShopDetailsBottomTableViewHeader] ;
+        [_ShopDetailsTableViewHeader addSubview: self.ShopDetailsBottomTableViewHeader] ;
         
     }
     return _ShopDetailsTableViewHeader;
@@ -160,38 +171,49 @@
         [shopImg sd_setImageWithURL:[NSURL URLWithString:[@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg" stringByAppendingString:@"?imageView2/1/w/222/h/160"] ]];
         [_ShopDetailsTopTableViewHeader addSubview:shopImg];
         
-           //商店名称
+        //商店评论条数
+        UILabel *shopCommentCount=[[UILabel alloc] init];
+        shopCommentCount.text=@"123";
+        shopCommentCount.font=[UIFont systemFontOfSize:12];
+        [shopCommentCount sizeToFit];
+        shopCommentCount.frame=CGRectMake(shopImg.width-10-shopCommentCount .frame.size.width-5,  shopImg.Height-20, shopCommentCount .frame.size.width+10,15+2.5);
+        shopCommentCount.backgroundColor=[[UIColor blackColor]colorWithAlphaComponent:0.6f];
+        shopCommentCount.textColor=[UIColor whiteColor];
+        shopCommentCount.textAlignment=NSTextAlignmentCenter;
+        [shopImg addSubview:shopCommentCount];
+        
+        //商店名称
         UILabel *shopName=[[UILabel alloc] initWithFrame:CGRectMake(111+10+15, 10, SCREEN_WIDTH-15-19-111-20-25, 20)];
         shopName.font=[UIFont systemFontOfSize:16];
         shopName.text=@"胡大饭馆（东直门总店）";
         shopName.textColor=[UIColor color_202020];
         [_ShopDetailsTopTableViewHeader addSubview:shopName];
         
-           //商店地址图标
+        //商店地址图标
         UIImageView *shopAddressIcon=[[UIImageView alloc] initWithFrame:CGRectMake(111+10+15, 45,8, 10)];
         shopAddressIcon.image=[UIImage imageNamed:@"dinwgei_2"];
         [_ShopDetailsTopTableViewHeader addSubview:shopAddressIcon];
         
-           //商店地址
+        //商店地址
         UILabel *shopAddress=[[UILabel alloc] initWithFrame:CGRectMake(111+10+15+8+5, 45,SCREEN_WIDTH-111+10+15+8+10-33-15, 12)];
         shopAddress.text=@"东城区东直门内大街233";
         shopAddress.font=[UIFont systemFontOfSize:13];
         shopAddress.textColor=[UIColor color_979797];
         [_ShopDetailsTopTableViewHeader addSubview:shopAddress];
         
-           //商店电话图标
+        //商店电话图标
         UIImageView *shopPhoneIcon=[[UIImageView alloc] initWithFrame:CGRectMake(111+10+15, 62,8, 10)];
         shopPhoneIcon.image=[UIImage imageNamed:@"dianhua"];
         [_ShopDetailsTopTableViewHeader addSubview:shopPhoneIcon];
         
-           //商店电话号码
+        //商店电话号码
         UILabel *shopPhone=[[UILabel alloc] initWithFrame:CGRectMake(111+10+15+8+5, 62,SCREEN_WIDTH-111+10+15+8+10-40-15, 12)];
         shopPhone.text=@"87474993";
         shopPhone.font=[UIFont systemFontOfSize:11];
         shopPhone.textColor=[UIColor color_979797];
         [_ShopDetailsTopTableViewHeader addSubview:shopPhone];
         
-           //跳转地图图标
+        //跳转地图图标
         UIImageView *goMapIcon=[[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-19-25, 15,25, 25)];
         goMapIcon.image=[UIImage imageNamed:@"daohang"];
         [_ShopDetailsTopTableViewHeader addSubview:goMapIcon];
@@ -213,7 +235,7 @@
         
         
         
-
+        
     }
     return _ShopDetailsTopTableViewHeader;
 }
@@ -254,4 +276,5 @@
 -(void)_FabiaoButtonClick{
     DLog(@"点击了发表");
 }
+
 @end

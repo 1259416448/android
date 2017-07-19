@@ -19,5 +19,9 @@
     <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
         <item name="android:background">@color/black_overlay</item>
     </style>
+    <style name="main_tab_text" >
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@drawable/tab_text</item>
+    </style>
 
 </resources>

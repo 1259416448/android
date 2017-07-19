@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -48,6 +49,7 @@ import arvix.cn.ontheway.utils.StaticVar;
  * status bar and navigation/system bar) with user interaction.
  */
 public class BaiduActivity extends AppCompatActivity {
+    public static String EXTRA_KEYWORD = "baiduKeyWord";
     private static String logTag =  BaiduActivity.class.getName();
     public static MapView mMapView = null;
     public static BaiduMap mBaiduMap = null;
@@ -75,6 +77,8 @@ public class BaiduActivity extends AppCompatActivity {
         }
 
     }
+
+
 
     private void initLocation(){
         LocationClientOption option = new LocationClientOption();
@@ -134,8 +138,9 @@ public class BaiduActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_baidu);
+
+        String searchKeyWord = getIntent().getStringExtra(BaiduActivity.EXTRA_KEYWORD);
         //获取地图控件引用
         mMapView = (MapView) findViewById(R.id.bmapView);
 
@@ -157,8 +162,10 @@ public class BaiduActivity extends AppCompatActivity {
         mLocationClient.registerLocationListener(bdLocationListener);
         mLocationClient.start();
         BaiduPoiServiceInterface poiService = OnthewayApplication.getInstahce(BaiduPoiServiceInterface.class);
-
-        poiService.search(latCache,lonCache,"美食",1000,new OnGetPoiSearchResultListener(){
+        if(TextUtils.isEmpty(searchKeyWord)){
+            searchKeyWord = "美食";
+        }
+        poiService.search(latCache,lonCache,searchKeyWord,1000,new OnGetPoiSearchResultListener(){
             @Override
             public void onGetPoiResult(PoiResult poiResult) {
 

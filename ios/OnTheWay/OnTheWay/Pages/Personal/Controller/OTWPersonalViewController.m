@@ -15,6 +15,7 @@
 #import "OTWLoginViewController.h"
 #import "OTWRootViewController.h"
 #import "OTWTabBarController.h"
+#import "OTWPersonalFootprintsListController.h"
 
 @interface OTWPersonalViewController() <UITableViewDataSource,UITableViewDelegate>
 
@@ -55,15 +56,7 @@
 {
     [super viewWillAppear:animated];
     [[OTWLaunchManager sharedManager].mainTabController showTabBarWithAnimation:YES];
-    DLog(@"执行了viewWillAppear");
     [self buildPersonalInfo];
-}
-
-//登陆被关闭，说明用户没有登陆，直接跳转到首页
--(void)handleColorChange:(NSNotification*)sender
-{
-    DLog(@"执行了loginCancel");
-    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void)buildPersonalInfo
@@ -116,6 +109,11 @@
     if(indexPath.row==4){
         OTWPersonalSiteController *personalSiteVC = [[OTWPersonalSiteController alloc] init];
         [self.navigationController pushViewController:personalSiteVC animated:YES];
+    }
+    if(indexPath.row==0){
+        OTWPersonalFootprintsListController *personalSiteVC = [[OTWPersonalFootprintsListController alloc] init];
+        [self.navigationController pushViewController:personalSiteVC animated:YES];
+
     }
 }
 

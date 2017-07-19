@@ -10,12 +10,14 @@
 #import "OTWFootprintListModel.h"
 #import "OTWFootprintListFrame.h"
 #import "OTWFootprintListTableViewCell.h"
+#import "OTWFootprintDetailController.h"
 #import <MJRefresh.h>
 
 @interface OTWFootprintsViewController () <UITableViewDataSource,UITableViewDelegate>
 
 @property (nonatomic,strong) UITableView *footprintTableView;
 @property (nonatomic,strong) NSMutableArray *footprintFrames;
+@property (nonatomic,assign) NSInteger selectedIndex;
 
 @end
 
@@ -83,11 +85,14 @@
 }
 #pragma mark 点击行
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    
     //跳转
-    [self.navigationController pushViewController:[[OTWLaunchManager sharedManager] footprintDetailController] animated:YES];
-    
+//    [self.navigationController pushViewController:[[OTWLaunchManager sharedManager] footprintDetailController:self.selectedIndex != indexPath.row] animated:YES];
+//    _selectedIndex = indexPath.row;
     DLog(@"我点击了：%ld",indexPath.row);
+    
+    OTWFootprintDetailController *detailVC = [[OTWFootprintDetailController alloc] init];
+    [self.navigationController pushViewController:detailVC animated:YES];
+    
 }
 
 #pragma mark 返回第indexPath这行对应的内容
