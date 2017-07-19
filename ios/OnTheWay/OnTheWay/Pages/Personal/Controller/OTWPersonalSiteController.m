@@ -31,7 +31,7 @@
 
 @property (nonatomic,strong) UIView *contentView;
 
-//退出登陆提示
+//退出登录提示
 @property (nonatomic,strong) UIAlertController *alertController;
 
 @end
@@ -148,7 +148,6 @@
         [_alertController addAction:[UIAlertAction actionWithTitle:@"退出登录" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
             [[OTWUserModel shared] logout];
             [GCTokenManager cleanToken];
-            [[OTWLaunchManager sharedManager] deallocLoginViewController];
             [[OTWLaunchManager sharedManager].mainTabController didSelectedItemByIndex:0];
             [self.navigationController popToRootViewControllerAnimated: NO];
             
@@ -199,7 +198,7 @@
         
         tableViewFooterContentView.backgroundColor = [UIColor whiteColor];
         UILabel *outSizeLabel = [[UILabel alloc] initWithFrame:CGRectMake((SCREEN_WIDTH - 66)/2, 15+0.5, 66, 20)];
-        outSizeLabel.text = @"退出登陆";
+        outSizeLabel.text = @"退出登录";
         outSizeLabel.textColor = [UIColor color_e50834];
         outSizeLabel.font = [UIFont systemFontOfSize:16];
         

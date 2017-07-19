@@ -8,6 +8,7 @@
 
 #import "OTWNewsViewController.h"
 #import "OTWSystemNewsViewController.h"
+#import "OTWPraiseViewController.h"
 #import "OTWNewsCell.h"
 
 @interface OTWNewsViewController ()<UITableViewDelegate, UITableViewDataSource>
@@ -93,13 +94,14 @@
         case 0: // 系统消息
         {
             DLog(@"我点击了：%ld",indexPath.row);
-            OTWSystemNewsViewController *personalSiteVC = [[OTWSystemNewsViewController alloc] init];
-            [self.navigationController pushViewController:personalSiteVC animated:YES];
+            OTWSystemNewsViewController *systemNewsVC = [[OTWSystemNewsViewController alloc] init];
+            [self.navigationController pushViewController:systemNewsVC animated:YES];
         }
             break;
         case 1: // 新的赞
         {
-            
+            OTWPraiseViewController *praiseVC = [[OTWPraiseViewController alloc] init];
+            [self.navigationController pushViewController:praiseVC animated:YES];
         }
             break;
         case 2: // 新的评论
