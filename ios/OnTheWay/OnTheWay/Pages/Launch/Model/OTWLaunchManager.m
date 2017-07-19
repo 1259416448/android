@@ -59,7 +59,7 @@
     //检查是否存在用户信息
     if(![OTWUserModel shared].username
        ||[[OTWUserModel shared].username isEqualToString:@""]){
-       [viewController presentViewController:self.loginViewController animated:YES completion:completion];
+       [viewController presentViewController:[[OTWLoginViewController alloc] init] animated:YES completion:completion];
         return YES;
     }
     return NO;
@@ -175,23 +175,6 @@
     
     return _mainTabViewController;
 }
-
-- (OTWFootprintDetailController *) footprintDetailController:(BOOL) newFootprint
-{
-    if(newFootprint&&_footprintDetailController){
-        [_footprintDetailController moveDelegate];
-        //[_footprintDetailController.view removeFromSuperview];
-        //_footprintDetailController.view = nil;
-        _footprintDetailController = nil;
-        DLog(@"_footprintDetailController >>>>>%@",_footprintDetailController)
-    }
-    
-    if(!_footprintDetailController){
-        _footprintDetailController = [[OTWFootprintDetailController alloc] init];
-    }
-    return _footprintDetailController;
-}
-
 
 - (OTWTabBarController*)mainTabController
 {
