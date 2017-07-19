@@ -347,7 +347,7 @@
 
 -(UIView *)textFeildBGView{
     if(!_textFeildBGView){
-        self.textFeildBGView = [[UIView alloc] initWithFrame:CGRectMake(0, 64 + 10, SCREEN_WIDTH, 101.5)];
+        self.textFeildBGView = [[UIView alloc] initWithFrame:CGRectMake(0, self.navigationHeight + 10, SCREEN_WIDTH, 101.5)];
         self.textFeildBGView.backgroundColor = [UIColor whiteColor];
     }
     return _textFeildBGView;
@@ -574,4 +574,10 @@
     }
     return _messageTipsLabel;
 }
+
+- (void) dealloc
+{
+    DLog(@"????????>>>>>>>>>> loginController");
+}
+
 @end
