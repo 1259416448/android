@@ -22,7 +22,6 @@
 		18B034E11F1CE42700F53461 /* OTWFindViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B034E01F1CE42700F53461 /* OTWFindViewController.m */; };
 		18B034E41F1CE6B300F53461 /* OTWShopDetailsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B034E31F1CE6B300F53461 /* OTWShopDetailsController.m */; };
 		18BC9E441F1F716F00C7B6C1 /* OTWPersonalFootprintMonthDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BC9E421F1F716F00C7B6C1 /* OTWPersonalFootprintMonthDataModel.m */; };
-		18BC9E461F1F71B900C7B6C1 /* OTWUserFootprintList.plist in Resources */ = {isa = PBXBuildFile; fileRef = 18BC9E451F1F71B900C7B6C1 /* OTWUserFootprintList.plist */; };
 		B13ADA1D1F1B23DA008E889C /* OTWSystemNewsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B13ADA1C1F1B23DA008E889C /* OTWSystemNewsViewController.m */; };
 		B13ADA201F1C5508008E889C /* OTWSystemNewsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B13ADA1F1F1C5508008E889C /* OTWSystemNewsCell.m */; };
 		B13ADA231F1C5660008E889C /* OTWSystemNewsCellFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = B13ADA221F1C5660008E889C /* OTWSystemNewsCellFrame.m */; };
@@ -75,6 +74,7 @@
 		DDB8C29A1F1320B90091E7B0 /* OTWPersonalInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = DDB8C2991F1320B90091E7B0 /* OTWPersonalInfoController.m */; };
 		DDB8C29F1F14AF230091E7B0 /* OTWUserModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DDB8C29E1F14AF230091E7B0 /* OTWUserModel.m */; };
 		DDC0A93A1F1F77D100A6E4DB /* OTWSystemNewsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DDC0A9391F1F77D100A6E4DB /* OTWSystemNewsModel.m */; };
+		DDC0A9431F1F7B1800A6E4DB /* OTWUserFootprintList.plist in Resources */ = {isa = PBXBuildFile; fileRef = DDC0A9421F1F7B1800A6E4DB /* OTWUserFootprintList.plist */; };
 		DDD4AB4B1F1AFC6900D42CF3 /* OTWFootprintDetailFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = DDD4AB4A1F1AFC6900D42CF3 /* OTWFootprintDetailFrame.m */; };
 		DDD4AB4E1F1B020400D42CF3 /* OTWCommentFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = DDD4AB4D1F1B020400D42CF3 /* OTWCommentFrame.m */; };
 		DDDAE08F1F1CFA5B00981E60 /* OTWFootprintDetail.plist in Resources */ = {isa = PBXBuildFile; fileRef = DDDAE08E1F1CFA5B00981E60 /* OTWFootprintDetail.plist */; };
@@ -128,7 +128,6 @@
 		18B034E31F1CE6B300F53461 /* OTWShopDetailsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWShopDetailsController.m; sourceTree = "<group>"; };
 		18BC9E421F1F716F00C7B6C1 /* OTWPersonalFootprintMonthDataModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPersonalFootprintMonthDataModel.m; sourceTree = "<group>"; };
 		18BC9E431F1F716F00C7B6C1 /* OTWPersonalFootprintMonthDataModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPersonalFootprintMonthDataModel.h; sourceTree = "<group>"; };
-		18BC9E451F1F71B900C7B6C1 /* OTWUserFootprintList.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = OTWUserFootprintList.plist; sourceTree = "<group>"; };
 		45C2D5CA9B6813E8ACAF6178 /* libPods-OnTheWay.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnTheWay.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B8637730B7A7E4B6ADD9FEE /* Pods-OnTheWay.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnTheWay.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OnTheWay/Pods-OnTheWay.debug.xcconfig"; sourceTree = "<group>"; };
 		68C4FF114BC411D8C8AADB56 /* Pods-OnTheWay.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnTheWay.release.xcconfig"; path = "Pods/Target Support Files/Pods-OnTheWay/Pods-OnTheWay.release.xcconfig"; sourceTree = "<group>"; };
@@ -230,6 +229,7 @@
 		DDB8C29E1F14AF230091E7B0 /* OTWUserModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWUserModel.m; sourceTree = "<group>"; };
 		DDC0A9381F1F77D100A6E4DB /* OTWSystemNewsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWSystemNewsModel.h; sourceTree = "<group>"; };
 		DDC0A9391F1F77D100A6E4DB /* OTWSystemNewsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWSystemNewsModel.m; sourceTree = "<group>"; };
+		DDC0A9421F1F7B1800A6E4DB /* OTWUserFootprintList.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = OTWUserFootprintList.plist; sourceTree = "<group>"; };
 		DDD4AB491F1AFC4300D42CF3 /* OTWFootprintDetailFrame.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTWFootprintDetailFrame.h; sourceTree = "<group>"; };
 		DDD4AB4A1F1AFC6900D42CF3 /* OTWFootprintDetailFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWFootprintDetailFrame.m; sourceTree = "<group>"; };
 		DDD4AB4C1F1B01D500D42CF3 /* OTWCommentFrame.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTWCommentFrame.h; sourceTree = "<group>"; };
@@ -323,6 +323,7 @@
 		D7F6AFF41F0D32FB0013090A /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				DDC0A9421F1F7B1800A6E4DB /* OTWUserFootprintList.plist */,
 				DDDAE0921F1F0D4C00981E60 /* Assets.xcassets */,
 				DDDAE08E1F1CFA5B00981E60 /* OTWFootprintDetail.plist */,
 				D7F6B0021F0D32FB0013090A /* LaunchScreen.storyboard */,
@@ -936,6 +937,7 @@
 				D7F6B0041F0D32FB0013090A /* LaunchScreen.storyboard in Resources */,
 				18B034CD1F171ED300F53461 /* OTWFindBusinessmen.plist in Resources */,
 				B13ADA281F1C9932008E889C /* OTWSystemNews.plist in Resources */,
+				DDC0A9431F1F7B1800A6E4DB /* OTWUserFootprintList.plist in Resources */,
 				DDDAE0931F1F0D4C00981E60 /* Assets.xcassets in Resources */,
 				DD9452F51F160CD7004EDDED /* OTWFootprintList.plist in Resources */,
 			);

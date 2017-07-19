@@ -90,6 +90,8 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     //监听键盘的通知
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self buildUI];
+    self.returnKeyHandler = [[IQKeyboardReturnKeyHandler alloc] initWithViewController:self];
+    self.returnKeyHandler.lastTextFieldReturnKeyType = UIReturnKeySend;
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -100,9 +102,6 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeFrameNotify:) name:UIKeyboardWillChangeFrameNotification object:nil];
     _wasKeyboardManagerEnabled = [[IQKeyboardManager sharedManager] isEnabled];
     [[IQKeyboardManager sharedManager] setEnable:NO];
-    self.writeCommentTextView.delegate = self;
-    self.returnKeyHandler = [[IQKeyboardReturnKeyHandler alloc] initWithViewController:self];
-    self.returnKeyHandler.lastTextFieldReturnKeyType = UIReturnKeySend;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -136,6 +135,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
  */
 - (void) keyboardWillChangeFrameNotify:(NSNotification*)notify
 {
+    self.returnKeyHandler.lastTextFieldReturnKeyType = UIReturnKeySend;
     // 0.取出键盘动画的时间
     CGFloat duration = [notify.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     // 1.取得键盘最后的frame
@@ -343,6 +343,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
         _writeCommentTextView.backgroundColor = [UIColor clearColor];
         _writeCommentTextView.textContainerInset = UIEdgeInsetsMake(0,0, 0, 0);
         _writeCommentTextView.layoutManager.allowsNonContiguousLayout = NO;
+        self.writeCommentTextView.delegate = self;
     }
     return _writeCommentTextView;
 }
