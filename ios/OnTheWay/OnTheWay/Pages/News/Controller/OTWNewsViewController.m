@@ -21,6 +21,12 @@
 
 @implementation OTWNewsViewController
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [[OTWLaunchManager sharedManager].mainTabController showTabBarWithAnimation:YES];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     

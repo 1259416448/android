@@ -33,6 +33,7 @@
     @property (nonatomic,strong) UIImageView *userImage;
     @property (nonatomic,strong) UILabel *username;
     @property (nonatomic,strong) UIButton *replyButton;
+    @property (nonatomic,strong) UIView *cellBG;
     @property (nonatomic,strong) UILabel *time;
     @property (nonatomic,strong) UILabel *content;
     @property (nonatomic,strong) UILabel *topicContent;
@@ -55,24 +56,27 @@
 #pragma mark 初始化视图
 - (void)initSubView
 {
+    [self setBackgroundColor:[UIColor color_f4f4f4]];
     //头像
-    [self addSubview:self.userImage];
+    [self.cellBG addSubview:self.userImage];
     //用户名
-    [self addSubview:self.username];
+    [self.cellBG addSubview:self.username];
     //回复按钮
-    [self addSubview:self.replyButton];
+    [self.cellBG addSubview:self.replyButton];
     //点赞时间
-    [self addSubview:self.time];
+    [self.cellBG addSubview:self.time];
     //点赞提示
-    [self addSubview:self.content];
+    [self.cellBG addSubview:self.content];
     //topic背景
-    [self addSubview:self.topicBG];
+    [self.cellBG addSubview:self.topicBG];
     //topic文章图片
-    [self addSubview:self.topicImage];
+    [self.cellBG addSubview:self.topicImage];
     //topic文章标题
-    [self addSubview:self.topicTitle];
+    [self.cellBG addSubview:self.topicTitle];
     //文章内容
-    [self addSubview:self.topicContent];
+    [self.cellBG addSubview:self.topicContent];
+    //加入背景
+    [self addSubview:self.cellBG];
     
 }
 
@@ -108,6 +112,16 @@
         _replyButton.titleEdgeInsets = UIEdgeInsetsMake(5, 9.5, 5, 9.5);
     }
     return _replyButton;
+}
+
+-(UIView *)cellBG
+{
+    if (!_cellBG) {
+        _cellBG = [[UIView alloc] init];
+        _cellBG.backgroundColor = [UIColor whiteColor];
+        
+    }
+    return _cellBG;
 }
 
 -(UILabel *)time
@@ -237,7 +251,11 @@
     _topicContent.text = praise.topicContent;
     _topicContent.frame = topicContentRect;
     
-    _height = CGRectGetMaxY(_topicBG.frame) + OTWStatusTableViewCellControlSpacing;
+    CGFloat cellSpaceH = CGRectGetMaxY(_topicBG.frame) + OTWStatusTableViewCellControlSpacing;
+    CGRect cellSpaceRect = CGRectMake(0, 0, self.frame.size.width, cellSpaceH);
+    _cellBG.frame = cellSpaceRect;
+    
+    _height = CGRectGetMaxY(_topicBG.frame) + OTWStatusTableViewCellControlSpacing*2;
 }
 
 @end

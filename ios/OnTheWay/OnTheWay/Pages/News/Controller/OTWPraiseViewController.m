@@ -14,12 +14,19 @@
 @property (nonatomic, strong) NSMutableArray<OTWPraiseViewModel *> *hotestPraises;
 @property (nonatomic, strong) NSMutableArray<OTWPraiseViewTableCell *> *hotestPraiseCells;
 @property (nonatomic,strong) UITableView *tableV;
+@property (nonatomic,strong) UIView *headerV;
 
 @end
 
 static NSString *const praiseID = @"praise";
 
 @implementation OTWPraiseViewController
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
+}
 
 - (void)viewDidLoad
 {
@@ -51,8 +58,19 @@ static NSString *const praiseID = @"praise";
         _tableV.delegate = self;
         _tableV.separatorColor  = [UIColor color_f4f4f4];
         _tableV.backgroundColor = [UIColor clearColor];
+        _tableV.tableHeaderView = self.headerV;
     }
     return _tableV;
+}
+
+- (UIView *)headerV
+{
+    if (!_headerV) {
+        _headerV = [[UIView alloc] init];
+        _headerV.backgroundColor = [UIColor color_f4f4f4];
+        _headerV.frame = CGRectMake(0, 0, self.view.width, 15);
+    }
+    return _headerV;
 }
 
 #pragma mark 加载数据
@@ -103,6 +121,12 @@ static NSString *const praiseID = @"praise";
 {
     OTWPraiseViewTableCell *cell = _hotestPraiseCells[indexPath.row];
     cell.praiseModel = _hotestPraises[indexPath.row];
+    NSLog(@"x=%ld",(long)indexPath.row);
+    NSLog(@"x=%ld",(long)_hotestPraiseCells.count);
+    if (indexPath.row == _hotestPraiseCells.count - 1) {
+        NSLog(@"ok");
+        return cell.height + 10;
+    }
     return cell.height;
 }
 @end
