@@ -71,7 +71,7 @@ public class MainActivity2 extends BaseActivity {
             if (checkedId == R.id.tab_faxian) {
                 targetFrag = new FaXianFrag();
             } else if (checkedId == R.id.tab_xiaoxi) {
-                targetFrag = new Fragment();
+                targetFrag = new MsgFrag();
             } else if (checkedId == R.id.tab_wode) {
                 targetFrag = new Fragment();
             }
