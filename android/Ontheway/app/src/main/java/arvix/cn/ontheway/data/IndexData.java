@@ -20,18 +20,23 @@ public class IndexData {
         try {
             List<MainCardBean> beans = new ArrayList<>();
             MainCardBean b = new MainCardBean();
-            b.setTitle("Title1");
+            b.setTitle("餐饮");
             b.setBg(R.drawable.faxian);
             List<MenuBean> menus = new ArrayList<>();
             MenuBean mb = new MenuBean();
-            mb.setTitle("t1");
+            mb.setTitle("自助餐");
             ;
             mb.setImgSrc(R.drawable.bashi);
             menus.add(mb);
             mb = new MenuBean();
-            mb.setTitle("t1");
+            mb.setTitle("咖啡");
             mb.setImgSrc(R.drawable.bashi);
             menus.add(mb);
+            mb = new MenuBean();
+            mb.setTitle("火锅");
+            mb.setImgSrc(R.drawable.bashi);
+            menus.add(mb);
+            //
             b.setMenus(menus);
             beans.add(b);
             b = new MainCardBean();

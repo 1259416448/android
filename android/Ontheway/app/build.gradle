@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
+    aaptOptions.cruncherEnabled = false
+    aaptOptions.useNewCruncher = false
     signingConfigs {
         key {
             keyAlias 'onthewaykey'
@@ -33,6 +35,7 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'org.xutils:xutils:3.5.0'
+	compile 'com.alibaba:fastjson:1.1.59.android'
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support:design:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'

@@ -20,6 +20,12 @@
 
 @implementation OTWSystemNewsViewController
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -43,6 +49,7 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    NSLog(@"count=%ld",self.sysNewsFrames.count);
     return self.sysNewsFrames.count;
 }
 
@@ -82,10 +89,10 @@
 - (UITableView*)systemNewsTableView
 {
     if (!_systemNewsTableView) {
-        _systemNewsTableView = [[UITableView alloc] initWithFrame: CGRectMake(0, self.navigationHeight, self.view.width, self.view.height - self.navigationHeight) style:UITableViewStylePlain];
+        _systemNewsTableView = [[UITableView alloc] initWithFrame: CGRectMake(0, self.navigationHeight, self.view.width, self.view.height - self.navigationHeight) style:UITableViewStyleGrouped];
         _systemNewsTableView.dataSource = self;
         _systemNewsTableView.delegate = self;
-        _systemNewsTableView.separatorStyle = UITableViewCellSelectionStyleNone;
+//        _systemNewsTableView.separatorStyle = UITableViewCellSelectionStyleNone;
         _systemNewsTableView.backgroundColor = [UIColor clearColor];
     }
     return _systemNewsTableView;
