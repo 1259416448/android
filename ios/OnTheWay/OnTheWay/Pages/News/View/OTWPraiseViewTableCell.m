@@ -203,7 +203,7 @@
     _username.text = praise.username;
     _username.frame = usernameRect;
     
-    CGFloat replyButtonX = self.frame.size.width - OTWStatusTableViewCellControlSpacing - 45;
+    CGFloat replyButtonX =       - OTWTableViewPadding - 45;
     CGFloat replyButtonY = userImageY;
     CGRect replyButtonRect = CGRectMake(replyButtonX, replyButtonY, OTWPraiseReplyButtonWidth, OTWPraiseReplyButtonHeigth);
     _replyButton.frame = replyButtonRect;
