@@ -43,7 +43,7 @@
         <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote">
         </service>
         <activity
-            android:name=".MainActivity2"
+            android:name=".ui.MainActivity2"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

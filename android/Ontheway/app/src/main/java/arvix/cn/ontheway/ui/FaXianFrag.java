@@ -1,9 +1,10 @@
-package arvix.cn.ontheway;
+package arvix.cn.ontheway.ui;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
@@ -22,42 +23,37 @@ import org.xutils.x;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import arvix.cn.ontheway.BaiduActivity;
+import arvix.cn.ontheway.MainCardBean;
+import arvix.cn.ontheway.MenuBean;
+import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.async.AsyncUtil;
 import arvix.cn.ontheway.async.Callback;
 import arvix.cn.ontheway.async.Result;
 import arvix.cn.ontheway.data.IndexData;
-import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.utils.UIUtils;
 
-public class MainActivity2 extends BaseActivity {
+/**
+ * Created by yd on 2017/7/19.
+ */
+
+public class FaXianFrag extends BaseFragment {
     @ViewInject(R.id.main_card_container)
     private LinearLayout cardContainerLL;
     @ViewInject(R.id.main_search_edit)
     private EditText searchET;
 
     @Override
-    public void onActivityReenter(int resultCode, Intent data) {
-        super.onActivityReenter(resultCode, data);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.tab_faxian, null);
+        x.view().inject(this, root);
+        initView(root);
+        return root;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
-        x.view().inject(self);
-        initView();
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         initData();
-    }
-
-    private void initView() {
-        //android:hint="搜索附近的美食、商场"
-        SpannableStringBuilder ssb = new SpannableStringBuilder("  icon搜索附近的美食、商场");
-        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.sousuo_1);
-        ImageSpan imgSpan = new ImageSpan(this, b);
-        ssb.setSpan(imgSpan, 2, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        searchET.setHint(ssb);
-        ((ViewGroup) searchET.getParent()).setFocusable(true);
-        ((ViewGroup) searchET.getParent()).setFocusableInTouchMode(true);
     }
 
     private void initData() {
@@ -72,24 +68,31 @@ public class MainActivity2 extends BaseActivity {
                 if (result.ok()) {
                     bindCards(result.getData());
                 } else {
-                    UIUtils.toast(self, result.getErrorMsg(), Toast.LENGTH_LONG);
+                    UIUtils.toast(act, result.getErrorMsg(), Toast.LENGTH_LONG);
                 }
             }
         });
     }
 
+    private void initView(View root) {
+        //android:hint="搜索附近的美食、商场"
+        SpannableStringBuilder ssb = new SpannableStringBuilder("  icon搜索附近的美食、商场");
+        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.sousuo_1);
+        ImageSpan imgSpan = new ImageSpan(act, b);
+        ssb.setSpan(imgSpan, 2, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        searchET.setHint(ssb);
+        ((ViewGroup) searchET.getParent()).setFocusable(true);
+        ((ViewGroup) searchET.getParent()).setFocusableInTouchMode(true);
+    }
+
     private void bindCards(List<MainCardBean> data) {
-        LayoutInflater lf = LayoutInflater.from(self);
+        LayoutInflater lf = LayoutInflater.from(act);
         for (final MainCardBean card : data) {
             View item = lf.inflate(R.layout.main_card, cardContainerLL, false);
             item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    UIUtils.toast(self, "ccc", Toast.LENGTH_SHORT);
-                    //一级菜单
-                    Intent intent = new Intent(self,BaiduActivity.class);
-                    intent.putExtra(BaiduActivity.EXTRA_KEYWORD,card.getTitle());
-                    startActivity(intent);
+
                 }
             });
             TextView titleTv = item.findViewById(R.id.card_title);
@@ -101,8 +104,10 @@ public class MainActivity2 extends BaseActivity {
                 menuItem.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                    UIUtils.toast(self, "ccc", Toast.LENGTH_SHORT);
-                    //二级菜单
+                        //二级菜单
+                        Intent intent = new Intent(act, BaiduActivity.class);
+                        intent.putExtra(BaiduActivity.EXTRA_KEYWORD, card.getTitle());
+                        startActivity(intent);
                     }
                 });
                 TextView tv = menuItem.findViewById(R.id.menu_text);
@@ -117,24 +122,4 @@ public class MainActivity2 extends BaseActivity {
             cardContainerLL.addView(item);
         }
     }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-    }
-
-
 }
