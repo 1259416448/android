@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface OTWCommentModel : NSObject
+@interface OTWNewsCommentModel : NSObject
 
 @property (nonatomic,copy) NSString *sUserImage;
 @property (nonatomic,copy) NSString *sUserName;
