@@ -109,13 +109,12 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     [super viewWillDisappear:animated];
     [[IQKeyboardManager sharedManager] resignFirstResponder];
     [self.writeCommentTextView resignFirstResponder];
-    self.returnKeyHandler = nil;
-    self.writeCommentTextView.delegate = nil;
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
+    self.returnKeyHandler = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[IQKeyboardManager sharedManager] setEnable:_wasKeyboardManagerEnabled];
     
@@ -148,15 +147,17 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     [self.writeCommentTextView scrollRangeToVisible:NSMakeRange(self.writeCommentTextView.text.length-1, 1)];
     [UIView animateWithDuration:duration animations:^{
         if(transformY == 0){
-            self.commentBGView.frame = CGRectMake(self.commentBGView.MinX, self.commentBGView.MinY + self.lastTextViewDifHeight ,self.commentBGView.Witdh, 49);
-            self.writeCommentView.frame = CGRectMake(self.writeCommentView.MinX, self.writeCommentView.MinY, SCREEN_WIDTH - padding - 173, 33 );
-            self.writeCommentTextView.frame = CGRectMake(self.writeCommentTextView.MinX, self.writeCommentTextView.MinY, self.writeCommentView.Witdh-33-15,20);
-            self.commentSunLabel.hidden = NO;
-            self.likeView.hidden = NO;
-            self.shareView.hidden = NO;
-            //判断是否输入内容
-            if(self.writeCommentTextView.text.length==0){
-                self.commentLabel.hidden = NO;
+            if(_openKeyboard){
+                self.commentBGView.frame = CGRectMake(self.commentBGView.MinX, self.commentBGView.MinY + self.lastTextViewDifHeight ,self.commentBGView.Witdh, 49);
+                self.writeCommentView.frame = CGRectMake(self.writeCommentView.MinX, self.writeCommentView.MinY, SCREEN_WIDTH - padding - 173, 33 );
+                self.writeCommentTextView.frame = CGRectMake(self.writeCommentTextView.MinX, self.writeCommentTextView.MinY, self.writeCommentView.Witdh-33-15,20);
+                self.commentSunLabel.hidden = NO;
+                self.likeView.hidden = NO;
+                self.shareView.hidden = NO;
+                //判断是否输入内容
+                if(self.writeCommentTextView.text.length==0){
+                    self.commentLabel.hidden = NO;
+                }
             }
             _openKeyboard = NO;
         }else{
@@ -174,6 +175,10 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
         self.tableView.frame = CGRectMake(0, self.navigationHeight, SCREEN_WIDTH, SCREEN_HEIGHT + transformY - self.commentBGView.Height-self.navigationHeight);
         self.commentBGView.transform = CGAffineTransformMakeTranslation(0, transformY);
         [self scrollTableViewToBottom];
+    } completion:^(BOOL finished){
+        if(_openKeyboard){
+            self.writeCommentTextView.selectedRange = NSMakeRange(self.writeCommentTextView.text.length, 0);
+        }
     }];
 }
 
@@ -343,7 +348,8 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
         _writeCommentTextView.backgroundColor = [UIColor clearColor];
         _writeCommentTextView.textContainerInset = UIEdgeInsetsMake(0,0, 0, 0);
         _writeCommentTextView.layoutManager.allowsNonContiguousLayout = NO;
-        self.writeCommentTextView.delegate = self;
+        _writeCommentTextView.delegate = self;
+        _writeCommentTextView.returnKeyType = UIReturnKeySend;
     }
     return _writeCommentTextView;
 }
@@ -628,22 +634,35 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 #pragma mark - UITextViewDetegate
 
 - (void)textViewDidChange:(UITextView *)textView{
+    [self updateLastTextViewTextHeight];
     [UIView animateWithDuration:0.3 animations:^{
-        [self updateLastTextViewTextHeight];
         //改变frame
-        self.commentBGView.frame = CGRectMake(self.commentBGView.MinX, self.commentBGView.MinY-self.lastTextViewDifHeight, self.commentBGView.Witdh, self.commentBGView.Height+self.lastTextViewDifHeight);
-        self.writeCommentView.frame=CGRectMake(self.writeCommentView.MinX, self.writeCommentView.MinY, self.writeCommentView.Witdh, self.writeCommentView.Height+self.lastTextViewDifHeight);
-        self.writeCommentTextView.frame = CGRectMake(self.writeCommentTextView.MinX, self.writeCommentTextView.MinY, self.writeCommentTextView.Witdh, self.lastTextViewTextHeight);
-        self.tableView.frame = CGRectMake(self.tableView.MinX, self.tableView.MinY, self.tableView.Witdh, self.tableView.Height-self.lastTextViewDifHeight);
-        //加上这句话就不会出现闪一下的问题了
-        [self.writeCommentTextView scrollRangeToVisible:NSMakeRange(self.writeCommentTextView.text.length-1, 1)];
+        if(_openKeyboard){
+            self.commentBGView.frame = CGRectMake(self.commentBGView.MinX, self.commentBGView.MinY-self.lastTextViewDifHeight, self.commentBGView.Witdh, self.commentBGView.Height+self.lastTextViewDifHeight);
+            self.writeCommentView.frame=CGRectMake(self.writeCommentView.MinX, self.writeCommentView.MinY, self.writeCommentView.Witdh, self.writeCommentView.Height+self.lastTextViewDifHeight);
+            self.writeCommentTextView.frame = CGRectMake(self.writeCommentTextView.MinX, self.writeCommentTextView.MinY, self.writeCommentTextView.Witdh, self.lastTextViewTextHeight);
+            self.tableView.frame = CGRectMake(self.tableView.MinX, self.tableView.MinY, self.tableView.Witdh, self.tableView.Height-self.lastTextViewDifHeight);
+            //加上这句话就不会出现闪一下的问题了
+            [self.writeCommentTextView scrollRangeToVisible:NSMakeRange(self.writeCommentTextView.text.length-1, 1)];
+        }
     }];
+}
+
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
+    if ([text isEqualToString:@"\n"]){ //判断输入的字是否是回车，即按下return
+        DLog(@"点击了发送按钮");
+    }
+    return YES;
 }
 
 - (CGFloat) updateLastTextViewTextHeight{
     CGFloat minHeight = 20; //最小的高度
     CGFloat maxHeight = 60; //最大的高度
     CGFloat contentSize = 0;
+    //设置宽
+    self.writeCommentTextView.frame = CGRectMake(self.writeCommentTextView.MinX, self.writeCommentTextView.MinY, self.commentBGView.Witdh - padding * 2 - 15 - 33, self.writeCommentTextView.Height);
+    
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7) {
         CGRect textFrame=[[self.writeCommentTextView layoutManager]usedRectForTextContainer:[self.writeCommentTextView textContainer]];
         contentSize = textFrame.size.height;
@@ -658,7 +677,6 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
         _lastTextViewTextHeight = contentSize;
     }
     _lastTextViewDifHeight = _lastTextViewTextHeight - self.writeCommentTextView.Height;
-    DLog(@"_lastTextViewDifHeight %f",_lastTextViewDifHeight);
     return _lastTextViewTextHeight;
 }
 
