@@ -26,6 +26,10 @@
 		B13ADA201F1C5508008E889C /* OTWSystemNewsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B13ADA1F1F1C5508008E889C /* OTWSystemNewsCell.m */; };
 		B13ADA231F1C5660008E889C /* OTWSystemNewsCellFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = B13ADA221F1C5660008E889C /* OTWSystemNewsCellFrame.m */; };
 		B13ADA281F1C9932008E889C /* OTWSystemNews.plist in Resources */ = {isa = PBXBuildFile; fileRef = B13ADA271F1C9932008E889C /* OTWSystemNews.plist */; };
+		B181AB591F1F7F33009929D1 /* OTWPraiseViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B181AB581F1F7F33009929D1 /* OTWPraiseViewModel.m */; };
+		B181AB5C1F1F7F56009929D1 /* OTWPraiseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B181AB5A1F1F7F56009929D1 /* OTWPraiseViewController.m */; };
+		B181AB5F1F1F7F85009929D1 /* OTWPraiseViewTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B181AB5E1F1F7F85009929D1 /* OTWPraiseViewTableCell.m */; };
+		B181AB611F1F8105009929D1 /* OTWPraise.plist in Resources */ = {isa = PBXBuildFile; fileRef = B181AB601F1F8105009929D1 /* OTWPraise.plist */; };
 		D7F6AFF61F0D32FB0013090A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6AFF51F0D32FB0013090A /* main.m */; };
 		D7F6AFF91F0D32FB0013090A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6AFF81F0D32FB0013090A /* AppDelegate.m */; };
 		D7F6B0041F0D32FB0013090A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7F6B0021F0D32FB0013090A /* LaunchScreen.storyboard */; };
@@ -139,6 +143,13 @@
 		B13ADA211F1C564E008E889C /* OTWSystemNewsCellFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWSystemNewsCellFrame.h; sourceTree = "<group>"; };
 		B13ADA221F1C5660008E889C /* OTWSystemNewsCellFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWSystemNewsCellFrame.m; sourceTree = "<group>"; };
 		B13ADA271F1C9932008E889C /* OTWSystemNews.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = OTWSystemNews.plist; sourceTree = "<group>"; };
+		B181AB571F1F7F33009929D1 /* OTWPraiseViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPraiseViewModel.h; sourceTree = "<group>"; };
+		B181AB581F1F7F33009929D1 /* OTWPraiseViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPraiseViewModel.m; sourceTree = "<group>"; };
+		B181AB5A1F1F7F56009929D1 /* OTWPraiseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPraiseViewController.m; sourceTree = "<group>"; };
+		B181AB5B1F1F7F56009929D1 /* OTWPraiseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPraiseViewController.h; sourceTree = "<group>"; };
+		B181AB5D1F1F7F85009929D1 /* OTWPraiseViewTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPraiseViewTableCell.h; sourceTree = "<group>"; };
+		B181AB5E1F1F7F85009929D1 /* OTWPraiseViewTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPraiseViewTableCell.m; sourceTree = "<group>"; };
+		B181AB601F1F8105009929D1 /* OTWPraise.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = OTWPraise.plist; path = ../../../../../../Desktop/OTWPraise.plist; sourceTree = "<group>"; };
 		D7F6AFF11F0D32FB0013090A /* OnTheWay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheWay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7F6AFF51F0D32FB0013090A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D7F6AFF71F0D32FB0013090A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -336,6 +347,7 @@
 				DD9452F41F160CD7004EDDED /* OTWFootprintList.plist */,
 				18B034CC1F171ED300F53461 /* OTWFindBusinessmen.plist */,
 				B13ADA271F1C9932008E889C /* OTWSystemNews.plist */,
+				B181AB601F1F8105009929D1 /* OTWPraise.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -629,6 +641,8 @@
 				D7F6B0771F0DD3F90013090A /* OTWNewsViewController.m */,
 				B13ADA1B1F1B21D4008E889C /* OTWSystemNewsViewController.h */,
 				B13ADA1C1F1B23DA008E889C /* OTWSystemNewsViewController.m */,
+				B181AB5A1F1F7F56009929D1 /* OTWPraiseViewController.m */,
+				B181AB5B1F1F7F56009929D1 /* OTWPraiseViewController.h */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -795,6 +809,8 @@
 			children = (
 				DDC0A9381F1F77D100A6E4DB /* OTWSystemNewsModel.h */,
 				DDC0A9391F1F77D100A6E4DB /* OTWSystemNewsModel.m */,
+				B181AB571F1F7F33009929D1 /* OTWPraiseViewModel.h */,
+				B181AB581F1F7F33009929D1 /* OTWPraiseViewModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -808,6 +824,8 @@
 				B13ADA1F1F1C5508008E889C /* OTWSystemNewsCell.m */,
 				B13ADA211F1C564E008E889C /* OTWSystemNewsCellFrame.h */,
 				B13ADA221F1C5660008E889C /* OTWSystemNewsCellFrame.m */,
+				B181AB5D1F1F7F85009929D1 /* OTWPraiseViewTableCell.h */,
+				B181AB5E1F1F7F85009929D1 /* OTWPraiseViewTableCell.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -945,6 +963,7 @@
 				DDC0A9431F1F7B1800A6E4DB /* OTWUserFootprintList.plist in Resources */,
 				DDDAE0931F1F0D4C00981E60 /* Assets.xcassets in Resources */,
 				DD9452F51F160CD7004EDDED /* OTWFootprintList.plist in Resources */,
+				B181AB611F1F8105009929D1 /* OTWPraise.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1072,8 +1091,10 @@
 				18B034CB1F171C0900F53461 /* OTWFindBusinessmenViewCell.m in Sources */,
 				DD14F2431F114436004DFE4A /* CommonContact.m in Sources */,
 				DD3520961F186E0700E8D725 /* OTWFootprintDetailModel.m in Sources */,
+				B181AB591F1F7F33009929D1 /* OTWPraiseViewModel.m in Sources */,
 				D7F6B0461F0D39320013090A /* README.md in Sources */,
 				18B034E11F1CE42700F53461 /* OTWFindViewController.m in Sources */,
+				B181AB5C1F1F7F56009929D1 /* OTWPraiseViewController.m in Sources */,
 				D7F6AFF61F0D32FB0013090A /* main.m in Sources */,
 				18B034C51F171BC100F53461 /* OTWFindBusinessmenController.m in Sources */,
 				D7F6B08B1F0DD5370013090A /* UIImage+Color.m in Sources */,
@@ -1087,6 +1108,7 @@
 				B13ADA231F1C5660008E889C /* OTWSystemNewsCellFrame.m in Sources */,
 				18B034C21F15CC3F00F53461 /* OTWFindModel.m in Sources */,
 				D7F6B0541F0DCE420013090A /* UIView+Frame.m in Sources */,
+				B181AB5F1F1F7F85009929D1 /* OTWPraiseViewTableCell.m in Sources */,
 				18BC9E441F1F716F00C7B6C1 /* OTWPersonalFootprintMonthDataModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -7,28 +7,12 @@
     android:orientation="vertical"
     tools:context="arvix.cn.ontheway.MainActivity">
 
-    <EditText
-        android:id="@+id/main_search_edit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="12sp" />
 
-    <ScrollView
+    <FrameLayout
+        android:id="@+id/main_frag_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:scrollbars="none"
-        android:visibility="visible">
-
-        <LinearLayout
-            android:id="@+id/main_card_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-        </LinearLayout>
-    </ScrollView>
+        android:layout_weight="1" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -43,6 +27,7 @@
             android:orientation="horizontal">
 
             <RadioButton
+                android:id="@+id/tab_faxian"
                 style="@style/main_tab_text"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
@@ -55,6 +40,7 @@
                 android:text="发现" />
 
             <RadioButton
+                android:id="@+id/tab_zuji"
                 style="@style/main_tab_text"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
@@ -64,7 +50,7 @@
                 android:drawableTop="@drawable/tab_faxian_sel"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="发现" />
+                android:text="足迹" />
 
             <RadioButton
                 android:layout_width="0dip"
@@ -75,6 +61,7 @@
                 android:visibility="invisible" />
 
             <RadioButton
+                android:id="@+id/tab_xiaoxi"
                 style="@style/main_tab_text"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
@@ -84,9 +71,10 @@
                 android:drawableTop="@drawable/tab_faxian_sel"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="发现" />
+                android:text="消息" />
 
             <RadioButton
+                android:id="@+id/tab_wode"
                 style="@style/main_tab_text"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
@@ -96,7 +84,7 @@
                 android:drawableTop="@drawable/tab_faxian_sel"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="发现" />
+                android:text="我的" />
         </RadioGroup>
 
         <ImageButton
