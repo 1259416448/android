@@ -23,6 +23,7 @@
 @property(nonatomic,strong) UILabel *fansNum;
 @property(nonatomic,strong) UILabel *centerCell;
 @property(nonatomic,strong) UILabel *zanNum;
+@property(nonatomic,strong) UIButton *button;
 
 @end
 
@@ -56,7 +57,7 @@
     [self setLeftNavigationImage:[UIImage imageNamed:@"back_2"]];
     [self setRightNavigationTitle:@"+ 关注"];
     //大背景
-    self.view.backgroundColor=[UIColor color_f4f4f4];
+    self.view.backgroundColor=[UIColor whiteColor];
     
     //创建一个分组样式的UITableView
     _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0,65, SCREEN_WIDTH, SCREEN_HEIGHT-65-20) style:UITableViewStylePlain];
@@ -73,6 +74,10 @@
     
     //设置tableview的第一行显示内容
     _tableView.tableHeaderView=self.PersonalFootprintsListTableViewHeader;
+    
+    
+        [self.view addSubview:self.button];
+    
     
 }
 
@@ -125,7 +130,7 @@
     
     if(section!=0){
         sectionHeader.frame=CGRectMake(0, 0, SCREEN_WIDTH,40);
-        sectionHeader .backgroundColor=[UIColor whiteColor];
+        sectionHeader .backgroundColor=[UIColor clearColor];
         
         //月份的左边线条
         UILabel *sectionHeaderLeft=[[UILabel alloc] initWithFrame:CGRectMake(22.5, 0, 1,40)];
@@ -145,6 +150,7 @@
         sectionHeaderText.frame=CGRectMake(36, 5, 40, 15);
         sectionHeaderText.font=[UIFont systemFontOfSize:17];
         sectionHeaderText.textColor=[UIColor color_202020];
+        sectionHeaderText.backgroundColor=[UIColor whiteColor];
         [sectionHeader addSubview:sectionHeaderText];
         
     }else{
@@ -253,7 +259,19 @@
     }
     return _centerCell;
 }
-
+-(UIButton*)button{
+    if(!_button){
+        _button=[[UIButton alloc] init];
+        _button.frame=CGRectMake(SCREEN_WIDTH-15-50, SCREEN_HEIGHT-49-60, 50, 50);
+        [_button setImage:[UIImage imageNamed:@"qiehuanpingmian"] forState:UIControlStateNormal];
+        
+        [_button addTarget:self action:@selector(_ButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _button;
+}
+-(void)_ButtonClick{
+    DLog(@"点击了按钮");
+}
 /*
  #pragma mark - Navigation
  
