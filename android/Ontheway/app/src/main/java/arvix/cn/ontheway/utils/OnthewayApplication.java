@@ -4,8 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import arvix.cn.ontheway.service.impl.BaiduPoiServiceImpl;
+import arvix.cn.ontheway.service.impl.BaiduServiceImpl;
 import arvix.cn.ontheway.service.impl.CacheDefault;
 import arvix.cn.ontheway.service.inter.BaiduPoiServiceInterface;
+import arvix.cn.ontheway.service.inter.BaiduServiceInterface;
 import arvix.cn.ontheway.service.inter.CacheInterface;
 
 /**
@@ -24,6 +26,8 @@ public class OnthewayApplication {
             iocMap.put(CacheInterface.class,cache);
             BaiduPoiServiceInterface poiService = new BaiduPoiServiceImpl();
             iocMap.put(BaiduPoiServiceInterface.class,poiService);
+            BaiduServiceInterface baiduService = new BaiduServiceImpl();
+            iocMap.put(BaiduServiceInterface.class,baiduService);
         }
         initBefore = true;
     }
