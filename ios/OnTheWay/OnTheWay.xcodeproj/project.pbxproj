@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1822EE601F20843B00E07665 /* OTWFootprintsChangeAddressController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1822EE5F1F20843B00E07665 /* OTWFootprintsChangeAddressController.m */; };
+		1822EE631F20845A00E07665 /* OTWFootprintsChangeAddressModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1822EE621F20845A00E07665 /* OTWFootprintsChangeAddressModel.m */; };
+		1822EE661F20846F00E07665 /* OTWFootprintsChangeAddressCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1822EE651F20846F00E07665 /* OTWFootprintsChangeAddressCellTableViewCell.m */; };
 		189954C61F1CE986004CCEBE /* OTWShopDetailsViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 189954C51F1CE986004CCEBE /* OTWShopDetailsViewCell.m */; };
 		189954C91F1DAD3C004CCEBE /* OTWPersonalFootprintsListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 189954C81F1DAD3C004CCEBE /* OTWPersonalFootprintsListController.m */; };
 		189954CC1F1DAD5E004CCEBE /* OTWPersonalFootprintsListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 189954CB1F1DAD5E004CCEBE /* OTWPersonalFootprintsListModel.m */; };
@@ -107,6 +110,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1822EE5E1F20843B00E07665 /* OTWFootprintsChangeAddressController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWFootprintsChangeAddressController.h; sourceTree = "<group>"; };
+		1822EE5F1F20843B00E07665 /* OTWFootprintsChangeAddressController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWFootprintsChangeAddressController.m; sourceTree = "<group>"; };
+		1822EE611F20845A00E07665 /* OTWFootprintsChangeAddressModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWFootprintsChangeAddressModel.h; sourceTree = "<group>"; };
+		1822EE621F20845A00E07665 /* OTWFootprintsChangeAddressModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWFootprintsChangeAddressModel.m; sourceTree = "<group>"; };
+		1822EE641F20846F00E07665 /* OTWFootprintsChangeAddressCellTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWFootprintsChangeAddressCellTableViewCell.h; sourceTree = "<group>"; };
+		1822EE651F20846F00E07665 /* OTWFootprintsChangeAddressCellTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWFootprintsChangeAddressCellTableViewCell.m; sourceTree = "<group>"; };
 		189954C41F1CE986004CCEBE /* OTWShopDetailsViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTWShopDetailsViewCell.h; path = OnTheWay/Pages/Find/Controller/OTWShopDetailsViewCell.h; sourceTree = SOURCE_ROOT; };
 		189954C51F1CE986004CCEBE /* OTWShopDetailsViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTWShopDetailsViewCell.m; path = OnTheWay/Pages/Find/Controller/OTWShopDetailsViewCell.m; sourceTree = SOURCE_ROOT; };
 		189954C71F1DAD3C004CCEBE /* OTWPersonalFootprintsListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPersonalFootprintsListController.h; sourceTree = "<group>"; };
@@ -612,6 +621,8 @@
 				DD9452ED1F15CC29004EDDED /* OTWFootprintListModel.m */,
 				DD3520971F186E2200E8D725 /* OTWFootprintDetailModel.h */,
 				DD3520951F186E0700E8D725 /* OTWFootprintDetailModel.m */,
+				1822EE611F20845A00E07665 /* OTWFootprintsChangeAddressModel.h */,
+				1822EE621F20845A00E07665 /* OTWFootprintsChangeAddressModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -629,6 +640,8 @@
 				DDD4AB4A1F1AFC6900D42CF3 /* OTWFootprintDetailFrame.m */,
 				DDD4AB4C1F1B01D500D42CF3 /* OTWCommentFrame.h */,
 				DDD4AB4D1F1B020400D42CF3 /* OTWCommentFrame.m */,
+				1822EE641F20846F00E07665 /* OTWFootprintsChangeAddressCellTableViewCell.h */,
+				1822EE651F20846F00E07665 /* OTWFootprintsChangeAddressCellTableViewCell.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1076,6 +1089,7 @@
 				B13ADA201F1C5508008E889C /* OTWSystemNewsCell.m in Sources */,
 				B18A430D1F208515002C7A5A /* OTWNewsToOtherCommentModel.m in Sources */,
 				18B034B91F139C1500F53461 /* OTWPersonalSiteController.m in Sources */,
+				1822EE631F20845A00E07665 /* OTWFootprintsChangeAddressModel.m in Sources */,
 				D7F6B03D1F0D39060013090A /* README.md in Sources */,
 				DD14F23B1F1132FE004DFE4A /* NSString+RegexCategory.m in Sources */,
 				DD9452F01F15D139004EDDED /* OTWFootprintListTableViewCell.m in Sources */,
@@ -1106,6 +1120,7 @@
 				B13ADA1D1F1B23DA008E889C /* OTWSystemNewsViewController.m in Sources */,
 				D7F6B0581F0DCF040013090A /* UIColor+Utils.m in Sources */,
 				DD9452F31F15DE23004EDDED /* OTWFootprintListFrame.m in Sources */,
+				1822EE661F20846F00E07665 /* OTWFootprintsChangeAddressCellTableViewCell.m in Sources */,
 				18B034CB1F171C0900F53461 /* OTWFindBusinessmenViewCell.m in Sources */,
 				DD14F2431F114436004DFE4A /* CommonContact.m in Sources */,
 				DD3520961F186E0700E8D725 /* OTWFootprintDetailModel.m in Sources */,
@@ -1126,6 +1141,7 @@
 				B13ADA231F1C5660008E889C /* OTWSystemNewsCellFrame.m in Sources */,
 				18B034C21F15CC3F00F53461 /* OTWFindModel.m in Sources */,
 				D7F6B0541F0DCE420013090A /* UIView+Frame.m in Sources */,
+				1822EE601F20843B00E07665 /* OTWFootprintsChangeAddressController.m in Sources */,
 				B181AB5F1F1F7F85009929D1 /* OTWPraiseViewTableCell.m in Sources */,
 				18BC9E441F1F716F00C7B6C1 /* OTWPersonalFootprintMonthDataModel.m in Sources */,
 			);
