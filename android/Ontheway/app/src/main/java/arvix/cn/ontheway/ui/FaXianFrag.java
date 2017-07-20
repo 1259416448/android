@@ -1,5 +1,6 @@
 package arvix.cn.ontheway.ui;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import org.xutils.x;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import arvix.cn.ontheway.BaiduActivity;
 import arvix.cn.ontheway.MainCardBean;
 import arvix.cn.ontheway.MenuBean;
 import arvix.cn.ontheway.R;
@@ -85,12 +87,12 @@ public class FaXianFrag extends BaseFragment {
 
     private void bindCards(List<MainCardBean> data) {
         LayoutInflater lf = LayoutInflater.from(act);
-        for (MainCardBean card : data) {
+        for (final MainCardBean card : data) {
             View item = lf.inflate(R.layout.main_card, cardContainerLL, false);
             item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    UIUtils.toast(act, "ccc", Toast.LENGTH_SHORT);
+
                 }
             });
             TextView titleTv = item.findViewById(R.id.card_title);
@@ -99,6 +101,15 @@ public class FaXianFrag extends BaseFragment {
             for (int i = 0; i < card.getMenus().size(); i++) {
                 MenuBean menu = card.getMenus().get(i);
                 View menuItem = lf.inflate(R.layout.main_card_menu_item, menuContainerLL, false);
+                menuItem.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //二级菜单
+                        Intent intent = new Intent(act, BaiduActivity.class);
+                        intent.putExtra(BaiduActivity.EXTRA_KEYWORD, card.getTitle());
+                        startActivity(intent);
+                    }
+                });
                 TextView tv = menuItem.findViewById(R.id.menu_text);
                 tv.setText(menu.getTitle());
                 ImageView iv = menuItem.findViewById(R.id.menu_icon);
