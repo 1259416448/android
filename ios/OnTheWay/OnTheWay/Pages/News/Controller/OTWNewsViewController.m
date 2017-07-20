@@ -9,6 +9,7 @@
 #import "OTWNewsViewController.h"
 #import "OTWSystemNewsViewController.h"
 #import "OTWPraiseViewController.h"
+#import "OTWNewCommentListViewController.h"
 #import "OTWNewsCell.h"
 
 @interface OTWNewsViewController ()<UITableViewDelegate, UITableViewDataSource>
@@ -113,7 +114,8 @@
         case 2: // 新的评论
         {
             
-            
+            OTWNewCommentListViewController *newsCommentVC = [[OTWNewCommentListViewController alloc] init];
+            [self.navigationController pushViewController:newsCommentVC animated:YES];
         }
             break;
         default:
