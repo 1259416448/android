@@ -7,7 +7,13 @@
 //
 
 #import "OTWNewsCommentModel.h"
+#import "MJExtension.h"
 
 @implementation OTWNewsCommentModel
+
++ (id) commentModelWithDictionary:(NSDictionary *)dict
+{
+    return [OTWNewsCommentModel mj_objectWithKeyValues:dict];
+}
 
 @end
