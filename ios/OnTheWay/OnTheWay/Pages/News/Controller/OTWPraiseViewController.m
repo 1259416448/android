@@ -68,7 +68,7 @@ static NSString *const praiseID = @"praise";
     if (!_headerV) {
         _headerV = [[UIView alloc] init];
         _headerV.backgroundColor = [UIColor color_f4f4f4];
-        _headerV.frame = CGRectMake(0, 0, self.view.width, 15);
+        _headerV.frame = CGRectMake(0, 0, self.view.width, 10);
     }
     return _headerV;
 }
@@ -125,7 +125,7 @@ static NSString *const praiseID = @"praise";
     NSLog(@"x=%ld",(long)_hotestPraiseCells.count);
     if (indexPath.row == _hotestPraiseCells.count - 1) {
         NSLog(@"ok");
-        return cell.height + 10;
+        return cell.height + 20;
     }
     return cell.height;
 }
