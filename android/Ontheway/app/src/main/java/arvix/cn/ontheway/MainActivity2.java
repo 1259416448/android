@@ -1,5 +1,6 @@
 package arvix.cn.ontheway;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -33,6 +34,11 @@ public class MainActivity2 extends BaseActivity {
     private LinearLayout cardContainerLL;
     @ViewInject(R.id.main_search_edit)
     private EditText searchET;
+
+    @Override
+    public void onActivityReenter(int resultCode, Intent data) {
+        super.onActivityReenter(resultCode, data);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,12 +80,16 @@ public class MainActivity2 extends BaseActivity {
 
     private void bindCards(List<MainCardBean> data) {
         LayoutInflater lf = LayoutInflater.from(self);
-        for (MainCardBean card : data) {
+        for (final MainCardBean card : data) {
             View item = lf.inflate(R.layout.main_card, cardContainerLL, false);
             item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     UIUtils.toast(self, "ccc", Toast.LENGTH_SHORT);
+                    //一级菜单
+                    Intent intent = new Intent(self,BaiduActivity.class);
+                    intent.putExtra(BaiduActivity.EXTRA_KEYWORD,card.getTitle());
+                    startActivity(intent);
                 }
             });
             TextView titleTv = item.findViewById(R.id.card_title);
@@ -88,6 +98,13 @@ public class MainActivity2 extends BaseActivity {
             for (int i = 0; i < card.getMenus().size(); i++) {
                 MenuBean menu = card.getMenus().get(i);
                 View menuItem = lf.inflate(R.layout.main_card_menu_item, menuContainerLL, false);
+                menuItem.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                    UIUtils.toast(self, "ccc", Toast.LENGTH_SHORT);
+                    //二级菜单
+                    }
+                });
                 TextView tv = menuItem.findViewById(R.id.menu_text);
                 tv.setText(menu.getTitle());
                 ImageView iv = menuItem.findViewById(R.id.menu_icon);

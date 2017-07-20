@@ -42,13 +42,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SDKInitializer.initialize(getApplicationContext());
         Log.i(this.getClass().getName(),"MainActivity--->onCreate!!!!!!!!!!!!!--------------->" + System.currentTimeMillis());
         setContentView(R.layout.activity_main);
         mainActivity = this;
        // mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        SDKInitializer.initialize(getApplicationContext());
+      //  getApplicationContext()
     }
 
     @Override
