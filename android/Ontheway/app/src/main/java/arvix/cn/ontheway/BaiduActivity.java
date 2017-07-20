@@ -135,6 +135,7 @@ public class BaiduActivity extends AppCompatActivity {
     }
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -165,48 +166,51 @@ public class BaiduActivity extends AppCompatActivity {
         if(TextUtils.isEmpty(searchKeyWord)){
             searchKeyWord = "美食";
         }
-        poiService.search(latCache,lonCache,searchKeyWord,1000,new OnGetPoiSearchResultListener(){
-            @Override
-            public void onGetPoiResult(PoiResult poiResult) {
+        if(latCache!=null){
+            poiService.search(latCache,lonCache,searchKeyWord,1000,new OnGetPoiSearchResultListener(){
+                @Override
+                public void onGetPoiResult(PoiResult poiResult) {
 
-                if (poiResult == null
-                        || poiResult.error == SearchResult.ERRORNO.RESULT_NOT_FOUND) {// 没有找到检索结果
-                    Toast.makeText(BaiduActivity.this, "未找到结果",
-                            Toast.LENGTH_LONG).show();
-                    return;
+                    if (poiResult == null
+                            || poiResult.error == SearchResult.ERRORNO.RESULT_NOT_FOUND) {// 没有找到检索结果
+                        Toast.makeText(BaiduActivity.this, "未找到结果",
+                                Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    //获取POI检索结果
+                    List<PoiInfo> allAddr = poiResult.getAllPoi();
+                    for (PoiInfo p: allAddr) {
+                        Log.d("MainActivity", "p.name--->" + p.name +"p.phoneNum" + p.phoneNum +" -->p.address:" + p.address + "p.location" + p.location);
+                        //mBaiduMap.addOverlay()
+                        View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.custom_marker, null);
+                        // ImageView img_hotel_image=
+                        // (ImageView)view.findViewById(R.id.img_hotel_image);
+                        // new
+                        // DownloadImageTask(img_hotel_image).execute(hotel.getHotelImageUrl());
+
+                        TextView tv_hotel_price = (TextView) view.findViewById(R.id.tv_hotel_price);
+                        tv_hotel_price.setText( p.name );
+                        BitmapDescriptor markerIcon = BitmapDescriptorFactory.fromBitmap(getViewBitmap(view));
+
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("customData", p.phoneNum);
+                        OverlayOptions oo = new MarkerOptions().position(p.location).icon(markerIcon).zIndex(9).draggable(true).extraInfo(bundle);
+                        mBaiduMap.addOverlay(oo);
+                    }
                 }
-                //获取POI检索结果
-                 List<PoiInfo> allAddr = poiResult.getAllPoi();
-                for (PoiInfo p: allAddr) {
-                    Log.d("MainActivity", "p.name--->" + p.name +"p.phoneNum" + p.phoneNum +" -->p.address:" + p.address + "p.location" + p.location);
-                    //mBaiduMap.addOverlay()
-                    View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.custom_marker, null);
-                    // ImageView img_hotel_image=
-                    // (ImageView)view.findViewById(R.id.img_hotel_image);
-                    // new
-                    // DownloadImageTask(img_hotel_image).execute(hotel.getHotelImageUrl());
 
-                    TextView tv_hotel_price = (TextView) view.findViewById(R.id.tv_hotel_price);
-                    tv_hotel_price.setText( p.name );
-                    BitmapDescriptor markerIcon = BitmapDescriptorFactory.fromBitmap(getViewBitmap(view));
+                @Override
+                public void onGetPoiDetailResult(PoiDetailResult poiDetailResult) {
 
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("customData", p.phoneNum);
-                    OverlayOptions oo = new MarkerOptions().position(p.location).icon(markerIcon).zIndex(9).draggable(true).extraInfo(bundle);
-                    mBaiduMap.addOverlay(oo);
                 }
-            }
 
-            @Override
-            public void onGetPoiDetailResult(PoiDetailResult poiDetailResult) {
+                @Override
+                public void onGetPoiIndoorResult(PoiIndoorResult poiIndoorResult) {
 
-            }
+                }
+            });
+        }
 
-            @Override
-            public void onGetPoiIndoorResult(PoiIndoorResult poiIndoorResult) {
-
-            }
-        });
 
 
         mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
