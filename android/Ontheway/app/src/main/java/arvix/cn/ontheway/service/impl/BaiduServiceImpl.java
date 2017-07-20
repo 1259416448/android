@@ -15,6 +15,9 @@ import arvix.cn.ontheway.service.inter.BaiduServiceInterface;
 public class BaiduServiceImpl implements BaiduServiceInterface{
     private LocationClient mLocationClient = null;
     private BDLocationListener bdLocationListener = null;
+
+
+    // TODO location.stop()
     @Override
     public void initLocation() {
         bdLocationListener = new BaiduLocationListenerService(App.self);

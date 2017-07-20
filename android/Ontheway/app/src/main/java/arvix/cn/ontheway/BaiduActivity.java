@@ -15,9 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
+
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
@@ -38,10 +36,12 @@ import com.baidu.mapapi.search.poi.PoiResult;
 import java.util.List;
 import arvix.cn.ontheway.service.BaiduLocationListenerService;
 import arvix.cn.ontheway.service.inter.BaiduPoiServiceInterface;
+import arvix.cn.ontheway.service.inter.BaiduServiceInterface;
 import arvix.cn.ontheway.service.inter.CacheInterface;
 import arvix.cn.ontheway.ui.MainActivity2;
 import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticVar;
+
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -95,6 +95,8 @@ public class BaiduActivity extends AppCompatActivity {
         // 改变地图状态
         mBaiduMap.setMapStatus(mMapStatusUpdate);
         Log.i(logTag,"init location from cache");
+
+
         BaiduPoiServiceInterface poiService = OnthewayApplication.getInstahce(BaiduPoiServiceInterface.class);
         if(TextUtils.isEmpty(searchKeyWord)){
             searchKeyWord = "美食";

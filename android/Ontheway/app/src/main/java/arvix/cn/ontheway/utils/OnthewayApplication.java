@@ -27,6 +27,7 @@ public class OnthewayApplication {
             BaiduPoiServiceInterface poiService = new BaiduPoiServiceImpl();
             iocMap.put(BaiduPoiServiceInterface.class,poiService);
             BaiduServiceInterface baiduService = new BaiduServiceImpl();
+            baiduService.initLocation();
             iocMap.put(BaiduServiceInterface.class,baiduService);
         }
         initBefore = true;

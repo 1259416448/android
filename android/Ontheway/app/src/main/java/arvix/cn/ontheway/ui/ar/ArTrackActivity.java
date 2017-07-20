@@ -22,6 +22,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import arvix.cn.ontheway.BaiduActivity;
 import arvix.cn.ontheway.R;
 
 public class ArTrackActivity extends AppCompatActivity implements SensorEventListener, LocationListener {
@@ -51,11 +52,12 @@ public class ArTrackActivity extends AppCompatActivity implements SensorEventLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ar);
-
+        searchKeyWord = getIntent().getStringExtra(BaiduActivity.EXTRA_KEYWORD);
         sensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);
         cameraContainerLayout = (FrameLayout) findViewById(R.id.camera_container_layout);
         surfaceView = (SurfaceView) findViewById(R.id.surface_view);
         tvCurrentLocation = (TextView) findViewById(R.id.tv_current_location);
+
         arOverlayView = new AROverlayView(this);
     }
 

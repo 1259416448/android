@@ -61,13 +61,7 @@ public class AROverlayView extends View {
 
         this.context = context;
 
-        //Demo points
-        arPoints = new ArrayList<ARPoint>() {{
-            //104.06909,30.54492
-            add(new ARPoint("菁蓉国际广场", 30.54492,104.06909,  513.0));
-            add(new ARPoint("招商银行",30.549474, 104.064537,  513.0));
-            add(new ARPoint("银泰城",30.547522,  104.064591,  513.0));
-        }};
+        updateLocation();
     }
 
     public  void updateLocation(){
@@ -79,7 +73,7 @@ public class AROverlayView extends View {
             lonCache = cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LON);
             Double  alt =     cache.getDouble(StaticVar.BAIDU_LOC_CACHE_ALT);
             Log.i(this.getClass().getName(),"init location from cache");
-            updateLocation(latCache,lonCache,alt);
+            updateLocation(latCache,lonCache,530.0);
         }
     }
     private void updateLocation(double lat,double lon,final double alt){

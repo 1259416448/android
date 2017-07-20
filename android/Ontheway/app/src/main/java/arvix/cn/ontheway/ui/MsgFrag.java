@@ -58,7 +58,7 @@ public class MsgFrag extends BaseFragment {
             @Override
             public Result<List<MsgBean>> call() throws Exception {
                 ArrayList<MsgBean> msgs = new ArrayList<MsgBean>();
-                for (int i = 0; i < 50; i++) {
+                for (int i = 0; i < 500; i++) {
                     MsgBean m = new MsgBean();
                     m.setTitle("hello" + i);
                     msgs.add(m);
@@ -117,14 +117,28 @@ public class MsgFrag extends BaseFragment {
         }
 
         @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
+        public View getView(int i, View convertView, ViewGroup viewGroup) {
             MsgBean b = getItem(i);
             LayoutInflater inflater = LayoutInflater.from(act);
-            View v = inflater.inflate(R.layout.msg_item, viewGroup, false);
-            TextView titleTv = v.findViewById(R.id.msg_title);
-            titleTv.setText(b.getTitle());
-            return v;
+
+            ViewHolder holder = null;
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.msg_item, null);
+                holder = new ViewHolder();
+                holder.titleTv=convertView.findViewById(R.id.msg_title);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+            holder.titleTv.setText(b.getTitle());
+
+
+
+            return convertView;
         }
+    }
+    private static class ViewHolder{
+        public TextView titleTv;
     }
 
 }
