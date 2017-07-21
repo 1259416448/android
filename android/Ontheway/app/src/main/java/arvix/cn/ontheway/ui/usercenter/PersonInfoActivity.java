@@ -16,6 +16,7 @@ import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.EditTextActivity;
+import arvix.cn.ontheway.ui.head.HeaderHolder;
 
 /**
  * Created by asdtiang on 2017/7/21 0021.
@@ -37,6 +38,7 @@ public class PersonInfoActivity extends BaseActivity {
     int REQ_GET_NAME_EDIT=new Random().nextInt();
     private void initView(){
         x.view().inject(this);
+        new HeaderHolder().init(self,"个人信息");
         nameTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
