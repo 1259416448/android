@@ -1,8 +1,11 @@
 package arvix.cn.ontheway;
 
-
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,9 +16,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
@@ -33,16 +33,15 @@ import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
 import com.baidu.mapapi.search.poi.PoiDetailResult;
 import com.baidu.mapapi.search.poi.PoiIndoorResult;
 import com.baidu.mapapi.search.poi.PoiResult;
-import com.baidu.mapapi.search.poi.PoiSearch;
-
-import java.util.Iterator;
 import java.util.List;
-
 import arvix.cn.ontheway.service.BaiduLocationListenerService;
 import arvix.cn.ontheway.service.inter.BaiduPoiServiceInterface;
+import arvix.cn.ontheway.service.inter.BaiduServiceInterface;
 import arvix.cn.ontheway.service.inter.CacheInterface;
+import arvix.cn.ontheway.ui.MainActivity2;
 import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticVar;
+
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -50,12 +49,13 @@ import arvix.cn.ontheway.utils.StaticVar;
  */
 public class BaiduActivity extends AppCompatActivity {
     public static String EXTRA_KEYWORD = "baiduKeyWord";
+
     private static String logTag =  BaiduActivity.class.getName();
     public static MapView mMapView = null;
     public static BaiduMap mBaiduMap = null;
-    public LocationClient mLocationClient = null;
-    public BDLocationListener bdLocationListener = new BaiduLocationListenerService();
-
+    LocalBroadcastManager mLocalBroadcastManager;
+    BroadcastReceiver mReceiver;
+    private String searchKeyWord;
 
     /**
      * 监听Back键按下事件,方法2:
@@ -67,7 +67,7 @@ public class BaiduActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, MainActivity2.class);
             startActivity(intent);
             System.out.println("back clicked44444444444444444444");
             Log.i(this.getClass().getName(),"back clicked!!!!!!!!!!!!!");
@@ -80,48 +80,11 @@ public class BaiduActivity extends AppCompatActivity {
 
 
 
-    private void initLocation(){
-        LocationClientOption option = new LocationClientOption();
-        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
-        //可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
-
-        option.setCoorType("bd09ll");
-        //可选，默认gcj02，设置返回的定位结果坐标系
-
-        int span=3;
-        option.setScanSpan(span);
-
-
-        //可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
-
-        option.setIsNeedAddress(true);
-        //可选，设置是否需要地址信息，默认不需要
-
-        option.setOpenGps(true);
-        //可选，默认false,设置是否使用gps
-
-        option.setLocationNotify(true);
-        //可选，默认false，设置是否当GPS有效时按照1S/1次频率输出GPS结果
-
-        option.setIsNeedLocationDescribe(true);
-        //可选，默认false，设置是否需要位置语义化结果，可以在BDLocation.getLocationDescribe里得到，结果类似于“在北京天安门附近”
-
-        option.setIsNeedLocationPoiList(true);
-        //可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到
-
-        option.setIgnoreKillProcess(false);
-        //可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
-
-        option.SetIgnoreCacheException(false);
-        //可选，默认false，设置是否收集CRASH信息，默认收集
-
-        option.setEnableSimulateGps(false);
-        //可选，默认false，设置是否需要过滤GPS仿真结果，默认需要
-
-        mLocationClient.setLocOption(option);
-    }
-
-    public static void updateLocation(double lat,double lon ){
+    private void updateLocation(double lat,double lon){
+        if(lat==0.0&&lon==0.0){
+            Log.w(this.getClass().getName(),"lat and lon is 0.0");
+            return;
+        }
         // 初始化位置
         // 设定中心点坐标
         LatLng cenpt = new LatLng(lat,lon);
@@ -132,91 +95,100 @@ public class BaiduActivity extends AppCompatActivity {
         // 改变地图状态
         mBaiduMap.setMapStatus(mMapStatusUpdate);
         Log.i(logTag,"init location from cache");
+
+
+        BaiduPoiServiceInterface poiService = OnthewayApplication.getInstahce(BaiduPoiServiceInterface.class);
+        if(TextUtils.isEmpty(searchKeyWord)){
+            searchKeyWord = "美食";
+        }
+        poiService.search(lat,lon,searchKeyWord,1000,new OnGetPoiSearchResultListener(){
+            @Override
+            public void onGetPoiResult(PoiResult poiResult) {
+
+                if (poiResult == null
+                        || poiResult.error == SearchResult.ERRORNO.RESULT_NOT_FOUND) {// 没有找到检索结果
+                    Toast.makeText(BaiduActivity.this, "未找到结果",
+                            Toast.LENGTH_LONG).show();
+                    return;
+                }
+                //获取POI检索结果
+                List<PoiInfo> allAddr = poiResult.getAllPoi();
+                for (PoiInfo p: allAddr) {
+                    Log.i("MainActivity", "p.name--->" + p.name +"p.phoneNum" + p.phoneNum +" -->p.address:" + p.address + "p.location" + p.location);
+                    //mBaiduMap.addOverlay()
+                    double diff = 0.0002;
+                    for(int i=0;i<5;i++){
+                        View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.custom_marker, null);
+                        LatLng latLng = new LatLng(p.location.latitude+diff*i,p.location.longitude+diff*i);
+                        // ImageView img_hotel_image=
+                        // (ImageView)view.findViewById(R.id.img_hotel_image);
+                        // new
+                        // DownloadImageTask(img_hotel_image).execute(hotel.getHotelImageUrl());
+                        TextView tv_hotel_price = (TextView) view.findViewById(R.id.tv_hotel_price);
+                        tv_hotel_price.setText( p.name +i);
+                        BitmapDescriptor markerIcon = BitmapDescriptorFactory.fromBitmap(getViewBitmap(view));
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("customData", p.phoneNum);
+                        OverlayOptions oo = new MarkerOptions().position(latLng).icon(markerIcon).zIndex(9).draggable(true).extraInfo(bundle);
+                        mBaiduMap.addOverlay(oo);
+                    }
+
+                }
+            }
+            @Override
+            public void onGetPoiDetailResult(PoiDetailResult poiDetailResult) {
+            }
+
+            @Override
+            public void onGetPoiIndoorResult(PoiIndoorResult poiIndoorResult) {
+            }
+        });
     }
 
 
+
+    public  void updateLocation(){
+        CacheInterface cache = OnthewayApplication.getInstahce(CacheInterface.class);
+        Double latCache = cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LAT);
+        Double lonCache = 0.0;
+        if(latCache!=null){
+            lonCache = cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LON);
+            Log.i(this.getClass().getName(),"init location from cache");
+            updateLocation(latCache,lonCache);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_baidu);
-
-        String searchKeyWord = getIntent().getStringExtra(BaiduActivity.EXTRA_KEYWORD);
+        searchKeyWord = getIntent().getStringExtra(BaiduActivity.EXTRA_KEYWORD);
         //获取地图控件引用
         mMapView = (MapView) findViewById(R.id.bmapView);
 
         mBaiduMap = mMapView.getMap();
         mBaiduMap.setMyLocationEnabled(true);
         mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
-        CacheInterface cache = OnthewayApplication.getInstahce(CacheInterface.class);
-        Double latCache = cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LAT);
-        Double lonCache = 0.0;
-        if(latCache!=null){
-            lonCache = cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LON);
-            updateLocation(latCache, lonCache);
-            Log.i(this.getClass().getName(),"init location from cache");
-        }
-        //获取当前坐标
-        mLocationClient = new LocationClient(getApplicationContext());
-        initLocation();
-        //声明LocationClient类
-        mLocationClient.registerLocationListener(bdLocationListener);
-        mLocationClient.start();
-        BaiduPoiServiceInterface poiService = OnthewayApplication.getInstahce(BaiduPoiServiceInterface.class);
-        if(TextUtils.isEmpty(searchKeyWord)){
-            searchKeyWord = "美食";
-        }
-        if(latCache!=null){
-            poiService.search(latCache,lonCache,searchKeyWord,1000,new OnGetPoiSearchResultListener(){
-                @Override
-                public void onGetPoiResult(PoiResult poiResult) {
-
-                    if (poiResult == null
-                            || poiResult.error == SearchResult.ERRORNO.RESULT_NOT_FOUND) {// 没有找到检索结果
-                        Toast.makeText(BaiduActivity.this, "未找到结果",
-                                Toast.LENGTH_LONG).show();
-                        return;
-                    }
-                    //获取POI检索结果
-                    List<PoiInfo> allAddr = poiResult.getAllPoi();
-                    for (PoiInfo p: allAddr) {
-                        Log.d("MainActivity", "p.name--->" + p.name +"p.phoneNum" + p.phoneNum +" -->p.address:" + p.address + "p.location" + p.location);
-                        //mBaiduMap.addOverlay()
-                        View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.custom_marker, null);
-                        // ImageView img_hotel_image=
-                        // (ImageView)view.findViewById(R.id.img_hotel_image);
-                        // new
-                        // DownloadImageTask(img_hotel_image).execute(hotel.getHotelImageUrl());
-
-                        TextView tv_hotel_price = (TextView) view.findViewById(R.id.tv_hotel_price);
-                        tv_hotel_price.setText( p.name );
-                        BitmapDescriptor markerIcon = BitmapDescriptorFactory.fromBitmap(getViewBitmap(view));
-
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("customData", p.phoneNum);
-                        OverlayOptions oo = new MarkerOptions().position(p.location).icon(markerIcon).zIndex(9).draggable(true).extraInfo(bundle);
-                        mBaiduMap.addOverlay(oo);
-                    }
+        updateLocation();
+        //register localroadcast
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(BaiduLocationListenerService.BROADCAST_LOCATION);
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.i(logTag,"receive broadcast-->"+intent.getAction());
+                if (intent.getAction().equals(BaiduLocationListenerService.BROADCAST_LOCATION)) {
+                    double lat = intent.getDoubleExtra(BaiduLocationListenerService.EXTRA_LAT,0.0);
+                    double lon = intent.getDoubleExtra(BaiduLocationListenerService.EXTRA_LON,0.0);
+                    updateLocation(lat,lon);
                 }
-
-                @Override
-                public void onGetPoiDetailResult(PoiDetailResult poiDetailResult) {
-
-                }
-
-                @Override
-                public void onGetPoiIndoorResult(PoiIndoorResult poiIndoorResult) {
-
-                }
-            });
-        }
-
-
-
+            }
+        };
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(App.self);
+        mLocalBroadcastManager.registerReceiver(mReceiver, filter);
         mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
             public boolean onMarkerClick(final Marker marker) {
-                // TO DO
-
+                // TODO
                 return true;
             }
         });
@@ -231,7 +203,7 @@ public class BaiduActivity extends AppCompatActivity {
         if(mMapView!=null){
             mMapView.onDestroy();
         }
-
+        mLocalBroadcastManager.unregisterReceiver(mReceiver);
     }
     @Override
     protected void onResume() {
@@ -259,8 +231,6 @@ public class BaiduActivity extends AppCompatActivity {
         addViewContent.buildDrawingCache();
         Bitmap cacheBitmap = addViewContent.getDrawingCache();
         Bitmap bitmap = Bitmap.createBitmap(cacheBitmap);
-
-
         return bitmap;
     }
 
