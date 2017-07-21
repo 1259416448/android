@@ -2,12 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-<EditText
+    <include layout="@layout/header"/>
+
+    <EditText
     android:layout_width="match_parent"
     android:id="@+id/edit_et"
     android:layout_height="wrap_content" />
-    <Button
-        android:id="@+id/edit_submit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+
 </LinearLayout>

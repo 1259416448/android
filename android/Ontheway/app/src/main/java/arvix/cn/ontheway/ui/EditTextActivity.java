@@ -10,6 +10,7 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import arvix.cn.ontheway.R;
+import arvix.cn.ontheway.ui.head.HeaderHolder;
 
 /**
  * Created by asdtiang on 2017/7/21 0021.
@@ -25,7 +26,9 @@ public class EditTextActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edittext);
         x.view().inject(this);
-        findViewById(R.id.edit_submit).setOnClickListener(new View.OnClickListener() {
+        HeaderHolder head=new HeaderHolder();
+        head.init(self,"修改名称");
+        head.setUpRightTextBtn("保存", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String s=editEt.getText().toString();
@@ -35,5 +38,7 @@ public class EditTextActivity extends BaseActivity {
                 finish();
             }
         });
+
+
     }
 }
