@@ -99,6 +99,8 @@ public class FaXianFrag extends BaseFragment {
             });
             TextView titleTv = item.findViewById(R.id.card_title);
             titleTv.setText(card.getTitle());
+            ImageView itemIv = item.findViewById(R.id.card_bg);
+            itemIv.setImageResource(card.getBg());
             LinearLayout menuContainerLL = item.findViewById(R.id.menu_container);
             for (int i = 0; i < card.getMenus().size(); i++) {
                 final MenuBean menu = card.getMenus().get(i);

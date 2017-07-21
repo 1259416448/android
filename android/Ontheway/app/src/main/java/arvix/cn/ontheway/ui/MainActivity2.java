@@ -2,42 +2,22 @@ package arvix.cn.ontheway.ui;
 
 import android.app.Fragment;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.ImageSpan;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.w3c.dom.Text;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.Callable;
 
 import arvix.cn.ontheway.BaiduActivity;
-import arvix.cn.ontheway.MainCardBean;
-import arvix.cn.ontheway.MenuBean;
 import arvix.cn.ontheway.R;
-import arvix.cn.ontheway.async.AsyncUtil;
-import arvix.cn.ontheway.async.Callback;
-import arvix.cn.ontheway.async.Result;
-import arvix.cn.ontheway.data.IndexData;
 import arvix.cn.ontheway.ui.ar.ArTrackActivity;
-import arvix.cn.ontheway.utils.UIUtils;
+import arvix.cn.ontheway.ui.usercenter.MyProfileFragment;
 
 /**
  * Created by yd on 2017/7/19.
@@ -91,7 +71,7 @@ public class MainActivity2 extends BaseActivity {
             } else if (checkedId == R.id.tab_xiaoxi) {
                 targetFrag = new MsgFrag();
             } else if (checkedId == R.id.tab_wode) {
-                targetFrag = new Fragment();
+                targetFrag = new MyProfileFragment();
             }
         }
         if (targetFrag != null) {
