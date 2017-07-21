@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OTWFootprintChangeAddressArrayModel.h"
 
 @interface OTWFootprintsChangeAddressCellTableViewCell : UITableViewCell
+
+-(void) setData:(OTWFootprintChangeAddressArrayModel *)  data;
 
 @end

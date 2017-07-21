@@ -11,6 +11,7 @@
 #import "OTWCommentModel.h"
 #import "OTWFootprintDetailFrame.h"
 #import "OTWCommentFrame.h"
+#import "OTWFootprintsChangeAddressController.h"
 
 #import <SDCycleScrollView.h>
 #import <AFNetworking/UIImageView+AFNetworking.h>
@@ -301,6 +302,9 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 #pragma mark 点击行
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     DLog(@"我点击了：%ld",indexPath.row);
+    OTWFootprintsChangeAddressController *changeAddressVC =
+    [[OTWFootprintsChangeAddressController alloc] init];
+    [self.navigationController pushViewController:changeAddressVC animated:YES];
 }
 
 #pragma mark - 返回第indexPath这行对应的内容

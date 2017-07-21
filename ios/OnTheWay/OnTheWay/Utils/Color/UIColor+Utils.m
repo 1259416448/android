@@ -130,6 +130,15 @@
 + (UIColor *)color_202020 {
     return [UIColor colorWithHexString:@"202020"];
 }
++(UIColor *)color_242424{
+     return [UIColor colorWithHexString:@"242424"];
+}
++(UIColor*)color_999999{
+      return [UIColor colorWithHexString:@"999999"];
+}
++(UIColor*)color_dedede{
+     return [UIColor colorWithHexString:@"dedede"];
+}
 + (UIColor *)color_979797 {
     return [UIColor colorWithHexString:@"979797"];
 }

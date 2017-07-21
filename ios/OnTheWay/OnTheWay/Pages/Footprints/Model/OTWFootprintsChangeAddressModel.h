@@ -7,7 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "OTWFootprintChangeAddressArrayModel.h"
 
 @interface OTWFootprintsChangeAddressModel : NSObject
+
+@property (nonatomic,strong) NSString  *city;
+@property (nonatomic,strong) NSMutableArray<OTWFootprintChangeAddressArrayModel*>  *addressArray;
+
++ (instancetype) initWithDict:(NSDictionary *) dict;
 
 @end
