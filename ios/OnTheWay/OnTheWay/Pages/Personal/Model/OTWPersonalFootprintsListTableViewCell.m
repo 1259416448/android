@@ -56,15 +56,18 @@
         _footprintsDay.text=@"今天";
         _footprintsDay.textColor=[UIColor color_202020];
         _footprintsDay.font=[UIFont systemFontOfSize:17];
-        _footprintsDay.frame=CGRectMake(36,0,45, 24);
+        _footprintsDay.frame=CGRectMake(36,0,34, 24);
         
         _today.frame=CGRectMake(0, 0, SCREEN_WIDTH, 80);
         
+        UIView *photoIconView = [[UIView alloc] initWithFrame:CGRectMake(_footprintsDay.MaxX + 10, 0, 80, 80)];
+        photoIconView.backgroundColor = [UIColor color_ededed];
         //相机图标
-        UIImageView *photoIcon=[[UIImageView alloc] initWithFrame:CGRectMake(80, 0, 80, 80)];
-        photoIcon.image=[UIImage imageNamed:@"dinwgei_2"];
-        
-        [_today addSubview:photoIcon];
+        UIImageView *photoIcon=[[UIImageView alloc] initWithFrame:CGRectMake(20, 21.5, 40, 37)];
+        photoIcon.image=[UIImage imageNamed:@"wd_xiangji"];
+        photoIcon.backgroundColor = [UIColor color_ededed];
+        [photoIconView addSubview:photoIcon];
+        [_today addSubview:photoIconView];
         
         //左边线条
         UILabel *sectionHeaderLeft=[[UILabel alloc] initWithFrame:CGRectMake(22.5, 9.5, 1,80+15-9.5)];

@@ -39,8 +39,13 @@
     [self buildUI];
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
+}
+
 -(void)initData{
-    
     NSString *fullPath = [[NSBundle mainBundle] pathForResource:@"OTWUserFootprintList.plist" ofType:nil];
     NSMutableArray *array = [NSMutableArray arrayWithContentsOfFile:fullPath];
     _status = [[NSMutableArray alloc] init];
@@ -59,8 +64,7 @@
     //大背景
     self.view.backgroundColor=[UIColor whiteColor];
     
-    //创建一个分组样式的UITableView
-    _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0,65, SCREEN_WIDTH, SCREEN_HEIGHT-65-20) style:UITableViewStylePlain];
+    _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0,self.navigationHeight, SCREEN_WIDTH, SCREEN_HEIGHT- self.navigationHeight) style:UITableViewStylePlain];
     
     _tableView.dataSource = self;
     
@@ -76,7 +80,7 @@
     _tableView.tableHeaderView=self.PersonalFootprintsListTableViewHeader;
     
     
-        [self.view addSubview:self.button];
+    [self.view addSubview:self.button];
     
     
 }
@@ -93,11 +97,15 @@
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    
+    
+    
+    
     static NSString *cellIdentifier=@"findViewCellI";
     OTWPersonalFootprintsListTableViewCell *cell;
     cell=[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if(!cell){
-        
         cell=[[OTWPersonalFootprintsListTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
         cell.contentView.backgroundColor = [UIColor whiteColor];
         cell.backgroundColor = [UIColor whiteColor];

@@ -33,7 +33,6 @@
 @property (nonatomic,strong) UINavigationController *footprintsViewController;
 
 
-
 @end
 
 @implementation OTWLaunchManager
@@ -45,7 +44,6 @@
     dispatch_once(&onceToken, ^{
         manager = [[OTWLaunchManager alloc] init];
     });
-    
     return manager;
 }
 
