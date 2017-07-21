@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="#F4F4F4"
     android:orientation="vertical"
-    tools:context="arvix.cn.ontheway.MainActivity">
+    tools:context="arvix.cn.ontheway.ui.MainActivity2">
 
 
     <FrameLayout
@@ -39,7 +39,7 @@
                 android:padding="5dp"
                 android:text="发现" />
 
-            <RadioButton
+            <TextView
                 android:id="@+id/tab_zuji"
                 style="@style/main_tab_text"
                 android:layout_width="0dip"

@@ -6,6 +6,6 @@ package arvix.cn.ontheway.service.inter;
 
 public interface BaiduServiceInterface {
 
-
+    void initLocation();
 
 }

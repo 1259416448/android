@@ -9,5 +9,6 @@ import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
 
 public interface BaiduPoiServiceInterface {
 
+
     void search(double lat,double lon,String keyword, int radius, OnGetPoiSearchResultListener poiListener);
 }

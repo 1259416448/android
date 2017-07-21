@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		1822EE631F20845A00E07665 /* OTWFootprintsChangeAddressModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1822EE621F20845A00E07665 /* OTWFootprintsChangeAddressModel.m */; };
 		1822EE661F20846F00E07665 /* OTWFootprintsChangeAddressCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1822EE651F20846F00E07665 /* OTWFootprintsChangeAddressCellTableViewCell.m */; };
+		1822EE681F20903100E07665 /* OTWFindprintChangeAddress.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1822EE671F20903100E07665 /* OTWFindprintChangeAddress.plist */; };
+		1822EE6B1F209E4900E07665 /* OTWFootprintChangeAddressArrayModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1822EE6A1F209E4900E07665 /* OTWFootprintChangeAddressArrayModel.m */; };
+		1822EE6E1F20E11C00E07665 /* CHCustomSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 1822EE6D1F20E11C00E07665 /* CHCustomSearchBar.m */; };
 		189954C61F1CE986004CCEBE /* OTWShopDetailsViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 189954C51F1CE986004CCEBE /* OTWShopDetailsViewCell.m */; };
 		189954C91F1DAD3C004CCEBE /* OTWPersonalFootprintsListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 189954C81F1DAD3C004CCEBE /* OTWPersonalFootprintsListController.m */; };
 		189954CC1F1DAD5E004CCEBE /* OTWPersonalFootprintsListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 189954CB1F1DAD5E004CCEBE /* OTWPersonalFootprintsListModel.m */; };
@@ -35,6 +38,8 @@
 		B18A43081F207D14002C7A5A /* OTWNewsCommentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B18A43071F207D14002C7A5A /* OTWNewsCommentModel.m */; };
 		B18A430A1F20829E002C7A5A /* OTWPraise.plist in Resources */ = {isa = PBXBuildFile; fileRef = B18A43091F20829E002C7A5A /* OTWPraise.plist */; };
 		B18A430D1F208515002C7A5A /* OTWNewsToOtherCommentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B18A430C1F208515002C7A5A /* OTWNewsToOtherCommentModel.m */; };
+		B18A43101F2088C2002C7A5A /* OTWNewsCommentTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B18A430F1F2088C2002C7A5A /* OTWNewsCommentTableCell.m */; };
+		B18A43121F20C857002C7A5A /* OTWNewsCommentList.plist in Resources */ = {isa = PBXBuildFile; fileRef = B18A43111F20C857002C7A5A /* OTWNewsCommentList.plist */; };
 		D7F6AFF61F0D32FB0013090A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6AFF51F0D32FB0013090A /* main.m */; };
 		D7F6AFF91F0D32FB0013090A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6AFF81F0D32FB0013090A /* AppDelegate.m */; };
 		D7F6B0041F0D32FB0013090A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7F6B0021F0D32FB0013090A /* LaunchScreen.storyboard */; };
@@ -114,6 +119,11 @@
 		1822EE621F20845A00E07665 /* OTWFootprintsChangeAddressModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWFootprintsChangeAddressModel.m; sourceTree = "<group>"; };
 		1822EE641F20846F00E07665 /* OTWFootprintsChangeAddressCellTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWFootprintsChangeAddressCellTableViewCell.h; sourceTree = "<group>"; };
 		1822EE651F20846F00E07665 /* OTWFootprintsChangeAddressCellTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWFootprintsChangeAddressCellTableViewCell.m; sourceTree = "<group>"; };
+		1822EE671F20903100E07665 /* OTWFindprintChangeAddress.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = OTWFindprintChangeAddress.plist; sourceTree = "<group>"; };
+		1822EE691F209E4900E07665 /* OTWFootprintChangeAddressArrayModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWFootprintChangeAddressArrayModel.h; sourceTree = "<group>"; };
+		1822EE6A1F209E4900E07665 /* OTWFootprintChangeAddressArrayModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWFootprintChangeAddressArrayModel.m; sourceTree = "<group>"; };
+		1822EE6C1F20E11C00E07665 /* CHCustomSearchBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHCustomSearchBar.h; sourceTree = "<group>"; };
+		1822EE6D1F20E11C00E07665 /* CHCustomSearchBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHCustomSearchBar.m; sourceTree = "<group>"; };
 		189954C41F1CE986004CCEBE /* OTWShopDetailsViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTWShopDetailsViewCell.h; path = OnTheWay/Pages/Find/Controller/OTWShopDetailsViewCell.h; sourceTree = SOURCE_ROOT; };
 		189954C51F1CE986004CCEBE /* OTWShopDetailsViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTWShopDetailsViewCell.m; path = OnTheWay/Pages/Find/Controller/OTWShopDetailsViewCell.m; sourceTree = SOURCE_ROOT; };
 		189954C71F1DAD3C004CCEBE /* OTWPersonalFootprintsListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPersonalFootprintsListController.h; sourceTree = "<group>"; };
@@ -166,6 +176,9 @@
 		B18A43091F20829E002C7A5A /* OTWPraise.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = OTWPraise.plist; sourceTree = "<group>"; };
 		B18A430B1F208515002C7A5A /* OTWNewsToOtherCommentModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWNewsToOtherCommentModel.h; sourceTree = "<group>"; };
 		B18A430C1F208515002C7A5A /* OTWNewsToOtherCommentModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWNewsToOtherCommentModel.m; sourceTree = "<group>"; };
+		B18A430E1F2088C2002C7A5A /* OTWNewsCommentTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWNewsCommentTableCell.h; sourceTree = "<group>"; };
+		B18A430F1F2088C2002C7A5A /* OTWNewsCommentTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWNewsCommentTableCell.m; sourceTree = "<group>"; };
+		B18A43111F20C857002C7A5A /* OTWNewsCommentList.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = OTWNewsCommentList.plist; sourceTree = "<group>"; };
 		D7F6AFF11F0D32FB0013090A /* OnTheWay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheWay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7F6AFF51F0D32FB0013090A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D7F6AFF71F0D32FB0013090A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -366,6 +379,7 @@
 				18B034CC1F171ED300F53461 /* OTWFindBusinessmen.plist */,
 				B13ADA271F1C9932008E889C /* OTWSystemNews.plist */,
 				B18A43091F20829E002C7A5A /* OTWPraise.plist */,
+				1822EE671F20903100E07665 /* OTWFindprintChangeAddress.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -625,6 +639,8 @@
 				DD3520951F186E0700E8D725 /* OTWFootprintDetailModel.m */,
 				1822EE611F20845A00E07665 /* OTWFootprintsChangeAddressModel.h */,
 				1822EE621F20845A00E07665 /* OTWFootprintsChangeAddressModel.m */,
+				1822EE691F209E4900E07665 /* OTWFootprintChangeAddressArrayModel.h */,
+				1822EE6A1F209E4900E07665 /* OTWFootprintChangeAddressArrayModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -856,6 +872,8 @@
 				B13ADA221F1C5660008E889C /* OTWSystemNewsCellFrame.m */,
 				B181AB5D1F1F7F85009929D1 /* OTWPraiseViewTableCell.h */,
 				B181AB5E1F1F7F85009929D1 /* OTWPraiseViewTableCell.m */,
+				B18A430E1F2088C2002C7A5A /* OTWNewsCommentTableCell.h */,
+				B18A430F1F2088C2002C7A5A /* OTWNewsCommentTableCell.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -986,12 +1004,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1822EE681F20903100E07665 /* OTWFindprintChangeAddress.plist in Resources */,
 				B18A430A1F20829E002C7A5A /* OTWPraise.plist in Resources */,
 				DDDAE08F1F1CFA5B00981E60 /* OTWFootprintDetail.plist in Resources */,
 				D7F6B0041F0D32FB0013090A /* LaunchScreen.storyboard in Resources */,
 				18B034CD1F171ED300F53461 /* OTWFindBusinessmen.plist in Resources */,
 				B13ADA281F1C9932008E889C /* OTWSystemNews.plist in Resources */,
 				DDC0A9431F1F7B1800A6E4DB /* OTWUserFootprintList.plist in Resources */,
+				B18A43121F20C857002C7A5A /* OTWNewsCommentList.plist in Resources */,
 				DDDAE0931F1F0D4C00981E60 /* Assets.xcassets in Resources */,
 				DD9452F51F160CD7004EDDED /* OTWFootprintList.plist in Resources */,
 			);
@@ -1086,6 +1106,7 @@
 				DD9452EE1F15CC29004EDDED /* OTWFootprintListModel.m in Sources */,
 				DDABAA4B1F12801E00010532 /* OTWPersonalEditNicknameController.m in Sources */,
 				D7F6B0431F0D39160013090A /* README.md in Sources */,
+				1822EE6E1F20E11C00E07665 /* CHCustomSearchBar.m in Sources */,
 				D7F6B09D1F0F75770013090A /* OTWLaunchManager.m in Sources */,
 				D7F6B0BC1F14E9E00013090A /* OTWCustomTabBarItem.m in Sources */,
 				B13ADA201F1C5508008E889C /* OTWSystemNewsCell.m in Sources */,
@@ -1096,6 +1117,7 @@
 				DD14F23B1F1132FE004DFE4A /* NSString+RegexCategory.m in Sources */,
 				DD9452F01F15D139004EDDED /* OTWFootprintListTableViewCell.m in Sources */,
 				D7F6B0811F0DD44C0013090A /* OTWARViewController.m in Sources */,
+				B18A43101F2088C2002C7A5A /* OTWNewsCommentTableCell.m in Sources */,
 				D7F6B0B31F1089400013090A /* OTWLoginService.m in Sources */,
 				DD14F2401F113654004DFE4A /* HmacUtils.m in Sources */,
 				D7F6B0371F0D38EA0013090A /* README.md in Sources */,
@@ -1143,6 +1165,7 @@
 				189954C61F1CE986004CCEBE /* OTWShopDetailsViewCell.m in Sources */,
 				B13ADA231F1C5660008E889C /* OTWSystemNewsCellFrame.m in Sources */,
 				18B034C21F15CC3F00F53461 /* OTWFindModel.m in Sources */,
+				1822EE6B1F209E4900E07665 /* OTWFootprintChangeAddressArrayModel.m in Sources */,
 				D7F6B0541F0DCE420013090A /* UIView+Frame.m in Sources */,
 				B181AB5F1F1F7F85009929D1 /* OTWPraiseViewTableCell.m in Sources */,
 				18BC9E441F1F716F00C7B6C1 /* OTWPersonalFootprintMonthDataModel.m in Sources */,

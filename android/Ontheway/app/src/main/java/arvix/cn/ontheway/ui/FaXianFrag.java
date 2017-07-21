@@ -92,21 +92,23 @@ public class FaXianFrag extends BaseFragment {
             item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    Intent intent = new Intent(act, BaiduActivity.class);
+                    intent.putExtra(BaiduActivity.EXTRA_KEYWORD, card.getTitle());
+                    startActivity(intent);
                 }
             });
             TextView titleTv = item.findViewById(R.id.card_title);
             titleTv.setText(card.getTitle());
             LinearLayout menuContainerLL = item.findViewById(R.id.menu_container);
             for (int i = 0; i < card.getMenus().size(); i++) {
-                MenuBean menu = card.getMenus().get(i);
+                final MenuBean menu = card.getMenus().get(i);
                 View menuItem = lf.inflate(R.layout.main_card_menu_item, menuContainerLL, false);
                 menuItem.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         //二级菜单
                         Intent intent = new Intent(act, BaiduActivity.class);
-                        intent.putExtra(BaiduActivity.EXTRA_KEYWORD, card.getTitle());
+                        intent.putExtra(BaiduActivity.EXTRA_KEYWORD, menu.getTitle());
                         startActivity(intent);
                     }
                 });
