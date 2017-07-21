@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import arvix.cn.ontheway.App;
-import arvix.cn.ontheway.MainCardBean;
-import arvix.cn.ontheway.MenuBean;
+import arvix.cn.ontheway.been.MainCardBean;
+import arvix.cn.ontheway.been.MenuBean;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.async.ExceptionHandler;
 import arvix.cn.ontheway.async.Result;

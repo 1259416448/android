@@ -1,4 +1,4 @@
-package arvix.cn.ontheway;
+package arvix.cn.ontheway.been;
 
 import java.io.Serializable;
 

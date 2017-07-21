@@ -58,18 +58,6 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login" />
-        <activity android:name=".SearchableActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-        </activity>
-        <activity
             android:name=".BaiduActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_baidu"
