@@ -22,11 +22,13 @@
             android:src="@drawable/header_default" />
 
         <TextView
+            android:id="@+id/nameTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_weight="1"
             android:layout_gravity="center"
+            android:textColor="@color/text_label_default"
             android:textSize="17sp"
             android:text="想起一个很长的名字"
            />
@@ -58,6 +60,7 @@
             android:layout_marginLeft="8dp"
             android:layout_weight="1"
             android:text="我的足迹"
+            android:textColor="@color/text_label_default"
             android:textSize="16sp"
             android:layout_gravity="center" />
 
@@ -86,6 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_weight="1"
+            android:textColor="@color/text_label_default"
             android:layout_gravity="center"
             android:text="我的收藏" />
 
@@ -115,6 +119,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_weight="1"
+            android:textColor="@color/text_label_default"
             android:layout_gravity="center"
             android:text="我的发现" />
 
@@ -142,6 +147,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
+            android:textColor="@color/text_label_default"
             android:layout_weight="1"
             android:layout_gravity="center"
             android:text="我的认领" />
@@ -171,6 +177,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_weight="1"
+            android:textColor="@color/text_label_default"
             android:layout_gravity="center"
             android:text="我的钱包" />
 
@@ -198,6 +205,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_weight="1"
+            android:textColor="@color/text_label_default"
             android:layout_gravity="center"
             android:text="设置" />
 

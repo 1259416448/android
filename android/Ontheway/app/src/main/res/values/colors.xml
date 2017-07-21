@@ -9,4 +9,9 @@
     <color name="white">#ffffff</color>
     <color name="black_overlay">#66000000</color>
     <color name="text_label_default">#202020</color>
+    <color name="text_label_small">#979797</color>
+    <color name="bg_default">#F4F4F4</color>
+
+
+
 </resources>

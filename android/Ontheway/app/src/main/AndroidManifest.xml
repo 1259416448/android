@@ -38,7 +38,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:name=".App"
-        android:theme="@style/AppTheme">
+        android:theme="@style/Theme.AppCompat.Light">
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="FrO6qe0FvVlBlwklCgPaIz1igDCffKMR" />
@@ -73,14 +73,19 @@
             android:name=".BaiduActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_baidu"
-            android:theme="@style/FullscreenTheme" />
+             />
+        <activity
+            android:name=".ui.EditTextActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_baidu"
+             />
+        <activity
+            android:name=".ui.usercenter.PersonInfoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_baidu"
+             />
 
         <activity android:name=".ui.ar.ArTrackActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 
