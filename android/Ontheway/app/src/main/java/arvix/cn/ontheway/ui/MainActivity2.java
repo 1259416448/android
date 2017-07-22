@@ -37,7 +37,7 @@ public class MainActivity2 extends BaseActivity {
         zuJiTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("zuji","zuji--------------------------------->");
+                Log.i("zuji", "zuji--------------------------------->");
                 Intent intent = new Intent(self, ArTrackActivity.class);
                 intent.putExtra(BaiduActivity.EXTRA_KEYWORD, "美食");
                 startActivity(intent);
@@ -65,17 +65,17 @@ public class MainActivity2 extends BaseActivity {
         Fragment targetFrag = frags.get(checkedId);
 
         if (targetFrag == null) {
-            Log.i("zuji","zuji--------------------------fffffff------->" + checkedId);
+            Log.i("zuji", "zuji--------------------------fffffff------->" + checkedId);
             if (checkedId == R.id.tab_faxian) {
                 targetFrag = new FaXianFrag();
             } else if (checkedId == R.id.tab_xiaoxi) {
-                targetFrag = new MsgFrag();
+                targetFrag = MsgFrag.newInstance();
             } else if (checkedId == R.id.tab_wode) {
                 targetFrag = new MyProfileFragment();
             }
         }
         if (targetFrag != null) {
-            Log.i("zuji","zuji--------------------------------->" + targetFrag.getTag());
+            Log.i("zuji", "zuji--------------------------------->" + targetFrag.getTag());
             getFragmentManager().beginTransaction().replace(R.id.main_frag_container, targetFrag).commit();
             frags.put(checkedId, targetFrag);
         }

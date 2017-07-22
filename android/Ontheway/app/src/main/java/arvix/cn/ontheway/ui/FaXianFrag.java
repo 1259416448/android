@@ -97,11 +97,11 @@ public class FaXianFrag extends BaseFragment {
                     startActivity(intent);
                 }
             });
-            TextView titleTv = item.findViewById(R.id.card_title);
+            TextView titleTv = (TextView) item.findViewById(R.id.card_title);
             titleTv.setText(card.getTitle());
-            ImageView itemIv = item.findViewById(R.id.card_bg);
+            ImageView itemIv = (ImageView) item.findViewById(R.id.card_bg);
             itemIv.setImageResource(card.getBg());
-            LinearLayout menuContainerLL = item.findViewById(R.id.menu_container);
+            LinearLayout menuContainerLL = (LinearLayout) item.findViewById(R.id.menu_container);
             for (int i = 0; i < card.getMenus().size(); i++) {
                 final MenuBean menu = card.getMenus().get(i);
                 View menuItem = lf.inflate(R.layout.main_card_menu_item, menuContainerLL, false);
@@ -114,9 +114,9 @@ public class FaXianFrag extends BaseFragment {
                         startActivity(intent);
                     }
                 });
-                TextView tv = menuItem.findViewById(R.id.menu_text);
+                TextView tv = (TextView) menuItem.findViewById(R.id.menu_text);
                 tv.setText(menu.getTitle());
-                ImageView iv = menuItem.findViewById(R.id.menu_icon);
+                ImageView iv = (ImageView) menuItem.findViewById(R.id.menu_icon);
                 iv.setImageResource(menu.getImgSrc());
                 if (i == card.getMenus().size() - 1) {
                     menuItem.setPadding(menuItem.getPaddingLeft(), menuItem.getPaddingTop(), 0, menuItem.getPaddingBottom());
