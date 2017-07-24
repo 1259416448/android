@@ -171,7 +171,7 @@
 - (UILabel*)titleLabel {
     if (!_titleLabel) {
         _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 0, 20)];
-        _titleLabel.font = [UIFont systemFontOfSize:17];
+        _titleLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:17];
         _titleLabel.textColor = [UIColor color_202020];
     }
     return _titleLabel;
