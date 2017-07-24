@@ -130,6 +130,15 @@
 + (UIColor *)color_202020 {
     return [UIColor colorWithHexString:@"202020"];
 }
++ (UIColor *)color_c4c4c4{
+    return [UIColor colorWithHexString:@"c4c4c4"];
+}
++ (UIColor *)color_ff134c {
+    return [UIColor colorWithHexString:@"ff134c"];
+}
++ (UIColor *)color_ff9144 {
+    return [UIColor colorWithHexString:@"ff9144"];
+}
 +(UIColor *)color_242424{
      return [UIColor colorWithHexString:@"242424"];
 }
@@ -153,5 +162,11 @@
 }
 + (UIColor *)color_ededed {
     return [UIColor colorWithHexString:@"ededed"];
+}
++ (UIColor *)color_ffc6c8{
+    return [UIColor colorWithHexString:@"ffc6c8"];
+}
++ (UIColor *)color_f3715a{
+    return [UIColor colorWithHexString:@"f3715a"];
 }
 @end

@@ -14,6 +14,8 @@
 @property (nonatomic,copy) NSString *userHeadImg;
 //用户昵称
 @property (nonatomic,copy) NSString *userNickname;
+//用户ID
+@property (nonatomic,copy) NSNumber *userId;
 //足迹内容
 @property (nonatomic,copy) NSString *footprintContent;
 //足迹发布地址

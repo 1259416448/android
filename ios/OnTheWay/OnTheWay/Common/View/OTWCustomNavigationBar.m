@@ -134,7 +134,7 @@
 }
 
 - (void)setLeftView:(UIView *)leftView {
-    CGFloat yOff = 20 - (leftView.Height - 55)/2;
+    CGFloat yOff = 20 - (leftView.Height - 44)/2;
     yOff = fmaxf(yOff, 0);
     leftView.frame = CGRectMake(13.5, yOff, leftView.Witdh, leftView.Height);
     [self addSubview:leftView];
@@ -142,7 +142,7 @@
 }
 
 - (void)setRightView:(UIView *)rightView {
-    CGFloat yOff = 20 - (rightView.Height - 55)/2;
+    CGFloat yOff = 20 - (rightView.Height - 44)/2;
     yOff = fmaxf(yOff, 0);
     CGFloat xoff = self.Witdh - rightView.Witdh - 17.5;
     xoff = fmaxf(xoff, 0);
@@ -151,7 +151,7 @@
 }
 
 - (void)setTitleView:(UIView *)titleView {
-    CGFloat yOff = 20 - (titleView.Height - 55)/2;
+    CGFloat yOff = 20 - (titleView.Height - 44)/2;
     yOff = fmaxf(yOff, 0);
     CGFloat xoff = (self.Witdh - titleView.Witdh)/2;
     titleView.frame = CGRectMake(xoff, yOff, titleView.Witdh, titleView.Height);
@@ -162,13 +162,16 @@
 - (void)buildUI {
     _backgroungImageView = [[UIImageView alloc] initWithFrame:self.bounds];
     _backgroungImageView.backgroundColor = [UIColor color_22b2e7];
+    //_backgroungImageView.image = [UIImage imageNamed:@"wd_bg"];
+    _backgroungImageView.contentMode = UIViewContentModeTop;
+    _backgroungImageView.clipsToBounds  = YES;
     [self addSubview:_backgroungImageView];
 }
 
 - (UILabel*)titleLabel {
     if (!_titleLabel) {
         _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 0, 20)];
-        _titleLabel.font = [UIFont systemFontOfSize:17];
+        _titleLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:17];
         _titleLabel.textColor = [UIColor color_202020];
     }
     return _titleLabel;

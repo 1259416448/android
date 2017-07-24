@@ -31,6 +31,17 @@
 @property(nonatomic,strong) UILabel * userName;
 @property (nonatomic,strong) UIView *underLineBottomView;
 @property (nonatomic,strong) UIView *underLineTopView;
+@property (nonatomic,strong) UIView *myFootprintsView;
+@property (nonatomic,strong) UIImageView *personalIconImageView;
+@property (nonatomic,strong) UILabel *personalNameLabel;
+@property (nonatomic,strong) UIImageView *personalLeftIconImageView;
+@property (nonatomic,strong) UIView *personalMyTableViewFooter;
+@property (nonatomic,strong) UIView *myWalletView;
+@property (nonatomic,strong) UIView *mySiteView;
+@property (nonatomic,strong) UIImageView *personalWalletIconImageView;
+@property (nonatomic,strong) UILabel *personalWalletNameLabel;
+@property (nonatomic,strong) UIImageView *personalSiteIconImageView;
+@property (nonatomic,strong) UILabel *personalSiteNameLabel;
 @end
 
 @implementation OTWPersonalViewController
@@ -45,11 +56,9 @@
 - (void) initData
 {
     _tableViewLabelArray = [[NSMutableArray alloc] init];
-    [_tableViewLabelArray addObject:@[@"我的足迹",@"wodezuji"]];
     [_tableViewLabelArray addObject:@[@"我的收藏",@"wodeshoucang"]];
-    [_tableViewLabelArray addObject:@[@"我发现的商家",@"faxianshangjia"]];
-    [_tableViewLabelArray addObject:@[@"我的卡券",@"wodekaquan"]];
-    [_tableViewLabelArray addObject:@[@"设置",@"shezhi"]];
+    [_tableViewLabelArray addObject:@[@"我的发现",@"faxianshangjia"]];
+    [_tableViewLabelArray addObject:@[@"我的认领",@"wd_renling"]];
     //获取用户数据
 }
 -(void)viewWillAppear:(BOOL)animated
@@ -85,6 +94,8 @@
     
     //设置tableview的第一行显示内容
     self.personalMyTableView.tableHeaderView=self.personalMyTableViewHeader;
+    
+    self.personalMyTableView.tableFooterView=self.personalMyTableViewFooter;
 }
 
 #pragma mark 这一组里面有多少行
@@ -106,15 +117,6 @@
 #pragma mark 点击行
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     DLog(@"我点击了：%ld",indexPath.row);
-    if(indexPath.row==4){
-        OTWPersonalSiteController *personalSiteVC = [[OTWPersonalSiteController alloc] init];
-        [self.navigationController pushViewController:personalSiteVC animated:YES];
-    }
-    if(indexPath.row==0){
-        OTWPersonalFootprintsListController *personalSiteVC = [[OTWPersonalFootprintsListController alloc] init];
-        [self.navigationController pushViewController:personalSiteVC animated:YES];
-
-    }
 }
 
 #pragma mark 返回第indexPath这行对应的内容
@@ -167,11 +169,8 @@
 -(UIView*)personalMyTableViewHeader{
     if(!_personalMyTableViewHeader){
         //设置header的背景
-        _personalMyTableViewHeader=[[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 96)];
+        _personalMyTableViewHeader=[[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 155)];
         _personalMyTableViewHeader.backgroundColor=[UIColor clearColor];
-        
-         UITapGestureRecognizer *tapGesturRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction)];
-        [_personalMyTableViewHeader addGestureRecognizer:tapGesturRecognizer];
         
          //设置header 内容的背景
         [_personalMyTableViewHeader addSubview:self.contentView];
@@ -186,10 +185,18 @@
         
         //header 内容的中名称
         [self.contentView addSubview:self.userName];
-
+        
+        UITapGestureRecognizer *tapGesturRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction)];
+        [self.contentView addGestureRecognizer:tapGesturRecognizer];
+        
         //header 内容的中的下边框
         [_personalMyTableViewHeader addSubview:self.underLineBottomView];
         
+        //我的足迹
+        [_personalMyTableViewHeader addSubview:self.myFootprintsView];
+        
+        UITapGestureRecognizer  *tapGesturFootprints=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapActionForFootprints)];
+        [self.myFootprintsView addGestureRecognizer:tapGesturFootprints];
         
     }
       return _personalMyTableViewHeader;
@@ -199,6 +206,10 @@
 {
     OTWPersonalInfoController *personalInfoVC = [[OTWPersonalInfoController alloc] init];
     [self.navigationController pushViewController:personalInfoVC animated:YES];
+}
+-(void)tapActionForFootprints{
+    OTWPersonalFootprintsListController *personalSiteVC = [OTWPersonalFootprintsListController initWithIfMyFootprint:YES];
+    [self.navigationController pushViewController:personalSiteVC animated:YES];
 }
 
 -(UIImageView*)personalHeadImageView{
@@ -246,7 +257,7 @@
 
 -(UIView*)underLineBottomView{
     if(!_underLineBottomView){
-        _underLineBottomView = [[UIView alloc] initWithFrame:CGRectMake(0, 95.5, SCREEN_WIDTH, 0.5)];
+        _underLineBottomView = [[UIView alloc] initWithFrame:CGRectMake(0, 85+10, SCREEN_WIDTH, 0.5)];
         _underLineBottomView.backgroundColor = [UIColor color_d5d5d5];
     }
     return _underLineBottomView;
@@ -258,5 +269,145 @@
         _underLineTopView.backgroundColor = [UIColor color_d5d5d5];
     }
     return _underLineTopView;
+}
+-(UIView*)myFootprintsView{
+    if(!_myFootprintsView){
+        _myFootprintsView=[[UIView alloc ]initWithFrame:CGRectMake(0, self.contentView.MaxY+10, SCREEN_WIDTH, 50)];
+        _myFootprintsView.backgroundColor=[UIColor whiteColor];
+        _myFootprintsView.layer.borderWidth=0.5;
+        _myFootprintsView.layer.borderColor=[UIColor color_d5d5d5].CGColor;
+        
+        //我的足迹图标
+        [_myFootprintsView addSubview: self.personalIconImageView];
+        self.personalIconImageView.image=[UIImage imageNamed:@"wodezuji"];
+        
+        //我的足迹名称
+         [_myFootprintsView addSubview: self.personalNameLabel];
+        self.personalNameLabel.text=@"我的足迹";
+        
+        //向左的图标
+        [_myFootprintsView addSubview: self.personalLeftIconImageView];
+
+    }
+    return _myFootprintsView;
+}
+
+-(UIImageView*)personalIconImageView{
+    if(!_personalIconImageView){
+        _personalIconImageView=[[UIImageView alloc] initWithFrame:CGRectMake(15, 16.5, 17, 17)];
+    }
+    return _personalIconImageView;
+}
+-(UILabel*)personalNameLabel{
+    if(!_personalNameLabel){
+        _personalNameLabel=[[UILabel alloc] initWithFrame:CGRectMake(self.personalIconImageView.MaxX+15, 15, 70, 20)];
+        _personalNameLabel.font=[UIFont systemFontOfSize:16];
+        _personalNameLabel.textColor=[UIColor color_202020];
+    }
+    return _personalNameLabel;
+}
+-(UIImageView*)personalLeftIconImageView{
+    if(!_personalLeftIconImageView){
+        _personalLeftIconImageView=[[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-8-15, 16.5, 8, 15)];
+        _personalLeftIconImageView.image=_arrowImge;
+    }
+    return _personalLeftIconImageView;
+}
+
+-(UIView*)personalMyTableViewFooter{
+    if(!_personalMyTableViewFooter){
+        _personalMyTableViewFooter=[[UIView alloc]initWithFrame:CGRectMake(0,10, SCREEN_WIDTH, 110)];
+        
+        [_personalMyTableViewFooter addSubview: self.mySiteView];
+        [_personalMyTableViewFooter addSubview: self.myWalletView];
+    }
+    return _personalMyTableViewFooter;
+}
+
+-(UIView*)mySiteView{
+    if(!_mySiteView){
+        _mySiteView=[[UIView alloc]initWithFrame:CGRectMake(0, self.myWalletView.MaxY+10, SCREEN_WIDTH, 50)];
+        _mySiteView.backgroundColor=[UIColor whiteColor];
+        _mySiteView.layer.borderWidth=0.5;
+        _mySiteView.layer.borderColor=[UIColor color_d5d5d5].CGColor;
+        
+         //设置图标
+        [_mySiteView addSubview: self.personalSiteIconImageView];
+        self.personalSiteIconImageView.image=[UIImage imageNamed:@"shezhi"];
+        
+        //设置名称
+        [_mySiteView addSubview: self.personalSiteNameLabel];
+        self.personalSiteNameLabel.text=@"设置";
+        
+        //向左的图标
+      UIImageView  *personalSiteLeftIconImageView=[[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-8-15, 16.5, 8, 15)];
+        personalSiteLeftIconImageView.image=_arrowImge;
+        [_mySiteView addSubview: personalSiteLeftIconImageView];
+        
+        UITapGestureRecognizer  *tapGesturSite=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapActionForSite)];
+        [_mySiteView addGestureRecognizer:tapGesturSite];
+
+    }
+    return _mySiteView;
+}
+-(void)tapActionForSite{
+    OTWPersonalSiteController *personalSiteVC = [[OTWPersonalSiteController alloc] init];
+    [self.navigationController pushViewController:personalSiteVC animated:YES];
+}
+-(UIView*)myWalletView{
+    _myWalletView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 50)];
+    _myWalletView.backgroundColor=[UIColor whiteColor];
+    _myWalletView.layer.borderWidth=0.5;
+    _myWalletView.layer.borderColor=[UIColor color_d5d5d5].CGColor;
+    
+   //我的钱包图标
+    [_myWalletView addSubview: self.personalWalletIconImageView];
+    self.personalWalletIconImageView.image=[UIImage imageNamed:@"wd_qianbao"];
+    
+    //我的钱包名称
+    [_myWalletView addSubview: self.personalWalletNameLabel];
+    self.personalWalletNameLabel.text=@"我的钱包";
+    
+    //向左的图标
+    UIImageView  *personalWalletLeftIconImageView=[[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-8-15, 16.5, 8, 15)];
+    personalWalletLeftIconImageView.image=_arrowImge;
+    [_myWalletView addSubview: personalWalletLeftIconImageView];
+
+    UITapGestureRecognizer  *tapGesturWallet=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapActionForWallet)];
+    [_myWalletView addGestureRecognizer:tapGesturWallet];
+    
+    return _myWalletView;
+}
+-(void)tapActionForWallet{
+    DLog(@"点击我的钱包");
+
+}
+-(UIImageView*)personalWalletIconImageView{
+    if(!_personalWalletIconImageView){
+        _personalWalletIconImageView=[[UIImageView alloc] initWithFrame:CGRectMake(15, 16.5, 17, 17)];
+    }
+    return _personalWalletIconImageView;
+}
+-(UILabel*)personalWalletNameLabel{
+    if(!_personalWalletNameLabel){
+        _personalWalletNameLabel=[[UILabel alloc] initWithFrame:CGRectMake(self.personalWalletIconImageView.MaxX+15, 15, 70, 20)];
+        _personalWalletNameLabel.font=[UIFont systemFontOfSize:16];
+        _personalWalletNameLabel.textColor=[UIColor color_202020];
+    }
+    return _personalWalletNameLabel;
+}
+-(UIImageView*)personalSiteIconImageView{
+    if(!_personalSiteIconImageView){
+        _personalSiteIconImageView=[[UIImageView alloc] initWithFrame:CGRectMake(15, 16.5, 17, 17)];
+    }
+    return _personalSiteIconImageView;
+}
+-(UILabel*)personalSiteNameLabel{
+    if(!_personalSiteNameLabel){
+        _personalSiteNameLabel=[[UILabel alloc] initWithFrame:CGRectMake(self.personalSiteIconImageView.MaxX+15, 15, 70, 20)];
+        _personalSiteNameLabel.font=[UIFont systemFontOfSize:16];
+        _personalSiteNameLabel.textColor=[UIColor color_202020];
+    }
+    return _personalSiteNameLabel;
 }
 @end

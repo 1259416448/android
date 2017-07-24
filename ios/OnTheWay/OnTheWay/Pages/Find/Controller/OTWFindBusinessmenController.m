@@ -19,7 +19,7 @@
 }
 @property (nonatomic,strong) UIView * ARdituImageView;
 @property (nonatomic,strong) UIView * fabuImageView;
-@property (nonatomic,strong) UIView * pingmianImageView;
+//@property (nonatomic,strong) UIView * pingmianImageView;
 @end
 
 @implementation OTWFindBusinessmenViewController
@@ -50,7 +50,7 @@
     
     [self.view addSubview:self.fabuImageView];
     
-    [self.view addSubview:self.pingmianImageView];
+    //[self.view addSubview:self.pingmianImageView];
     
 }
 
@@ -172,11 +172,11 @@
 
 -(UIView*)ARdituImageView{
     if(!_ARdituImageView){
-        _ARdituImageView = [[UIControl alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-15-50-50, SCREEN_HEIGHT-30-49, 50, 50)] ;
+        _ARdituImageView = [[UIControl alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-15-50, SCREEN_HEIGHT-30-49, 50, 50)] ;
         _ARdituImageView.backgroundColor = [UIColor clearColor];
         [(UIControl *)_ARdituImageView addTarget:self action:@selector(ARdituClick) forControlEvents:UIControlEventTouchUpInside];
         UIImageView *imgARditu=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
-        imgARditu.image=[UIImage imageNamed:@"ARditu"];
+        imgARditu.image=[UIImage imageNamed:@"ar_ARditu"];
         [_ARdituImageView addSubview:imgARditu];
     }
     return _ARdituImageView;
@@ -184,28 +184,28 @@
 
 -(UIView*)fabuImageView{
     if(!_fabuImageView){
-        _fabuImageView = [[UIControl alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-15-50-50-50, SCREEN_HEIGHT-30-49, 50, 50)] ;
+        _fabuImageView = [[UIControl alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-15-50-50-15, SCREEN_HEIGHT-30-49, 50, 50)] ;
         _fabuImageView.backgroundColor = [UIColor clearColor];
         [(UIControl *)_fabuImageView addTarget:self action:@selector(fubuClick) forControlEvents:UIControlEventTouchUpInside];
         UIImageView *imgfabu=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
-        imgfabu.image=[UIImage imageNamed:@"fabu"];
+        imgfabu.image=[UIImage imageNamed:@"ar_fabu"];
         [_fabuImageView addSubview:imgfabu];
     }
     return _fabuImageView;
 }
 
--(UIView*)pingmianImageView{
-    if(!_pingmianImageView){
-        _pingmianImageView = [[UIControl alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-15-50, SCREEN_HEIGHT-30-49, 50, 50)] ;
-        _pingmianImageView.backgroundColor = [UIColor clearColor];
-        [(UIControl *)_pingmianImageView addTarget:self action:@selector(pingmianClick) forControlEvents:UIControlEventTouchUpInside];
-        UIImageView *imgpingmian=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
-        imgpingmian.image=[UIImage imageNamed:@"pingmian"];
-        [_pingmianImageView addSubview:imgpingmian];
-        
-    }
-    return _pingmianImageView;
-}
+//-(UIView*)pingmianImageView{
+//    if(!_pingmianImageView){
+//        _pingmianImageView = [[UIControl alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-15-50, SCREEN_HEIGHT-30-49, 50, 50)] ;
+//        _pingmianImageView.backgroundColor = [UIColor clearColor];
+//        [(UIControl *)_pingmianImageView addTarget:self action:@selector(pingmianClick) forControlEvents:UIControlEventTouchUpInside];
+//        UIImageView *imgpingmian=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+//        imgpingmian.image=[UIImage imageNamed:@"ar_pingmian"];
+//        [_pingmianImageView addSubview:imgpingmian];
+//        
+//    }
+//    return _pingmianImageView;
+//}
 
 -(void)ARdituClick{
     DLog(@"我点击了ARdituClick");
@@ -214,7 +214,7 @@
 -(void)fubuClick{
    DLog(@"我点击了fubuClick");
 }
--(void)pingmianClick{
-    DLog(@"我点击了pingmianClick");
-}
+//-(void)pingmianClick{
+//    DLog(@"我点击了pingmianClick");
+//}
 @end

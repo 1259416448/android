@@ -3,6 +3,8 @@
 <plist version="1.0">
 <array>
 	<dict>
+		<key>userId</key>
+		<string>1</string>
 		<key>userHeadImg</key>
 		<string>http://osx4pwgde.bkt.clouddn.com/b4.jpg?imageView2/1/w/160/h/160</string>
 		<key>userNickname</key>
@@ -23,6 +25,8 @@
 		<string>photo</string>
 	</dict>
 	<dict>
+		<key>userId</key>
+		<string>2</string>
 		<key>userHeadImg</key>
 		<string>http://osx4pwgde.bkt.clouddn.com/b1.jpg?imageView2/1/w/160/h/160</string>
 		<key>userNickname</key>
@@ -43,6 +47,8 @@
 		<string></string>
 	</dict>
 	<dict>
+		<key>userId</key>
+		<string>1</string>
 		<key>userHeadImg</key>
 		<string>http://osx4pwgde.bkt.clouddn.com/b4.jpg?imageView2/1/w/160/h/160</string>
 		<key>userNickname</key>
@@ -63,6 +69,8 @@
 		<string></string>
 	</dict>
 	<dict>
+		<key>userId</key>
+		<string>1</string>
 		<key>userHeadImg</key>
 		<string>http://osx4pwgde.bkt.clouddn.com/b4.jpg?imageView2/1/w/160/h/160</string>
 		<key>userNickname</key>
@@ -83,6 +91,8 @@
 		<string></string>
 	</dict>
 	<dict>
+		<key>userId</key>
+		<string>1</string>
 		<key>userHeadImg</key>
 		<string>http://osx4pwgde.bkt.clouddn.com/b4.jpg?imageView2/1/w/160/h/160</string>
 		<key>userNickname</key>
@@ -103,6 +113,8 @@
 		<string></string>
 	</dict>
 	<dict>
+		<key>userId</key>
+		<string>1</string>
 		<key>userHeadImg</key>
 		<string>http://osx4pwgde.bkt.clouddn.com/b4.jpg?imageView2/1/w/160/h/160</string>
 		<key>userNickname</key>
@@ -123,6 +135,8 @@
 		<string></string>
 	</dict>
 	<dict>
+		<key>userId</key>
+		<string>1</string>
 		<key>userHeadImg</key>
 		<string>http://osx4pwgde.bkt.clouddn.com/b4.jpg?imageView2/1/w/160/h/160</string>
 		<key>userNickname</key>
@@ -143,6 +157,8 @@
 		<string></string>
 	</dict>
 	<dict>
+		<key>userId</key>
+		<string>1</string>
 		<key>userHeadImg</key>
 		<string>http://osx4pwgde.bkt.clouddn.com/b4.jpg?imageView2/1/w/160/h/160</string>
 		<key>userNickname</key>
@@ -163,6 +179,8 @@
 		<string></string>
 	</dict>
 	<dict>
+		<key>userId</key>
+		<string>1</string>
 		<key>userHeadImg</key>
 		<string>http://osx4pwgde.bkt.clouddn.com/b4.jpg?imageView2/1/w/160/h/160</string>
 		<key>userNickname</key>
@@ -183,6 +201,8 @@
 		<string></string>
 	</dict>
 	<dict>
+		<key>userId</key>
+		<string>1</string>
 		<key>userHeadImg</key>
 		<string>http://osx4pwgde.bkt.clouddn.com/b4.jpg?imageView2/1/w/160/h/160</string>
 		<key>userNickname</key>

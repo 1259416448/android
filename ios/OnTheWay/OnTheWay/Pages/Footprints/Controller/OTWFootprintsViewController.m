@@ -11,12 +11,19 @@
 #import "OTWFootprintListFrame.h"
 #import "OTWFootprintListTableViewCell.h"
 #import "OTWFootprintDetailController.h"
+#import "OTWPersonalFootprintsListController.h"
 #import <MJRefresh.h>
+#import "OTWUserModel.h"
+#import "OTWCustomNavigationBar.h"
+#import "OTWFootprintReleaseViewController.h"
 
 @interface OTWFootprintsViewController () <UITableViewDataSource,UITableViewDelegate>
 
 @property (nonatomic,strong) UITableView *footprintTableView;
 @property (nonatomic,strong) NSMutableArray<OTWFootprintListFrame *> *footprintFrames;
+@property (nonatomic,strong) UIView * ARdituImageView;
+@property (nonatomic,strong) UIView * fabuImageView;
+@property (nonatomic,strong) UIView * pingmianImageView;
 
 @end
 
@@ -25,9 +32,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
+    self.customNavigationBar.leftButtonClicked = ^(){
+        //这里直接回到上一个首页
+        [[OTWLaunchManager sharedManager].mainTabController didSelectedItemByIndex:0];
+    };
     [self buildUI];
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -38,7 +47,7 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [[OTWLaunchManager sharedManager].mainTabController showTabBarWithAnimation:YES];
+    [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
 }
 
 -(void)buildUI
@@ -56,6 +65,13 @@
     
     [self.view addSubview:self.footprintTableView];
     
+    [self.view addSubview:self.ARdituImageView];
+    
+    [self.view addSubview:self.fabuImageView];
+    
+    [self.view addSubview:self.pingmianImageView];
+    
+    [self.view bringSubviewToFront:self.customNavigationBar];
 }
 
 -(void)refresh
@@ -92,7 +108,21 @@
 #pragma mark 返回第indexPath这行对应的内容
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [OTWFootprintListTableViewCell cellWithTableView:tableView footprintListFrame:self.footprintFrames[indexPath.row]];
+    static NSString *identifier = @"OTWFootprintListTableViewCellStatus";
+    OTWFootprintListTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    if(cell == nil){
+        cell = [OTWFootprintListTableViewCell cellWithTableView:tableView identifier:identifier];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        [cell setFootprintListFrame:self.footprintFrames[indexPath.row]];
+        WeakSelf(self);
+        cell.tapOne = ^(NSString *opId){
+            OTWPersonalFootprintsListController *listVC = [[OTWPersonalFootprintsListController alloc] init];
+            //判断是否是当前用户，然后跳转
+            listVC.ifMyFootprint = [[OTWUserModel shared].userId.description isEqualToString:opId];
+            [weakself.navigationController pushViewController:listVC animated:YES];
+        };
+    }
+    return cell;
 }
 
 /*
@@ -126,13 +156,66 @@
 
 -(UITableView*)footprintTableView{
     if(!_footprintTableView){
-        _footprintTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 65, SCREEN_WIDTH, SCREEN_HEIGHT-65) style:UITableViewStyleGrouped];
+        _footprintTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, self.navigationHeight - 20, SCREEN_WIDTH, SCREEN_HEIGHT) style:UITableViewStyleGrouped];
         _footprintTableView.dataSource = self;
         _footprintTableView.delegate = self;
         _footprintTableView.separatorStyle  = UITableViewCellSelectionStyleNone;
         _footprintTableView.backgroundColor = [UIColor clearColor];
     }
     return _footprintTableView;
+}
+
+-(UIView*)ARdituImageView{
+    if(!_ARdituImageView){
+        _ARdituImageView = [[UIControl alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-15-50-50-4, SCREEN_HEIGHT-30-49, 50, 50)] ;
+        _ARdituImageView.backgroundColor = [UIColor clearColor];
+        [(UIControl *)_ARdituImageView addTarget:self action:@selector(ARdituClick) forControlEvents:UIControlEventTouchUpInside];
+        UIImageView *imgARditu=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+        imgARditu.image=[UIImage imageNamed:@"ar_ARditu"];
+        [_ARdituImageView addSubview:imgARditu];
+    }
+    return _ARdituImageView;
+}
+
+-(UIView*)fabuImageView{
+    if(!_fabuImageView){
+        _fabuImageView = [[UIControl alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-15-50-50-50-8, SCREEN_HEIGHT-30-49, 50, 50)] ;
+        _fabuImageView.backgroundColor = [UIColor clearColor];
+        [(UIControl *)_fabuImageView addTarget:self action:@selector(fubuClick) forControlEvents:UIControlEventTouchUpInside];
+        UIImageView *imgfabu=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+        imgfabu.image=[UIImage imageNamed:@"ar_fabu"];
+        [_fabuImageView addSubview:imgfabu];
+    }
+    return _fabuImageView;
+}
+
+-(UIView*)pingmianImageView{
+    if(!_pingmianImageView){
+        _pingmianImageView = [[UIControl alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-15-50, SCREEN_HEIGHT-30-49, 50, 50)] ;
+        _pingmianImageView.backgroundColor = [UIColor clearColor];
+        [(UIControl *)_pingmianImageView addTarget:self action:@selector(pingmianClick) forControlEvents:UIControlEventTouchUpInside];
+        UIImageView *imgpingmian=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+        imgpingmian.image=[UIImage imageNamed:@"ar_pingmian"];
+        [_pingmianImageView addSubview:imgpingmian];
+        
+    }
+    return _pingmianImageView;
+}
+
+-(void)ARdituClick{
+    DLog(@"我点击了ARditu");
+}
+
+-(void)fubuClick{
+    //验证登陆信息
+    
+    if(![[OTWLaunchManager sharedManager] showLoginViewWithController:self completion:nil]){
+        OTWFootprintReleaseViewController *releaseVC = [[OTWFootprintReleaseViewController alloc] init];
+        [self.navigationController pushViewController:releaseVC animated:YES];
+    };
+}
+-(void)pingmianClick{
+    DLog(@"我点击了pingmianClick");
 }
 
 @end
