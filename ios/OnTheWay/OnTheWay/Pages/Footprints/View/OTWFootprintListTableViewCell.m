@@ -10,6 +10,7 @@
 #import "OTWFootprintListFrame.h"
 #import <AFNetworking/UIImageView+AFNetworking.h>
 #import "OTWFootprintListModel.h"
+#import "OTWUITapGestureRecognizer.h"
 
 
 #define OTWFootprintNameFont [UIFont systemFontOfSize:15]
@@ -46,20 +47,15 @@
 
 @property (nonatomic,strong) UIView *userheadImgBGView;
 
+@property (nonatomic,strong) UIView *userNicknameView;
+
 @end
 
 @implementation OTWFootprintListTableViewCell
 
-+ (instancetype)cellWithTableView:(UITableView *)tableView footprintListFrame:(OTWFootprintListFrame *) frame
++ (instancetype)cellWithTableView:(UITableView *)tableView identifier:(NSString *) identifier
 {
-    static NSString *identifier = @"OTWFootprintListTableViewCellStatus";
-    OTWFootprintListTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-    if(cell == nil){
-        cell = [[OTWFootprintListTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        [cell setFootprintListFrame:frame];
-    }
-    return cell;
+    return [[OTWFootprintListTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
 }
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -69,7 +65,7 @@
         self.backgroundColor = [UIColor clearColor];
         [self addSubview:self.footprintBGView];
         [self.footprintBGView addSubview:self.userheadImgBGView];
-        [self.footprintBGView addSubview:self.userNicknameLabel];
+        [self.footprintBGView addSubview:self.userNicknameView];
         [self.footprintBGView addSubview:self.footprintContentLabel];
         [self.footprintBGView addSubview:self.footprintPhotoImgView];
         [self.footprintBGView addSubview:self.footprintAddressImageView];
@@ -99,7 +95,6 @@
     [self.footprintAddressLabel setText:model.footprintAddress];
     [self.dateCreatedLabel setText:model.dateCreatedStr];
     if(model.footprintPhoto && ![model.footprintPhoto isEqualToString:@""]){
-        DLog(@"_footprint.footprintPhoto:%@",model.footprintPhoto);
         [self.footprintPhotoImgView setImageWithURL:[NSURL URLWithString:[model.footprintPhoto stringByAppendingString:@"?imageView2/1/w/160/h/160"]]];
     }else{
         self.footprintPhotoImgView.hidden = YES;
@@ -118,7 +113,8 @@
     struct CGPath *path = CGPathCreateMutable();
     CGPathAddArc(path, nil, 17 , 17, 17, 0, M_PI*2, true);
     self.userheadImgBGView.layer.shadowPath = path;
-    self.userNicknameLabel.frame = self.footprintListFrame.userNicknameF;
+    self.userNicknameView.frame = self.footprintListFrame.userNicknameF;
+    self.userNicknameLabel.frame = CGRectMake(0, 0, self.userNicknameView.Witdh, self.userNicknameView.Height);
     self.footprintContentLabel.frame = self.footprintListFrame.footprintContentF;
     self.footprintPhotoImgView.frame = self.footprintListFrame.footprintPhotoImgF;
     self.footprintAddressImageView.frame = self.footprintListFrame.footprintAddressImageF;
@@ -133,8 +129,8 @@
     if(!_userheadImgView){
         _userheadImgView = [[UIImageView alloc] init];
         _userheadImgView.frame = CGRectMake(2, 2, 30, 30);
-//        _userheadImgView.layer.borderColor = [UIColor whiteColor].CGColor;
-//        _userheadImgView.layer.borderWidth = 2;
+        //        _userheadImgView.layer.borderColor = [UIColor whiteColor].CGColor;
+        //        _userheadImgView.layer.borderWidth = 2;
         _userheadImgView.layer.cornerRadius = self.userheadImgView.Witdh/2.0;
         _userheadImgView.layer.masksToBounds = YES;
     }
@@ -147,6 +143,20 @@
     }
     return _footprintPhotoImgView;
 }
+
+- (UIView *) userNicknameView
+{
+    if(!_userNicknameView){
+        _userNicknameView = [[UIView alloc] init];
+        _userNicknameView.backgroundColor = [UIColor clearColor];
+        OTWUITapGestureRecognizer *tapRecognizer = [[OTWUITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOneAction:)];
+        tapRecognizer.opId = self.footprintListFrame.footprint.userId.description;
+        [_userNicknameView addGestureRecognizer:tapRecognizer];
+        [_userNicknameView addSubview:self.userNicknameLabel];
+    }
+    return _userNicknameView;
+}
+
 -(UILabel *)userNicknameLabel{
     if(!_userNicknameLabel){
         _userNicknameLabel = [[UILabel alloc] init];
@@ -218,8 +228,22 @@
         _userheadImgBGView.layer.shadowOffset = CGSizeMake(0, 1);
         _userheadImgBGView.layer.shadowOpacity = 0.3;
         [_userheadImgBGView addSubview:self.userheadImgView];
+        //增加一个头像点击事件
+        OTWUITapGestureRecognizer *tapRecognizer = [[OTWUITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOneAction:)];
+        tapRecognizer.opId = self.footprintListFrame.footprint.userId.description;
+        [_userheadImgBGView addGestureRecognizer:tapRecognizer];
     }
     return _userheadImgBGView;
+}
+
+#pragma mark - 头像昵称点击事件
+
+- (void) tapOneAction:(UITapGestureRecognizer *)tapRecognizer
+{
+    OTWUITapGestureRecognizer *tap = (OTWUITapGestureRecognizer*) tapRecognizer;
+    if(_tapOne){
+        _tapOne(tap.opId);
+    }
 }
 
 @end

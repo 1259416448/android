@@ -95,6 +95,7 @@
 		DDDAE08F1F1CFA5B00981E60 /* OTWFootprintDetail.plist in Resources */ = {isa = PBXBuildFile; fileRef = DDDAE08E1F1CFA5B00981E60 /* OTWFootprintDetail.plist */; };
 		DDDAE0931F1F0D4C00981E60 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DDDAE0921F1F0D4C00981E60 /* Assets.xcassets */; };
 		DDEA15B61F21A91200056166 /* OTWNewsCommentList.plist in Resources */ = {isa = PBXBuildFile; fileRef = DDEA15B51F21A91200056166 /* OTWNewsCommentList.plist */; };
+		DDEA15B91F22177900056166 /* OTWUITapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = DDEA15B81F22177900056166 /* OTWUITapGestureRecognizer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -281,6 +282,8 @@
 		DDDAE08E1F1CFA5B00981E60 /* OTWFootprintDetail.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = OTWFootprintDetail.plist; sourceTree = "<group>"; };
 		DDDAE0921F1F0D4C00981E60 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DDEA15B51F21A91200056166 /* OTWNewsCommentList.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = OTWNewsCommentList.plist; sourceTree = "<group>"; };
+		DDEA15B71F22177900056166 /* OTWUITapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWUITapGestureRecognizer.h; sourceTree = "<group>"; };
+		DDEA15B81F22177900056166 /* OTWUITapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWUITapGestureRecognizer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -431,6 +434,8 @@
 				D7F6B05A1F0DD0280013090A /* OTWBaseViewController.m */,
 				D7F6B0BD1F15C09E0013090A /* OTWTabBarController.h */,
 				D7F6B0BE1F15C09E0013090A /* OTWTabBarController.m */,
+				DDEA15B71F22177900056166 /* OTWUITapGestureRecognizer.h */,
+				DDEA15B81F22177900056166 /* OTWUITapGestureRecognizer.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1139,6 +1144,7 @@
 				DDC0A94C1F2089AA00A6E4DB /* OTWFootprintsChangeAddressController.m in Sources */,
 				DDB8C29F1F14AF230091E7B0 /* OTWUserModel.m in Sources */,
 				D7F6B09A1F0F75510013090A /* OTWLaunchViewController.m in Sources */,
+				DDEA15B91F22177900056166 /* OTWUITapGestureRecognizer.m in Sources */,
 				18B034BF1F15C9BD00F53461 /* OTWFindViewCell.m in Sources */,
 				D7F6B05E1F0DD1D80013090A /* OTWRootViewController.m in Sources */,
 				DD35209A1F18715400E8D725 /* OTWCommentModel.m in Sources */,

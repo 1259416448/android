@@ -13,6 +13,9 @@
 
 @property (nonatomic,strong) OTWFootprintListFrame *footprintListFrame;
 
-+ (instancetype)cellWithTableView:(UITableView *)tableView footprintListFrame:(OTWFootprintListFrame *) frame;
+//cell中每条足迹点击事件
+@property (nonatomic,copy) void (^tapOne)(NSString *);
+
++ (instancetype)cellWithTableView:(UITableView *)tableView identifier:(NSString *) identifier;
 
 @end

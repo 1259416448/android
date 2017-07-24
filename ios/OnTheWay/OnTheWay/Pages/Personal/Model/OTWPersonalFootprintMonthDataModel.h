@@ -12,6 +12,9 @@
 @interface OTWPersonalFootprintMonthDataModel : NSObject
 
 @property (nonatomic,strong) NSString *day;
+
+@property (nonatomic,assign) CGFloat cellHeight;
+
 @property (nonatomic,strong) NSMutableArray<OTWFootprintListModel *> *dayData;
 
 + (instancetype) initWithDict:(NSDictionary *) dict;

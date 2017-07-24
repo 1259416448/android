@@ -111,7 +111,7 @@
         [self.navigationController pushViewController:personalSiteVC animated:YES];
     }
     if(indexPath.row==0){
-        OTWPersonalFootprintsListController *personalSiteVC = [[OTWPersonalFootprintsListController alloc] init];
+        OTWPersonalFootprintsListController *personalSiteVC = [OTWPersonalFootprintsListController initWithIfMyFootprint:YES];
         [self.navigationController pushViewController:personalSiteVC animated:YES];
 
     }
