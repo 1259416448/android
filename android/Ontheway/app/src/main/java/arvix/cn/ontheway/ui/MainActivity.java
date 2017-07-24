@@ -17,13 +17,14 @@ import java.util.HashMap;
 import arvix.cn.ontheway.BaiduActivity;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.ui.ar.ArTrackActivity;
+import arvix.cn.ontheway.ui.msg.MsgFrag;
 import arvix.cn.ontheway.ui.usercenter.MyProfileFragment;
 
 /**
  * Created by yd on 2017/7/19.
  */
 
-public class MainActivity2 extends BaseActivity {
+public class MainActivity extends BaseActivity {
     @ViewInject(R.id.tab_group)
     private RadioGroup tabRG;
     @ViewInject(R.id.tab_zuji)
@@ -32,7 +33,7 @@ public class MainActivity2 extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.activity_main);
         x.view().inject(self);
         zuJiTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +70,8 @@ public class MainActivity2 extends BaseActivity {
             if (checkedId == R.id.tab_faxian) {
                 targetFrag = new FaXianFrag();
             } else if (checkedId == R.id.tab_xiaoxi) {
-                targetFrag = MsgFrag.newInstance();
+                targetFrag = new MsgFrag();
+               //list Msg targetFrag = MsgListFrag.newInstance();
             } else if (checkedId == R.id.tab_wode) {
                 targetFrag = new MyProfileFragment();
             }

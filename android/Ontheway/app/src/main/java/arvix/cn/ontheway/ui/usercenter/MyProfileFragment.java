@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
@@ -41,6 +40,7 @@ public class MyProfileFragment extends BaseFragment {
                 startActivity(new Intent(act,PersonInfoActivity.class));
             }
         });
+        nameTv.setText(App.user.getString("nickname","默认昵称"));
         IntentFilter filter=new IntentFilter(PersonInfoActivity.ACTION_USER_CHANGE);
         LocalBroadcastManager.getInstance(act).registerReceiver(receiver,filter);
         return root;
@@ -49,7 +49,7 @@ public class MyProfileFragment extends BaseFragment {
     private BroadcastReceiver receiver=new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            nameTv.setText(App.user.getString("nickname",""));
+            nameTv.setText(App.user.getString("nickname","默认昵称"));
         }
     };
 
