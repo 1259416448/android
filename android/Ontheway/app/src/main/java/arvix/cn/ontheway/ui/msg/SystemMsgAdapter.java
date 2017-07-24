@@ -14,6 +14,7 @@ import org.xutils.x;
 import java.util.List;
 
 import arvix.cn.ontheway.R;
+import arvix.cn.ontheway.utils.StaticMethod;
 
 /**
  * Created by asdtiang on 2017/7/24 0024.
@@ -61,9 +62,9 @@ public class SystemMsgAdapter  extends ArrayAdapter<MsgBean> {
             h = (SystemMsgAdapter.ViewHolder) convertView.getTag();
         }
         MsgBean bean = getItem(position);
-        h.titleTv.setText(bean.getTitle());
-        h.contentTv.setText(TextUtils.substring(bean.getContent(),0,30));
-        h.timeTv.setText(bean.getMsgTimeMils()+"");
+        h.titleTv.setText(StaticMethod.genLesStr(bean.getTitle(),10));
+        h.contentTv.setText(StaticMethod.genLesStr(bean.getContent(),40));
+        h.timeTv.setText(StaticMethod.formatDate(bean.getMsgTimeMils(),"HH:MM"));
         return convertView;
     }
 

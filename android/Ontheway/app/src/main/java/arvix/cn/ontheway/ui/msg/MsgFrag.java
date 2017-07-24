@@ -9,11 +9,8 @@ import android.view.ViewGroup;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
-import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.ui.BaseFragment;
-import arvix.cn.ontheway.ui.EditTextActivity;
-import arvix.cn.ontheway.utils.InterRouterUrl;
 
 /**
  * Created by asdtiang on 2017/7/24 0024.

@@ -36,9 +36,6 @@ public class SystemMsgActivity extends BaseActivity implements AdapterView.OnIte
     private List<MsgBean> datas;
     private ListViewHolder listHolder;
 
-    private ListView listView;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,32 +45,17 @@ public class SystemMsgActivity extends BaseActivity implements AdapterView.OnIte
         head.init(self,"系统消息");
         Log.i("tag","eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
         datas = new ArrayList();
-        for (int i =0; i < (5 + 1) * 30; i++) {
-            MsgBean b = new MsgBean();
-            b.setTitle("系统消息:" + i);
-            b.setContent("可以用在所有的场景，包括外部链接映射到内部页面与内部activity之间的跳转，可以通过Router统一起来"+i+"...");
-            b.setMsgTimeMils(System.currentTimeMillis());
-            b.setId(i);
-            datas.add(b);
-        }
+        initData(true);
         Log.i("tag","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         adapter = new SystemMsgAdapter(this, datas);
         Log.i("tag","bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
-        listView = (ListView) findViewById(R.layout.sy);
-        listView.setAdapter(adapter);
-    //    Log.i("tag","ccccccccccccccccccccccccccccccccccccccccc");
-      //  listView.setOnItemClickListener(this);
-       // listHolder = ListViewHolder.initList(this);
-        /*
-
-
+        listHolder = ListViewHolder.initList(this);
         listHolder.list.setAdapter(adapter);
         listHolder.list.setOnItemClickListener(this);
-
+        Log.i("tag","ccccccccccccccccccccccccccccccccccccccccc");
         listHolder.list.setMode(PullToRefreshBase.Mode.BOTH);
         listHolder.list.setOnRefreshListener(this);
         listHolder.list.setRefreshing();
-        */
     }
 
     private int pageNum = 0;
@@ -95,7 +77,6 @@ public class SystemMsgActivity extends BaseActivity implements AdapterView.OnIte
                     b.setId(i);
                     aPage.add(b);
                 }
-                Thread.sleep(2000);
                 ret.setData(aPage);
                 return ret;
             }

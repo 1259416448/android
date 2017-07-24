@@ -15,7 +15,6 @@ import java.util.Random;
 import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.ui.BaseActivity;
-import arvix.cn.ontheway.ui.EditTextActivity;
 import arvix.cn.ontheway.ui.head.HeaderHolder;
 
 /**
@@ -42,12 +41,12 @@ public class PersonInfoActivity extends BaseActivity {
     private void initView() {
         x.view().inject(this);
         new HeaderHolder().init(self, "个人信息");
+        nameTV.setText(App.user.getString("nickname","默认昵称"));
         nameTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(self, EditTextActivity.class);
-                intent.putExtra("hint", "请输入姓名");
-                intent.putExtra("default", App.user.getString("nickname", ""));
+                Intent intent = new Intent(self, EditNicknameActivity.class);
+                intent.putExtra(EditNicknameActivity.EXTRA_NICKNAME, App.user.getString("nickname", "默认昵称"));
                 startActivityForResult(intent, REQ_GET_NAME_EDIT);
             }
         });
@@ -56,11 +55,10 @@ public class PersonInfoActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        System.out.println("xxx:" + data.getStringExtra("data"));
-
+        System.out.println("xxx---------------->edit nickname return:" );
         if (resultCode == RESULT_OK) {
             if (requestCode == REQ_GET_NAME_EDIT) {
-                String s = data.getStringExtra("data");
+                String s = data.getStringExtra(EditNicknameActivity.EXTRA_NICKNAME);
                 nameTV.setText(s);
                 //// TODO: 2017/7/21 0021
                 App.user.setString("nickname", s);

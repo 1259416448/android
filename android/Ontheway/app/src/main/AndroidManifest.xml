@@ -62,7 +62,7 @@
             android:label="@string/title_activity_baidu"
              />
         <activity
-            android:name=".ui.EditTextActivity"
+            android:name=".ui.usercenter.EditNicknameActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_baidu"
              />
