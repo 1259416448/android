@@ -34,11 +34,11 @@
     UIView *_ShopDetailsIconList;//图标列表
     UIView *_ShopDetailsCommentImgList;//评论图片列表
     UIView *_CellBottomBorder;//cell底部边框
+    UILabel *_totalComment;
 }
 
-@property (nonatomic,strong) UIButton * ZanImageView;
-@property (nonatomic,strong) UIButton * PinglunImageView;
-@property (nonatomic,strong) UIButton * FenxiangImageView;
+@property (nonatomic,strong) UIView * ZanImageView;
+@property (nonatomic,strong) UIView * FenxiangImageView;
 @property (nonatomic,assign) CGFloat photoH;
 
 @end
@@ -90,7 +90,10 @@
     _CellBottomBorder.layer.borderWidth=0.5;
     [self.contentView addSubview:_CellBottomBorder];
     
-    
+    _totalComment=[[UILabel alloc] init];
+    _totalComment.textColor=[UIColor color_979797];
+    _totalComment.font=[UIFont systemFontOfSize:11];
+    [self.contentView addSubview:_totalComment];
 }
 
 #pragma mark 设置模块
@@ -131,12 +134,12 @@
     if(status.footprintPhotoArray.count==0){
         _ShopDetailsCommentImgList.frame=CGRectMake(55, CGRectGetMaxY(_ShopDetailsCommentConten.frame) + 5, (SCREEN_WIDTH-55)/3, 0);
         
-        _ShopDetailsIconList.frame=CGRectMake(SCREEN_WIDTH-126, CGRectGetMaxY(_ShopDetailsCommentImgList.frame)+15, 126, ShopDetailsIcon);
+        _ShopDetailsIconList.frame=CGRectMake(SCREEN_WIDTH-130-15, CGRectGetMaxY(_ShopDetailsCommentImgList.frame)+15, 130, ShopDetailsIcon);
     }else{
         if(status.footprintPhotoArray.count%3==0){
             
             _ShopDetailsCommentImgList.frame=CGRectMake(55, CGRectGetMaxY(_ShopDetailsCommentConten.frame) + 5, SCREEN_WIDTH-55-15, status.footprintPhotoArray.count/3*self.photoH +(status.footprintPhotoArray.count/3-1)*5 );
-            _ShopDetailsIconList.frame=CGRectMake(SCREEN_WIDTH-126, CGRectGetMaxY(_ShopDetailsCommentImgList.frame)+15, 126, ShopDetailsIcon);
+            _ShopDetailsIconList.frame=CGRectMake(SCREEN_WIDTH-130-15, CGRectGetMaxY(_ShopDetailsCommentImgList.frame)+15, 130, ShopDetailsIcon);
             for (int i = 0; i < status.footprintPhotoArray.count / 3; i ++) {
                 for (int j = 0; j < 3; j ++) {
                     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(j*(SCREEN_WIDTH-55-15)/3, i*(self.photoH+5), (SCREEN_WIDTH-55-14-15)/3, self.photoH)];
@@ -148,7 +151,7 @@
             }
         }else{
             _ShopDetailsCommentImgList.frame=CGRectMake(55, CGRectGetMaxY(_ShopDetailsCommentConten.frame) + 5, SCREEN_WIDTH-55-15, (status.footprintPhotoArray.count/3+1)*self.photoH +status.footprintPhotoArray.count/3*5 );
-            _ShopDetailsIconList.frame=CGRectMake(SCREEN_WIDTH-126, CGRectGetMaxY(_ShopDetailsCommentImgList.frame)+15, 126, ShopDetailsIcon);
+            _ShopDetailsIconList.frame=CGRectMake(SCREEN_WIDTH-130-15, CGRectGetMaxY(_ShopDetailsCommentImgList.frame)+15, 130, ShopDetailsIcon);
             for (int i = 0; i < status.footprintPhotoArray.count / 3 + 1; i ++) {
                 for (int j = 0; j < 3; j ++) {
                     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(j*(SCREEN_WIDTH-55-14)/3, i*(self.photoH+5), (SCREEN_WIDTH-55-14-15)/3, self.photoH)];
@@ -163,14 +166,15 @@
             }
         }
     }
+    _totalComment.frame=CGRectMake(55, CGRectGetMaxY(_ShopDetailsIconList.frame)-15, SCREEN_WIDTH-55-15-140, 15);
+        _totalComment.text=[[NSString stringWithFormat:@"%ld", (long)status.footprintCommentNum]  stringByAppendingString:@" 条回复"];
     
     [_ShopDetailsIconList addSubview:self.FenxiangImageView];
-    [_ShopDetailsIconList addSubview:self.PinglunImageView];
     [_ShopDetailsIconList addSubview:self.ZanImageView];
     
-    [_ZanImageView addTarget:self action:@selector(ZanClick) forControlEvents:UIControlEventTouchUpInside];
-    [_PinglunImageView addTarget:self action:@selector(PinglunClick) forControlEvents:UIControlEventTouchUpInside];
-    [_FenxiangImageView addTarget:self action:@selector(FenxiangClick) forControlEvents:UIControlEventTouchUpInside];
+//    [_ZanImageView addTarget:self action:@selector(ZanClick) forControlEvents:UIControlEventTouchUpInside];
+//    [_PinglunImageView addTarget:self action:@selector(PinglunClick) forControlEvents:UIControlEventTouchUpInside];
+//    [_FenxiangImageView addTarget:self action:@selector(FenxiangClick) forControlEvents:UIControlEventTouchUpInside];
     
     _CellBottomBorder.frame=CGRectMake(0, CGRectGetMaxY(_ShopDetailsIconList.frame)+14, SCREEN_WIDTH, 0.5);
     
@@ -178,28 +182,51 @@
     
 }
 
--(UIButton*)ZanImageView{
+-(UIView*)ZanImageView{
     if(!_ZanImageView){
-        _ZanImageView = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 17, 17)];
-        [_ZanImageView setImage:[UIImage imageNamed:@"zan"] forState:UIControlStateNormal];
+        _ZanImageView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 60, 25)];
+        _ZanImageView.layer.borderWidth=0.5;
+        _ZanImageView.layer.borderColor=[UIColor color_c4c4c4].CGColor;
+        _ZanImageView.layer.cornerRadius=12;
+        _ZanImageView.layer.masksToBounds = YES;
         
+        UIImageView *zanIcon=[[UIImageView alloc]initWithFrame:CGRectMake(15.5, 6, 12, 12)];
+        zanIcon.image=[UIImage imageNamed:@"zan"];
+        
+        UILabel *zanName=[[UILabel alloc]initWithFrame:CGRectMake(zanIcon.MaxX+5, 4, 12, 16.5)];
+        zanName.text=@"赞";
+        zanName.font=[UIFont systemFontOfSize:12];
+        zanName.textColor=[UIColor color_202020];
+        
+        [_ZanImageView addSubview:zanIcon];
+        [_ZanImageView addSubview:zanName];
+        
+        UITapGestureRecognizer  *tapGesturZan=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(ZanClick)];
+        [_ZanImageView addGestureRecognizer:tapGesturZan];
     }
     return _ZanImageView;
 }
 
--(UIButton*)PinglunImageView{
-    if(!_PinglunImageView){
-        _PinglunImageView = [[UIButton alloc] initWithFrame:CGRectMake(47, 0, 17, 17)] ;
-        [_PinglunImageView setImage:[UIImage imageNamed:@"pinglun"] forState:UIControlStateNormal];
-        
-    }
-    return _PinglunImageView;
-}
-
--(UIButton*)FenxiangImageView{
+-(UIView*)FenxiangImageView{
     if(!_FenxiangImageView){
-        _FenxiangImageView = [[UIButton alloc] initWithFrame:CGRectMake(47+30+17, 0, 17, 17)] ;
-        [_FenxiangImageView setImage:[UIImage imageNamed:@"fenxiang"] forState:UIControlStateNormal];
+        _FenxiangImageView = [[UIView alloc] initWithFrame:CGRectMake(self.ZanImageView.MaxX+10, 0, 60, 25)] ;
+        _FenxiangImageView.layer.borderWidth=0.5;
+        _FenxiangImageView.layer.borderColor=[UIColor color_c4c4c4].CGColor;
+        _FenxiangImageView.layer.cornerRadius=12;
+        _FenxiangImageView.layer.masksToBounds = YES;
+        
+        UIImageView *shareIcon=[[UIImageView alloc]initWithFrame:CGRectMake(9.5, 6, 12, 12)];
+        shareIcon.image=[UIImage imageNamed:@"fenxiang"];
+        
+        UILabel *shareName=[[UILabel alloc]initWithFrame:CGRectMake(shareIcon.MaxX+5, 4, 25, 16.5)];
+        shareName.text=@"分享";
+        shareName.font=[UIFont systemFontOfSize:12];
+        shareName.textColor=[UIColor color_202020];
+        
+        [_FenxiangImageView addSubview:shareIcon];
+        [_FenxiangImageView addSubview:shareName];
+        UITapGestureRecognizer  *tapGesturFenxiang=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(FenxiangClick)];
+        [_FenxiangImageView addGestureRecognizer:tapGesturFenxiang];
         
     }
     return _FenxiangImageView;
@@ -209,9 +236,6 @@
     DLog(@"我点击了ZanClick");
 }
 
--(void)PinglunClick{
-    DLog(@"我点击了PinglunClick");
-}
 -(void)FenxiangClick{
     DLog(@"我点击了FenxiangClick");
 }
