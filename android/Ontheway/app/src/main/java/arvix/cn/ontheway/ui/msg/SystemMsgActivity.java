@@ -52,6 +52,7 @@ public class SystemMsgActivity extends BaseActivity implements AdapterView.OnIte
         listHolder = ListViewHolder.initList(this);
         listHolder.list.setAdapter(adapter);
         listHolder.list.setOnItemClickListener(this);
+
         Log.i("tag","ccccccccccccccccccccccccccccccccccccccccc");
         listHolder.list.setMode(PullToRefreshBase.Mode.BOTH);
         listHolder.list.setOnRefreshListener(this);
