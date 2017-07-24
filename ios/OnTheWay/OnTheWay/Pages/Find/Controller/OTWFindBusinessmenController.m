@@ -172,11 +172,11 @@
 
 -(UIView*)ARdituImageView{
     if(!_ARdituImageView){
-        _ARdituImageView = [[UIControl alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-15-50-50, SCREEN_HEIGHT-30-49, 50, 50)] ;
+        _ARdituImageView = [[UIControl alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-15-50-50-4, SCREEN_HEIGHT-30-49, 50, 50)] ;
         _ARdituImageView.backgroundColor = [UIColor clearColor];
         [(UIControl *)_ARdituImageView addTarget:self action:@selector(ARdituClick) forControlEvents:UIControlEventTouchUpInside];
         UIImageView *imgARditu=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
-        imgARditu.image=[UIImage imageNamed:@"ARditu"];
+        imgARditu.image=[UIImage imageNamed:@"ar_ARditu"];
         [_ARdituImageView addSubview:imgARditu];
     }
     return _ARdituImageView;
@@ -184,11 +184,11 @@
 
 -(UIView*)fabuImageView{
     if(!_fabuImageView){
-        _fabuImageView = [[UIControl alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-15-50-50-50, SCREEN_HEIGHT-30-49, 50, 50)] ;
+        _fabuImageView = [[UIControl alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-15-50-50-50-8, SCREEN_HEIGHT-30-49, 50, 50)] ;
         _fabuImageView.backgroundColor = [UIColor clearColor];
         [(UIControl *)_fabuImageView addTarget:self action:@selector(fubuClick) forControlEvents:UIControlEventTouchUpInside];
         UIImageView *imgfabu=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
-        imgfabu.image=[UIImage imageNamed:@"fabu"];
+        imgfabu.image=[UIImage imageNamed:@"ar_fabu"];
         [_fabuImageView addSubview:imgfabu];
     }
     return _fabuImageView;
@@ -200,7 +200,7 @@
         _pingmianImageView.backgroundColor = [UIColor clearColor];
         [(UIControl *)_pingmianImageView addTarget:self action:@selector(pingmianClick) forControlEvents:UIControlEventTouchUpInside];
         UIImageView *imgpingmian=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
-        imgpingmian.image=[UIImage imageNamed:@"pingmian"];
+        imgpingmian.image=[UIImage imageNamed:@"ar_pingmian"];
         [_pingmianImageView addSubview:imgpingmian];
         
     }

@@ -10,6 +10,7 @@
 #import "OTWFootprintListModel.h"
 
 #define FootprintDateCreatedStrFont [UIFont systemFontOfSize:11]
+#define nicknameLabelFont [UIFont systemFontOfSize:15]
 
 @implementation OTWFootprintListFrame
 
@@ -28,10 +29,12 @@
     
     //用户名称
     CGFloat userNicknameFX = userHeadImgFX+userHeadImgFW+10;
-    CGFloat userNicknameFY = 18;
+    CGFloat userNicknameFY = 10;
     CGFloat userNicknameFW = SCREEN_WIDTH - padding *2 - userNicknameFX - 15;
-    CGFloat userNicknameFH = 18;
-    _userNicknameF = CGRectMake(userNicknameFX, userNicknameFY, userNicknameFW, userNicknameFH);
+    CGFloat userNicknameFH = 34;
+    //计算一下nickname宽度
+    CGSize nickNameSize = [self sizeWithString:_footprint.userNickname font:nicknameLabelFont maxSize:CGSizeMake(userNicknameFW, userNicknameFH)];
+    _userNicknameF = CGRectMake(userNicknameFX, userNicknameFY, nickNameSize.width, userNicknameFH);
     
     //内容
     CGFloat footprintContentX = 15;

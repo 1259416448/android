@@ -195,8 +195,8 @@
             UINavigationController * personalNav = [[UINavigationController alloc] initWithRootViewController:personalVC]; // 我的
             
             config.viewControllers = @[findNav, footprintsNav, arNav, newsNav, personalNav];
-            config.normalImages = @[@"tab_faxian", @"tab_zuji", @"tab_AR", @"tab_xiaoxi", @"tab_wode"];
-            config.selectedImages = @[@"tab_faxian_click", @"tab_zuji", @"tab_AR", @"tab_xiaoxi_click", @"tab_wode_click"];
+            config.normalImages = @[@"fx_faxian", @"fx_zuji", @"fx_AR", @"fx_xiaoxi", @"fx_wode"];
+            config.selectedImages = @[@"fx_faxian_click", @"fx_zuji", @"fx_AR", @"fx_xiaoxi_click", @"fx_wode_click"];
             config.titles = @[@"发现", @"足迹", @"AR", @"消息", @"我的"];
             config.selectedColor = [UIColor colorWithHexString:@"262626"];
             config.normalColor = [UIColor colorWithHexString:@"9b9b9b"];

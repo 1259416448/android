@@ -154,4 +154,10 @@
 + (UIColor *)color_ededed {
     return [UIColor colorWithHexString:@"ededed"];
 }
++ (UIColor *)color_ffc6c8{
+    return [UIColor colorWithHexString:@"ffc6c8"];
+}
++ (UIColor *)color_f3715a{
+    return [UIColor colorWithHexString:@"f3715a"];
+}
 @end

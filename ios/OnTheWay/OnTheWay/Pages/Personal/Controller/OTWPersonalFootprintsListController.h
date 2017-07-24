@@ -10,7 +10,9 @@
 
 @interface OTWPersonalFootprintsListController : OTWBaseViewController
 
-@property (assign,nonatomic) CGFloat height;
+@property (nonatomic,assign) BOOL ifMyFootprint;
+
++(instancetype) initWithIfMyFootprint: (BOOL) ifMyFootprint;
 
 @end
 

@@ -57,10 +57,8 @@
 -(void)setStatus:(OTWFindStatus *)status{
     //设置背景大小和位置
     CGRect avatarRect=CGRectMake(15, FindTableViewCellControlSpacing,  SCREEN_WIDTH-30, FindTableViewBackImageHeight);
-    [_FindTpyeBackgroundImageUrl setImageWithURL:[NSURL URLWithString:status.FindTpyeBackgroundImageUrl]];
+    _FindTpyeBackgroundImageUrl.image = [UIImage imageNamed:status.FindTpyeBackgroundImageUrl];
     _FindTpyeBackgroundImageUrl.frame=avatarRect;
-    _FindTpyeBackgroundImageUrl.layer.cornerRadius = 3;
-    _FindTpyeBackgroundImageUrl.layer.masksToBounds = YES;
     //根据名称计算占用空间大小
     CGSize userNameSize=[status.FindTpyeName sizeWithAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:25]}];
     CGRect userNameRect=CGRectMake( SCREEN_WIDTH-20-userNameSize.width-15, 32,userNameSize.width,userNameSize.height);
