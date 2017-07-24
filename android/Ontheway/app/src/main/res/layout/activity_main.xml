@@ -57,7 +57,7 @@
                             android:layout_marginBottom="28dp"
                             android:layout_marginLeft="190dp"
                             android:layout_marginTop="67dp"
-                            app:srcCompat="@drawable/zizhucan" />
+                            app:srcCompat="@drawable/fx_zizhucan" />
 
                         <TextView
                             android:id="@+id/index_item_one_text_one"
@@ -75,7 +75,7 @@
                             android:layout_height="@dimen/index_item_btn_h"
                             android:layout_marginLeft="240dp"
                             android:layout_marginTop="67dp"
-                            app:srcCompat="@drawable/kafei" />
+                            app:srcCompat="@drawable/fx_kafei" />
 
                         <TextView
                             android:id="@+id/index_item_one_text_two"
@@ -93,7 +93,7 @@
                             android:layout_height="@dimen/index_item_btn_h"
                             android:layout_marginLeft="290dp"
                             android:layout_marginTop="67dp"
-                            app:srcCompat="@drawable/huoguo" />
+                            app:srcCompat="@drawable/fx_huoguo" />
 
                         <TextView
                             android:id="@+id/index_item_one_text_three"
@@ -145,7 +145,7 @@
                             android:layout_marginBottom="28dp"
                             android:layout_marginLeft="190dp"
                             android:layout_marginTop="67dp"
-                            app:srcCompat="@drawable/gouwu" />
+                            app:srcCompat="@drawable/fx_gouwu" />
 
                         <TextView
                             android:id="@+id/index_item_two_text_one"
@@ -163,7 +163,7 @@
                             android:layout_height="@dimen/index_item_btn_h"
                             android:layout_marginLeft="240dp"
                             android:layout_marginTop="67dp"
-                            app:srcCompat="@drawable/shudian" />
+                            app:srcCompat="@drawable/fx_shudian" />
 
                         <TextView
                             android:id="@+id/index_item_two_text_two"
@@ -181,7 +181,7 @@
                             android:layout_height="@dimen/index_item_btn_h"
                             android:layout_marginLeft="290dp"
                             android:layout_marginTop="67dp"
-                            app:srcCompat="@drawable/bianlidian" />
+                            app:srcCompat="@drawable/fx_bianlidian" />
 
                         <TextView
                             android:id="@+id/index_item_two_text_three"
@@ -233,7 +233,7 @@
                             android:layout_height="@dimen/index_item_btn_h"
                             android:layout_marginLeft="240dp"
                             android:layout_marginTop="67dp"
-                            app:srcCompat="@drawable/dianyingyuan" />
+                            app:srcCompat="@drawable/fx_dianyingyuan" />
 
                         <TextView
                             android:id="@+id/index_item_three_text_two"
@@ -251,7 +251,7 @@
                             android:layout_height="@dimen/index_item_btn_h"
                             android:layout_marginLeft="290dp"
                             android:layout_marginTop="67dp"
-                            app:srcCompat="@drawable/huoguo" />
+                            app:srcCompat="@drawable/fx_bowuguan" />
 
                         <TextView
                             android:id="@+id/index_item_three_text_three"
@@ -304,7 +304,7 @@
                             android:layout_marginBottom="28dp"
                             android:layout_marginLeft="139.5dp"
                             android:layout_marginTop="67dp"
-                            app:srcCompat="@drawable/bashi" />
+                            app:srcCompat="@drawable/fx_bashi" />
 
                         <TextView
                             android:id="@+id/index_item_four_text_zero"
@@ -323,7 +323,7 @@
                             android:layout_marginBottom="28dp"
                             android:layout_marginLeft="190dp"
                             android:layout_marginTop="67dp"
-                            app:srcCompat="@drawable/ditie" />
+                            app:srcCompat="@drawable/fx_ditie" />
 
                         <TextView
                             android:id="@+id/index_item_four_text_one"
@@ -341,7 +341,7 @@
                             android:layout_height="@dimen/index_item_btn_h"
                             android:layout_marginLeft="240dp"
                             android:layout_marginTop="67dp"
-                            app:srcCompat="@drawable/chuzu" />
+                            app:srcCompat="@drawable/fx_chuzu" />
 
                         <TextView
                             android:id="@+id/index_item_four_text_two"
@@ -359,7 +359,7 @@
                             android:layout_height="@dimen/index_item_btn_h"
                             android:layout_marginLeft="290dp"
                             android:layout_marginTop="67dp"
-                            app:srcCompat="@drawable/feiji" />
+                            app:srcCompat="@drawable/fx_feiji" />
 
                         <TextView
                             android:id="@+id/index_item_four_text_three"

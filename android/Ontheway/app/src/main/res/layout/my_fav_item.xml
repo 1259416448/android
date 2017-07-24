@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/my_fav_item"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:paddingLeft="15dp"
+        android:layout_height="70dp">
+        <LinearLayout  android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+            <TextView
+                android:layout_width="match_parent"
+                android:textSize="17sp"
+                android:textColor="@color/text_label_default"
+                android:layout_marginTop="15dp"
+                android:text="胡大饭馆(东直门店)"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout  android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/dingwei"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:textColor="@color/text_label_small"
+                android:textSize="11sp"
+                android:layout_marginLeft="5dp"
+                android:text="东城区东直门内大街233号"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

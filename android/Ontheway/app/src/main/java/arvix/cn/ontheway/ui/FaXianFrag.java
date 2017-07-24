@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import arvix.cn.ontheway.BaiduActivity;
-import arvix.cn.ontheway.MainCardBean;
-import arvix.cn.ontheway.MenuBean;
+import arvix.cn.ontheway.been.MainCardBean;
+import arvix.cn.ontheway.been.MenuBean;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.async.AsyncUtil;
 import arvix.cn.ontheway.async.Callback;
@@ -97,9 +97,11 @@ public class FaXianFrag extends BaseFragment {
                     startActivity(intent);
                 }
             });
-            TextView titleTv = item.findViewById(R.id.card_title);
+            TextView titleTv = (TextView) item.findViewById(R.id.card_title);
             titleTv.setText(card.getTitle());
-            LinearLayout menuContainerLL = item.findViewById(R.id.menu_container);
+            ImageView itemIv = (ImageView) item.findViewById(R.id.card_bg);
+            itemIv.setImageResource(card.getBg());
+            LinearLayout menuContainerLL = (LinearLayout) item.findViewById(R.id.menu_container);
             for (int i = 0; i < card.getMenus().size(); i++) {
                 final MenuBean menu = card.getMenus().get(i);
                 View menuItem = lf.inflate(R.layout.main_card_menu_item, menuContainerLL, false);
@@ -112,9 +114,9 @@ public class FaXianFrag extends BaseFragment {
                         startActivity(intent);
                     }
                 });
-                TextView tv = menuItem.findViewById(R.id.menu_text);
+                TextView tv = (TextView) menuItem.findViewById(R.id.menu_text);
                 tv.setText(menu.getTitle());
-                ImageView iv = menuItem.findViewById(R.id.menu_icon);
+                ImageView iv = (ImageView) menuItem.findViewById(R.id.menu_icon);
                 iv.setImageResource(menu.getImgSrc());
                 if (i == card.getMenus().size() - 1) {
                     menuItem.setPadding(menuItem.getPaddingLeft(), menuItem.getPaddingTop(), 0, menuItem.getPaddingBottom());

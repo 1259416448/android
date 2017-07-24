@@ -47,7 +47,7 @@
                 android:layout_weight="1"
                 android:button="@null"
                 android:drawablePadding="3dp"
-                android:drawableTop="@drawable/tab_faxian_sel"
+                android:drawableTop="@drawable/tab_zuji_sel"
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="足迹" />
@@ -68,7 +68,7 @@
                 android:layout_weight="1"
                 android:button="@null"
                 android:drawablePadding="3dp"
-                android:drawableTop="@drawable/tab_faxian_sel"
+                android:drawableTop="@drawable/tab_xiaoxi_sel"
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="消息" />
@@ -81,7 +81,7 @@
                 android:layout_weight="1"
                 android:button="@null"
                 android:drawablePadding="3dp"
-                android:drawableTop="@drawable/tab_faxian_sel"
+                android:drawableTop="@drawable/tab_myprofile_sel"
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="我的" />
@@ -93,7 +93,7 @@
             android:layout_alignBottom="@id/tab_group"
             android:layout_centerHorizontal="true"
             android:background="@color/transparent"
-            android:src="@drawable/ar" />
+            android:src="@drawable/fx_ar" />
     </RelativeLayout>
 
 </LinearLayout>

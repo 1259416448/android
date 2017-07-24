@@ -7,21 +7,14 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.opengl.Matrix;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baidu.mapapi.map.BitmapDescriptor;
-import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
-import com.baidu.mapapi.map.MarkerOptions;
-import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.core.SearchResult;
@@ -34,8 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import arvix.cn.ontheway.App;
-import arvix.cn.ontheway.BaiduActivity;
-import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.been.ARPoint;
 import arvix.cn.ontheway.service.inter.BaiduPoiServiceInterface;
 import arvix.cn.ontheway.service.inter.CacheInterface;
@@ -54,17 +45,17 @@ public class AROverlayView extends View {
     private float[] rotatedProjectionMatrix = new float[16];
     private Location currentLocation;
     private List<ARPoint> arPoints;
+    private double latAndLonAndAltLast = 0.0;
 
 
     public AROverlayView(Context context) {
         super(context);
-
         this.context = context;
-
-        updateLocation();
+        updateLocationData();
+        arPoints = new ArrayList<ARPoint>();
     }
 
-    public  void updateLocation(){
+    public  void updateLocationData(){
         arPoints = new ArrayList<ARPoint>();
         CacheInterface cache = OnthewayApplication.getInstahce(CacheInterface.class);
         Double latCache = cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LAT);
@@ -73,10 +64,14 @@ public class AROverlayView extends View {
             lonCache = cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LON);
             Double  alt =     cache.getDouble(StaticVar.BAIDU_LOC_CACHE_ALT);
             Log.i(this.getClass().getName(),"init location from cache");
-            updateLocation(latCache,lonCache,530.0);
+            if(alt==null){
+                alt = 0.0;
+            }
+            latAndLonAndAltLast = latCache + lonCache;
+            updateLocationData(latCache,lonCache,alt);
         }
     }
-    private void updateLocation(double lat,double lon,final double alt){
+    private void updateLocationData(double lat, double lon, final double alt){
         if(lat==0.0&&lon==0.0){
             Log.w(this.getClass().getName(),"lat and lon is 0.0");
             return;
@@ -89,7 +84,7 @@ public class AROverlayView extends View {
         // 定义MapStatusUpdate对象，以便描述地图状态将要发生的变化
         MapStatusUpdate mMapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
         // 改变地图状态
-        Log.i("updateLocation","init location from cache");
+        Log.i("updateLocationData","init location from cache");
         BaiduPoiServiceInterface poiService = OnthewayApplication.getInstahce(BaiduPoiServiceInterface.class);
         if(TextUtils.isEmpty(ArTrackActivity.searchKeyWord)){
             ArTrackActivity.searchKeyWord = "美食";
@@ -129,6 +124,17 @@ public class AROverlayView extends View {
 
     public void updateCurrentLocation(Location currentLocation){
         this.currentLocation = currentLocation;
+        if(this.currentLocation!=null){
+            double tempSum = this.currentLocation.getLatitude() + this.currentLocation.getLongitude() + currentLocation.getAltitude();
+            if(Math.abs(tempSum-latAndLonAndAltLast)>0.0001){
+                if(currentLocation.hasAltitude()){
+                    updateLocationData(currentLocation.getLatitude(),currentLocation.getLongitude(),currentLocation.getAltitude());
+                }else{
+                    updateLocationData(currentLocation.getLatitude(),currentLocation.getLongitude(),0.0);
+                }
+            }
+            latAndLonAndAltLast = tempSum;
+        }
         this.invalidate();
     }
 
