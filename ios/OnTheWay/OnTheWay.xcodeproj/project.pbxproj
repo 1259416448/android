@@ -34,6 +34,7 @@
 		B181AB591F1F7F33009929D1 /* OTWPraiseViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B181AB581F1F7F33009929D1 /* OTWPraiseViewModel.m */; };
 		B181AB5C1F1F7F56009929D1 /* OTWPraiseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B181AB5A1F1F7F56009929D1 /* OTWPraiseViewController.m */; };
 		B181AB5F1F1F7F85009929D1 /* OTWPraiseViewTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B181AB5E1F1F7F85009929D1 /* OTWPraiseViewTableCell.m */; };
+		B183D9981F221D9900CF3E1F /* OTWPrintARViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B183D9971F221D9900CF3E1F /* OTWPrintARViewController.m */; };
 		B18A43051F207BB6002C7A5A /* OTWNewCommentListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B18A43041F207BB6002C7A5A /* OTWNewCommentListViewController.m */; };
 		B18A43081F207D14002C7A5A /* OTWNewsCommentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B18A43071F207D14002C7A5A /* OTWNewsCommentModel.m */; };
 		B18A430A1F20829E002C7A5A /* OTWPraise.plist in Resources */ = {isa = PBXBuildFile; fileRef = B18A43091F20829E002C7A5A /* OTWPraise.plist */; };
@@ -169,6 +170,8 @@
 		B181AB5B1F1F7F56009929D1 /* OTWPraiseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPraiseViewController.h; sourceTree = "<group>"; };
 		B181AB5D1F1F7F85009929D1 /* OTWPraiseViewTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPraiseViewTableCell.h; sourceTree = "<group>"; };
 		B181AB5E1F1F7F85009929D1 /* OTWPraiseViewTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPraiseViewTableCell.m; sourceTree = "<group>"; };
+		B183D9961F221D9900CF3E1F /* OTWPrintARViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPrintARViewController.h; sourceTree = "<group>"; };
+		B183D9971F221D9900CF3E1F /* OTWPrintARViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPrintARViewController.m; sourceTree = "<group>"; };
 		B18A43031F207BB6002C7A5A /* OTWNewCommentListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWNewCommentListViewController.h; sourceTree = "<group>"; };
 		B18A43041F207BB6002C7A5A /* OTWNewCommentListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWNewCommentListViewController.m; sourceTree = "<group>"; };
 		B18A43061F207D14002C7A5A /* OTWNewsCommentModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWNewsCommentModel.h; sourceTree = "<group>"; };
@@ -627,6 +630,8 @@
 				DDC0A94B1F2089AA00A6E4DB /* OTWFootprintsChangeAddressController.m */,
 				1822EE6C1F20E11C00E07665 /* CHCustomSearchBar.h */,
 				1822EE6D1F20E11C00E07665 /* CHCustomSearchBar.m */,
+				B183D9961F221D9900CF3E1F /* OTWPrintARViewController.h */,
+				B183D9971F221D9900CF3E1F /* OTWPrintARViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1143,6 +1148,7 @@
 				D7F6B05E1F0DD1D80013090A /* OTWRootViewController.m in Sources */,
 				DD35209A1F18715400E8D725 /* OTWCommentModel.m in Sources */,
 				D7F6B0CB1F1627000013090A /* OTWNewsCell.m in Sources */,
+				B183D9981F221D9900CF3E1F /* OTWPrintARViewController.m in Sources */,
 				DD3520941F18670800E8D725 /* OTWFootprintDetailController.m in Sources */,
 				D7F6B05B1F0DD0280013090A /* OTWBaseViewController.m in Sources */,
 				B13ADA1D1F1B23DA008E889C /* OTWSystemNewsViewController.m in Sources */,
