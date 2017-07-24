@@ -44,7 +44,7 @@
         <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote">
         </service>
         <activity
-            android:name=".ui.MainActivity2"
+            android:name=".ui.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -66,6 +66,11 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_baidu"
              />
+        <activity
+            android:name=".ui.msg.SystemMsgActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="SystemMsgActivity"
+            />
         <activity
             android:name=".ui.usercenter.PersonInfoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

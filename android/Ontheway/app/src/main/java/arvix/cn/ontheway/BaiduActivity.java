@@ -36,9 +36,8 @@ import com.baidu.mapapi.search.poi.PoiResult;
 import java.util.List;
 import arvix.cn.ontheway.service.BaiduLocationListenerService;
 import arvix.cn.ontheway.service.inter.BaiduPoiServiceInterface;
-import arvix.cn.ontheway.service.inter.BaiduServiceInterface;
 import arvix.cn.ontheway.service.inter.CacheInterface;
-import arvix.cn.ontheway.ui.MainActivity2;
+import arvix.cn.ontheway.ui.MainActivity;
 import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticVar;
 
@@ -67,7 +66,7 @@ public class BaiduActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            Intent intent = new Intent(this, MainActivity2.class);
+            Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             System.out.println("back clicked44444444444444444444");
             Log.i(this.getClass().getName(),"back clicked!!!!!!!!!!!!!");

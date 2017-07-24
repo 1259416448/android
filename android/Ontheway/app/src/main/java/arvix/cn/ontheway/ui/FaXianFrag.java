@@ -24,9 +24,9 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import arvix.cn.ontheway.BaiduActivity;
+import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.been.MainCardBean;
 import arvix.cn.ontheway.been.MenuBean;
-import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.async.AsyncUtil;
 import arvix.cn.ontheway.async.Callback;
 import arvix.cn.ontheway.async.Result;
