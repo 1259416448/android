@@ -280,6 +280,7 @@
         photoChooseH = ( photosView.images.count / 4 + 1 ) * (self.photoW + 10) + 15 * 2 - 10;
     }
     _photoChooseView.frame = CGRectMake(0, self.footprintContentView.MaxY, CGRectGetWidth(self.view.frame), photoChooseH);
+    [self layoutView];
 }
 
 @end
