@@ -14,6 +14,7 @@
 @interface OTWShopDetailsController ()<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>{
     UITableView *_tableView;
     NSMutableArray *_status;
+    NSMutableArray *icons;
 }
 @property (nonatomic,strong) UIView *ShopDetailsTableViewHeader;
 
@@ -22,6 +23,8 @@
 @property (nonatomic,strong) UIView *ShopDetailsBottomTableViewHeader;
 
 @property(nonatomic,strong) UIButton *FabiaoButton;
+
+@property (nonatomic,strong) UIImageView *shopImgView;
 
 @end
 
@@ -114,10 +117,10 @@
 
 -(void)initData{
     _status = [[NSMutableArray alloc] init];
-    NSDictionary *dic=@{@"userNickname":@"高世奇",@"userHeadImg":@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"footprintContent":@"他家菜的味道不错，量也很大就是有点小贵，下次考虑还来",@"footprintPhotoArray":@[@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg"],@"dateCreatedStr":@"13:09"};
-    NSDictionary *dic2=@{@"userNickname":@"高世奇",@"userHeadImg":@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"footprintContent":@"他家菜的味道不错，量也很大就是有点小贵，下次考虑还来",@"footprintPhotoArray":@[@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg"],@"dateCreatedStr":@"13:09"};
-    NSDictionary *dic3=@{@"userNickname":@"高世奇",@"userHeadImg":@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"footprintContent":@"围绕着我的卑微 也许能消退 其实我并不在意 有很多机会像巨人一样的无畏放纵我心里的鬼",@"footprintPhotoArray":@[],@"dateCreatedStr":@"13:09"};
-    NSDictionary *dic4=@{@"userNickname":@"高世奇",@"userHeadImg":@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"footprintContent":@"围绕着我的卑微 也",@"footprintPhotoArray":@[],@"dateCreatedStr":@"13:09"};
+    NSDictionary *dic=@{@"userNickname":@"高世奇",@"userHeadImg":@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"footprintContent":@"他家菜的味道不错，量也很大就是有点小贵，下次考虑还来",@"footprintPhotoArray":@[@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg"],@"dateCreatedStr":@"13:09",@"footprintCommentNum":@"126"};
+    NSDictionary *dic2=@{@"userNickname":@"高世奇",@"userHeadImg":@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"footprintContent":@"他家菜的味道不错，量也很大就是有点小贵，下次考虑还来",@"footprintPhotoArray":@[@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg"],@"dateCreatedStr":@"13:09",@"footprintCommentNum":@"126"};
+    NSDictionary *dic3=@{@"userNickname":@"高世奇",@"userHeadImg":@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"footprintContent":@"围绕着我的卑微 也许能消退 其实我并不在意 有很多机会像巨人一样的无畏放纵我心里的鬼",@"footprintPhotoArray":@[],@"dateCreatedStr":@"13:09",@"footprintCommentNum":@"126"};
+    NSDictionary *dic4=@{@"userNickname":@"高世奇",@"userHeadImg":@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"footprintContent":@"围绕着我的卑微 也",@"footprintPhotoArray":@[],@"dateCreatedStr":@"13:09",@"footprintCommentNum":@"126"};
     OTWFootprintListModel *model = [OTWFootprintListModel statusWithDictionary:dic];
     OTWFootprintListModel *model2= [OTWFootprintListModel statusWithDictionary:dic2];
     OTWFootprintListModel *model3= [OTWFootprintListModel statusWithDictionary:dic3];
@@ -126,6 +129,12 @@
     [_status addObject:model2];
     [_status addObject:model3];
     [_status addObject:model4];
+    
+    icons=[[NSMutableArray alloc] init];
+    [icons addObject:@"wodekaquan"];
+    [icons addObject:@"wodekaquan"];
+    [icons addObject:@"wodekaquan"];
+    [icons addObject:@"wodekaquan"];
 }
 
 
@@ -167,51 +176,52 @@
         _ShopDetailsTopTableViewHeader.layer.borderColor=[UIColor color_d5d5d5].CGColor;
         
         //商店图片
-        UIImageView *shopImg=[[UIImageView alloc] initWithFrame:CGRectMake(15, 10, 111, 80)];
-        [shopImg sd_setImageWithURL:[NSURL URLWithString:[@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg" stringByAppendingString:@"?imageView2/1/w/222/h/160"] ]];
-        [_ShopDetailsTopTableViewHeader addSubview:shopImg];
         
-        //商店评论条数
-        UILabel *shopCommentCount=[[UILabel alloc] init];
-        shopCommentCount.text=@"123";
-        shopCommentCount.font=[UIFont systemFontOfSize:12];
-        [shopCommentCount sizeToFit];
-        shopCommentCount.frame=CGRectMake(shopImg.width-10-shopCommentCount .frame.size.width-5,  shopImg.Height-20, shopCommentCount .frame.size.width+10,15+2.5);
-        shopCommentCount.backgroundColor=[[UIColor blackColor]colorWithAlphaComponent:0.6f];
-        shopCommentCount.textColor=[UIColor whiteColor];
-        shopCommentCount.textAlignment=NSTextAlignmentCenter;
-        [shopImg addSubview:shopCommentCount];
+            [_ShopDetailsTopTableViewHeader addSubview:self.shopImgView];
+        
         
         //商店名称
-        UILabel *shopName=[[UILabel alloc] initWithFrame:CGRectMake(111+10+15, 10, SCREEN_WIDTH-15-19-111-20-25, 20)];
+        UILabel *shopName=[[UILabel alloc] initWithFrame:CGRectMake(self.shopImgView.MaxX+10, 10, SCREEN_WIDTH-15-19-111-20-25, 20)];
         shopName.font=[UIFont systemFontOfSize:16];
         shopName.text=@"胡大饭馆（东直门总店）";
         shopName.textColor=[UIColor color_202020];
         [_ShopDetailsTopTableViewHeader addSubview:shopName];
         
         //商店地址图标
-        UIImageView *shopAddressIcon=[[UIImageView alloc] initWithFrame:CGRectMake(111+10+15, 45,8, 10)];
+        UIImageView *shopAddressIcon=[[UIImageView alloc] initWithFrame:CGRectMake(self.shopImgView.MaxX+10, shopName.MaxY+10,8, 10)];
         shopAddressIcon.image=[UIImage imageNamed:@"dinwgei_2"];
         [_ShopDetailsTopTableViewHeader addSubview:shopAddressIcon];
         
         //商店地址
-        UILabel *shopAddress=[[UILabel alloc] initWithFrame:CGRectMake(111+10+15+8+5, 45,SCREEN_WIDTH-111+10+15+8+10-33-15, 12)];
+        UILabel *shopAddress=[[UILabel alloc] initWithFrame:CGRectMake(shopAddressIcon.MaxX+5, shopName.MaxY+10,SCREEN_WIDTH-self.shopImgView.Witdh-40-30-8-10-6.5, 12)];
         shopAddress.text=@"东城区东直门内大街233";
         shopAddress.font=[UIFont systemFontOfSize:13];
         shopAddress.textColor=[UIColor color_979797];
         [_ShopDetailsTopTableViewHeader addSubview:shopAddress];
         
         //商店电话图标
-        UIImageView *shopPhoneIcon=[[UIImageView alloc] initWithFrame:CGRectMake(111+10+15, 62,8, 10)];
+        UIImageView *shopPhoneIcon=[[UIImageView alloc] initWithFrame:CGRectMake(self.shopImgView.MaxX+10, shopAddress.MaxY+6.5,8, 10)];
         shopPhoneIcon.image=[UIImage imageNamed:@"dianhua"];
         [_ShopDetailsTopTableViewHeader addSubview:shopPhoneIcon];
         
         //商店电话号码
-        UILabel *shopPhone=[[UILabel alloc] initWithFrame:CGRectMake(111+10+15+8+5, 62,SCREEN_WIDTH-111+10+15+8+10-40-15, 12)];
+        UILabel *shopPhone=[[UILabel alloc] initWithFrame:CGRectMake(shopPhoneIcon.MaxX+5, shopAddress.MaxY+6.5,SCREEN_WIDTH-self.shopImgView.Witdh-40-30-8-10-6.5, 12)];
         shopPhone.text=@"87474993";
         shopPhone.font=[UIFont systemFontOfSize:11];
         shopPhone.textColor=[UIColor color_979797];
         [_ShopDetailsTopTableViewHeader addSubview:shopPhone];
+        
+        // 商家券列表
+        UIView *quanIconBox=[[UIView alloc]initWithFrame:CGRectMake(self.shopImgView.MaxX+10, shopPhoneIcon.MaxY+6.5,SCREEN_WIDTH-self.shopImgView.Witdh-77-10-30 , 15)];
+        for(int i=0;i<icons.count;i++){
+            UIImageView *quanIcon=[[UIImageView alloc]initWithFrame:CGRectMake(i*22.5, 0, 15, 15)];
+            quanIcon.image=[UIImage imageNamed:icons[i]];
+            [quanIconBox addSubview:quanIcon];
+
+        }
+   
+          [_ShopDetailsTopTableViewHeader addSubview:quanIconBox];
+        
         
         //跳转地图图标
         UIImageView *goMapIcon=[[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-19-25, 15,25, 25)];
@@ -233,17 +243,70 @@
         
         [_ShopDetailsTopTableViewHeader addSubview:goMap];
         
+        //认领商家
+        UIView *renlingView=[[UIView alloc]initWithFrame:CGRectMake(SCREEN_WIDTH-15-74, goMapName.MaxY+15, 77, 25)];
+         CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+        //渐变
+         gradientLayer.colors = @[(__bridge id)[UIColor color_ff134c].CGColor, (__bridge id)[UIColor color_ff9144].CGColor];
+        gradientLayer.startPoint = CGPointMake(0, 0);
+        gradientLayer.endPoint = CGPointMake(1.0, 0);
+        gradientLayer.frame = CGRectMake(0, 0, 77,25);
+         gradientLayer.locations = @[@0.5, @1.0];
+        [renlingView.layer addSublayer:gradientLayer];
         
+        renlingView.layer.cornerRadius=3;
+        renlingView.layer.masksToBounds = YES;
+        renlingView.alpha=0.8;
         
+        UIImageView *renlingImg=[[UIImageView alloc]initWithFrame:CGRectMake(5, 6, 12.5, 12.5)];
+        renlingImg.image=[UIImage imageNamed:@"ar_renling"];
         
+        UILabel *renlingName=[[UILabel alloc]initWithFrame:CGRectMake(renlingImg.MaxX+5, 5, 47, 15)];
+        renlingName.text=@"认领商家";
+        renlingName.textColor=[UIColor whiteColor];
+        renlingName.font=[UIFont systemFontOfSize:11];
+        
+        UITapGestureRecognizer  *tapGestur=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapActionForRenling)];
+        [renlingView addGestureRecognizer:tapGestur];
+        
+        [renlingView addSubview:renlingImg];
+        [renlingView addSubview:renlingName];
+        [_ShopDetailsTopTableViewHeader addSubview:renlingView];
     }
     return _ShopDetailsTopTableViewHeader;
+}
+-(UIImageView*)shopImgView{
+    if(!_shopImgView){
+        _shopImgView=[[UIImageView alloc]init];
+        //这里判断商家是否存在图片
+        if(1){
+            _shopImgView.frame=CGRectMake(15, 10, 111, 80);
+            [_shopImgView sd_setImageWithURL:[NSURL URLWithString:[@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg" stringByAppendingString:@"?imageView2/1/w/222/h/160"] ]];
+            //商店评论条数
+            UILabel *shopCommentCount=[[UILabel alloc] init];
+            shopCommentCount.text=@"123";
+            shopCommentCount.font=[UIFont systemFontOfSize:12];
+            [shopCommentCount sizeToFit];
+            shopCommentCount.frame=CGRectMake(_shopImgView.width-10-shopCommentCount .frame.size.width-5,  _shopImgView.Height-20, shopCommentCount .frame.size.width+10,15+2.5);
+            shopCommentCount.backgroundColor=[[UIColor blackColor]colorWithAlphaComponent:0.6f];
+            shopCommentCount.textColor=[UIColor whiteColor];
+            shopCommentCount.textAlignment=NSTextAlignmentCenter;
+            [_shopImgView addSubview:shopCommentCount];
+        }else{
+              _shopImgView.frame=CGRectMake(0, 0, 5, 0);
+        }
+        
+    }
+    return _shopImgView;
 }
 
 -(void)goMapClick{
     DLog(@"点击了到这里去");
 }
 
+-(void)tapActionForRenling{
+    DLog(@"点击了认领商家");
+}
 -(UIView*)ShopDetailsBottomTableViewHeader{
     if(!_ShopDetailsBottomTableViewHeader){
         _ShopDetailsBottomTableViewHeader=[[UIView alloc] initWithFrame:CGRectMake(0, 130, SCREEN_WIDTH, 35)];
