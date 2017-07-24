@@ -13,6 +13,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.TextAppearanceSpan;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ import arvix.cn.ontheway.async.AsyncUtil;
 import arvix.cn.ontheway.async.Callback;
 import arvix.cn.ontheway.async.Result;
 import arvix.cn.ontheway.data.IndexData;
+import arvix.cn.ontheway.ui.view.BottomDialog;
 import arvix.cn.ontheway.utils.UIUtils;
 
 /**
@@ -82,8 +84,8 @@ public class FaXianFrag extends BaseFragment {
     private void initView(View root) {
         //android:hint="搜索附近的美食、商场"
         SpannableStringBuilder ssb = new SpannableStringBuilder("  icon搜索附近的美食、商场");
-        int length =ssb.length();
-        AbsoluteSizeSpan absoluteSizeSpan = new AbsoluteSizeSpan(12,true);
+        int length = ssb.length();
+        AbsoluteSizeSpan absoluteSizeSpan = new AbsoluteSizeSpan(12, true);
         ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#979797"));
         ssb.setSpan(colorSpan, 6, length, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
         ssb.setSpan(absoluteSizeSpan, 6, length, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
@@ -102,9 +104,23 @@ public class FaXianFrag extends BaseFragment {
             item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(act, BaiduActivity.class);
-                    intent.putExtra(BaiduActivity.EXTRA_KEYWORD, card.getTitle());
-                    startActivity(intent);
+//                    Intent intent = new Intent(act, BaiduActivity.class);
+//                    intent.putExtra(BaiduActivity.EXTRA_KEYWORD, card.getTitle());
+//                    startActivity(intent);
+                    BottomDialog dialog = new BottomDialog(act);
+                    LinearLayout ll = new LinearLayout(act);
+                    ViewGroup.LayoutParams p = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, UIUtils.dip2px(act, 100));
+                    ll.setLayoutParams(p);
+                    ll.setOrientation(LinearLayout.VERTICAL);
+                    ll.setGravity(Gravity.CENTER_HORIZONTAL);
+                    ImageView iv = new ImageView(act);
+                    ViewGroup.LayoutParams pp = new ViewGroup.LayoutParams(UIUtils.dip2px(act, 100), UIUtils.dip2px(act, 100));
+                    iv.setLayoutParams(pp);
+                    iv.setImageResource(R.drawable.header_default);
+                    ll.addView(iv);
+                    //从这添加通过LayoutInflater加载的xml布局
+                    dialog.setCustom(ll);
+                    dialog.show();
                 }
             });
             TextView titleTv = (TextView) item.findViewById(R.id.card_title);

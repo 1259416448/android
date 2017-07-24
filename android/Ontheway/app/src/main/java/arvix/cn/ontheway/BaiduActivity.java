@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +40,7 @@ import arvix.cn.ontheway.service.inter.BaiduPoiServiceInterface;
 import arvix.cn.ontheway.service.inter.CacheInterface;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.MainActivity;
+import arvix.cn.ontheway.ui.view.BottomDialog;
 import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticVar;
 
@@ -47,7 +49,7 @@ import arvix.cn.ontheway.utils.StaticVar;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class BaiduActivity extends BaseActivity {
+public class BaiduActivity extends BaseActivity implements BaiduMap.OnMarkerClickListener {
     public static String EXTRA_KEYWORD = "baiduKeyWord";
 
     private static String logTag =  BaiduActivity.class.getName();
@@ -158,8 +160,8 @@ public class BaiduActivity extends BaseActivity {
         searchKeyWord = getIntent().getStringExtra(BaiduActivity.EXTRA_KEYWORD);
         //获取地图控件引用
         mMapView = (MapView) findViewById(R.id.bmapView);
-
         mBaiduMap = mMapView.getMap();
+        mBaiduMap.setOnMarkerClickListener(this);
         mBaiduMap.setMyLocationEnabled(true);
         mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
         updateLocation();
@@ -228,5 +230,14 @@ public class BaiduActivity extends BaseActivity {
     }
 
 
-
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        String phoneNum=marker.getExtraInfo().getString("customData");
+        BottomDialog dialog=new BottomDialog(self);
+        ImageView iv=new ImageView(self);
+        iv.setImageResource(R.drawable.header_default);
+        dialog.setCustom(iv);
+        dialog.show();
+        return true;
+    }
 }
