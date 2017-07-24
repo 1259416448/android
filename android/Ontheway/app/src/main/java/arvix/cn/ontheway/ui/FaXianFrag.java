@@ -3,11 +3,16 @@ package arvix.cn.ontheway.ui;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.TextAppearanceSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,9 +29,9 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import arvix.cn.ontheway.BaiduActivity;
+import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.been.MainCardBean;
 import arvix.cn.ontheway.been.MenuBean;
-import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.async.AsyncUtil;
 import arvix.cn.ontheway.async.Callback;
 import arvix.cn.ontheway.async.Result;
@@ -77,6 +82,11 @@ public class FaXianFrag extends BaseFragment {
     private void initView(View root) {
         //android:hint="搜索附近的美食、商场"
         SpannableStringBuilder ssb = new SpannableStringBuilder("  icon搜索附近的美食、商场");
+        int length =ssb.length();
+        AbsoluteSizeSpan absoluteSizeSpan = new AbsoluteSizeSpan(12,true);
+        ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#979797"));
+        ssb.setSpan(colorSpan, 6, length, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        ssb.setSpan(absoluteSizeSpan, 6, length, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
         Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.sousuo_1);
         ImageSpan imgSpan = new ImageSpan(act, b);
         ssb.setSpan(imgSpan, 2, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

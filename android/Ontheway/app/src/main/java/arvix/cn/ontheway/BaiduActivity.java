@@ -36,9 +36,9 @@ import com.baidu.mapapi.search.poi.PoiResult;
 import java.util.List;
 import arvix.cn.ontheway.service.BaiduLocationListenerService;
 import arvix.cn.ontheway.service.inter.BaiduPoiServiceInterface;
-import arvix.cn.ontheway.service.inter.BaiduServiceInterface;
 import arvix.cn.ontheway.service.inter.CacheInterface;
-import arvix.cn.ontheway.ui.MainActivity2;
+import arvix.cn.ontheway.ui.BaseActivity;
+import arvix.cn.ontheway.ui.MainActivity;
 import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticVar;
 
@@ -47,7 +47,7 @@ import arvix.cn.ontheway.utils.StaticVar;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class BaiduActivity extends AppCompatActivity {
+public class BaiduActivity extends BaseActivity {
     public static String EXTRA_KEYWORD = "baiduKeyWord";
 
     private static String logTag =  BaiduActivity.class.getName();
@@ -67,7 +67,7 @@ public class BaiduActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            Intent intent = new Intent(this, MainActivity2.class);
+            Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             System.out.println("back clicked44444444444444444444");
             Log.i(this.getClass().getName(),"back clicked!!!!!!!!!!!!!");
@@ -77,8 +77,6 @@ public class BaiduActivity extends AppCompatActivity {
         }
 
     }
-
-
 
     private void updateLocation(double lat,double lon){
         if(lat==0.0&&lon==0.0){
@@ -116,22 +114,17 @@ public class BaiduActivity extends AppCompatActivity {
                 for (PoiInfo p: allAddr) {
                     Log.i("MainActivity", "p.name--->" + p.name +"p.phoneNum" + p.phoneNum +" -->p.address:" + p.address + "p.location" + p.location);
                     //mBaiduMap.addOverlay()
-                    double diff = 0.0002;
-                    for(int i=0;i<5;i++){
-                        View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.custom_marker, null);
-                        LatLng latLng = new LatLng(p.location.latitude+diff*i,p.location.longitude+diff*i);
-                        // ImageView img_hotel_image=
-                        // (ImageView)view.findViewById(R.id.img_hotel_image);
-                        // new
-                        // DownloadImageTask(img_hotel_image).execute(hotel.getHotelImageUrl());
-                        TextView tv_hotel_price = (TextView) view.findViewById(R.id.tv_hotel_price);
-                        tv_hotel_price.setText( p.name +i);
-                        BitmapDescriptor markerIcon = BitmapDescriptorFactory.fromBitmap(getViewBitmap(view));
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("customData", p.phoneNum);
-                        OverlayOptions oo = new MarkerOptions().position(latLng).icon(markerIcon).zIndex(9).draggable(true).extraInfo(bundle);
-                        mBaiduMap.addOverlay(oo);
-                    }
+                    View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.custom_marker, null);
+                    LatLng latLng = new LatLng(p.location.latitude,p.location.longitude);
+                    // ImageView img_hotel_image=
+                    // (ImageView)view.findViewById(R.id.img_hotel_image);
+                    // new
+                    // DownloadImageTask(img_hotel_image).execute(hotel.getHotelImageUrl());
+                    BitmapDescriptor markerIcon = BitmapDescriptorFactory.fromBitmap(getViewBitmap(view));
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("customData", p.phoneNum);
+                    OverlayOptions oo = new MarkerOptions().position(latLng).icon(markerIcon).zIndex(9).draggable(true).extraInfo(bundle);
+                    mBaiduMap.addOverlay(oo);
 
                 }
             }

@@ -1,4 +1,4 @@
-package arvix.cn.ontheway.ui;
+package arvix.cn.ontheway.ui.msg;
 
 import android.content.Context;
 import android.view.LayoutInflater;

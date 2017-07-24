@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/header_layout"
     android:layout_width="match_parent"
-    android:layout_height="55dip"
-    android:background="@drawable/top_bg"
+    android:layout_height="44dp"
+    android:background="@color/white"
     android:orientation="horizontal" >
 
     <RelativeLayout
@@ -47,8 +47,9 @@
         android:layout_centerInParent="true"
         android:maxEms="7"
         android:singleLine="true"
+        android:textColor="@color/text_label_default"
         android:text="标题标题标题标题"
-        android:textSize="20dp" />
+        android:textSize="17sp" />
 
     <LinearLayout
         android:layout_width="wrap_content"

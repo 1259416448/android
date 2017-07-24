@@ -1,19 +1,16 @@
-package arvix.cn.ontheway.ui;
+package arvix.cn.ontheway.ui.msg;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
-
+import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -22,33 +19,43 @@ import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.async.AsyncUtil;
 import arvix.cn.ontheway.async.Callback;
 import arvix.cn.ontheway.async.Result;
+import arvix.cn.ontheway.ui.BaseActivity;
+import arvix.cn.ontheway.ui.head.HeaderHolder;
 import arvix.cn.ontheway.ui.view.ListViewHolder;
+import arvix.cn.ontheway.utils.DLog;
+import arvix.cn.ontheway.utils.InterRouterUrl;
 import arvix.cn.ontheway.utils.UIUtils;
 
-public class MsgFrag extends BaseFragment implements OnItemClickListener, PullToRefreshBase.OnRefreshListener2<ListView> {
-    private MsgAdapter adapter;
+/**
+ * Created by asdtiang on 2017/7/24 0024.
+ * asdtiangxia@163.com
+ */
+
+public class SystemMsgActivity extends BaseActivity implements AdapterView.OnItemClickListener, PullToRefreshBase.OnRefreshListener2<ListView> {
+    private SystemMsgAdapter adapter;
     private List<MsgBean> datas;
     private ListViewHolder listHolder;
 
-    public static MsgFrag newInstance() {
-        MsgFrag frag = new MsgFrag();
-        Bundle args = new Bundle();
-        frag.setArguments(args);
-        return frag;
-    }
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = initView(inflater, container, savedInstanceState);
-        listHolder.list.setMode(Mode.BOTH);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_system_msg);
+        x.view().inject(self);
+        HeaderHolder head=new HeaderHolder();
+        head.init(self,"系统消息");
+        Log.i("tag","eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+        datas = new ArrayList();
+        initData(true);
+        Log.i("tag","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        adapter = new SystemMsgAdapter(this, datas);
+        Log.i("tag","bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
+        listHolder = ListViewHolder.initList(this);
+        listHolder.list.setAdapter(adapter);
+        listHolder.list.setOnItemClickListener(this);
+
+        Log.i("tag","ccccccccccccccccccccccccccccccccccccccccc");
+        listHolder.list.setMode(PullToRefreshBase.Mode.BOTH);
         listHolder.list.setOnRefreshListener(this);
-
-        return root;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         listHolder.list.setRefreshing();
     }
 
@@ -65,10 +72,12 @@ public class MsgFrag extends BaseFragment implements OnItemClickListener, PullTo
                 List<MsgBean> aPage = new ArrayList<MsgBean>();
                 for (int i = reqPage * pageSize; i < (reqPage + 1) * pageSize; i++) {
                     MsgBean b = new MsgBean();
-                    b.setTitle("TITLE:" + i);
+                    b.setTitle("系统消息:" + i);
+                    b.setContent("可以用在所有的场景，包括外部链接映射到内部页面与内部activity之间的跳转，可以通过Router统一起来"+i+"...");
+                    b.setMsgTimeMils(System.currentTimeMillis());
+                    b.setId(i);
                     aPage.add(b);
                 }
-                Thread.sleep(2000);
                 ret.setData(aPage);
                 return ret;
             }
@@ -89,7 +98,7 @@ public class MsgFrag extends BaseFragment implements OnItemClickListener, PullTo
                     datas.addAll(result.getData());
                     adapter.notifyDataSetChanged();
                 } else {
-                    new AlertDialog.Builder(act).setMessage(result.getErrorMsg()).show();
+                    new AlertDialog.Builder(SystemMsgActivity.this).setMessage(result.getErrorMsg()).show();
                 }
                 listHolder.mayShowEmpty(adapter.getCount());
                 listHolder.list.onRefreshComplete();
@@ -99,22 +108,10 @@ public class MsgFrag extends BaseFragment implements OnItemClickListener, PullTo
     }
 
 
-    private View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.common_list, container, false);
-        listHolder = ListViewHolder.initList(act, root);
-
-        datas = new ArrayList<MsgBean>();
-        adapter = new MsgAdapter(act, datas);
-        listHolder.list.setAdapter(adapter);
-        listHolder.list.setOnItemClickListener(this);
-        return root;
-    }
-
-
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         MsgBean m = (MsgBean) parent.getItemAtPosition(position);
-        UIUtils.toast(act, m.getTitle(), Toast.LENGTH_SHORT);
+        UIUtils.toast(SystemMsgActivity.this, m.getTitle(), Toast.LENGTH_SHORT);
     }
 
     @Override
