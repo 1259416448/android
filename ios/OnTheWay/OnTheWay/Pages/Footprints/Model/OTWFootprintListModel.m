@@ -24,6 +24,7 @@
         self.footprintContent=dic[@"footprintContent"];
         self.footprintPhotoArray=dic[@"footprintPhotoArray"];
         self.dateCreatedStr=dic[@"dateCreatedStr"];
+        self.footprintAddress=dic[@"footprintAddress"];
     }
     return self;
 }

@@ -10,6 +10,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.xutils.view.annotation.ViewInject;
@@ -18,6 +19,7 @@ import org.xutils.x;
 import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.ui.BaseFragment;
+import arvix.cn.ontheway.utils.StaticMethod;
 
 /**
  * Created by asdtiang on 2017/7/21 0021.
@@ -27,8 +29,12 @@ import arvix.cn.ontheway.ui.BaseFragment;
 public class MyProfileFragment extends BaseFragment {
     @ViewInject(R.id.to_person_info)
     private View nameLineVG;
+    @ViewInject(R.id.to_my_map_track)
+    private View myMapTrackVG;
     @ViewInject(R.id.nameTv)
     private TextView nameTv;
+    @ViewInject(R.id.header_img)
+    private ImageView headerIV;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,9 +46,17 @@ public class MyProfileFragment extends BaseFragment {
                 startActivity(new Intent(act,PersonInfoActivity.class));
             }
         });
+        myMapTrackVG.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(act,MyTrackMapActivity.class));
+            }
+        });
         nameTv.setText(App.user.getString("nickname","默认昵称"));
         IntentFilter filter=new IntentFilter(PersonInfoActivity.ACTION_USER_CHANGE);
         LocalBroadcastManager.getInstance(act).registerReceiver(receiver,filter);
+        StaticMethod.setCircularHeaderImg(headerIV,110,110);
+
         return root;
     }
 

@@ -1,19 +1,20 @@
-package arvix.cn.ontheway;
+package arvix.cn.ontheway.ui.usercenter;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.baidu.mapapi.map.BaiduMap;
@@ -33,29 +34,43 @@ import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
 import com.baidu.mapapi.search.poi.PoiDetailResult;
 import com.baidu.mapapi.search.poi.PoiIndoorResult;
 import com.baidu.mapapi.search.poi.PoiResult;
+
+import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
+
 import java.util.List;
+
+import arvix.cn.ontheway.App;
+import arvix.cn.ontheway.BaiduActivity;
+import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.service.BaiduLocationListenerService;
 import arvix.cn.ontheway.service.inter.BaiduPoiServiceInterface;
 import arvix.cn.ontheway.service.inter.CacheInterface;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.MainActivity;
 import arvix.cn.ontheway.utils.OnthewayApplication;
+import arvix.cn.ontheway.utils.StaticMethod;
 import arvix.cn.ontheway.utils.StaticVar;
 
-
 /**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
+ * Created by asdtiang on 2017/7/25 0025.
+ * asdtiangxia@163.com
  */
-public class BaiduActivity extends BaseActivity {
-    public static String EXTRA_KEYWORD = "baiduKeyWord";
 
-    private static String logTag =  BaiduActivity.class.getName();
+public class MyTrackMapActivity extends BaseActivity {
+
+    private static String logTag =  MyTrackMapActivity.class.getName();
     public static MapView mMapView = null;
     public static BaiduMap mBaiduMap = null;
     LocalBroadcastManager mLocalBroadcastManager;
     BroadcastReceiver mReceiver;
     private String searchKeyWord;
+    @ViewInject(R.id.header_img_track)
+    private ImageView headerIV;
+    @ViewInject(R.id.to_my_track_list)
+    private LinearLayout toMyTrackListLi;
+    @ViewInject(R.id.to_my_track_btn)
+    private Button toMyTrackListBtn ;
 
     /**
      * 监听Back键按下事件,方法2:
@@ -104,21 +119,20 @@ public class BaiduActivity extends BaseActivity {
 
                 if (poiResult == null
                         || poiResult.error == SearchResult.ERRORNO.RESULT_NOT_FOUND) {// 没有找到检索结果
-                    Toast.makeText(BaiduActivity.this, "未找到结果",
+                    Toast.makeText(MyTrackMapActivity.this, "未找到结果",
                             Toast.LENGTH_LONG).show();
                     return;
                 }
                 //获取POI检索结果
                 List<PoiInfo> allAddr = poiResult.getAllPoi();
+
                 for (PoiInfo p: allAddr) {
                     Log.i("MainActivity", "p.name--->" + p.name +"p.phoneNum" + p.phoneNum +" -->p.address:" + p.address + "p.location" + p.location);
                     //mBaiduMap.addOverlay()
-                    View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.custom_marker, null);
                     LatLng latLng = new LatLng(p.location.latitude,p.location.longitude);
-                    // ImageView img_hotel_image=
-                    // (ImageView)view.findViewById(R.id.img_hotel_image);
-                    // new
-                    // DownloadImageTask(img_hotel_image).execute(hotel.getHotelImageUrl());
+                    View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.custom_marker, null);
+                    ImageView headerIV=  (ImageView)view.findViewById(R.id.header_img);
+                    StaticMethod.setCircularHeaderImg(headerIV,50,50);
                     BitmapDescriptor markerIcon = BitmapDescriptorFactory.fromBitmap(getViewBitmap(view));
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("customData", p.phoneNum);
@@ -153,7 +167,10 @@ public class BaiduActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_baidu);
+        setContentView(R.layout.activity_my_track_map);
+        x.view().inject(this);
+        StaticMethod.setCircularHeaderImg(headerIV,180,180);
+
         searchKeyWord = getIntent().getStringExtra(BaiduActivity.EXTRA_KEYWORD);
         //获取地图控件引用
         mMapView = (MapView) findViewById(R.id.bmapView);
@@ -186,6 +203,20 @@ public class BaiduActivity extends BaseActivity {
         });
         //test cache
 //        new CacheDefauleTest(OnthewayApplication.cache).startTest();
+        toMyTrackListLi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("route","MyTrackListActivity---------------------------------------------------->");
+                startActivity(new Intent(self,MyTrackListActivity.class));
+            }
+        });
+        toMyTrackListBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("route","MyTrackListActivity btnnnnnn---------------------------------------------------->");
+                startActivity(new Intent(self,MyTrackListActivity.class));
+            }
+        });
     }
 
     @Override
@@ -214,18 +245,14 @@ public class BaiduActivity extends BaseActivity {
         }
     }
     private Bitmap getViewBitmap(View addViewContent) {
-
         addViewContent.setDrawingCacheEnabled(true);
-
         addViewContent.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
         addViewContent.layout(0, 0, addViewContent.getMeasuredWidth(), addViewContent.getMeasuredHeight());
-
         addViewContent.buildDrawingCache();
         Bitmap cacheBitmap = addViewContent.getDrawingCache();
         Bitmap bitmap = Bitmap.createBitmap(cacheBitmap);
         return bitmap;
     }
-
 
 
 }

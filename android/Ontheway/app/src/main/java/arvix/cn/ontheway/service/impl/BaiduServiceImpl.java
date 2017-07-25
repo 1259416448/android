@@ -40,6 +40,7 @@ public class BaiduServiceImpl implements BaiduServiceInterface{
         option.setIsNeedAddress(true);
         //可选，设置是否需要地址信息，默认不需要
         option.setOpenGps(true);
+
         //可选，默认false,设置是否使用gps
         option.setLocationNotify(true);
         //可选，默认false，设置是否当GPS有效时按照1S/1次频率输出GPS结果
