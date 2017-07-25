@@ -10,6 +10,7 @@ target 'OnTheWay' do
   pod 'YSCategorys'
   pod 'STPopup'
   pod 'SDCycleScrollView'
-  pod 'PYPhotoBrowser'
+  pod 'DACircularProgress'
+  pod 'TZImagePickerController'
 end
 

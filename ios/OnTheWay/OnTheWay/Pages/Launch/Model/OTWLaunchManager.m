@@ -18,6 +18,7 @@
 #import "OTWFootprintsViewController.h"
 #import "OTWARViewController.h"
 #import "OTWNewsViewController.h"
+#import "OTWPrintARViewController.h"
 #import "OTWPersonalViewController.h"
 #import "OTWUserModel.h"
 

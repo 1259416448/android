@@ -22,7 +22,7 @@
     self.navigationController.interactivePopGestureRecognizer.delegate = self;
     WeakSelf(self);
     _customNavigationBar = [[OTWCustomNavigationBar alloc] init];
-    _customNavigationBar.leftImage = [UIImage imageNamed:@"back"];
+    _customNavigationBar.leftImage = [UIImage imageNamed:@"back_2"];
     _customNavigationBar.leftButtonClicked = ^{
         [weakself leftNavigaionButtonClicked];
     };
@@ -54,7 +54,7 @@
 }
 
 - (CGFloat)navigationHeight {
-    return 65.0;
+    return 64.0;
 }
 
 - (void)setCustomNavigationLeftView:(UIView*)view {

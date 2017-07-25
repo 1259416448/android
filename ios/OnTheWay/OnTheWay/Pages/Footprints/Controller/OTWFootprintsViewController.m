@@ -70,6 +70,8 @@
     [self.view addSubview:self.fabuImageView];
     
     [self.view addSubview:self.pingmianImageView];
+    
+    [self.view bringSubviewToFront:self.customNavigationBar];
 }
 
 -(void)refresh
@@ -154,7 +156,7 @@
 
 -(UITableView*)footprintTableView{
     if(!_footprintTableView){
-        _footprintTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 65, SCREEN_WIDTH, SCREEN_HEIGHT-65) style:UITableViewStyleGrouped];
+        _footprintTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, self.navigationHeight - 20, SCREEN_WIDTH, SCREEN_HEIGHT) style:UITableViewStyleGrouped];
         _footprintTableView.dataSource = self;
         _footprintTableView.delegate = self;
         _footprintTableView.separatorStyle  = UITableViewCellSelectionStyleNone;
@@ -205,8 +207,12 @@
 }
 
 -(void)fubuClick{
-    OTWFootprintReleaseViewController *releaseVC = [[OTWFootprintReleaseViewController alloc] init];
-    [self.navigationController pushViewController:releaseVC animated:YES];
+    //验证登陆信息
+    
+    if(![[OTWLaunchManager sharedManager] showLoginViewWithController:self completion:nil]){
+        OTWFootprintReleaseViewController *releaseVC = [[OTWFootprintReleaseViewController alloc] init];
+        [self.navigationController pushViewController:releaseVC animated:YES];
+    };
 }
 -(void)pingmianClick{
     DLog(@"我点击了pingmianClick");
