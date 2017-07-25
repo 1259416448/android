@@ -1,4 +1,4 @@
-package arvix.cn.ontheway.ui.msg;
+package arvix.cn.ontheway.been;
 
 /**
  * Created by yd on 2017/7/20.
