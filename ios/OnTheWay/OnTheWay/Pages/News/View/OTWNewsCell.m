@@ -66,14 +66,14 @@
 - (UILabel*)subTitleLabel
 {
     if (!_subTitleLabel) {
-        _subTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, (self.Height-18)/2, 30, 18)];
-        _subTitleLabel.font = [UIFont systemFontOfSize:15];
-        _subTitleLabel.textColor = [UIColor color_202020];
+        _subTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, (self.Height-25)/2, 30, 25)];
+        _subTitleLabel.font = [UIFont systemFontOfSize:13];
+        _subTitleLabel.textColor = [UIColor whiteColor];
         _subTitleLabel.right = self.arrowImageView.left - 10;
-        _subTitleLabel.layer.cornerRadius = 10;
+        _subTitleLabel.layer.cornerRadius = 25/2;
         _subTitleLabel.layer.masksToBounds = YES;
         _subTitleLabel.textAlignment = NSTextAlignmentCenter;
-        _subTitleLabel.backgroundColor = [UIColor redColor];
+        _subTitleLabel.backgroundColor = [UIColor color_e50834];
     }
     
     return _subTitleLabel;
