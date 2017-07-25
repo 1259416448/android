@@ -7,14 +7,14 @@
         android:layout_width="32dp"
         android:layout_height="38dp"
         android:background="@drawable/ar_dw_fen"
-        android:gravity="center"
         android:orientation="horizontal" >
         <ImageView
-            android:visibility="gone"
-            android:id="@+id/img_hotel_image"
+            android:id="@+id/header_img"
+            android:layout_marginTop="3dp"
+            android:layout_marginLeft="3.5dp"
+            android:layout_marginRight="3.5dp"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:layout_gravity="center"
-            android:src="@drawable/hotel_pic" />
+            android:src="@drawable/header_default" />
     </LinearLayout>
 </LinearLayout>

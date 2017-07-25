@@ -1,7 +1,6 @@
 package arvix.cn.ontheway.ui.msg;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import org.xutils.x;
 import java.util.List;
 
 import arvix.cn.ontheway.R;
+import arvix.cn.ontheway.been.MsgBean;
 import arvix.cn.ontheway.utils.StaticMethod;
 
 /**
