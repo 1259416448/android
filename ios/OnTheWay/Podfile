@@ -12,5 +12,6 @@ target 'OnTheWay' do
   pod 'SDCycleScrollView'
   pod 'DACircularProgress'
   pod 'TZImagePickerController'
+  pod 'BaiduMapKit' #百度地图SDK
 end
 

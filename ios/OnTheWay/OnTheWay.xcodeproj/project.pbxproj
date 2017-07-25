@@ -517,6 +517,7 @@
 		D7F6B03E1F0D390D0013090A /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				DDEA15F41F2708B400056166 /* BaiduMap */,
 				DDEA15EA1F25D28E00056166 /* FLAnimatedImage */,
 				DDEA15BA1F25CCA500056166 /* PYPhotoBrowser */,
 				D7F6B03F1F0D390D0013090A /* README.md */,
@@ -1048,6 +1049,13 @@
 			path = FLAnimatedImage;
 			sourceTree = "<group>";
 		};
+		DDEA15F41F2708B400056166 /* BaiduMap */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = BaiduMap;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1214,6 +1222,7 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-OnTheWay/Pods-OnTheWay-resources.sh",
+				"${PODS_ROOT}/BaiduMapKit/BaiduMapKit/BaiduMapAPI_Map.framework/Resources/mapapi.bundle",
 				"${PODS_ROOT}/IQKeyboardManager/IQKeyboardManager/Resources/IQKeyboardManager.bundle",
 				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
 				"${PODS_ROOT}/TZImagePickerController/TZImagePickerController/TZImagePickerController/TZImagePickerController.bundle",

@@ -166,8 +166,8 @@
                 [weakself.navigationController pushViewController:releaseVC animated:YES];
             };
         }
-        [cell setData:_status[indexPath.section].monthData[indexPath.row]];
     }
+    [cell setData:_status[indexPath.section].monthData[indexPath.row]];
     return cell;
 }
 #pragma mark - 代理方法
