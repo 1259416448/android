@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/photo4_grid_two_photo_1"
+        android:layout_width="39dp"
+        android:layout_height="80dp" />
+    <ImageView
+        android:id="@+id/photo4_grid_four_photo_1"
+        android:layout_width="39dp"
+        android:layout_marginLeft="2dp"
+        android:layout_height="39dp" />
+    <ImageView
+        android:id="@+id/photo4_grid_four_photo_2"
+        android:layout_width="39dp"
+        android:layout_marginLeft="2dp"
+        android:layout_height="39dp" />
+</LinearLayout>
