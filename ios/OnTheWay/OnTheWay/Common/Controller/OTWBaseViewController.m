@@ -22,7 +22,7 @@
     self.navigationController.interactivePopGestureRecognizer.delegate = self;
     WeakSelf(self);
     _customNavigationBar = [[OTWCustomNavigationBar alloc] init];
-    _customNavigationBar.leftImage = [UIImage imageNamed:@"back_2"];
+    //_customNavigationBar.leftImage = [UIImage imageNamed:@"back_2"];
     _customNavigationBar.leftButtonClicked = ^{
         [weakself leftNavigaionButtonClicked];
     };
@@ -112,7 +112,7 @@
 
 - (void)netWorkErrorTips:(NSError*)error{
     DLog(@"请求失败>>>>：%@",error);
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.mode = MBProgressHUDModeText;
     if(error.code == -1004){
         hud.label.text =@"服务端繁忙，请稍后";

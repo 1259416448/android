@@ -55,7 +55,6 @@
 #pragma mark 设置模块
 -(void) setData:(OTWPersonalFootprintMonthDataModel *) data
 {
-
     //判断是否是今天，当data.day的值为0的时候，显示今天
     if([data.day isEqualToString:@"0"]){
         _footprintsDay.text=@"今天";

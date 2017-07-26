@@ -5,11 +5,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import org.xutils.view.annotation.ViewInject;
+
 import org.xutils.x;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +18,10 @@ import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.async.AsyncUtil;
 import arvix.cn.ontheway.async.Callback;
 import arvix.cn.ontheway.async.Result;
+import arvix.cn.ontheway.been.MsgBean;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.head.HeaderHolder;
 import arvix.cn.ontheway.ui.view.ListViewHolder;
-import arvix.cn.ontheway.utils.DLog;
-import arvix.cn.ontheway.utils.InterRouterUrl;
 import arvix.cn.ontheway.utils.UIUtils;
 
 /**

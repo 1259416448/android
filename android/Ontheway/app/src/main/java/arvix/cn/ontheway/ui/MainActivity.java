@@ -16,9 +16,13 @@ import java.util.HashMap;
 
 import arvix.cn.ontheway.BaiduActivity;
 import arvix.cn.ontheway.R;
+import arvix.cn.ontheway.service.inter.CacheInterface;
 import arvix.cn.ontheway.ui.ar.ArTrackActivity;
 import arvix.cn.ontheway.ui.msg.MsgFrag;
 import arvix.cn.ontheway.ui.usercenter.MyProfileFragment;
+import arvix.cn.ontheway.utils.OnthewayApplication;
+import arvix.cn.ontheway.utils.StaticMethod;
+import arvix.cn.ontheway.utils.StaticVar;
 
 /**
  * Created by yd on 2017/7/19.
@@ -44,6 +48,8 @@ public class MainActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+        CacheInterface cache = OnthewayApplication.getInstahce(CacheInterface.class);
+        cache.put(StaticVar.HEADER_URL_CACHE_KEY,"http://p2.so.qhmsg.com/sdr/599_900_/t019e91b7618003e862.jpg");
         initView();
     }
 

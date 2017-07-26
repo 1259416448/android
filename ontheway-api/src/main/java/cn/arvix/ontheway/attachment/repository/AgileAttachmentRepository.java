@@ -1,7 +1,7 @@
 package cn.arvix.ontheway.attachment.repository;
 
 import cn.arvix.ontheway.attachment.entity.AgileAttachment;
-import cn.arvix.base.common.entity.AgileModule;
+import cn.arvix.base.common.entity.SystemModule;
 import cn.arvix.base.common.repository.BaseRepository;
 import org.springframework.data.jpa.repository.Modifying;
 
@@ -12,6 +12,6 @@ import org.springframework.data.jpa.repository.Modifying;
 public interface AgileAttachmentRepository extends BaseRepository<AgileAttachment, Long> {
 
     @Modifying
-    int deleteByAgileModuleAndInstanceId(AgileModule agileModule, Long instanceId);
+    int deleteByAgileModuleAndInstanceId(SystemModule agileModule, Long instanceId);
 
 }

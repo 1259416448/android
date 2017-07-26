@@ -76,7 +76,16 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_baidu"
              />
-
+        <activity
+            android:name=".ui.usercenter.MyTrackMapActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="MyMapTrackActivity"
+            />
+        <activity
+            android:name=".ui.usercenter.MyTrackListActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="MyMapTrackActivity"
+            />
         <activity android:name=".ui.ar.ArTrackActivity">
         </activity>
     </application>

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.xutils.view.annotation.ViewInject;
@@ -16,6 +17,7 @@ import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.head.HeaderHolder;
+import arvix.cn.ontheway.utils.StaticMethod;
 
 /**
  * Created by asdtiang on 2017/7/21 0021.
@@ -27,7 +29,8 @@ public class PersonInfoActivity extends BaseActivity {
 
     @ViewInject(R.id.nameTv)
     private TextView nameTV;
-
+    @ViewInject(R.id.header_img)
+    private ImageView headerIV;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +53,7 @@ public class PersonInfoActivity extends BaseActivity {
                 startActivityForResult(intent, REQ_GET_NAME_EDIT);
             }
         });
+        StaticMethod.setCircularHeaderImg(headerIV,110,110);
     }
 
     @Override

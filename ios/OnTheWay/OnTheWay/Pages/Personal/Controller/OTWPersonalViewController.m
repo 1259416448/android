@@ -16,6 +16,7 @@
 #import "OTWRootViewController.h"
 #import "OTWTabBarController.h"
 #import "OTWPersonalFootprintsListController.h"
+#import "OTWPersonalClaimViewController.h"
 
 @interface OTWPersonalViewController() <UITableViewDataSource,UITableViewDelegate>
 
@@ -117,6 +118,10 @@
 #pragma mark 点击行
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     DLog(@"我点击了：%ld",indexPath.row);
+    if(indexPath.row==2){
+        OTWPersonalClaimViewController *PersonalClaimVC = [[OTWPersonalClaimViewController alloc] init];
+        [self.navigationController pushViewController:PersonalClaimVC animated:YES];
+    }
 }
 
 #pragma mark 返回第indexPath这行对应的内容
@@ -333,7 +338,7 @@
         
          //设置图标
         [_mySiteView addSubview: self.personalSiteIconImageView];
-        self.personalSiteIconImageView.image=[UIImage imageNamed:@"shezhi"];
+        self.personalSiteIconImageView.image=[UIImage imageNamed:@"wodekaquan-1"];
         
         //设置名称
         [_mySiteView addSubview: self.personalSiteNameLabel];

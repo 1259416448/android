@@ -10,7 +10,9 @@
 #import "OTWSystemNewsViewController.h"
 #import "OTWPraiseViewController.h"
 #import "OTWNewCommentListViewController.h"
+#import "OTWNewFootprintsControllerViewController.h"
 #import "OTWNewsCell.h"
+
 
 @interface OTWNewsViewController ()<UITableViewDelegate, UITableViewDataSource>
 
@@ -44,8 +46,8 @@
     self.title = @"消息";
     self.view.backgroundColor = [UIColor color_f4f4f4];
     
-    self.icons = @[@"news_xitong", @"news_xindezan", @"news_xindepinglun"];
-    self.titles = @[@"系统消息", @"新的赞", @"新的评论"];
+    self.icons = @[@"news_xitong", @"news_xindezan", @"news_xindepinglun",@"xx_dongtai"];
+    self.titles = @[@"系统消息", @"新的赞", @"新的评论",@"新的足迹动态"];
     
     [self.view addSubview:self.tableView];
     
@@ -118,6 +120,15 @@
             [self.navigationController pushViewController:newsCommentVC animated:YES];
         }
             break;
+            
+        case 3://新的足迹动态
+        {
+        
+            OTWNewFootprintsControllerViewController *newsFootprintsVC = [[OTWNewFootprintsControllerViewController alloc] init];
+            [self.navigationController pushViewController:newsFootprintsVC animated:YES];
+            
+        }
+        break;
         default:
             
             break;
