@@ -125,20 +125,26 @@ public class MyTrackMapActivity extends BaseActivity {
                 }
                 //获取POI检索结果
                 List<PoiInfo> allAddr = poiResult.getAllPoi();
-
+                Bitmap headerImg = StaticMethod.getHttpBitmap(StaticMethod.getUserHeaderUrl());
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                headerIV.setDrawingCacheEnabled(true);
                 for (PoiInfo p: allAddr) {
                     Log.i("MainActivity", "p.name--->" + p.name +"p.phoneNum" + p.phoneNum +" -->p.address:" + p.address + "p.location" + p.location);
-                    //mBaiduMap.addOverlay()
                     LatLng latLng = new LatLng(p.location.latitude,p.location.longitude);
                     View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.custom_marker, null);
-                    ImageView headerIV=  (ImageView)view.findViewById(R.id.header_img);
-                    StaticMethod.setCircularHeaderImg(headerIV,50,50);
+                    ImageView headerIVTemp=  (ImageView)view.findViewById(R.id.header_img);
+                    headerIVTemp.setImageBitmap(headerIV.getDrawingCache());
+                    headerIVTemp.setDrawingCacheEnabled(true);
                     BitmapDescriptor markerIcon = BitmapDescriptorFactory.fromBitmap(getViewBitmap(view));
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("customData", p.phoneNum);
                     OverlayOptions oo = new MarkerOptions().position(latLng).icon(markerIcon).zIndex(9).draggable(true).extraInfo(bundle);
                     mBaiduMap.addOverlay(oo);
-
+                    view.setDrawingCacheEnabled(false);
                 }
             }
             @Override

@@ -1,6 +1,7 @@
 package cn.arvix.ontheway.sys.user.service;
 
 import cn.arvix.base.common.entity.JSONResult;
+import cn.arvix.base.common.entity.SystemModule;
 import cn.arvix.base.common.entity.search.PageRequest;
 import cn.arvix.base.common.entity.search.Searchable;
 import cn.arvix.base.common.entity.search.filter.SearchFilter;
@@ -8,6 +9,8 @@ import cn.arvix.base.common.entity.search.filter.SearchFilterHelper;
 import cn.arvix.base.common.repository.hibernate.HibernateUtils;
 import cn.arvix.base.common.service.impl.BaseServiceImpl;
 import cn.arvix.base.common.utils.*;
+import cn.arvix.ontheway.ducuments.entity.Document;
+import cn.arvix.ontheway.ducuments.service.DocumentService;
 import cn.arvix.ontheway.sys.config.service.ConfigService;
 import cn.arvix.ontheway.sys.dto.*;
 import cn.arvix.ontheway.sys.organization.entity.Organization;
@@ -74,6 +77,13 @@ public class UserService extends BaseServiceImpl<User, Long> {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    private DocumentService documentService;
+
+    @Autowired
+    public void setDocumentService(DocumentService documentService) {
+        this.documentService = documentService;
+    }
 
     private final Cache authCache;
 
@@ -402,8 +412,10 @@ public class UserService extends BaseServiceImpl<User, Long> {
     public JSONResult updateUserName(User user) {
         User user1 = webContextUtils.getCheckCurrentUser();
         if (StringUtils.isEmpty(user.getName())) return JsonUtil.getFailure("name is not null");
+        if(user.getName().length()>20) return JsonUtil.getFailure("name length between 1 and 20 ");
         user1.setName(user.getName());
-        return super.update_(user1);
+        super.update(user1);
+        return JsonUtil.getSuccess(CommonContact.UPDATE_SUCCESS,CommonContact.UPDATE_SUCCESS);
     }
 
     /**
@@ -671,5 +683,35 @@ public class UserService extends BaseServiceImpl<User, Long> {
         return "sms_mobile_" + mobile;
     }
 
+    /**
+     * 更新用不性别
+     * @param user 用户数据
+     * @return 更新结果
+     */
+    public JSONResult updateGender(User user){
+        if (user.getGender() == null) return JsonUtil.getFailure("gender is not null");
+        User user1 = webContextUtils.getCheckCurrentUser();
+        user1.setGender(user.getGender());
+        super.update(user1);
+        return JsonUtil.getSuccess(CommonContact.UPDATE_SUCCESS,CommonContact.UPDATE_SUCCESS);
+    }
+
+    /**
+     * 更新用户头像
+     * 1、保存头像数据到document中
+     * 2、修改现有头像数据
+     * @param document 头像数据
+     * @return 操作结果
+     */
+    public JSONResult updateHeaderImg(Document document){
+        User user1 = webContextUtils.getCheckCurrentUser();
+        document.setParentId(user1.getId());
+        document.setSystemModule(SystemModule.user);
+        documentService.save_(document);
+        user1.setHeadImgYuan(document.getNewName());
+        user1.setHeadImg(document.getNewName());
+        super.update(user1);
+        return JsonUtil.getSuccess(CommonContact.UPDATE_SUCCESS,CommonContact.UPDATE_SUCCESS);
+    }
 
 }

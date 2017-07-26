@@ -198,7 +198,8 @@ public class ShiroConfig {
         filterMap.put("statelessAuthc", statelessAuthcFilter);
         shiroFilterFactoryBean.setFilters(filterMap);
         shiroFilterFactoryBean.setSecurityManager(securityManager);
-        shiroFilterFactoryBean.setFilterChainDefinitions("/api/v1/** =noSessionCreation,cors,statelessAuthc\n");
+        shiroFilterFactoryBean.setFilterChainDefinitions("/api/v1/** =noSessionCreation,cors,statelessAuthc\n" +
+                "/app/** =noSessionCreation,cors,statelessAuthc\n");
         return shiroFilterFactoryBean;
     }
 

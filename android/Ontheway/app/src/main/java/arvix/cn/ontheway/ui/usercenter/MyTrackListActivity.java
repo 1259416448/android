@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +11,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 
@@ -29,15 +26,11 @@ import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.async.AsyncUtil;
 import arvix.cn.ontheway.async.Callback;
 import arvix.cn.ontheway.async.Result;
-import arvix.cn.ontheway.been.MsgBean;
 import arvix.cn.ontheway.been.MyTrackBean;
 import arvix.cn.ontheway.data.MyTrackListData;
 import arvix.cn.ontheway.ui.BaseActivity;
-import arvix.cn.ontheway.ui.msg.SystemMsgActivity;
-import arvix.cn.ontheway.ui.msg.SystemMsgAdapter;
 import arvix.cn.ontheway.ui.view.ListViewHolder;
 import arvix.cn.ontheway.utils.StaticMethod;
-import arvix.cn.ontheway.utils.UIUtils;
 
 /**
  * Created by asdtiang on 2017/7/25 0025.
@@ -66,7 +59,7 @@ public class MyTrackListActivity  extends BaseActivity   implements AdapterView.
 
         initData(true);
         Log.i("tag","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-        adapter = new MyTrackListAdapter(this, R.layout.track_list_item,datas);
+        adapter = new MyTrackListAdapter(this, R.layout.my_track_list_item,datas);
         Log.i("tag","bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
         listHolder = ListViewHolder.initList(this);
         listHolder.list.setAdapter(adapter);
