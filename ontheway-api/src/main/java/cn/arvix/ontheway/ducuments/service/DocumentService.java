@@ -90,17 +90,6 @@ public class DocumentService extends BaseServiceImpl<Document, Long> {
      */
     public JSONResult save_(Document m) {
         User user = webContextUtils.getCheckCurrentUser();
-        //保存在附件中
-        if (Objects.equals(m.getParentId(), -1L)) {
-            //获取当前公司的附件文件夹
-            DocumentDir documentDir = documentDirService.getCompanyAttachment(user);
-            if (documentDir == null) return JsonUtil.getFailure(MessageUtils.message("document.save.error"), "document.save.error");
-            m.setParentId(documentDir.getId());
-        } else {
-            if (m.getParentId() != null) {
-                documentDirService.findOne(m.getParentId());
-            }
-        }
         m.setId(null);
         m.setDownloadNo(0);
         m.setFileUrl(m.getNewName());
