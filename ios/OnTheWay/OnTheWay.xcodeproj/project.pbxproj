@@ -618,6 +618,7 @@
 			isa = PBXGroup;
 			children = (
 				D72091811F27466500153542 /* MCYAugmentedReality */,
+				DDEA15F41F2708B400056166 /* BaiduMap */,
 				DDEA15EA1F25D28E00056166 /* FLAnimatedImage */,
 				DDEA15BA1F25CCA500056166 /* PYPhotoBrowser */,
 				D7F6B03F1F0D390D0013090A /* README.md */,
