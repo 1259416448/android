@@ -222,6 +222,12 @@ static CGFloat otwCustomTabBarHeight = 49.0;
             return ;
         };
     }
+    
+#warning test
+    if (index == 2) {
+        // 
+    }
+    
     NSMutableArray *items = [NSMutableArray arrayWithCapacity:0];
     for (UIView *view in tab.subviews) {
         if ([view isKindOfClass:[OTWCustomTabBarItem class]]) {

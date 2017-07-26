@@ -106,6 +106,9 @@
 + (UIColor *)color_bfbfbf {
     return [UIColor colorWithHexString:@"bfbfbf"];
 }
++(UIColor*)color_fbfbfb{
+    return [UIColor colorWithHexString:@"fbfbfb"];
+}
 + (UIColor *)color_d9d9d9 {
     return [UIColor colorWithHexString:@"d9d9d9"];
 }

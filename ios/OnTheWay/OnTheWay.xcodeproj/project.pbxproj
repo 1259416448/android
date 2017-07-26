@@ -12,6 +12,12 @@
 		1822EE681F20903100E07665 /* OTWFindprintChangeAddress.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1822EE671F20903100E07665 /* OTWFindprintChangeAddress.plist */; };
 		1822EE6B1F209E4900E07665 /* OTWFootprintChangeAddressArrayModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1822EE6A1F209E4900E07665 /* OTWFootprintChangeAddressArrayModel.m */; };
 		1822EE6E1F20E11C00E07665 /* CHCustomSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 1822EE6D1F20E11C00E07665 /* CHCustomSearchBar.m */; };
+		1843A7D31F26E5FD00A285A3 /* OTWNewFootprintsControllerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1843A7D21F26E5FD00A285A3 /* OTWNewFootprintsControllerViewController.m */; };
+		1843A7D61F26E67800A285A3 /* OTWNewFootprintsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1843A7D51F26E67800A285A3 /* OTWNewFootprintsTableViewCell.m */; };
+		1843A7D91F2737D600A285A3 /* OTWPersonalClaimViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1843A7D81F2737D600A285A3 /* OTWPersonalClaimViewController.m */; };
+		1843A7DC1F27447000A285A3 /* OTWPersonalClaimTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1843A7DB1F27447000A285A3 /* OTWPersonalClaimTableViewCell.m */; };
+		1843A7DF1F2837B100A285A3 /* OTWPersonalCollectController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1843A7DE1F2837B100A285A3 /* OTWPersonalCollectController.m */; };
+		1843A7E21F28380D00A285A3 /* OTWPersonalCollectTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1843A7E11F28380D00A285A3 /* OTWPersonalCollectTableViewCell.m */; };
 		189954C61F1CE986004CCEBE /* OTWShopDetailsViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 189954C51F1CE986004CCEBE /* OTWShopDetailsViewCell.m */; };
 		189954C91F1DAD3C004CCEBE /* OTWPersonalFootprintsListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 189954C81F1DAD3C004CCEBE /* OTWPersonalFootprintsListController.m */; };
 		189954CC1F1DAD5E004CCEBE /* OTWPersonalFootprintsListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 189954CB1F1DAD5E004CCEBE /* OTWPersonalFootprintsListModel.m */; };
@@ -42,6 +48,19 @@
 		B18A430A1F20829E002C7A5A /* OTWPraise.plist in Resources */ = {isa = PBXBuildFile; fileRef = B18A43091F20829E002C7A5A /* OTWPraise.plist */; };
 		B18A430D1F208515002C7A5A /* OTWNewsToOtherCommentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B18A430C1F208515002C7A5A /* OTWNewsToOtherCommentModel.m */; };
 		B18A43101F2088C2002C7A5A /* OTWNewsCommentTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B18A430F1F2088C2002C7A5A /* OTWNewsCommentTableCell.m */; };
+		D72091971F27466500153542 /* MCYARAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D72091831F27466500153542 /* MCYARAnnotation.m */; };
+		D72091981F27466500153542 /* MCYARAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = D72091851F27466500153542 /* MCYARAnnotationView.m */; };
+		D72091991F27466500153542 /* MCYARConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = D72091871F27466500153542 /* MCYARConfiguration.m */; };
+		D720919A1F27466500153542 /* MCYARPresenter+Stacking.m in Sources */ = {isa = PBXBuildFile; fileRef = D72091891F27466500153542 /* MCYARPresenter+Stacking.m */; };
+		D720919B1F27466500153542 /* MCYARPresenter.m in Sources */ = {isa = PBXBuildFile; fileRef = D720918B1F27466500153542 /* MCYARPresenter.m */; };
+		D720919C1F27466500153542 /* MCYARRadar.m in Sources */ = {isa = PBXBuildFile; fileRef = D720918D1F27466500153542 /* MCYARRadar.m */; };
+		D720919D1F27466500153542 /* MCYARTrackingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D720918F1F27466500153542 /* MCYARTrackingManager.m */; };
+		D720919E1F27466500153542 /* MCYARViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D72091911F27466500153542 /* MCYARViewController.m */; };
+		D720919F1F27466500153542 /* MCYCameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = D72091931F27466500153542 /* MCYCameraView.m */; };
+		D72091A01F27466500153542 /* ar_leida@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D72091951F27466500153542 /* ar_leida@2x.png */; };
+		D72091A11F27466500153542 /* ar_leida@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D72091961F27466500153542 /* ar_leida@3x.png */; };
+		D72091A91F2747AA00153542 /* OTWCustomAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = D72091A81F2747AA00153542 /* OTWCustomAnnotationView.m */; };
+		D72091EB1F2843A400153542 /* OTWARManagerController.m in Sources */ = {isa = PBXBuildFile; fileRef = D72091EA1F2843A400153542 /* OTWARManagerController.m */; };
 		D7F6AFF61F0D32FB0013090A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6AFF51F0D32FB0013090A /* main.m */; };
 		D7F6AFF91F0D32FB0013090A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6AFF81F0D32FB0013090A /* AppDelegate.m */; };
 		D7F6B0041F0D32FB0013090A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7F6B0021F0D32FB0013090A /* LaunchScreen.storyboard */; };
@@ -145,6 +164,18 @@
 		1822EE6A1F209E4900E07665 /* OTWFootprintChangeAddressArrayModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWFootprintChangeAddressArrayModel.m; sourceTree = "<group>"; };
 		1822EE6C1F20E11C00E07665 /* CHCustomSearchBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHCustomSearchBar.h; sourceTree = "<group>"; };
 		1822EE6D1F20E11C00E07665 /* CHCustomSearchBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHCustomSearchBar.m; sourceTree = "<group>"; };
+		1843A7D11F26E5FD00A285A3 /* OTWNewFootprintsControllerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWNewFootprintsControllerViewController.h; sourceTree = "<group>"; };
+		1843A7D21F26E5FD00A285A3 /* OTWNewFootprintsControllerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWNewFootprintsControllerViewController.m; sourceTree = "<group>"; };
+		1843A7D41F26E67800A285A3 /* OTWNewFootprintsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWNewFootprintsTableViewCell.h; sourceTree = "<group>"; };
+		1843A7D51F26E67800A285A3 /* OTWNewFootprintsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWNewFootprintsTableViewCell.m; sourceTree = "<group>"; };
+		1843A7D71F2737D600A285A3 /* OTWPersonalClaimViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPersonalClaimViewController.h; sourceTree = "<group>"; };
+		1843A7D81F2737D600A285A3 /* OTWPersonalClaimViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPersonalClaimViewController.m; sourceTree = "<group>"; };
+		1843A7DA1F27447000A285A3 /* OTWPersonalClaimTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTWPersonalClaimTableViewCell.h; path = OnTheWay/Pages/Personal/Controller/OTWPersonalClaimTableViewCell.h; sourceTree = SOURCE_ROOT; };
+		1843A7DB1F27447000A285A3 /* OTWPersonalClaimTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTWPersonalClaimTableViewCell.m; path = OnTheWay/Pages/Personal/Controller/OTWPersonalClaimTableViewCell.m; sourceTree = SOURCE_ROOT; };
+		1843A7DD1F2837B100A285A3 /* OTWPersonalCollectController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPersonalCollectController.h; sourceTree = "<group>"; };
+		1843A7DE1F2837B100A285A3 /* OTWPersonalCollectController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPersonalCollectController.m; sourceTree = "<group>"; };
+		1843A7E01F28380D00A285A3 /* OTWPersonalCollectTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTWPersonalCollectTableViewCell.h; path = OnTheWay/Pages/Personal/Controller/OTWPersonalCollectTableViewCell.h; sourceTree = SOURCE_ROOT; };
+		1843A7E11F28380D00A285A3 /* OTWPersonalCollectTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTWPersonalCollectTableViewCell.m; path = OnTheWay/Pages/Personal/Controller/OTWPersonalCollectTableViewCell.m; sourceTree = SOURCE_ROOT; };
 		189954C41F1CE986004CCEBE /* OTWShopDetailsViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTWShopDetailsViewCell.h; path = OnTheWay/Pages/Find/Controller/OTWShopDetailsViewCell.h; sourceTree = SOURCE_ROOT; };
 		189954C51F1CE986004CCEBE /* OTWShopDetailsViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTWShopDetailsViewCell.m; path = OnTheWay/Pages/Find/Controller/OTWShopDetailsViewCell.m; sourceTree = SOURCE_ROOT; };
 		189954C71F1DAD3C004CCEBE /* OTWPersonalFootprintsListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPersonalFootprintsListController.h; sourceTree = "<group>"; };
@@ -205,6 +236,30 @@
 		B18A430C1F208515002C7A5A /* OTWNewsToOtherCommentModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWNewsToOtherCommentModel.m; sourceTree = "<group>"; };
 		B18A430E1F2088C2002C7A5A /* OTWNewsCommentTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWNewsCommentTableCell.h; sourceTree = "<group>"; };
 		B18A430F1F2088C2002C7A5A /* OTWNewsCommentTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWNewsCommentTableCell.m; sourceTree = "<group>"; };
+		D72091821F27466500153542 /* MCYARAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCYARAnnotation.h; sourceTree = "<group>"; };
+		D72091831F27466500153542 /* MCYARAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCYARAnnotation.m; sourceTree = "<group>"; };
+		D72091841F27466500153542 /* MCYARAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCYARAnnotationView.h; sourceTree = "<group>"; };
+		D72091851F27466500153542 /* MCYARAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCYARAnnotationView.m; sourceTree = "<group>"; };
+		D72091861F27466500153542 /* MCYARConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCYARConfiguration.h; sourceTree = "<group>"; };
+		D72091871F27466500153542 /* MCYARConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCYARConfiguration.m; sourceTree = "<group>"; };
+		D72091881F27466500153542 /* MCYARPresenter+Stacking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MCYARPresenter+Stacking.h"; sourceTree = "<group>"; };
+		D72091891F27466500153542 /* MCYARPresenter+Stacking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MCYARPresenter+Stacking.m"; sourceTree = "<group>"; };
+		D720918A1F27466500153542 /* MCYARPresenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCYARPresenter.h; sourceTree = "<group>"; };
+		D720918B1F27466500153542 /* MCYARPresenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCYARPresenter.m; sourceTree = "<group>"; };
+		D720918C1F27466500153542 /* MCYARRadar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCYARRadar.h; sourceTree = "<group>"; };
+		D720918D1F27466500153542 /* MCYARRadar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCYARRadar.m; sourceTree = "<group>"; };
+		D720918E1F27466500153542 /* MCYARTrackingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCYARTrackingManager.h; sourceTree = "<group>"; };
+		D720918F1F27466500153542 /* MCYARTrackingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCYARTrackingManager.m; sourceTree = "<group>"; };
+		D72091901F27466500153542 /* MCYARViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCYARViewController.h; sourceTree = "<group>"; };
+		D72091911F27466500153542 /* MCYARViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCYARViewController.m; sourceTree = "<group>"; };
+		D72091921F27466500153542 /* MCYCameraView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCYCameraView.h; sourceTree = "<group>"; };
+		D72091931F27466500153542 /* MCYCameraView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCYCameraView.m; sourceTree = "<group>"; };
+		D72091951F27466500153542 /* ar_leida@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ar_leida@2x.png"; sourceTree = "<group>"; };
+		D72091961F27466500153542 /* ar_leida@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ar_leida@3x.png"; sourceTree = "<group>"; };
+		D72091A71F2747AA00153542 /* OTWCustomAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWCustomAnnotationView.h; sourceTree = "<group>"; };
+		D72091A81F2747AA00153542 /* OTWCustomAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWCustomAnnotationView.m; sourceTree = "<group>"; };
+		D72091E91F2843A400153542 /* OTWARManagerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWARManagerController.h; sourceTree = "<group>"; };
+		D72091EA1F2843A400153542 /* OTWARManagerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWARManagerController.m; sourceTree = "<group>"; };
 		D7F6AFF11F0D32FB0013090A /* OnTheWay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheWay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7F6AFF51F0D32FB0013090A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D7F6AFF71F0D32FB0013090A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -389,6 +444,57 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		D72091811F27466500153542 /* MCYAugmentedReality */ = {
+			isa = PBXGroup;
+			children = (
+				D72091821F27466500153542 /* MCYARAnnotation.h */,
+				D72091831F27466500153542 /* MCYARAnnotation.m */,
+				D72091841F27466500153542 /* MCYARAnnotationView.h */,
+				D72091851F27466500153542 /* MCYARAnnotationView.m */,
+				D72091861F27466500153542 /* MCYARConfiguration.h */,
+				D72091871F27466500153542 /* MCYARConfiguration.m */,
+				D72091881F27466500153542 /* MCYARPresenter+Stacking.h */,
+				D72091891F27466500153542 /* MCYARPresenter+Stacking.m */,
+				D720918A1F27466500153542 /* MCYARPresenter.h */,
+				D720918B1F27466500153542 /* MCYARPresenter.m */,
+				D720918C1F27466500153542 /* MCYARRadar.h */,
+				D720918D1F27466500153542 /* MCYARRadar.m */,
+				D720918E1F27466500153542 /* MCYARTrackingManager.h */,
+				D720918F1F27466500153542 /* MCYARTrackingManager.m */,
+				D72091901F27466500153542 /* MCYARViewController.h */,
+				D72091911F27466500153542 /* MCYARViewController.m */,
+				D72091921F27466500153542 /* MCYCameraView.h */,
+				D72091931F27466500153542 /* MCYCameraView.m */,
+				D72091941F27466500153542 /* Resources */,
+			);
+			path = MCYAugmentedReality;
+			sourceTree = "<group>";
+		};
+		D72091941F27466500153542 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D72091951F27466500153542 /* ar_leida@2x.png */,
+				D72091961F27466500153542 /* ar_leida@3x.png */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		D72091A51F27478700153542 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		D72091A61F27478700153542 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				D72091A71F2747AA00153542 /* OTWCustomAnnotationView.h */,
+				D72091A81F2747AA00153542 /* OTWCustomAnnotationView.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		D7F6AFE81F0D32FA0013090A = {
 			isa = PBXGroup;
 			children = (
@@ -523,6 +629,8 @@
 		D7F6B03E1F0D390D0013090A /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				D72091811F27466500153542 /* MCYAugmentedReality */,
+				DDEA15F41F2708B400056166 /* BaiduMap */,
 				DDEA15EA1F25D28E00056166 /* FLAnimatedImage */,
 				DDEA15BA1F25CCA500056166 /* PYPhotoBrowser */,
 				D7F6B03F1F0D390D0013090A /* README.md */,
@@ -594,9 +702,9 @@
 		D7F6B05F1F0DD35C0013090A /* AR */ = {
 			isa = PBXGroup;
 			children = (
+				D72091A51F27478700153542 /* Model */,
+				D72091A61F27478700153542 /* View */,
 				D7F6B0601F0DD35C0013090A /* Controller */,
-				D7F6B0611F0DD35C0013090A /* Model */,
-				D7F6B0621F0DD35C0013090A /* View */,
 			);
 			path = AR;
 			sourceTree = "<group>";
@@ -606,22 +714,10 @@
 			children = (
 				D7F6B07F1F0DD44C0013090A /* OTWARViewController.h */,
 				D7F6B0801F0DD44C0013090A /* OTWARViewController.m */,
+				D72091E91F2843A400153542 /* OTWARManagerController.h */,
+				D72091EA1F2843A400153542 /* OTWARManagerController.m */,
 			);
 			path = Controller;
-			sourceTree = "<group>";
-		};
-		D7F6B0611F0DD35C0013090A /* Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
-		D7F6B0621F0DD35C0013090A /* View */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = View;
 			sourceTree = "<group>";
 		};
 		D7F6B0631F0DD3690013090A /* Find */ = {
@@ -761,6 +857,8 @@
 				B181AB5B1F1F7F56009929D1 /* OTWPraiseViewController.h */,
 				B18A43031F207BB6002C7A5A /* OTWNewCommentListViewController.h */,
 				B18A43041F207BB6002C7A5A /* OTWNewCommentListViewController.m */,
+				1843A7D11F26E5FD00A285A3 /* OTWNewFootprintsControllerViewController.h */,
+				1843A7D21F26E5FD00A285A3 /* OTWNewFootprintsControllerViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -789,6 +887,10 @@
 				18B034BB1F14A42800F53461 /* OTWPersonalViewController.m */,
 				189954C71F1DAD3C004CCEBE /* OTWPersonalFootprintsListController.h */,
 				189954C81F1DAD3C004CCEBE /* OTWPersonalFootprintsListController.m */,
+				1843A7D71F2737D600A285A3 /* OTWPersonalClaimViewController.h */,
+				1843A7D81F2737D600A285A3 /* OTWPersonalClaimViewController.m */,
+				1843A7DD1F2837B100A285A3 /* OTWPersonalCollectController.h */,
+				1843A7DE1F2837B100A285A3 /* OTWPersonalCollectController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -811,6 +913,10 @@
 			children = (
 				189954D31F1DAE4A004CCEBE /* OTWPersonalFootprintsListTableViewCell.h */,
 				189954D41F1DAE4A004CCEBE /* OTWPersonalFootprintsListTableViewCell.m */,
+				1843A7DA1F27447000A285A3 /* OTWPersonalClaimTableViewCell.h */,
+				1843A7DB1F27447000A285A3 /* OTWPersonalClaimTableViewCell.m */,
+				1843A7E01F28380D00A285A3 /* OTWPersonalCollectTableViewCell.h */,
+				1843A7E11F28380D00A285A3 /* OTWPersonalCollectTableViewCell.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -950,6 +1056,8 @@
 				B181AB5E1F1F7F85009929D1 /* OTWPraiseViewTableCell.m */,
 				B18A430E1F2088C2002C7A5A /* OTWNewsCommentTableCell.h */,
 				B18A430F1F2088C2002C7A5A /* OTWNewsCommentTableCell.m */,
+				1843A7D41F26E67800A285A3 /* OTWNewFootprintsTableViewCell.h */,
+				1843A7D51F26E67800A285A3 /* OTWNewFootprintsTableViewCell.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1058,6 +1166,13 @@
 			path = FLAnimatedImage;
 			sourceTree = "<group>";
 		};
+		DDEA15F41F2708B400056166 /* BaiduMap */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = BaiduMap;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1128,7 +1243,6 @@
 				TargetAttributes = {
 					D7F6AFF01F0D32FA0013090A = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = SEMAPEJ292;
 						ProvisioningStyle = Automatic;
 					};
 					D7F6B0091F0D32FB0013090A = {
@@ -1173,11 +1287,13 @@
 				DDEA15B61F21A91200056166 /* OTWNewsCommentList.plist in Resources */,
 				DDDAE08F1F1CFA5B00981E60 /* OTWFootprintDetail.plist in Resources */,
 				D7F6B0041F0D32FB0013090A /* LaunchScreen.storyboard in Resources */,
+				D72091A01F27466500153542 /* ar_leida@2x.png in Resources */,
 				18B034CD1F171ED300F53461 /* OTWFindBusinessmen.plist in Resources */,
 				B13ADA281F1C9932008E889C /* OTWSystemNews.plist in Resources */,
 				DDC0A9431F1F7B1800A6E4DB /* OTWUserFootprintList.plist in Resources */,
 				DDDAE0931F1F0D4C00981E60 /* Assets.xcassets in Resources */,
 				DD9452F51F160CD7004EDDED /* OTWFootprintList.plist in Resources */,
+				D72091A11F27466500153542 /* ar_leida@3x.png in Resources */,
 				DDEA15E51F25CCA500056166 /* PYPhotosView.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1224,6 +1340,7 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-OnTheWay/Pods-OnTheWay-resources.sh",
+				"${PODS_ROOT}/BaiduMapKit/BaiduMapKit/BaiduMapAPI_Map.framework/Resources/mapapi.bundle",
 				"${PODS_ROOT}/IQKeyboardManager/IQKeyboardManager/Resources/IQKeyboardManager.bundle",
 				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
 				"${PODS_ROOT}/TZImagePickerController/TZImagePickerController/TZImagePickerController/TZImagePickerController.bundle",
@@ -1259,9 +1376,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D720919A1F27466500153542 /* MCYARPresenter+Stacking.m in Sources */,
 				D7F6B0401F0D390D0013090A /* README.md in Sources */,
+				D72091971F27466500153542 /* MCYARAnnotation.m in Sources */,
+				D720919B1F27466500153542 /* MCYARPresenter.m in Sources */,
 				DD14F2451F11CB5F004DFE4A /* GCTokenManager.m in Sources */,
+				D72091991F27466500153542 /* MCYARConfiguration.m in Sources */,
 				DDEA15DF1F25CCA500056166 /* PYPhotosPreviewController.m in Sources */,
+				1843A7D61F26E67800A285A3 /* OTWNewFootprintsTableViewCell.m in Sources */,
 				B18A43081F207D14002C7A5A /* OTWNewsCommentModel.m in Sources */,
 				D7F6AFF91F0D32FB0013090A /* AppDelegate.m in Sources */,
 				189954D51F1DAE4A004CCEBE /* OTWPersonalFootprintsListTableViewCell.m in Sources */,
@@ -1270,6 +1392,7 @@
 				DDD4AB4E1F1B020400D42CF3 /* OTWCommentFrame.m in Sources */,
 				D7F6B07B1F0DD41F0013090A /* OTWFootprintsViewController.m in Sources */,
 				DD9452EE1F15CC29004EDDED /* OTWFootprintListModel.m in Sources */,
+				D72091EB1F2843A400153542 /* OTWARManagerController.m in Sources */,
 				DDABAA4B1F12801E00010532 /* OTWPersonalEditNicknameController.m in Sources */,
 				DDEA15DE1F25CCA500056166 /* PYPhotosNavigationController.m in Sources */,
 				D7F6B0431F0D39160013090A /* README.md in Sources */,
@@ -1282,16 +1405,19 @@
 				B18A430D1F208515002C7A5A /* OTWNewsToOtherCommentModel.m in Sources */,
 				18B034B91F139C1500F53461 /* OTWPersonalSiteController.m in Sources */,
 				DDEA15F31F25D2A100056166 /* FLAnimatedImageView+WebCache.m in Sources */,
+				1843A7E21F28380D00A285A3 /* OTWPersonalCollectTableViewCell.m in Sources */,
 				1822EE631F20845A00E07665 /* OTWFootprintsChangeAddressModel.m in Sources */,
 				D7F6B03D1F0D39060013090A /* README.md in Sources */,
 				DDEA15E31F25CCA500056166 /* PYPhotoBrowserConst.m in Sources */,
 				DD14F23B1F1132FE004DFE4A /* NSString+RegexCategory.m in Sources */,
 				DD9452F01F15D139004EDDED /* OTWFootprintListTableViewCell.m in Sources */,
+				1843A7D91F2737D600A285A3 /* OTWPersonalClaimViewController.m in Sources */,
 				D7F6B0811F0DD44C0013090A /* OTWARViewController.m in Sources */,
 				B18A43101F2088C2002C7A5A /* OTWNewsCommentTableCell.m in Sources */,
 				D7F6B0B31F1089400013090A /* OTWLoginService.m in Sources */,
 				DD14F2401F113654004DFE4A /* HmacUtils.m in Sources */,
 				D7F6B0371F0D38EA0013090A /* README.md in Sources */,
+				1843A7D31F26E5FD00A285A3 /* OTWNewFootprintsControllerViewController.m in Sources */,
 				DD35209D1F188FBF00E8D725 /* OTWFootprintDetailViewCell.m in Sources */,
 				18B034E41F1CE6B300F53461 /* OTWShopDetailsController.m in Sources */,
 				DDB8C29A1F1320B90091E7B0 /* OTWPersonalInfoController.m in Sources */,
@@ -1301,9 +1427,12 @@
 				B183D9B11F2722BD00CF3E1F /* BottomSheetDemoViewController.m in Sources */,
 				D7F6B0A91F1081850013090A /* OTWNetworkManager.m in Sources */,
 				DDD4AB4B1F1AFC6900D42CF3 /* OTWFootprintDetailFrame.m in Sources */,
+				D720919E1F27466500153542 /* MCYARViewController.m in Sources */,
 				B18A43051F207BB6002C7A5A /* OTWNewCommentListViewController.m in Sources */,
+				1843A7DC1F27447000A285A3 /* OTWPersonalClaimTableViewCell.m in Sources */,
 				DDC0A93A1F1F77D100A6E4DB /* OTWSystemNewsModel.m in Sources */,
 				D7F6B0B91F14E5C60013090A /* OTWCustomTabBar.m in Sources */,
+				D720919C1F27466500153542 /* MCYARRadar.m in Sources */,
 				D7F6B0B61F10AA2D0013090A /* OTWLoginViewController.m in Sources */,
 				DDEA15E41F25CCA500056166 /* PYProgressView.m in Sources */,
 				DDC0A94C1F2089AA00A6E4DB /* OTWFootprintsChangeAddressController.m in Sources */,
@@ -1316,6 +1445,7 @@
 				D7F6B0CB1F1627000013090A /* OTWNewsCell.m in Sources */,
 				B183D9981F221D9900CF3E1F /* OTWPrintARViewController.m in Sources */,
 				DD3520941F18670800E8D725 /* OTWFootprintDetailController.m in Sources */,
+				D72091A91F2747AA00153542 /* OTWCustomAnnotationView.m in Sources */,
 				D7F6B05B1F0DD0280013090A /* OTWBaseViewController.m in Sources */,
 				DDEA15DD1F25CCA500056166 /* UIView+PYExtension.m in Sources */,
 				B13ADA1D1F1B23DA008E889C /* OTWSystemNewsViewController.m in Sources */,
@@ -1336,6 +1466,7 @@
 				B181AB5C1F1F7F56009929D1 /* OTWPraiseViewController.m in Sources */,
 				D7F6AFF61F0D32FB0013090A /* main.m in Sources */,
 				18B034C51F171BC100F53461 /* OTWFindBusinessmenController.m in Sources */,
+				D72091981F27466500153542 /* MCYARAnnotationView.m in Sources */,
 				DDEA15E21F25CCA500056166 /* PYPhoto.m in Sources */,
 				D7F6B08B1F0DD5370013090A /* UIImage+Color.m in Sources */,
 				DD14F2481F11CDCA004DFE4A /* GCTokenModel.m in Sources */,
@@ -1350,10 +1481,13 @@
 				18B034C21F15CC3F00F53461 /* OTWFindModel.m in Sources */,
 				DDEA15E01F25CCA500056166 /* PYPhotosReaderController.m in Sources */,
 				1822EE6B1F209E4900E07665 /* OTWFootprintChangeAddressArrayModel.m in Sources */,
+				D720919D1F27466500153542 /* MCYARTrackingManager.m in Sources */,
+				D720919F1F27466500153542 /* MCYCameraView.m in Sources */,
 				D7F6B0541F0DCE420013090A /* UIView+Frame.m in Sources */,
 				B181AB5F1F1F7F85009929D1 /* OTWPraiseViewTableCell.m in Sources */,
 				DDEA15E61F25CCA500056166 /* PYPhotoBrowseView.m in Sources */,
 				18BC9E441F1F716F00C7B6C1 /* OTWPersonalFootprintMonthDataModel.m in Sources */,
+				1843A7DF1F2837B100A285A3 /* OTWPersonalCollectController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1498,12 +1632,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = SEMAPEJ292;
+				DEVELOPMENT_TEAM = "";
 				GCC_PREFIX_HEADER = "$(SRCROOT)/OnTheWay/PrefixHeader.pch";
 				INFOPLIST_FILE = OnTheWay/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.WeiHuan.OnTheWay;
+				PRODUCT_BUNDLE_IDENTIFIER = com.WeiHuan.OneTheWay;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1516,13 +1650,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = SEMAPEJ292;
+				DEVELOPMENT_TEAM = "";
 				GCC_PREFIX_HEADER = "$(SRCROOT)/OnTheWay/PrefixHeader.pch";
 				INFOPLIST_FILE = OnTheWay/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.WeiHuan.OnTheWay;
+				PRODUCT_BUNDLE_IDENTIFIER = com.WeiHuan.OneTheWay;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;

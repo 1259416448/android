@@ -6,7 +6,7 @@ import cn.arvix.ontheway.ducuments.entity.Document;
 import cn.arvix.ontheway.ducuments.service.DocumentService;
 import cn.arvix.ontheway.sys.config.service.ConfigService;
 import cn.arvix.ontheway.sys.utils.RegExpValidatorUtils;
-import cn.arvix.base.common.entity.AgileModule;
+import cn.arvix.base.common.entity.SystemModule;
 import cn.arvix.base.common.entity.search.Searchable;
 import cn.arvix.base.common.service.impl.BaseServiceImpl;
 import cn.arvix.base.common.utils.CommonContact;
@@ -64,7 +64,7 @@ public class AgileAttachmentService extends BaseServiceImpl<AgileAttachment, Lon
      * @param fileIds     文件IDs
      */
     @Transactional(rollbackFor = Exception.class)
-    public void save(Long instanceId, AgileModule agileModule, Long[] fileIds) {
+    public void save(Long instanceId, SystemModule agileModule, Long[] fileIds) {
         if (fileIds != null && fileIds.length > 0) {
             for (Long fileId : fileIds) {
                 save(instanceId, agileModule, fileId);
@@ -80,7 +80,7 @@ public class AgileAttachmentService extends BaseServiceImpl<AgileAttachment, Lon
      * @param fileId      文件ID
      */
     @Transactional(rollbackFor = Exception.class)
-    public void save(Long instanceId, AgileModule agileModule, Long fileId) {
+    public void save(Long instanceId, SystemModule agileModule, Long fileId) {
         AgileAttachment agileAttachment = new AgileAttachment();
         agileAttachment.setAgileModule(agileModule);
         agileAttachment.setInstanceId(instanceId);
@@ -96,7 +96,7 @@ public class AgileAttachmentService extends BaseServiceImpl<AgileAttachment, Lon
      * @param agileModule 附件类型
      * @param instanceId  实例ID
      */
-    public List<Map<String, Object>> getAttachments(AgileModule agileModule, Long instanceId) {
+    public List<Map<String, Object>> getAttachments(SystemModule agileModule, Long instanceId) {
         Map<String, Object> params = Maps.newHashMap();
         params.put("agileModule_eq", agileModule);
         params.put("instanceId_eq", instanceId);
@@ -154,7 +154,7 @@ public class AgileAttachmentService extends BaseServiceImpl<AgileAttachment, Lon
      * @param agileModule 模块
      * @param instanceId  实例ID
      */
-    public void deleteByModuleAndInstanceId(AgileModule agileModule, Long instanceId) {
+    public void deleteByModuleAndInstanceId(SystemModule agileModule, Long instanceId) {
         getAgileAttachmentRepository().deleteByAgileModuleAndInstanceId(agileModule, instanceId);
     }
 

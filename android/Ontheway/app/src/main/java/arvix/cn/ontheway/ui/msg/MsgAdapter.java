@@ -13,6 +13,7 @@ import org.xutils.x;
 import java.util.List;
 
 import arvix.cn.ontheway.R;
+import arvix.cn.ontheway.been.MsgBean;
 
 public class MsgAdapter extends ArrayAdapter<MsgBean> {
     Context ctx;

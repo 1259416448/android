@@ -94,7 +94,6 @@ public class BaiduActivity extends BaseActivity {
         mBaiduMap.setMapStatus(mMapStatusUpdate);
         Log.i(logTag,"init location from cache");
 
-
         BaiduPoiServiceInterface poiService = OnthewayApplication.getInstahce(BaiduPoiServiceInterface.class);
         if(TextUtils.isEmpty(searchKeyWord)){
             searchKeyWord = "美食";
