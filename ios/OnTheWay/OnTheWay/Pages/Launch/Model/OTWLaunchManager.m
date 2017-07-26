@@ -16,7 +16,7 @@
 
 #import "OTWFindViewController.h"
 #import "OTWFootprintsViewController.h"
-#import "OTWARViewController.h"
+#import "OTWARManagerController.h"
 #import "OTWNewsViewController.h"
 #import "OTWPrintARViewController.h"
 #import "OTWPersonalViewController.h"
@@ -186,7 +186,7 @@
             OTWFootprintsViewController *footprintsVC = [[OTWFootprintsViewController alloc] init];
             UINavigationController * footprintsNav = [[UINavigationController alloc] initWithRootViewController:footprintsVC]; // 足迹
             
-            OTWARViewController * arVC = [[OTWARViewController alloc] init];
+            OTWARManagerController * arVC = [[OTWARManagerController alloc] init];
             UINavigationController * arNav = [[UINavigationController alloc] initWithRootViewController:arVC]; // AR
             
             OTWNewsViewController *newsVC = [[OTWNewsViewController alloc] init];

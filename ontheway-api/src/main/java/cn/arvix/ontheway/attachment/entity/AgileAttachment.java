@@ -1,7 +1,7 @@
 package cn.arvix.ontheway.attachment.entity;
 
 import cn.arvix.ontheway.ducuments.entity.Document;
-import cn.arvix.base.common.entity.AgileModule;
+import cn.arvix.base.common.entity.SystemModule;
 import cn.arvix.base.common.entity.BaseEntity;
 import cn.arvix.base.common.utils.HibernateValidationUtil;
 
@@ -25,7 +25,7 @@ public class AgileAttachment extends BaseEntity<Long> {
      */
     @NotNull(message = "attachmentType is not null")
     @Enumerated(EnumType.STRING)
-    private AgileModule agileModule;
+    private SystemModule agileModule;
 
     /**
      * 文件
@@ -53,11 +53,11 @@ public class AgileAttachment extends BaseEntity<Long> {
     }
 
 
-    public AgileModule getAgileModule() {
+    public SystemModule getAgileModule() {
         return agileModule;
     }
 
-    public void setAgileModule(AgileModule agileModule) {
+    public void setAgileModule(SystemModule agileModule) {
         this.agileModule = agileModule;
     }
 

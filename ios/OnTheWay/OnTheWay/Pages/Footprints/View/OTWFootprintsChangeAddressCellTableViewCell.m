@@ -43,11 +43,18 @@
     [self.contentView addSubview:checkImgView];
 }
 -(void) setData:(OTWFootprintChangeAddressArrayModel *) data{
-    footprintChangeAddressName.frame=CGRectMake(15, 15, SCREEN_WIDTH-30-15-15, 20);
+    
+    CGFloat w = SCREEN_WIDTH - 15 - 15;
+    
+    if(data.isClick){
+        w -= 30;
+    }
+    
+    footprintChangeAddressName.frame=CGRectMake(15, 15, w, 20);
     footprintChangeAddressName.text=data.name;
     footprintChangeAddressName.font=[UIFont systemFontOfSize:16];
     
-    footprintChangeAddress.frame=CGRectMake(15, 40, SCREEN_WIDTH-30-15-15, 20);
+    footprintChangeAddress.frame=CGRectMake(15, 40, w, 20);
     footprintChangeAddress.text=data.address;
     footprintChangeAddress.textColor=[UIColor color_999999];
     footprintChangeAddress.font=[UIFont systemFontOfSize:14];

@@ -16,6 +16,7 @@
 #import "OTWUserModel.h"
 #import "OTWCustomNavigationBar.h"
 #import "OTWFootprintReleaseViewController.h"
+#import "OTWPlaneMapViewController.h"
 
 @interface OTWFootprintsViewController () <UITableViewDataSource,UITableViewDelegate>
 
@@ -214,8 +215,16 @@
         [self.navigationController pushViewController:releaseVC animated:YES];
     };
 }
+
+-(void)toPlaneMap
+{
+    OTWPlaneMapViewController *planeMapVC = [[OTWPlaneMapViewController alloc] init];
+    [self.navigationController pushViewController:planeMapVC animated:YES];
+}
 -(void)pingmianClick{
     DLog(@"我点击了pingmianClick");
+    OTWPlaneMapViewController *planeMapVC = [[OTWPlaneMapViewController alloc] init];
+    [self.navigationController pushViewController:planeMapVC animated:YES];
 }
 
 @end

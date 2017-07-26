@@ -1,5 +1,6 @@
 package cn.arvix.ontheway.ducuments.entity;
 
+import cn.arvix.base.common.entity.SystemModule;
 import cn.arvix.ontheway.sys.user.entity.User;
 import cn.arvix.base.common.entity.BaseEntity;
 import cn.arvix.base.common.utils.HibernateValidationUtil;
@@ -26,19 +27,27 @@ public class Document extends BaseEntity<Long> {
     @Column
     @NotNull(message = "name is not null")
     @Length(min = 1, max = 255, message = "The length of the name is between {min} and {max}!")
+    @ApiModelProperty(value = "图片名称")
     private String name;
 
     //名称
     @Column
     @NotNull(message = "newName is not null")
     @Length(min = 1, max = 255, message = "The length of the newName is between {min} and {max}!")
+    @ApiModelProperty(value = "七牛key名称")
     private String newName;
 
     /**
-     * 父路径
+     * 当前数据可以保存文件夹ID 也可以是足迹ID 也可以是商家的图集
+     * 需要注意的是，需要和类型一起做查询 整形ID可能会出现相同情况
      */
     @Column
+    @ApiModelProperty(hidden = true)
     private Long parentId;
+
+    @Enumerated(EnumType.STRING)
+    @ApiModelProperty(hidden = true)
+    private SystemModule systemModule;
 
     /**
      * 文件类型
@@ -53,27 +62,27 @@ public class Document extends BaseEntity<Long> {
     /**
      * 文件路径
      */
+    @ApiModelProperty(hidden = true)
     private String fileUrl;
 
     /**
      * 下载数量
      */
+    @ApiModelProperty(hidden = true)
     private Integer downloadNo;
 
     /**
      * 描述信息
      */
     @Column(columnDefinition = "longtext")
-
-    /**
-     * @NotNull(message = "content is not null!")
-     */
+    @ApiModelProperty(hidden = true)
     private String content;
 
     /**
      * 图标
      */
     @Column
+    @ApiModelProperty(hidden = true)
     private String iconCode;
 
     /**
@@ -92,7 +101,6 @@ public class Document extends BaseEntity<Long> {
     @ManyToOne(fetch = FetchType.LAZY)
     @ApiModelProperty(hidden = true)
     private User user;
-
 
     public String tableName() {
         return TABLE_NAME;
@@ -259,5 +267,13 @@ public class Document extends BaseEntity<Long> {
 
     public void setH(Integer h) {
         this.h = h;
+    }
+
+    public SystemModule getSystemModule() {
+        return systemModule;
+    }
+
+    public void setSystemModule(SystemModule systemModule) {
+        this.systemModule = systemModule;
     }
 }
