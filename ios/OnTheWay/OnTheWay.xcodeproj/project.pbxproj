@@ -16,6 +16,8 @@
 		1843A7D61F26E67800A285A3 /* OTWNewFootprintsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1843A7D51F26E67800A285A3 /* OTWNewFootprintsTableViewCell.m */; };
 		1843A7D91F2737D600A285A3 /* OTWPersonalClaimViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1843A7D81F2737D600A285A3 /* OTWPersonalClaimViewController.m */; };
 		1843A7DC1F27447000A285A3 /* OTWPersonalClaimTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1843A7DB1F27447000A285A3 /* OTWPersonalClaimTableViewCell.m */; };
+		1843A7DF1F2837B100A285A3 /* OTWPersonalCollectController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1843A7DE1F2837B100A285A3 /* OTWPersonalCollectController.m */; };
+		1843A7E21F28380D00A285A3 /* OTWPersonalCollectTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1843A7E11F28380D00A285A3 /* OTWPersonalCollectTableViewCell.m */; };
 		189954C61F1CE986004CCEBE /* OTWShopDetailsViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 189954C51F1CE986004CCEBE /* OTWShopDetailsViewCell.m */; };
 		189954C91F1DAD3C004CCEBE /* OTWPersonalFootprintsListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 189954C81F1DAD3C004CCEBE /* OTWPersonalFootprintsListController.m */; };
 		189954CC1F1DAD5E004CCEBE /* OTWPersonalFootprintsListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 189954CB1F1DAD5E004CCEBE /* OTWPersonalFootprintsListModel.m */; };
@@ -168,6 +170,10 @@
 		1843A7D81F2737D600A285A3 /* OTWPersonalClaimViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPersonalClaimViewController.m; sourceTree = "<group>"; };
 		1843A7DA1F27447000A285A3 /* OTWPersonalClaimTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTWPersonalClaimTableViewCell.h; path = OnTheWay/Pages/Personal/Controller/OTWPersonalClaimTableViewCell.h; sourceTree = SOURCE_ROOT; };
 		1843A7DB1F27447000A285A3 /* OTWPersonalClaimTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTWPersonalClaimTableViewCell.m; path = OnTheWay/Pages/Personal/Controller/OTWPersonalClaimTableViewCell.m; sourceTree = SOURCE_ROOT; };
+		1843A7DD1F2837B100A285A3 /* OTWPersonalCollectController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPersonalCollectController.h; sourceTree = "<group>"; };
+		1843A7DE1F2837B100A285A3 /* OTWPersonalCollectController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPersonalCollectController.m; sourceTree = "<group>"; };
+		1843A7E01F28380D00A285A3 /* OTWPersonalCollectTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTWPersonalCollectTableViewCell.h; path = OnTheWay/Pages/Personal/Controller/OTWPersonalCollectTableViewCell.h; sourceTree = SOURCE_ROOT; };
+		1843A7E11F28380D00A285A3 /* OTWPersonalCollectTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTWPersonalCollectTableViewCell.m; path = OnTheWay/Pages/Personal/Controller/OTWPersonalCollectTableViewCell.m; sourceTree = SOURCE_ROOT; };
 		189954C41F1CE986004CCEBE /* OTWShopDetailsViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTWShopDetailsViewCell.h; path = OnTheWay/Pages/Find/Controller/OTWShopDetailsViewCell.h; sourceTree = SOURCE_ROOT; };
 		189954C51F1CE986004CCEBE /* OTWShopDetailsViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTWShopDetailsViewCell.m; path = OnTheWay/Pages/Find/Controller/OTWShopDetailsViewCell.m; sourceTree = SOURCE_ROOT; };
 		189954C71F1DAD3C004CCEBE /* OTWPersonalFootprintsListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPersonalFootprintsListController.h; sourceTree = "<group>"; };
@@ -873,6 +879,8 @@
 				189954C81F1DAD3C004CCEBE /* OTWPersonalFootprintsListController.m */,
 				1843A7D71F2737D600A285A3 /* OTWPersonalClaimViewController.h */,
 				1843A7D81F2737D600A285A3 /* OTWPersonalClaimViewController.m */,
+				1843A7DD1F2837B100A285A3 /* OTWPersonalCollectController.h */,
+				1843A7DE1F2837B100A285A3 /* OTWPersonalCollectController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -897,6 +905,8 @@
 				189954D41F1DAE4A004CCEBE /* OTWPersonalFootprintsListTableViewCell.m */,
 				1843A7DA1F27447000A285A3 /* OTWPersonalClaimTableViewCell.h */,
 				1843A7DB1F27447000A285A3 /* OTWPersonalClaimTableViewCell.m */,
+				1843A7E01F28380D00A285A3 /* OTWPersonalCollectTableViewCell.h */,
+				1843A7E11F28380D00A285A3 /* OTWPersonalCollectTableViewCell.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1384,6 +1394,7 @@
 				B18A430D1F208515002C7A5A /* OTWNewsToOtherCommentModel.m in Sources */,
 				18B034B91F139C1500F53461 /* OTWPersonalSiteController.m in Sources */,
 				DDEA15F31F25D2A100056166 /* FLAnimatedImageView+WebCache.m in Sources */,
+				1843A7E21F28380D00A285A3 /* OTWPersonalCollectTableViewCell.m in Sources */,
 				1822EE631F20845A00E07665 /* OTWFootprintsChangeAddressModel.m in Sources */,
 				D7F6B03D1F0D39060013090A /* README.md in Sources */,
 				DDEA15E31F25CCA500056166 /* PYPhotoBrowserConst.m in Sources */,
@@ -1464,6 +1475,7 @@
 				B181AB5F1F1F7F85009929D1 /* OTWPraiseViewTableCell.m in Sources */,
 				DDEA15E61F25CCA500056166 /* PYPhotoBrowseView.m in Sources */,
 				18BC9E441F1F716F00C7B6C1 /* OTWPersonalFootprintMonthDataModel.m in Sources */,
+				1843A7DF1F2837B100A285A3 /* OTWPersonalCollectController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
