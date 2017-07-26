@@ -1,12 +1,12 @@
 //
-//  OTWARViewController.m
+//  OTWARManagerController.m
 //  OnTheWay
 //
-//  Created by machunyan on 2017/7/6.
+//  Created by machunyan on 2017/7/26.
 //  Copyright © 2017年 WeiHuan. All rights reserved.
 //
 
-#import "OTWARViewController.h"
+#import "OTWARManagerController.h"
 #import "MCYARConfiguration.h"
 #import "MCYARAnnotation.h"
 #import "MCYARAnnotationView.h"
@@ -16,24 +16,21 @@
 #warning test
 #import "OTWFootprintsChangeAddressController.h"
 
-@interface OTWARViewController ()<MCYARDataSource>
+@interface OTWARManagerController ()<MCYARDataSource>
+
+@property (nonatomic, strong) MCYARViewController *arViewController;
+@property (nonatomic) BOOL hasCustomEvent; // 判断是否是自定义点击事件 true: 不显示AR视图 false: 显示AR视图
+
+- (void)showARViewController;
 
 @end
 
-@implementation OTWARViewController
+@implementation OTWARManagerController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    [self showARViewController];
-    [self buildUI];
+    // Do any additional setup after loading the view.
+    self.hasCustomEvent = false;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -41,7 +38,17 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)buildUI
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    if (self.hasCustomEvent) return; // 如果执行了自定义事件, 则不显示AR视图
+    
+    [self showARViewController];
+    [self buildUI];
+}
+
+- (void)buildUI // test
 {
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     backButton.frame = CGRectMake(0, 20, 80, 44);
@@ -66,12 +73,14 @@
 
 - (void)searchButtonClick
 {
-    NSLog(@"点击了search按钮");
+    self.hasCustomEvent = true;
+    WeakSelf(self);
+    
     OTWFootprintsChangeAddressController *personalInfo = [[OTWFootprintsChangeAddressController alloc] init];
     [self.arViewController dismissViewControllerAnimated:NO completion:^{
-        [self.navigationController pushViewController:personalInfo animated:YES];
+        [weakself.navigationController pushViewController:personalInfo animated:NO];
+        weakself.hasCustomEvent = NO;
     }];
-    
     
     [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
 }
@@ -85,35 +94,9 @@
     double altitudeDelta = 0;
     NSInteger count = 20;
     
+#warning 这是假数据，需要换为真实数据
     NSArray *dummyAnnotations = [self getDummyAnnotation:lat centerLongitude:lon deltaLat:deltaLat deltaLon:deltaLon altitudeDelta:altitudeDelta count:count];
-    
-    // Present ARViewController
-    self.arViewController = [[MCYARViewController alloc] init];
-    self.arViewController.dataSource = self;
-    // Vertical offset by distance
-    self.arViewController.presenter.distanceOffsetMode = DistanceOffsetModeManual;
-    self.arViewController.presenter.distanceOffsetMultiplier = 0.1; // Pixels per meter
-    self.arViewController.presenter.distanceOffsetMinThreshold = 500;
-    self.arViewController.presenter.maxDistance = 3000;
-    self.arViewController.presenter.maxVisibleAnnotations = 100;
-    self.arViewController.presenter.verticalStackingEnabled = true;
-    self.arViewController.trackingManager.userDistanceFilter = 15;
-    self.arViewController.trackingManager.reloadDistanceFilter = 50;
-    // debug
-    self.arViewController.uiOptions.closeButtonEnabled = false;
-    self.arViewController.uiOptions.debugLabel = false;
-    self.arViewController.uiOptions.closeButtonEnabled = true;
-    self.arViewController.uiOptions.debugMap = false;
-    self.arViewController.uiOptions.simulatorDebugging = [Platform isSimulator];;
-    self.arViewController.uiOptions.setUserLocationToCenterOfAnnotations = [Platform isSimulator];
-    // Interface orientation
-    self.arViewController.interfaceOrientationMask = UIInterfaceOrientationMaskAll;
-    __weak typeof(self) weakSelf;
-    self.arViewController.onDidFailToFindLocation = ^(NSTimeInterval timeElapsed, BOOL acquiredLocationBefore) {
-        [weakSelf handleLocationFailure:timeElapsed acquiredLocationBefore:acquiredLocationBefore arViewController:weakSelf.arViewController];
-    };
     [self.arViewController setAnnotations:dummyAnnotations];
-    //[self.navigationController pushViewController:self.arViewController animated:NO];
     [self presentViewController:self.arViewController animated:NO completion:nil];
 }
 
@@ -189,6 +172,41 @@
     annotationView.frame = CGRectMake(0, 0, 150, 50);
     
     return annotationView;
+}
+
+#pragma mark - Setter & Getter
+
+- (MCYARViewController*)arViewController
+{
+    if (!_arViewController) {
+        _arViewController = [[MCYARViewController alloc] init];
+        // Present ARViewController
+        _arViewController.dataSource = self;
+        // Vertical offset by distance
+        _arViewController.presenter.distanceOffsetMode = DistanceOffsetModeManual;
+        _arViewController.presenter.distanceOffsetMultiplier = 0.1; // Pixels per meter
+        _arViewController.presenter.distanceOffsetMinThreshold = 500;
+        _arViewController.presenter.maxDistance = 3000;
+        _arViewController.presenter.maxVisibleAnnotations = 100;
+        _arViewController.presenter.verticalStackingEnabled = true;
+        _arViewController.trackingManager.userDistanceFilter = 15;
+        _arViewController.trackingManager.reloadDistanceFilter = 50;
+        // debug
+        _arViewController.uiOptions.closeButtonEnabled = false;
+        _arViewController.uiOptions.debugLabel = false;
+        _arViewController.uiOptions.closeButtonEnabled = true;
+        _arViewController.uiOptions.debugMap = false;
+        _arViewController.uiOptions.simulatorDebugging = [Platform isSimulator];;
+        _arViewController.uiOptions.setUserLocationToCenterOfAnnotations = [Platform isSimulator];
+        // Interface orientation
+        _arViewController.interfaceOrientationMask = UIInterfaceOrientationMaskAll;
+        __weak typeof(self) weakSelf;
+        _arViewController.onDidFailToFindLocation = ^(NSTimeInterval timeElapsed, BOOL acquiredLocationBefore) {
+            [weakSelf handleLocationFailure:timeElapsed acquiredLocationBefore:acquiredLocationBefore arViewController:weakSelf.arViewController];
+        };
+    }
+    
+    return _arViewController;
 }
 
 @end
