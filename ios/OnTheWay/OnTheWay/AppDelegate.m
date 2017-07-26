@@ -16,17 +16,19 @@
 
 @implementation AppDelegate
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    
     _window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     _window.rootViewController = [[OTWLaunchViewController alloc] init];
     [[OTWUserModel shared] load];
+    _mapManager = [[BMKMapManager alloc]init];
+    BOOL ret = [_mapManager start:@"13I7baCnebotHFHdyywGKZtPIVkzVM6h"  generalDelegate:nil];
+    if (!ret) {
+        DLog(@"manager start failed!");
+    }
     [_window makeKeyAndVisible];
     return YES;
 }
-
 
 //后台打开
 - (void)applicationWillResignActive:(UIApplication *)application {
