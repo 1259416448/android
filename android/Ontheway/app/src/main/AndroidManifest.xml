@@ -86,6 +86,22 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="MyMapTrackActivity"
             />
+        <activity
+            android:name=".ui.msg.NewLikeActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="NewLikeActivity"
+            />
+
+        <activity
+            android:name=".ui.msg.NewReplyActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="NewReplyActivity"
+            />
+        <activity
+            android:name=".ui.usercenter.MySetActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="MySetActivity"
+            />
         <activity android:name=".ui.ar.ArTrackActivity">
         </activity>
     </application>

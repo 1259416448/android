@@ -15,11 +15,15 @@
 #import <TZImageManager.h>
 #import "OTWUITapGestureRecognizer.h"
 #import "OTWFootprintsChangeAddressController.h"
+#import "QiniuUploadService.h"
+#import "OTWFootprintService.h"
 
 #import <BaiduMapAPI_Location/BMKLocationService.h>
 #import <BaiduMapAPI_Map/BMKMapComponent.h>
 #import <BaiduMapAPI_Search/BMKGeoCodeSearch.h>
 #import <BaiduMapAPI_Search/BMKPoiSearchType.h>
+#import <MJExtension.h>
+
 
 @interface OTWFootprintReleaseViewController () <UITextViewDelegate,PYPhotosViewDelegate,TZImagePickerControllerDelegate,BMKLocationServiceDelegate,BMKGeoCodeSearchDelegate>
 
@@ -122,6 +126,11 @@
     [self.addressChooseView addSubview:self.addressLabel];
     
     [self.view bringSubviewToFront:self.customNavigationBar];
+    
+    UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeFrom:)];
+    [recognizer setDirection:UISwipeGestureRecognizerDirectionDown];
+    [self.view addGestureRecognizer:recognizer];
+    
 }
 
 - (UIView *) footprintContentView
@@ -265,10 +274,81 @@
 - (void) footprintReleaseTap
 {
     DLog(@"点击发布");
+    //0 验证内容是否填写与定位信息是否加载成功
+    NSString *content = self.footprintTextView.text;
+    content = [content stringByReplacingOccurrencesOfString:@" " withString:@""];
+    content = [content stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+    
+    if(content.length == 0){
+        DLog(@"输入内容为空！");
+        [self errorTips:@"请输入文字信息" userInteractionEnabled:NO];
+        return ;
+    }
+    
+    if(self.addressModel == nil){
+        DLog(@"定位信息获取失败");
+        [self errorTips:@"定位信息获取失败，请重试" userInteractionEnabled:NO];
+        return ;
+    }
+    NSDictionary *footprint = [NSDictionary dictionaryWithObjectsAndKeys:self.addressModel.address,@"address",[self.footprintTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]],@"content",[NSNumber numberWithDouble:self.addressModel.latitude],@"latitude",[NSNumber numberWithDouble:self.addressModel.longitude],@"longitude",nil];
+    //1、首先上传图片
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.label.textColor = [UIColor whiteColor];
+    hud.bezelView.color = [UIColor blackColor];
+    hud.activityIndicatorColor = [UIColor whiteColor];
+    if(self.publishPhotosView.images.count > 0){
+        //显示正在上传提示
+        hud.label.text = @"正在上传图片";
+        [QiniuUploadService uploadImages:self.publishPhotosView.images progress:^(CGFloat progress){
+            DLog(@"已成功上传了 progress %f",progress);
+        }success:^(NSArray<OTWDocument *> *documents){
+            hud.label.text = @"正在发布";
+            //2、图片上传成功后，发布足迹到API服务器
+            NSArray *documentsDict = [OTWDocument mj_keyValuesArrayWithObjectArray:documents];
+            NSDictionary *requestBody = [NSDictionary dictionaryWithObjectsAndKeys:footprint,@"footprint",documentsDict,@"documents", nil];
+            DLog(@"requestBody %@",requestBody);
+            [self subReleaseData:requestBody hud:hud];
+        }failure:^(){
+            DLog(@"图片上传失败");
+            [hud hideAnimated:YES];
+            [self errorTips:@"发布失败，请检查您的网络是否连接" userInteractionEnabled:YES];
+        }];
+    }else{ //2、直接发布
+        hud.label.text = @"正在发布";
+        NSDictionary *requestBody = [NSDictionary dictionaryWithObjectsAndKeys:footprint,@"footprint", nil];
+        DLog(@"requestBody %@",requestBody);
+        [self subReleaseData:requestBody hud:hud];
+    }
+}
+
+- (void) subReleaseData:(NSDictionary *)requestBody hud:(MBProgressHUD *)hud
+{
+    [OTWFootprintService footprintRelease:requestBody completion:^(id result,NSError *error){
+        if(result){
+            [hud hideAnimated:YES];
+            if([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]){
+                [self errorTips:@"发布成功" userInteractionEnabled:NO];
+                dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+                dispatch_source_t _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
+                dispatch_source_set_timer(_timer,dispatch_walltime(NULL, 0),2.0*NSEC_PER_SEC, 0); //2秒后执行
+                dispatch_source_set_event_handler(_timer, ^{
+                    dispatch_source_cancel(_timer);
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.navigationController popViewControllerAnimated:YES];
+                    });
+                });
+                dispatch_resume(_timer);
+            }else{
+                DLog(@"message - %@  messageCode - %@",result[@"message"],result[@"messageCode"]);
+                [self errorTips:@"发布失败，请检查您的网络是否连接" userInteractionEnabled:YES];
+            }
+        }else{
+            [self netWorkErrorTips:error];
+        }
+    }];
 }
 
 #pragma mark - UITextViewDelegate
-
 
 - (void)textViewDidBeginEditing:(UITextView *)textView
 {
@@ -287,7 +367,6 @@
 {
     TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:9-images.count delegate:self];
     imagePickerVc.allowPickingVideo = NO;
-    imagePickerVc.allowPickingGif = NO;
     imagePickerVc.allowPickingOriginalPhoto = NO;
     // You can get the photos by block, the same as by delegate.
     // 你可以通过block或者代理，来得到用户选择的照片.
@@ -432,6 +511,14 @@
             self.addressLabel.text = _addressModel.address;
             _ifFirstLocation = NO;
         }
+    }
+}
+
+#pragma mark - 下滑动关闭键盘
+- (void) handleSwipeFrom:(UISwipeGestureRecognizer *)recognizer
+{
+    if(recognizer.direction == UISwipeGestureRecognizerDirectionDown){
+        [self.footprintTextView resignFirstResponder];
     }
 }
 

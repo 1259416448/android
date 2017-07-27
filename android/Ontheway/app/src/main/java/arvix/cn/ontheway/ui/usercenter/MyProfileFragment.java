@@ -35,6 +35,8 @@ public class MyProfileFragment extends BaseFragment {
     private TextView nameTv;
     @ViewInject(R.id.header_img)
     private ImageView headerIV;
+    @ViewInject(R.id.to_person_set)
+    private View toSet;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,6 +52,12 @@ public class MyProfileFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(act,MyTrackMapActivity.class));
+            }
+        });
+        toSet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(act,MySetActivity.class));
             }
         });
         nameTv.setText(App.user.getString("nickname","默认昵称"));

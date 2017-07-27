@@ -1,11 +1,11 @@
 package cn.arvix.ontheway.sys.shiro.web.filter;
 
-import cn.arvix.ontheway.sys.shiro.token.StatelessToken;
-import cn.arvix.ontheway.sys.shiro.web.mgt.HeaderRememberMeManager;
-import cn.arvix.ontheway.sys.user.entity.TokenInfo;
 import cn.arvix.base.common.utils.CommonContact;
 import cn.arvix.base.common.utils.JsonUtil;
 import cn.arvix.base.common.utils.MessageUtils;
+import cn.arvix.ontheway.sys.shiro.token.StatelessToken;
+import cn.arvix.ontheway.sys.shiro.web.mgt.HeaderRememberMeManager;
+import cn.arvix.ontheway.sys.user.entity.TokenInfo;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.subject.PrincipalCollection;
@@ -82,6 +82,7 @@ public class StatelessAuthcFilter extends AccessControlFilter {
             HttpServletRequest httpRequest = WebUtils.toHttp(request);
             //获取token
             String token = httpRequest.getHeader(CommonContact.HTTP_HEADER_AUTH_TOKEN);
+            System.out.println(token);
 //            if (SystemParms.ifDev()) {
 //                log.info("token：{} ", token);
 //            }
@@ -112,7 +113,11 @@ public class StatelessAuthcFilter extends AccessControlFilter {
                     onLoginFail(response);
                     return false;
                 }
-
+            } else {
+                httpResponse.setHeader(HeaderRememberMeManager.DEFAULT_REMEMBER_ME_COOKIE_NAME,
+                        httpRequest.getHeader(HeaderRememberMeManager.DEFAULT_REMEMBER_ME_COOKIE_NAME));
+                httpResponse.setHeader(HeaderRememberMeManager.DEFAULT_REMEMBER_ME_COOKIE_NAME_TIMEOUT,
+                        httpRequest.getHeader(HeaderRememberMeManager.DEFAULT_REMEMBER_ME_COOKIE_NAME_TIMEOUT));
             }
             //生成无状态Token
             StatelessToken statelessToken = new StatelessToken(obj.getUsername(), token);

@@ -12,7 +12,7 @@
 @interface OTWFootprintChangeAddressArrayModel : NSObject
 @property (nonatomic,strong) NSString *name;
 @property (nonatomic,strong) NSString *address;
-@property(nonatomic,assign)  BOOL  isClick;
+@property (nonatomic,assign)  BOOL  isClick;
 @property (nonatomic,assign) double latitude;
 @property (nonatomic,assign) double longitude;
 @property (nonatomic,copy) NSString *uuid;
