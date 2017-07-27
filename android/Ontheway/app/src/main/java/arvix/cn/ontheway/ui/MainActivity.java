@@ -18,10 +18,9 @@ import arvix.cn.ontheway.BaiduActivity;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.service.inter.CacheInterface;
 import arvix.cn.ontheway.ui.ar.ArTrackActivity;
-import arvix.cn.ontheway.ui.msg.MsgFrag;
+import arvix.cn.ontheway.ui.msg.MsgIndexFrag;
 import arvix.cn.ontheway.ui.usercenter.MyProfileFragment;
 import arvix.cn.ontheway.utils.OnthewayApplication;
-import arvix.cn.ontheway.utils.StaticMethod;
 import arvix.cn.ontheway.utils.StaticVar;
 
 /**
@@ -76,7 +75,7 @@ public class MainActivity extends BaseActivity {
             if (checkedId == R.id.tab_faxian) {
                 targetFrag = new FaXianFrag();
             } else if (checkedId == R.id.tab_xiaoxi) {
-                targetFrag = new MsgFrag();
+                targetFrag = new MsgIndexFrag();
                //list Msg targetFrag = MsgListFrag.newInstance();
             } else if (checkedId == R.id.tab_wode) {
                 targetFrag = new MyProfileFragment();

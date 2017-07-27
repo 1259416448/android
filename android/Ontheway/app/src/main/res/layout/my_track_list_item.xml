@@ -70,21 +70,16 @@
                 android:id="@+id/photo4_grid_layout"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-
                 android:columnCount="2"
                 android:rowCount="1">
                 <ImageView
+                    android:id="@+id/photo4_grid_two_photo_1"
                     android:layout_width="39dp"
-                    android:layout_height="80dp"
-                    android:src="@drawable/header_default" />
-
-                <ImageView
-                    android:layout_width="39dp"
-                    android:layout_height="80dp"
-                    android:src="@drawable/header_default" />
+                    android:src="@drawable/header_default"
+                    android:layout_height="80dp" />
             </GridLayout>
             <TextView
-                android:id="@+id/photo_count_tv"
+                android:id="@+id/show_count_tv"
                 android:background="@drawable/black_17dp_circle"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
