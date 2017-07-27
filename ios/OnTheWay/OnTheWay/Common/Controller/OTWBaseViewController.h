@@ -36,4 +36,6 @@
 
 - (void)netWorkErrorTips:(NSError*)error;
 
+- (void) errorTips:(NSString *)tips userInteractionEnabled:(BOOL)userInteractionEnabled;
+
 @end

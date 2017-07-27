@@ -128,4 +128,16 @@
     [hud hideAnimated:YES afterDelay:2];
 }
 
+- (void) errorTips:(NSString *)tips userInteractionEnabled:(BOOL)userInteractionEnabled
+{
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.mode = MBProgressHUDModeText;
+    hud.label.text = tips;
+    hud.label.numberOfLines = 0;
+    hud.userInteractionEnabled = userInteractionEnabled;
+    hud.label.textColor = [UIColor whiteColor];
+    hud.bezelView.color = [UIColor blackColor];
+    [hud hideAnimated:YES afterDelay:2];
+}
+
 @end

@@ -27,7 +27,7 @@ NSString *const TOKEN_KEY = @"x-auth-token";
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSData *tokenData = [userDefaults objectForKey:TOKEN_KEY];
     GCTokenModel *token = [NSKeyedUnarchiver unarchiveObjectWithData:tokenData];
-    [userDefaults synchronize];
+    //[userDefaults synchronize];
     return token;
 }
 

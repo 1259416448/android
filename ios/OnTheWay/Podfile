@@ -13,5 +13,6 @@ target 'OnTheWay' do
   pod 'DACircularProgress'
   pod 'TZImagePickerController'
   pod 'BaiduMapKit' #百度地图SDK
+  pod "Qiniu", "~> 7.1"
 end
 

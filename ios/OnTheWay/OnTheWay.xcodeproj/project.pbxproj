@@ -118,6 +118,10 @@
 		DDEA15EF1F25D28E00056166 /* FLAnimatedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = DDEA15EC1F25D28E00056166 /* FLAnimatedImage.m */; };
 		DDEA15F01F25D28E00056166 /* FLAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = DDEA15EE1F25D28E00056166 /* FLAnimatedImageView.m */; };
 		DDEA15F31F25D2A100056166 /* FLAnimatedImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = DDEA15F21F25D2A100056166 /* FLAnimatedImageView+WebCache.m */; };
+		DDEA15FB1F298A5A00056166 /* QiniuUploadService.m in Sources */ = {isa = PBXBuildFile; fileRef = DDEA15FA1F298A5A00056166 /* QiniuUploadService.m */; };
+		DDEA15FE1F299DFB00056166 /* OTWDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = DDEA15FD1F299DFB00056166 /* OTWDocument.m */; };
+		DDEA16011F29B35F00056166 /* QiniuUploadHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = DDEA16001F29B35F00056166 /* QiniuUploadHelper.m */; };
+		DDEA160C1F29DED300056166 /* OTWFootprintService.m in Sources */ = {isa = PBXBuildFile; fileRef = DDEA160B1F29DED300056166 /* OTWFootprintService.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -350,6 +354,14 @@
 		DDEA15EE1F25D28E00056166 /* FLAnimatedImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLAnimatedImageView.m; sourceTree = "<group>"; };
 		DDEA15F11F25D2A100056166 /* FLAnimatedImageView+WebCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FLAnimatedImageView+WebCache.h"; sourceTree = "<group>"; };
 		DDEA15F21F25D2A100056166 /* FLAnimatedImageView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "FLAnimatedImageView+WebCache.m"; sourceTree = "<group>"; };
+		DDEA15F91F298A5A00056166 /* QiniuUploadService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QiniuUploadService.h; sourceTree = "<group>"; };
+		DDEA15FA1F298A5A00056166 /* QiniuUploadService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QiniuUploadService.m; sourceTree = "<group>"; };
+		DDEA15FC1F299DFB00056166 /* OTWDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWDocument.h; sourceTree = "<group>"; };
+		DDEA15FD1F299DFB00056166 /* OTWDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWDocument.m; sourceTree = "<group>"; };
+		DDEA15FF1F29B35F00056166 /* QiniuUploadHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QiniuUploadHelper.h; sourceTree = "<group>"; };
+		DDEA16001F29B35F00056166 /* QiniuUploadHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QiniuUploadHelper.m; sourceTree = "<group>"; };
+		DDEA160A1F29DED300056166 /* OTWFootprintService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWFootprintService.h; sourceTree = "<group>"; };
+		DDEA160B1F29DED300056166 /* OTWFootprintService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWFootprintService.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -485,6 +497,7 @@
 			isa = PBXGroup;
 			children = (
 				D7F6B03B1F0D39060013090A /* README.md */,
+				DDEA15F81F2988ED00056166 /* Service */,
 				D7F6B0C31F160E060013090A /* Helper */,
 				D7F6B0391F0D39060013090A /* Controller */,
 				D7F6B03A1F0D39060013090A /* Model */,
@@ -509,6 +522,8 @@
 		D7F6B03A1F0D39060013090A /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				DDEA15FC1F299DFB00056166 /* OTWDocument.h */,
+				DDEA15FD1F299DFB00056166 /* OTWDocument.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -681,6 +696,7 @@
 		D7F6B0671F0DD36E0013090A /* Footprints */ = {
 			isa = PBXGroup;
 			children = (
+				DDEA16091F29DED300056166 /* Service */,
 				D7F6B0681F0DD36E0013090A /* Controller */,
 				D7F6B0691F0DD36E0013090A /* Model */,
 				D7F6B06A1F0DD36E0013090A /* View */,
@@ -773,7 +789,6 @@
 		D7F6B06F1F0DD3860013090A /* Personal */ = {
 			isa = PBXGroup;
 			children = (
-				DDC0A93D1F1F784200A6E4DB /* Service */,
 				D7F6B0701F0DD3860013090A /* Controller */,
 				D7F6B0711F0DD3860013090A /* Model */,
 				D7F6B0721F0DD3860013090A /* View */,
@@ -927,6 +942,8 @@
 			children = (
 				D7F6B0C41F160E590013090A /* OTWAlbumSelectHelper.h */,
 				D7F6B0C51F160E590013090A /* OTWAlbumSelectHelper.m */,
+				DDEA15FF1F29B35F00056166 /* QiniuUploadHelper.h */,
+				DDEA16001F29B35F00056166 /* QiniuUploadHelper.m */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -972,13 +989,6 @@
 				DD14F23A1F1132FE004DFE4A /* NSString+RegexCategory.m */,
 			);
 			name = NString;
-			sourceTree = "<group>";
-		};
-		DDC0A93D1F1F784200A6E4DB /* Service */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Service;
 			sourceTree = "<group>";
 		};
 		DDEA15BA1F25CCA500056166 /* PYPhotoBrowser */ = {
@@ -1074,6 +1084,24 @@
 			children = (
 			);
 			name = BaiduMap;
+			sourceTree = "<group>";
+		};
+		DDEA15F81F2988ED00056166 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				DDEA15F91F298A5A00056166 /* QiniuUploadService.h */,
+				DDEA15FA1F298A5A00056166 /* QiniuUploadService.m */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		DDEA16091F29DED300056166 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				DDEA160A1F29DED300056166 /* OTWFootprintService.h */,
+				DDEA160B1F29DED300056166 /* OTWFootprintService.m */,
+			);
+			path = Service;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1293,6 +1321,7 @@
 				DDABAA4B1F12801E00010532 /* OTWPersonalEditNicknameController.m in Sources */,
 				DDEA15DE1F25CCA500056166 /* PYPhotosNavigationController.m in Sources */,
 				D7F6B0431F0D39160013090A /* README.md in Sources */,
+				DDEA160C1F29DED300056166 /* OTWFootprintService.m in Sources */,
 				1822EE6E1F20E11C00E07665 /* CHCustomSearchBar.m in Sources */,
 				D7F6B09D1F0F75770013090A /* OTWLaunchManager.m in Sources */,
 				DDEA15E71F25CCA500056166 /* PYPhotoCell.m in Sources */,
@@ -1311,6 +1340,7 @@
 				B18A43101F2088C2002C7A5A /* OTWNewsCommentTableCell.m in Sources */,
 				D7F6B0B31F1089400013090A /* OTWLoginService.m in Sources */,
 				DD14F2401F113654004DFE4A /* HmacUtils.m in Sources */,
+				DDEA16011F29B35F00056166 /* QiniuUploadHelper.m in Sources */,
 				D7F6B0371F0D38EA0013090A /* README.md in Sources */,
 				1843A7D31F26E5FD00A285A3 /* OTWNewFootprintsControllerViewController.m in Sources */,
 				DD35209D1F188FBF00E8D725 /* OTWFootprintDetailViewCell.m in Sources */,
@@ -1342,6 +1372,7 @@
 				B13ADA1D1F1B23DA008E889C /* OTWSystemNewsViewController.m in Sources */,
 				D7F6B0581F0DCF040013090A /* UIColor+Utils.m in Sources */,
 				DD9452F31F15DE23004EDDED /* OTWFootprintListFrame.m in Sources */,
+				DDEA15FE1F299DFB00056166 /* OTWDocument.m in Sources */,
 				1822EE661F20846F00E07665 /* OTWFootprintsChangeAddressCellTableViewCell.m in Sources */,
 				18B034CB1F171C0900F53461 /* OTWFindBusinessmenViewCell.m in Sources */,
 				DD14F2431F114436004DFE4A /* CommonContact.m in Sources */,
@@ -1365,6 +1396,7 @@
 				DDC0A9461F207C3100A6E4DB /* OTWFootprintReleaseViewController.m in Sources */,
 				189954C91F1DAD3C004CCEBE /* OTWPersonalFootprintsListController.m in Sources */,
 				D7F6B04C1F0DCB9D0013090A /* OTWCustomNavigationBar.m in Sources */,
+				DDEA15FB1F298A5A00056166 /* QiniuUploadService.m in Sources */,
 				189954C61F1CE986004CCEBE /* OTWShopDetailsViewCell.m in Sources */,
 				DDEA15E11F25CCA500056166 /* PYPhotosViewController.m in Sources */,
 				B13ADA231F1C5660008E889C /* OTWSystemNewsCellFrame.m in Sources */,
