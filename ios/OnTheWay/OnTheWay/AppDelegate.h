@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <BaiduMapAPI_Base/BMKBaseComponent.h>
+#import <IQKeyboardManager.h>
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>{
     BMKMapManager *_mapManager;
