@@ -29,7 +29,7 @@ mysql version 5.6
 mysql db ddl
 ```
 CREATE USER 'ontheway_user'@'localhost'  IDENTIFIED BY '!@#8787aseerdsf878sd@#!23!';
-CREATE DATABASE IF NOT EXISTS `ontheway_db` DEFAULT CHARACTER SET `utf8` COLLATE `utf8_unicode_ci`;
+CREATE DATABASE IF NOT EXISTS `ontheway_db` DEFAULT CHARACTER SET `utf8mb4` COLLATE `utf8mb4_unicode_ci`;
 GRANT ALL PRIVILEGES ON ontheway_db.* TO 'ontheway_user'@'localhost';
 FLUSH PRIVILEGES;
 ```
