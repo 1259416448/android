@@ -90,7 +90,7 @@ public class BottomDialog {
     public void setCancelable(boolean flag) {
         if (dialog != null) {
             dialog.setCancelable(flag);
-            dialog.setCanceledOnTouchOutside(true);
+            dialog.setCanceledOnTouchOutside(flag);
         }
     }
 

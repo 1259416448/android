@@ -120,6 +120,7 @@ public class FaXianFrag extends BaseFragment {
                     ll.addView(iv);
                     //从这添加通过LayoutInflater加载的xml布局
                     dialog.setCustom(ll);
+                    dialog.setCancelable(true);
                     dialog.show();
                 }
             });
