@@ -12,6 +12,7 @@
 #import "OTWUserModel.h"
 #import "OTWPersonalEditNicknameController.h"
 #import "OTWAlbumSelectHelper.h"
+#import "OTWPersonalSiteGanderViewController.h"
 
 @interface OTWPersonalInfoController() <UITableViewDataSource,UITableViewDelegate>
 {
@@ -111,6 +112,11 @@
             [self.navigationController pushViewController:personalEditNicknameVC animated:YES];
         }
             break;
+        case 2:
+        {
+            OTWPersonalSiteGanderViewController *personalSiteGanderVC = [[OTWPersonalSiteGanderViewController alloc] init];
+            [self.navigationController pushViewController:personalSiteGanderVC animated:YES];
+        }
             
         default:
             break;

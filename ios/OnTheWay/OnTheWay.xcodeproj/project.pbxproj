@@ -48,6 +48,7 @@
 		B18A430A1F20829E002C7A5A /* OTWPraise.plist in Resources */ = {isa = PBXBuildFile; fileRef = B18A43091F20829E002C7A5A /* OTWPraise.plist */; };
 		B18A430D1F208515002C7A5A /* OTWNewsToOtherCommentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B18A430C1F208515002C7A5A /* OTWNewsToOtherCommentModel.m */; };
 		B18A43101F2088C2002C7A5A /* OTWNewsCommentTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B18A430F1F2088C2002C7A5A /* OTWNewsCommentTableCell.m */; };
+		B1A2B5C71F2987B300EAABE0 /* OTWPersonalSiteGanderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B1A2B5C61F2987B300EAABE0 /* OTWPersonalSiteGanderViewController.m */; };
 		D72091971F27466500153542 /* MCYARAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D72091831F27466500153542 /* MCYARAnnotation.m */; };
 		D72091981F27466500153542 /* MCYARAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = D72091851F27466500153542 /* MCYARAnnotationView.m */; };
 		D72091991F27466500153542 /* MCYARConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = D72091871F27466500153542 /* MCYARConfiguration.m */; };
@@ -236,6 +237,8 @@
 		B18A430C1F208515002C7A5A /* OTWNewsToOtherCommentModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWNewsToOtherCommentModel.m; sourceTree = "<group>"; };
 		B18A430E1F2088C2002C7A5A /* OTWNewsCommentTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWNewsCommentTableCell.h; sourceTree = "<group>"; };
 		B18A430F1F2088C2002C7A5A /* OTWNewsCommentTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWNewsCommentTableCell.m; sourceTree = "<group>"; };
+		B1A2B5C51F2987B300EAABE0 /* OTWPersonalSiteGanderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPersonalSiteGanderViewController.h; sourceTree = "<group>"; };
+		B1A2B5C61F2987B300EAABE0 /* OTWPersonalSiteGanderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPersonalSiteGanderViewController.m; sourceTree = "<group>"; };
 		D72091821F27466500153542 /* MCYARAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCYARAnnotation.h; sourceTree = "<group>"; };
 		D72091831F27466500153542 /* MCYARAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCYARAnnotation.m; sourceTree = "<group>"; };
 		D72091841F27466500153542 /* MCYARAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCYARAnnotationView.h; sourceTree = "<group>"; };
@@ -891,6 +894,8 @@
 				1843A7D81F2737D600A285A3 /* OTWPersonalClaimViewController.m */,
 				1843A7DD1F2837B100A285A3 /* OTWPersonalCollectController.h */,
 				1843A7DE1F2837B100A285A3 /* OTWPersonalCollectController.m */,
+				B1A2B5C51F2987B300EAABE0 /* OTWPersonalSiteGanderViewController.h */,
+				B1A2B5C61F2987B300EAABE0 /* OTWPersonalSiteGanderViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1243,6 +1248,7 @@
 				TargetAttributes = {
 					D7F6AFF01F0D32FA0013090A = {
 						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = SEMAPEJ292;
 						ProvisioningStyle = Automatic;
 					};
 					D7F6B0091F0D32FB0013090A = {
@@ -1405,6 +1411,7 @@
 				B18A430D1F208515002C7A5A /* OTWNewsToOtherCommentModel.m in Sources */,
 				18B034B91F139C1500F53461 /* OTWPersonalSiteController.m in Sources */,
 				DDEA15F31F25D2A100056166 /* FLAnimatedImageView+WebCache.m in Sources */,
+				B1A2B5C71F2987B300EAABE0 /* OTWPersonalSiteGanderViewController.m in Sources */,
 				1843A7E21F28380D00A285A3 /* OTWPersonalCollectTableViewCell.m in Sources */,
 				1822EE631F20845A00E07665 /* OTWFootprintsChangeAddressModel.m in Sources */,
 				D7F6B03D1F0D39060013090A /* README.md in Sources */,
@@ -1632,7 +1639,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = SEMAPEJ292;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/OnTheWay/PrefixHeader.pch";
 				INFOPLIST_FILE = OnTheWay/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1650,7 +1657,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = SEMAPEJ292;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/OnTheWay/PrefixHeader.pch";
 				INFOPLIST_FILE = OnTheWay/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
