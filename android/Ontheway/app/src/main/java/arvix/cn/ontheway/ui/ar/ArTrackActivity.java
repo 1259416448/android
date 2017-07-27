@@ -17,15 +17,21 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
+
 import arvix.cn.ontheway.BaiduActivity;
 import arvix.cn.ontheway.R;
+import arvix.cn.ontheway.ui.BaseActivity;
 
-public class ArTrackActivity extends AppCompatActivity implements SensorEventListener, LocationListener {
+public class ArTrackActivity extends BaseActivity implements SensorEventListener, LocationListener {
 
     final static String TAG = "ARActivity";
     private SurfaceView surfaceView;
@@ -47,18 +53,50 @@ public class ArTrackActivity extends AppCompatActivity implements SensorEventLis
     boolean isGPSEnabled;
     boolean isNetworkEnabled;
     boolean locationServiceAvailable;
+    @ViewInject(R.id.time_btn_line)
+    private View timeLine;
+    @ViewInject(R.id.range_btn_line)
+    private View rangeLine;
+
+    @ViewInject(R.id.time_btn)
+    private Button timeButton;
+    @ViewInject(R.id.range_btn)
+    private Button rangeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ar);
+        setContentView(R.layout.activity_zuji);
+        x.view().inject(self);
         searchKeyWord = getIntent().getStringExtra(BaiduActivity.EXTRA_KEYWORD);
         sensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);
         cameraContainerLayout = (FrameLayout) findViewById(R.id.camera_container_layout);
         surfaceView = (SurfaceView) findViewById(R.id.surface_view);
         tvCurrentLocation = (TextView) findViewById(R.id.tv_current_location);
-
         arOverlayView = new AROverlayView(this);
+
+        rangeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(rangeLine.getVisibility() == View.VISIBLE){
+                    rangeLine.setVisibility(View.INVISIBLE);
+                }else{
+                    rangeLine.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        timeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(timeLine.getVisibility() == View.VISIBLE){
+                    timeLine.setVisibility(View.INVISIBLE);
+                }else{
+                    timeLine.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
     }
 
     @Override

@@ -15,13 +15,13 @@ import java.util.List;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.been.MsgBean;
 
-public class MsgAdapter extends ArrayAdapter<MsgBean> {
+public class MsgListAdapter extends ArrayAdapter<MsgBean> {
     Context ctx;
     List<MsgBean> datas;
     LayoutInflater mInflater;
     int layout;
 
-    public MsgAdapter(Context ctx, List<MsgBean> datas) {
+    public MsgListAdapter(Context ctx, List<MsgBean> datas) {
         super(ctx, R.layout.msg_item, R.id.text);
         this.layout = R.layout.msg_item;
         this.ctx = ctx;

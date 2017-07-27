@@ -17,10 +17,15 @@ import arvix.cn.ontheway.ui.BaseFragment;
  * asdtiangxia@163.com
  */
 
-public class MsgFrag extends BaseFragment {
+public class MsgIndexFrag extends BaseFragment {
 
     @ViewInject(R.id.to_system_msg)
     private View toSystemLine;
+    @ViewInject(R.id.to_new_like_line)
+    private View toNewLikeLine;
+    @ViewInject(R.id.to_new_reply_line)
+    private View toNewReplyLine;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.frag_msg, null);
@@ -28,8 +33,21 @@ public class MsgFrag extends BaseFragment {
         toSystemLine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // ARouter.getInstance().build(InterRouterUrl.TO_SYSTEM_MSG).navigation();
                 Intent intent = new Intent(act , SystemMsgActivity.class);
+                startActivity(intent);
+            }
+        });
+        toNewLikeLine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(act , NewLikeActivity.class);
+                startActivity(intent);
+            }
+        });
+        toNewReplyLine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(act , NewReplyActivity.class);
                 startActivity(intent);
             }
         });

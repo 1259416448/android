@@ -65,6 +65,31 @@ public class StaticMethod {
     }
 
     public static void setCircularHeaderImg(ImageView imageView,int w,int h){
+        setCircularHeaderImg(getUserHeaderUrl(),imageView,w,h);
+    }
+
+    public static void setImg(String url,ImageView imageView,int w,int h){
+        //设置图片属性的options
+        ImageOptions options = new ImageOptions.Builder()
+                //设置图片的大小
+                .setSize(w, h)
+                // 如果ImageView的大小不是定义为wrap_content, 不要crop.
+                .setCrop(true)
+                // 加载中或错误图片的ScaleType
+                //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
+                .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
+                //设置加载过程中的图片
+                .setLoadingDrawableId(R.mipmap.ic_launcher)
+                //设置加载失败后的图片
+                .setFailureDrawableId(R.mipmap.ic_launcher)
+                //设置使用缓存
+                .setUseMemCache(true)
+                //设置支持gif
+                .setIgnoreGif(false).build();
+        x.image().bind(imageView, url, options);
+    }
+
+    public static void setCircularHeaderImg(String headerUrl,ImageView imageView,int w,int h){
         //设置图片属性的options
         ImageOptions options = new ImageOptions.Builder()
                 //设置图片的大小
@@ -84,8 +109,11 @@ public class StaticMethod {
                 .setIgnoreGif(false)
                 //设置显示圆形图片
                 .setCircular(true).build();
-        x.image().bind(imageView, getUserHeaderUrl(), options);
+        x.image().bind(imageView, headerUrl, options);
     }
+
+
+
     /**
      * 获取网落图片资源
      * @param url

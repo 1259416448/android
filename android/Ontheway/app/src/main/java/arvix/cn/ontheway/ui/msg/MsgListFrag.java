@@ -28,7 +28,7 @@ import arvix.cn.ontheway.ui.view.ListViewHolder;
 import arvix.cn.ontheway.utils.UIUtils;
 
 public class MsgListFrag extends BaseFragment implements OnItemClickListener, PullToRefreshBase.OnRefreshListener2<ListView> {
-    private MsgAdapter adapter;
+    private MsgListAdapter adapter;
     private List<MsgBean> datas;
     private ListViewHolder listHolder;
 
@@ -106,7 +106,7 @@ public class MsgListFrag extends BaseFragment implements OnItemClickListener, Pu
         listHolder = ListViewHolder.initList(act, root);
 
         datas = new ArrayList<MsgBean>();
-        adapter = new MsgAdapter(act, datas);
+        adapter = new MsgListAdapter(act, datas);
         listHolder.list.setAdapter(adapter);
         listHolder.list.setOnItemClickListener(this);
         return root;
