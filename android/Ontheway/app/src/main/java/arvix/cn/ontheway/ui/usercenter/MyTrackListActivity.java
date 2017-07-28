@@ -27,7 +27,7 @@ import arvix.cn.ontheway.async.AsyncUtil;
 import arvix.cn.ontheway.async.Callback;
 import arvix.cn.ontheway.async.Result;
 import arvix.cn.ontheway.been.TrackBean;
-import arvix.cn.ontheway.data.MyTrackListData;
+import arvix.cn.ontheway.data.TrackListData;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.view.ListViewHolder;
 import arvix.cn.ontheway.utils.StaticMethod;
@@ -97,7 +97,7 @@ public class MyTrackListActivity  extends BaseActivity   implements AdapterView.
             @Override
             public Result<List<TrackBean>> call() throws Exception {
                 Result<List<TrackBean> > ret = new Result<List<TrackBean> >();
-                ret.setData(MyTrackListData.genData());
+                ret.setData(TrackListData.genData());
                 return ret;
             }
         }, new Callback<Result<List<TrackBean>>>() {

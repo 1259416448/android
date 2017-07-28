@@ -162,8 +162,8 @@ public class MyTrackListAdapter extends ArrayAdapter<TrackBean> {
         h.gridLayout.setRowCount(row);
         h.monthTimeTv.setText(bean.getMonth()+"月");
         h.dayTimeTv.setText(bean.getDay()+"日");
-        h.contentTv.setText(StaticMethod.genLesStr(bean.getContent(),200));
-        h.addressTv.setText(StaticMethod.genLesStr(bean.getAddress(),20));
+        h.contentTv.setText(StaticMethod.genLesStr(bean.getContent(),30));
+        h.addressTv.setText(StaticMethod.genLesStr(bean.getAddress(),15));
         return convertView;
     }
 

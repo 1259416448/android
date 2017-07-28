@@ -10,7 +10,7 @@ import arvix.cn.ontheway.been.TrackBean;
  * asdtiangxia@163.com
  */
 
-public class MyTrackListData {
+public class TrackListData {
 
     public static List<TrackBean> genData(){
 
@@ -26,7 +26,7 @@ public class MyTrackListData {
         return resultList;
     }
 
-    private static TrackBean genData(int month, int day, long id, int photoCount){
+    public static TrackBean genData(int month, int day, long id, int photoCount){
         TrackBean trackBean = new TrackBean();
         trackBean.setUserHeaderUrl(GenTestData.genRandomUserHeader());
         trackBean.setContent(GenTestData.genContent());

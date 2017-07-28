@@ -1,5 +1,6 @@
 package arvix.cn.ontheway.been;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,7 +8,7 @@ import java.util.List;
  * asdtiangxia@163.com
  */
 
-public class TrackBean {
+public class TrackBean  implements Serializable{
 
     private long dateCreated;
     private long id;

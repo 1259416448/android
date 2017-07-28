@@ -1,81 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_ar"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="arvix.cn.ontheway.ui.ar.ArTrackActivity">
-
-    <FrameLayout
-        android:id="@+id/camera_container_layout"
+    tools:context="arvix.cn.ontheway.ui.track.TrackMapActivity">
+    <com.baidu.mapapi.map.MapView
+        android:id="@+id/bmapView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <SurfaceView
-            android:id="@+id/surface_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </FrameLayout>
-
-    <TextView
-        android:id="@+id/tv_current_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:textColor="@android:color/white"
-        android:text="GPS is loading..."/>
+        android:layout_height="match_parent"
+        />
     <LinearLayout
         android:id="@+id/zuji_bottom"
         android:layout_marginBottom="15dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:orientation="horizontal" android:layout_alignParentBottom="true">
-        <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginLeft="15dp"
-            android:src="@drawable/ar_leida"
-            />
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginLeft="9dp"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="附近商家"
-                android:layout_marginTop="5dp"
-                android:textSize="12sp"
-                android:textColor="#C4C4C4"/>
-            <TextView
-                android:layout_width="40dp"
-                android:layout_marginTop="4dp"
-                android:textColor="#FFFFFF"
-                android:layout_height="1dp" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:textColor="@color/white"
-                android:text="3456"
-                android:textSize="25sp"
-                android:layout_height="wrap_content" />
-           <LinearLayout
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content">
-               <ImageView
-                   android:layout_marginTop="1dp"
-                   android:layout_gravity="center"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:src="@drawable/dingwei"/>
-               <TextView
-                   android:layout_marginLeft="2dp"
-                   android:layout_gravity="center"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:textSize="12sp"
-                   android:textColor="#FFC4C4C4"
-                   android:text="三里屯白家坊"/>
-           </LinearLayout>
-        </LinearLayout>
+        android:gravity="right"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
 
         <Button
             android:id="@+id/to_ar_btn"
@@ -99,8 +40,10 @@
             android:layout_height="50dp"
             android:layout_marginBottom="30dp"
             android:layout_marginLeft="8dp"
+            android:layout_marginRight="15dp"
             android:background="@drawable/ar_pingmian" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_alignParentRight="true"
         android:layout_above="@id/zuji_bottom"
@@ -110,9 +53,9 @@
         android:layout_height="wrap_content" android:orientation="vertical">
         <Button
             android:layout_gravity="right"
-        android:background="@drawable/ar_huanyipi"
-        android:layout_width="35dp"
-        android:layout_height="35dp" />
+            android:background="@drawable/ar_huanyipi"
+            android:layout_width="35dp"
+            android:layout_height="35dp" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -179,45 +122,44 @@
                 android:id="@+id/range_btn_line"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-            <Button
-                android:id="@+id/r_100m"
-                android:layout_width="45dp"
-                android:layout_height="35dp"
-                android:layout_marginRight="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/black_btn_50dp"
-                android:text="100m"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
+                <Button
+                    android:id="@+id/r_100m"
+                    android:layout_width="45dp"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/black_btn_50dp"
+                    android:text="100m"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
 
-            <Button
-                android:id="@+id/r_500m"
-                android:layout_width="45dp"
-                android:layout_height="35dp"
-                android:layout_marginRight="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/black_btn_50dp"
-                android:text="500m"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
+                <Button
+                    android:id="@+id/r_500m"
+                    android:layout_width="45dp"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/black_btn_50dp"
+                    android:text="500m"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
 
-            <Button
-                android:id="@+id/r_1km"
-                android:layout_width="45dp"
-                android:layout_height="35dp"
-                android:layout_marginRight="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/black_btn_50dp"
-                android:text="1km"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
+                <Button
+                    android:id="@+id/r_1km"
+                    android:layout_width="45dp"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/black_btn_50dp"
+                    android:text="1km"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <Button
                 android:id="@+id/range_btn"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-
                 android:layout_weight="1"
                 android:background="@drawable/juli" />
         </LinearLayout>
@@ -228,5 +170,5 @@
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginLeft="15dp"
-    />
+        />
 </RelativeLayout>
