@@ -133,6 +133,7 @@ public class MyTrackListActivity  extends BaseActivity   implements AdapterView.
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
       //  MsgBean m = (MsgBean) parent.getItemAtPosition(position);
       //  UIUtils.toast(this, m.getTitle(), Toast.LENGTH_SHORT);
+        startActivity(new Intent(self,MyTrackDetailActivity.class));
     }
 
     /**

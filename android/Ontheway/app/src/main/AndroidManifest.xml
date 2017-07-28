@@ -103,6 +103,11 @@
             android:label="MySetActivity"
             />
         <activity android:name=".ui.ar.ArTrackActivity">
+		<activity
+            android:name=".ui.usercenter.MyTrackDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="MyMapTrackActivity"
+            />
         </activity>
     </application>
 
