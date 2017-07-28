@@ -92,7 +92,11 @@ public class DocumentService extends BaseServiceImpl<Document, Long> {
         User user = webContextUtils.getCheckCurrentUser();
         m.setId(null);
         m.setDownloadNo(0);
-        m.setFileUrl(m.getNewName());
+        if(m.getNewName()==null){
+            m.setNewName(m.getFileUrl());
+        }else {
+            m.setFileUrl(m.getNewName());
+        }
         m.setUser(user);
         return super.save_(m);
     }

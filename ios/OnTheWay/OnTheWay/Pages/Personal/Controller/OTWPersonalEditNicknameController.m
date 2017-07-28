@@ -22,7 +22,6 @@
     [super viewDidLoad];
     WeakSelf(self);
     self.customNavigationBar.rightButtonClicked=^{
-        DLog(@"点击了保存按钮");
         [weakself saveNickname];
     };
     [self buildUI];

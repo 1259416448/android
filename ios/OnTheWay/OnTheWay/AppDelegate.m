@@ -26,6 +26,10 @@
     if (!ret) {
         DLog(@"manager start failed!");
     }
+    
+    [IQKeyboardManager sharedManager].enableAutoToolbar = NO;
+    [IQKeyboardManager sharedManager].shouldResignOnTouchOutside = YES;
+    
     [_window makeKeyAndVisible];
     return YES;
 }

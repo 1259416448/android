@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>zh_CN</string>
+	<key>CFBundleDisplayName</key>
+	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -27,6 +29,8 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>请允许访问您的相机</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string></string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>请允许使用您的定位信息</string>
 	<key>NSPhotoLibraryUsageDescription</key>

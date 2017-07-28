@@ -16,36 +16,204 @@
             android:layout_height="match_parent" />
     </FrameLayout>
 
+    <TextView
+        android:id="@+id/tv_current_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:textColor="@android:color/white"
+        android:text="GPS is loading..."/>
     <LinearLayout
         android:id="@+id/zuji_bottom"
+        android:layout_marginBottom="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" android:orientation="horizontal" android:layout_alignParentBottom="true">
-        <Button
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginLeft="15dp"
+            android:src="@drawable/ar_leida"
+            />
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:orientation="vertical"
+            android:layout_marginLeft="9dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="附近商家"
+                android:layout_marginTop="5dp"
+                android:textSize="12sp"
+                android:textColor="#C4C4C4"/>
+            <TextView
+                android:layout_width="40dp"
+                android:layout_marginTop="4dp"
+                android:textColor="#FFFFFF"
+                android:layout_height="1dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:textColor="@color/white"
+                android:text="3456"
+                android:textSize="25sp"
+                android:layout_height="wrap_content" />
+           <LinearLayout
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content">
+               <ImageView
+                   android:layout_marginTop="1dp"
+                   android:layout_gravity="center"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:src="@drawable/dingwei"/>
+               <TextView
+                   android:layout_marginLeft="2dp"
+                   android:layout_gravity="center"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:textSize="12sp"
+                   android:textColor="#FFC4C4C4"
+                   android:text="三里屯白家坊"/>
+           </LinearLayout>
+        </LinearLayout>
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/ar_fabu"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" /><Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/ar_list"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+        <Button
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/ar_pingmian"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
     </LinearLayout>
     <LinearLayout
         android:layout_alignParentRight="true"
         android:layout_above="@id/zuji_bottom"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="25dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" android:orientation="vertical">
         <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-        <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-        <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+            android:layout_gravity="right"
+        android:background="@drawable/ar_huanyipi"
+        android:layout_width="35dp"
+        android:layout_height="35dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/time_btn_line"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible">
+
+                <Button
+                    android:id="@+id/time_one_day"
+                    android:layout_width="65dp"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/black_btn_50dp"
+                    android:text="1天内"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/time_7_day"
+                    android:layout_width="65dp"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/black_btn_50dp"
+                    android:text="7天内"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/time_one_month"
+                    android:layout_width="65dp"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/black_btn_50dp"
+                    android:text="一个月内"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/time_btn"
+
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="right"
+                android:background="@drawable/zj_shijian" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="10dp"
+            android:layout_gravity="right">
+            <LinearLayout
+                android:visibility="invisible"
+                android:id="@+id/range_btn_line"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/r_100m"
+                android:layout_width="45dp"
+                android:layout_height="35dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/black_btn_50dp"
+                android:text="100m"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/r_500m"
+                android:layout_width="45dp"
+                android:layout_height="35dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/black_btn_50dp"
+                android:text="500m"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/r_1km"
+                android:layout_width="45dp"
+                android:layout_height="35dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/black_btn_50dp"
+                android:text="1km"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/range_btn"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+
+                android:layout_weight="1"
+                android:background="@drawable/juli" />
+        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

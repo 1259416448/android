@@ -37,7 +37,7 @@ public class SystemMsgActivity extends BaseActivity implements AdapterView.OnIte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_system_msg);
+        setContentView(R.layout.activity_msg_system);
         x.view().inject(self);
         HeaderHolder head=new HeaderHolder();
         head.init(self,"系统消息");

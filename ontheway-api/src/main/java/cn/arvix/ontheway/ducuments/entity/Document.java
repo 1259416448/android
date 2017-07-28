@@ -34,7 +34,7 @@ public class Document extends BaseEntity<Long> {
     @Column
     @NotNull(message = "newName is not null")
     @Length(min = 1, max = 255, message = "The length of the newName is between {min} and {max}!")
-    @ApiModelProperty(value = "七牛key名称")
+    @ApiModelProperty(hidden = true)
     private String newName;
 
     /**
@@ -62,7 +62,7 @@ public class Document extends BaseEntity<Long> {
     /**
      * 文件路径
      */
-    @ApiModelProperty(hidden = true)
+    @ApiModelProperty(value = "七牛key名称")
     private String fileUrl;
 
     /**

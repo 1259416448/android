@@ -178,7 +178,6 @@ static BOOL _isOpenLog;   // 是否已开启日志打印
         [self setValue:token.rememberMe forHTTPHeaderField:rememberMeKey];
         [self setValue:token.rememberMeTime.description forHTTPHeaderField:rememberMeTimeKey];
     }
-    [self setRequestSerializer:PPRequestSerializerJSON];
     return [self POST:[self configeURL:URL] parameters:parameters responseCache:responseCache success:success failure:failure];
 }
 
@@ -469,6 +468,8 @@ static BOOL _isOpenLog;   // 是否已开启日志打印
     // 设置服务器返回结果的类型:JSON (AFJSONResponseSerializer,AFHTTPResponseSerializer)
     _sessionManager.responseSerializer = [AFJSONResponseSerializer serializer];
     _sessionManager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/html", @"text/json", @"text/plain", @"text/javascript", @"text/xml", @"image/*", nil];
+    //设置服务器请求类型
+    _sessionManager.requestSerializer = [AFJSONRequestSerializer serializer];
     // 打开状态栏的等待菊花
     [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
 }
