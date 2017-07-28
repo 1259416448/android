@@ -17,6 +17,7 @@
 #import "OTWTabBarController.h"
 #import "OTWPersonalFootprintsListController.h"
 #import "OTWPersonalClaimViewController.h"
+#import "OTWPersonalCollectController.h"
 
 @interface OTWPersonalViewController() <UITableViewDataSource,UITableViewDelegate>
 
@@ -121,6 +122,11 @@
     if(indexPath.row==2){
         OTWPersonalClaimViewController *PersonalClaimVC = [[OTWPersonalClaimViewController alloc] init];
         [self.navigationController pushViewController:PersonalClaimVC animated:YES];
+    }
+    
+    if(indexPath.row==0){
+        OTWPersonalCollectController *personalCollectVC = [[OTWPersonalCollectController alloc] init];
+        [self.navigationController pushViewController:personalCollectVC animated:YES];
     }
 }
 
