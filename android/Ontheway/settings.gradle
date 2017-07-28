@@ -1,1 +1,1 @@
-include ':app', ':PullToRefreshLibrary'
+include ':app', ':PullToRefreshLibrary', ':ViewPagerLibrary'
