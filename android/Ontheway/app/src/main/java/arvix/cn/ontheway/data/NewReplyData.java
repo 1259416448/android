@@ -3,7 +3,6 @@ package arvix.cn.ontheway.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import arvix.cn.ontheway.been.MyTrackBean;
 import arvix.cn.ontheway.been.ReplyBean;
 
 /**
@@ -17,9 +16,9 @@ public class NewReplyData {
     public static List<ReplyBean> genData(){
         List<ReplyBean> resultList = new ArrayList<>();
         for(int i=0;i<10;i++){
-            resultList.add(genData(UserHeaderGen.genRandomUserHeader(),"陈立"+i,UserHeaderGen.genRandomUserHeader(),
-                    UserHeaderGen.genRandomUserHeader(),"高迪"+i,
-                    "content"+i,"sContent"+i));
+            resultList.add(genData(GenTestData.genRandomUserHeader(),GenTestData.genNickname()+i, GenTestData.genRandomUserHeader(),
+                    GenTestData.genRandomUserHeader(),GenTestData.genNickname()+i,
+                    GenTestData.genContent()+i,GenTestData.genContent()+i));
         }
         return resultList;
     }
