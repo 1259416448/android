@@ -25,13 +25,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
     [self showARViewController];
     [self buildUI];
 }
@@ -41,43 +34,13 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)buildUI
+- (void)viewWillAppear:(BOOL)animated
 {
-    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    backButton.frame = CGRectMake(0, 20, 80, 44);
-    backButton.backgroundColor = [UIColor whiteColor];
-    [backButton setImage:[UIImage imageNamed:@"AR_back"] forState:UIControlStateNormal];
-    [backButton addTarget:self action:@selector(backButtonClick) forControlEvents:UIControlEventTouchUpInside];
-    [self.arViewController.view insertSubview:backButton atIndex:0];
+    [super viewWillAppear:animated];
     
-    UIButton *searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    searchButton.frame = CGRectMake(SCREEN_WIDTH-80, 100, 80, 80);
-    searchButton.backgroundColor = [UIColor whiteColor];
-    [searchButton setImage:[UIImage imageNamed:@"ar_list"] forState:UIControlStateNormal];
-    [searchButton addTarget:self action:@selector(searchButtonClick) forControlEvents:UIControlEventTouchUpInside];
-    [self.arViewController.view insertSubview:searchButton atIndex:0];
-}
-
-- (void)backButtonClick
-{
-    [self.arViewController dismissViewControllerAnimated:YES completion:nil];
-    [[OTWLaunchManager sharedManager].mainTabController didSelectedItemByIndex:0]; // 显示首页
-}
-
-- (void)searchButtonClick
-{
-    NSLog(@"点击了search按钮");
-    OTWFootprintsChangeAddressController *personalInfo = [[OTWFootprintsChangeAddressController alloc] init];
-    [self.arViewController dismissViewControllerAnimated:NO completion:^{
-        [self.navigationController pushViewController:personalInfo animated:YES];
-    }];
-    
-    
+    [self.navigationController setNavigationBarHidden:YES];
     [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
-}
-
-- (void)showARViewController
-{
+    
     double lat = 30.540017;
     double lon = 104.063377;
     double deltaLat = 0.04;
@@ -85,36 +48,95 @@
     double altitudeDelta = 0;
     NSInteger count = 20;
     
+#warning 这是假数据，需要换为真实数据
     NSArray *dummyAnnotations = [self getDummyAnnotation:lat centerLongitude:lon deltaLat:deltaLat deltaLon:deltaLon altitudeDelta:altitudeDelta count:count];
+    [self setAnnotations:dummyAnnotations];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+}
+
+- (void)buildUI // test
+{
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    backButton.frame = CGRectMake(0, 20, 80, 44);
+    backButton.backgroundColor = [UIColor whiteColor];
+    [backButton setImage:[UIImage imageNamed:@"AR_back"] forState:UIControlStateNormal];
+    [backButton addTarget:self action:@selector(backButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.view insertSubview:backButton aboveSubview:self.presenter];
     
+    UIButton *searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    searchButton.frame = CGRectMake(SCREEN_WIDTH-80, 100, 80, 80);
+    searchButton.backgroundColor = [UIColor whiteColor];
+    [searchButton setImage:[UIImage imageNamed:@"ar_list"] forState:UIControlStateNormal];
+    [searchButton addTarget:self action:@selector(searchButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.view insertSubview:searchButton aboveSubview:self.presenter];
+    
+    UIButton *nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    nextButton.frame = CGRectMake(SCREEN_WIDTH-80, 200, 80, 80);
+    nextButton.backgroundColor = [UIColor whiteColor];
+    [nextButton setTitle:@"换一批" forState:UIControlStateNormal];
+    [nextButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+    [nextButton addTarget:self action:@selector(nextButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.view insertSubview:nextButton aboveSubview:self.presenter];
+    
+}
+
+- (void)nextButtonClick
+{
+    double lat = 30.540117;
+    double lon = 104.063477;
+    double deltaLat = 0.04;
+    double deltaLon = 0.07;
+    double altitudeDelta = 0;
+    NSInteger count = 50;
+    
+#warning 这是假数据，需要换为真实数据
+    NSArray *dummyAnnotations = [self getDummyAnnotation:lat centerLongitude:lon deltaLat:deltaLat deltaLon:deltaLon altitudeDelta:altitudeDelta count:count];
+    //[self.presenter clear];
+    ///[self clearRadar];
+    [self setAnnotations:dummyAnnotations];
+}
+
+- (void)backButtonClick
+{
+    [[OTWLaunchManager sharedManager].mainTabController didSelectedItemByIndex:0]; // 显示首页
+}
+
+- (void)searchButtonClick
+{
+    OTWFootprintsChangeAddressController *personalInfo = [[OTWFootprintsChangeAddressController alloc] init];
+    [self.navigationController pushViewController:personalInfo animated:YES];
+}
+
+- (void)showARViewController
+{
     // Present ARViewController
-    self.arViewController = [[MCYARViewController alloc] init];
-    self.arViewController.dataSource = self;
+    self.dataSource = self;
     // Vertical offset by distance
-    self.arViewController.presenter.distanceOffsetMode = DistanceOffsetModeManual;
-    self.arViewController.presenter.distanceOffsetMultiplier = 0.1; // Pixels per meter
-    self.arViewController.presenter.distanceOffsetMinThreshold = 500;
-    self.arViewController.presenter.maxDistance = 3000;
-    self.arViewController.presenter.maxVisibleAnnotations = 100;
-    self.arViewController.presenter.verticalStackingEnabled = true;
-    self.arViewController.trackingManager.userDistanceFilter = 15;
-    self.arViewController.trackingManager.reloadDistanceFilter = 50;
+    self.presenter.distanceOffsetMode = DistanceOffsetModeManual;
+    self.presenter.distanceOffsetMultiplier = 0.1; // Pixels per meter
+    self.presenter.distanceOffsetMinThreshold = 500;
+    self.presenter.maxDistance = 3000;
+    self.presenter.maxVisibleAnnotations = 100;
+    self.presenter.verticalStackingEnabled = true;
+    self.trackingManager.userDistanceFilter = 15;
+    self.trackingManager.reloadDistanceFilter = 50;
     // debug
-    self.arViewController.uiOptions.closeButtonEnabled = false;
-    self.arViewController.uiOptions.debugLabel = false;
-    self.arViewController.uiOptions.closeButtonEnabled = true;
-    self.arViewController.uiOptions.debugMap = false;
-    self.arViewController.uiOptions.simulatorDebugging = [Platform isSimulator];;
-    self.arViewController.uiOptions.setUserLocationToCenterOfAnnotations = [Platform isSimulator];
+    self.uiOptions.closeButtonEnabled = false;
+    self.uiOptions.debugLabel = false;
+    self.uiOptions.closeButtonEnabled = true;
+    self.uiOptions.debugMap = false;
+    self.uiOptions.simulatorDebugging = [Platform isSimulator];;
+    self.uiOptions.setUserLocationToCenterOfAnnotations = [Platform isSimulator];
     // Interface orientation
-    self.arViewController.interfaceOrientationMask = UIInterfaceOrientationMaskAll;
+    self.interfaceOrientationMask = UIInterfaceOrientationMaskAll;
     __weak typeof(self) weakSelf;
-    self.arViewController.onDidFailToFindLocation = ^(NSTimeInterval timeElapsed, BOOL acquiredLocationBefore) {
-        [weakSelf handleLocationFailure:timeElapsed acquiredLocationBefore:acquiredLocationBefore arViewController:weakSelf.arViewController];
+    self.onDidFailToFindLocation = ^(NSTimeInterval timeElapsed, BOOL acquiredLocationBefore) {
+        [weakSelf handleLocationFailure:timeElapsed acquiredLocationBefore:acquiredLocationBefore arViewController:weakSelf];
     };
-    [self.arViewController setAnnotations:dummyAnnotations];
-    //[self.navigationController pushViewController:self.arViewController animated:NO];
-    [self presentViewController:self.arViewController animated:NO completion:nil];
 }
 
 - (NSArray*)getDummyAnnotation:(double)centerLatitude centerLongitude:(double)centerLongitude deltaLat:(double)deltaLat deltaLon:(double)deltaLon altitudeDelta:(double)altitudeDelta count:(NSInteger)count
@@ -181,7 +203,6 @@
         [self presentViewController:alert animated:YES completion:nil];
     }
 }
-
 #pragma mark - MCYARDatasource
 - (MCYARAnnotationView*)ar:(MCYARViewController*)arViewController viewForAnnotation:(MCYARAnnotation*)annotation
 {
