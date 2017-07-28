@@ -46,7 +46,7 @@
     
     tableView.backgroundColor = [UIColor clearColor];
     
-   // tableView.separatorStyle = UITableViewCellSeparatorStyleNone;//将边框去掉
+    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;//将边框去掉
     
     [self.view addSubview:tableView];
     
@@ -83,10 +83,8 @@
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    OTWPersonalCollectTableViewCell *cell = (OTWPersonalCollectTableViewCell *)[self tableView:tableView
-                                                                     cellForRowAtIndexPath:indexPath];
-    return cell.frame.size.height;
+
+    return 70;
 }
 /*
  #pragma mark - Navigation

@@ -19,7 +19,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
-
+        signingConfig signingConfigs.key
     }
     buildTypes {
         release {
@@ -31,6 +31,8 @@ android {
             signingConfig signingConfigs.key
         }
     }
+    productFlavors {
+    }
 }
 
 dependencies {
@@ -41,4 +43,5 @@ dependencies {
     compile 'com.android.support:design:23.+'
     compile 'com.android.support:support-v4:23.+'
     compile project(':PullToRefreshLibrary')
+    compile project(path: ':ViewPagerLibrary')
 }
