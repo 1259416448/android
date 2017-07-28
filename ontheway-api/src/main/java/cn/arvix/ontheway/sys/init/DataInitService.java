@@ -312,7 +312,7 @@ public class DataInitService implements ApplicationContextAware {
         if (configService.checkMapName(CommonContact.QINIU_FILE_BUCKET)) {
             config = new Config();
             config.setMapName(CommonContact.QINIU_FILE_BUCKET)
-                    .setMapValue("agilemaster")
+                    .setMapValue("ontheway")
                     .setDescription("七牛默认bucket")
                     .setValueType(ConfigValueType.String)
                     .setEditable(true)
@@ -323,7 +323,7 @@ public class DataInitService implements ApplicationContextAware {
         if (configService.checkMapName(CommonContact.QINIU_BUCKET_URL)) {
             config = new Config();
             config.setMapName(CommonContact.QINIU_BUCKET_URL)
-                    .setMapValue("http://onidt4bx8.bkt.clouddn.com")
+                    .setMapValue("http://osx4pwgde.bkt.clouddn.com")
                     .setDescription("七牛默认访问URL")
                     .setValueType(ConfigValueType.String)
                     .setEditable(true)
@@ -357,7 +357,7 @@ public class DataInitService implements ApplicationContextAware {
         if (configService.checkMapName(CommonContact.SYSTEM_ENVIRONMENT)) {
             config = new Config();
             config.setMapName(CommonContact.SYSTEM_ENVIRONMENT)
-                    .setMapValue("prod")
+                    .setMapValue("test")
                     .setDescription("系统环境")
                     .setValueType(ConfigValueType.String)
                     .setEditable(true)
