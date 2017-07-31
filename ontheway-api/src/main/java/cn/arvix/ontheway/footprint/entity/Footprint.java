@@ -5,9 +5,11 @@ import cn.arvix.base.common.utils.HibernateValidationUtil;
 import cn.arvix.ontheway.ducuments.entity.Document;
 import cn.arvix.ontheway.sys.user.entity.User;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 /**
  * 足迹实体
@@ -26,12 +28,16 @@ public class Footprint extends BaseEntity<Long> {
     private String content;
 
     //主题图片
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @ApiModelProperty(hidden = true)
     private Document photo;
 
+
+    @Formula(value = "( select d.file_url from agile_document d where d.id = photo_id )")
+    private String footprintPhoto;
+
     //发布用户
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @NotNull(message = "user is not null")
     @ApiModelProperty(hidden = true)
     private User user;
@@ -69,6 +75,34 @@ public class Footprint extends BaseEntity<Long> {
     //商家ID
     private Long business;
 
+    //到某个点的距离
+    private Double distance;
+
+    private Boolean ifDelete = Boolean.FALSE;
+
+    public Footprint() {
+
+    }
+
+    public Footprint(Long id, String content, String footprintPhoto, Long userId,
+                     String address, Double latitude, Double longitude,
+                     FootprintType type, Boolean ifBusinessComment,
+                     Long business, Double distance,Date dateCreated) {
+        setId(id);
+        this.content = content;
+        this.footprintPhoto = footprintPhoto;
+        this.user = new User();
+        this.user.setId(userId);
+        this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.type = type;
+        this.ifBusinessComment = ifBusinessComment;
+        this.business = business;
+        this.distance  = distance;
+        setDateCreated(dateCreated);
+    }
+
     /**
      * checkLack
      */
@@ -95,6 +129,22 @@ public class Footprint extends BaseEntity<Long> {
 
     public void setPhoto(Document photo) {
         this.photo = photo;
+    }
+
+    public String getFootprintPhoto() {
+        return footprintPhoto;
+    }
+
+    public void setFootprintPhoto(String footprintPhoto) {
+        this.footprintPhoto = footprintPhoto;
+    }
+
+    public Double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(Double distance) {
+        this.distance = distance;
     }
 
     public User getUser() {
@@ -159,5 +209,13 @@ public class Footprint extends BaseEntity<Long> {
 
     public void setBusiness(Long business) {
         this.business = business;
+    }
+
+    public Boolean getIfDelete() {
+        return ifDelete;
+    }
+
+    public void setIfDelete(Boolean ifDelete) {
+        this.ifDelete = ifDelete;
     }
 }

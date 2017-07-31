@@ -98,6 +98,16 @@ public class QiniuResourceManagerUtil {
         getBucketManager().delete(qiniuUploadUtil.getBucket(), key);
     }
 
+    /**
+     * 多个删除
+     * @param key 需要删除的Key
+     * @throws QiniuException 出现的异常
+     */
+    public void deleteFileMore(String... key) throws QiniuException{
+        BucketManager.BatchOperations operations = new BucketManager.BatchOperations().addDeleteOp(qiniuUploadUtil.getBucket(),key);
+        getBucketManager().batch(operations);
+    }
+
     // 批量操作,当需要一次性进行多个操作时, 可以使用批量操作.
     @SuppressWarnings({"null", "unused"})
 //    public void moreOperate(String key, String key1, String key2, String key3,

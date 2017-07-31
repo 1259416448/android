@@ -1,5 +1,6 @@
 package cn.arvix.ontheway.sys.init;
 
+import cn.arvix.base.common.entity.ScheduleJob;
 import cn.arvix.base.common.utils.CommonContact;
 import cn.arvix.base.common.utils.QuartzJobUtil;
 import cn.arvix.ontheway.sys.config.entity.Config;
@@ -112,16 +113,16 @@ public class DataInitService implements ApplicationContextAware {
 //            e.printStackTrace();
 //        }
         //创建一个基础定时任务
-//        ScheduleJob scheduleJob = new ScheduleJob();
-//        scheduleJob.setJobName("agileBasicPolling");
-//        scheduleJob.setJobId("agileBasicPolling");
-//        scheduleJob.setJobGroup("agileTask");
-//        scheduleJob.setJobStatus("1");
-//        scheduleJob.setDesc("基础定时任务，轮询的形式添加最近1小时内需要定时发送的所有邮件或者短信");
-//        scheduleJob.setCronExpression("0 0 0-23 * * ? ");
-//        scheduleJob.setTargetObject("agileRemindService");
-//        scheduleJob.setTargetMethod("execute");
-//        quartzJobUtil.addJob(scheduleJob);
+        ScheduleJob scheduleJob = new ScheduleJob();
+        scheduleJob.setJobName("footprintDeletePolling");
+        scheduleJob.setJobId("footprintDeletePolling");
+        scheduleJob.setJobGroup("footprint");
+        scheduleJob.setJobStatus("1");
+        scheduleJob.setDesc("定时任务，每30秒执行一次，检查需要删除的足迹数据");
+        scheduleJob.setCronExpression("0/30 * * * * ? ");
+        scheduleJob.setTargetObject("footprintService");
+        scheduleJob.setTargetMethod("delete");
+        quartzJobUtil.addJob(scheduleJob);
 
     }
 
@@ -323,7 +324,7 @@ public class DataInitService implements ApplicationContextAware {
         if (configService.checkMapName(CommonContact.QINIU_BUCKET_URL)) {
             config = new Config();
             config.setMapName(CommonContact.QINIU_BUCKET_URL)
-                    .setMapValue("http://osx4pwgde.bkt.clouddn.com")
+                    .setMapValue("http://osx4pwgde.bkt.clouddn.com/")
                     .setDescription("七牛默认访问URL")
                     .setValueType(ConfigValueType.String)
                     .setEditable(true)
