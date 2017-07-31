@@ -13,6 +13,11 @@
 #import "OTWPersonalEditNicknameController.h"
 #import "OTWAlbumSelectHelper.h"
 #import "OTWPersonalSiteGanderViewController.h"
+#import "QiniuUploadService.h"
+#import "MBProgressHUD+PYExtension.h"
+#import <MJExtension.h>
+
+static NSString *userImageUrl = @"/app/user/update/image";
 
 @interface OTWPersonalInfoController() <UITableViewDataSource,UITableViewDelegate>
 {
@@ -110,14 +115,14 @@
 
 #pragma mark 点击行
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    DLog(@"我点击了：%ld",indexPath.row);
     
     switch (indexPath.row) {
         case 0: // 头像
         {
-            DLog(@"点击了头像");
             [[OTWAlbumSelectHelper shared] showInViewController:self imageBlock:^(UIImage *image) {
-                personalHeadImageView.image = image;
+                if (image) {
+                    [self uploadImageToServer:image];
+                }
             }];
         }
             break;
@@ -211,6 +216,54 @@
     return cell;
 }
 
+-(void)uploadImageToServer:(UIImage *)image
+{
+    //上传图片到七牛
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.label.textColor = [UIColor whiteColor];
+    hud.bezelView.color = [UIColor blackColor];
+    hud.activityIndicatorColor = [UIColor whiteColor];
+    hud.label.text = @"正在上传头像";
+    [QiniuUploadService uploadImage:image progress:^(NSString *key, float progress) {
+        DLog(@"已成功上传了 progress %f",progress);
+    } success:^(OTWDocument *document) {
+        NSDictionary *documentDict = document.mj_keyValues;
+        [self sendRequest:documentDict completion:^(id result, NSError *error) {
+            if (result) {
+                [hud hideAnimated:YES];
+                if([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]){
+                    //保存用户信息
+                    [OTWUserModel shared].headImg = result[@"body"][@"headImg"];
+                    [[OTWUserModel shared] dump];
+                    //推送通知
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"userEdit" object:self];
+                    personalHeadImageView.image = image;
+                    [self errorTips:@"上传成功" userInteractionEnabled:NO];
+                }else{
+                    DLog(@"message - %@  messageCode - %@",result[@"message"],result[@"messageCode"]);
+                    [self errorTips:@"上传失败，请检查您的网络是否连接" userInteractionEnabled:YES];
+                }
+            }
+        }];
+    } failure:^{
+        [hud hideAnimated:YES];
+        [self errorTips:@"头像失败，请检查您的网络是否连接" userInteractionEnabled:YES];
+    }];
+}
+
+-(void)sendRequest:(NSDictionary *)params completion:(requestCompletionBlock)block
+{
+    [OTWNetworkManager doPOST:userImageUrl parameters:params success:^(id responseObject) {
+        if (block) {
+            block(responseObject,nil);
+        }
+    } failure:^(NSError *error) {
+        if (block) {
+            block(nil,error);
+        }
+    }];
+}
+
 - (void)setCellLabel:(UITableViewCell *)cell cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if(indexPath.row==1){
@@ -226,5 +279,6 @@
         }
     }
 }
+
 
 @end
