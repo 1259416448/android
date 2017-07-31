@@ -102,12 +102,26 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="MySetActivity"
             />
-        <activity android:name=".ui.ar.ArTrackActivity">
-		<activity
+        <activity
+            android:name=".ui.track.TrackListActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="TrackListActivity"
+            />
+
+        <activity
             android:name=".ui.usercenter.MyTrackDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="MyMapTrackActivity"
             />
+        <activity
+            android:name=".ui.track.TrackMapActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="TrackMapActivity"
+            />
+
+
+        <activity android:name=".ui.ar.ArTrackActivity">
+
         </activity>
     </application>
 

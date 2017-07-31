@@ -22,6 +22,7 @@ public class BottomDialog {
 
     public BottomDialog(Context ctx) {
         dialog = getDialog(ctx);
+
         makeNotFullScreen(dialog);
         Window window = dialog.getWindow();
         LayoutParams param = window.getAttributes();
@@ -53,6 +54,13 @@ public class BottomDialog {
     public void dismiss() {
         dialog.dismiss();
     }
+
+    public View getView(){
+        FrameLayout customLayout = (FrameLayout) dialog.findViewById(R.id.dialog_root);
+        return customLayout;
+    }
+
+
 
     public void setCustom(View v) {
         FrameLayout customLayout = (FrameLayout) dialog.findViewById(R.id.dialog_root);

@@ -70,7 +70,7 @@ public View getView(final int position, View convertView, ViewGroup parent) {
 
         h.replayNameTv.setText(replyBean.getReplayUserName());
         h.replayTimeTv.setText(StaticMethod.formatDate(replyBean.getDateCreated(),"MM-dd HH:ss"));
-        h.sourceContentTv.setText(StaticMethod.genLesStr(replyBean.getSourceContent(),100));
+        h.sourceContentTv.setText(StaticMethod.genLesStr(replyBean.getSourceContent(),30));
         h.sourceNameTv.setText(replyBean.getSourceMsgUserName());
         return convertView;
         }

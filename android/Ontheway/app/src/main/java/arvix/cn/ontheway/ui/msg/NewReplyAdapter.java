@@ -66,8 +66,8 @@ public class NewReplyAdapter  extends ArrayAdapter<ReplyBean> {
 
         h.replayNameTv.setText(replyBean.getReplayUserName());
         h.replayTimeTv.setText(StaticMethod.formatDate(replyBean.getDateCreated(),"MM-dd HH:ss"));
-        h.replayContentTv.setText(StaticMethod.genLesStr(replyBean.getContent(),100));
-        h.sourceContentTv.setText(StaticMethod.genLesStr(replyBean.getSourceContent(),100));
+        h.replayContentTv.setText(StaticMethod.genLesStr(replyBean.getContent(),35));
+        h.sourceContentTv.setText(StaticMethod.genLesStr(replyBean.getSourceContent(),30));
         h.sourceNameTv.setText(replyBean.getSourceMsgUserName());
 
         return convertView;
