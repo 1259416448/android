@@ -86,7 +86,7 @@ public class StatelessAuthcFilter extends AccessControlFilter {
             }
         }
         HttpServletResponse httpResponse = WebUtils.toHttp(response);
-        if (obj == null) { //记住我
+        if (obj == null && rememberMe != null) { //记住我
             PrincipalCollection principalCollection = rememberMeManager.getRememberedPrincipals(httpRequest, httpResponse);
             if (principalCollection != null && principalCollection.iterator().hasNext()) {
                 String principal = principalCollection.iterator().next().toString();
