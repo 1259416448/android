@@ -242,6 +242,7 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
     public JSONResult delete_(Long id){
         User user = webContextUtils.getCheckCurrentUser();
         Footprint footprint = super.findOne(id);
+        if(footprint.getIfDelete()) return JsonUtil.getSuccess(CommonContact.DELETE_SUCCESS,CommonContact.DELETE_SUCCESS,id);
         //判断一下是否可以删除
         if(!Objects.equals(user.getId(),footprint.getUser().getId())){
             return JsonUtil.getFailure(CommonContact.NO_PERMISSION, CommonErrorCode.FOOTPRINT_DELETE_NO_PERMISSION);
@@ -293,6 +294,8 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
      */
     @Transactional(rollbackFor = Exception.class)
     public JSONResult like(Long id) {
+        Footprint footprint = super.findOne(id);
+        if(footprint.getIfDelete()) return JsonUtil.getFailure("footprint already delete",CommonErrorCode.FOOTPRINT_ALREADY_DELETE);
         User user = webContextUtils.getCheckCurrentUser();
         int value = 1;
         if (likeRecordsService.countByUserIdAndFootprintId(user.getId(), id) == 0) {

@@ -116,9 +116,8 @@ public class CommentService extends BaseServiceImpl<Comment, Long> {
         super.delete(comment);
         statisticsService.updateCommentNumByInstanceId(comment.getFootprint().getId(), -1, SystemModule.footprint);
         getCommentRepository().updateReplyCommentId(id);
-        return JsonUtil.getSuccess(CommonContact.OPTION_SUCCESS, CommonContact.OPTION_SUCCESS);
+        return JsonUtil.getSuccess(CommonContact.DELETE_SUCCESS, CommonContact.DELETE_SUCCESS);
     }
-
 
     /**
      * 获取评论信息，评论按 dateCreated desc 排序

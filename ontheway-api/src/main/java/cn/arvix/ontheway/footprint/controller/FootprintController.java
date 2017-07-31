@@ -33,7 +33,7 @@ public class FootprintController extends ExceptionHandlerController {
         return service.save(dto);
     }
 
-    @RequestMapping(value = "/view/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/view/{id}", method = RequestMethod.GET)
     @ResponseBody
     @ApiOperation(value = "足迹详情", notes = "获取足迹详情")
     public JSONResult view(@PathVariable Long id) {
@@ -41,10 +41,17 @@ public class FootprintController extends ExceptionHandlerController {
     }
 
     @ResponseBody
-    @ApiOperation(value = "点赞",notes = "点赞接口，如果已经点赞，再次请求取消点赞")
-    @RequestMapping(value = "/like/{id}")
-    public JSONResult like(@PathVariable Long id){
+    @ApiOperation(value = "点赞", notes = "点赞接口，如果已经点赞，再次请求取消点赞")
+    @RequestMapping(value = "/like/{id}", method = RequestMethod.POST)
+    public JSONResult like(@PathVariable Long id) {
         return service.like(id);
+    }
+
+    @ResponseBody
+    @ApiOperation(value = "删除", notes = "删除足迹，异步删除，此方法只会变更足迹表示，真正删除在1天后清除掉")
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
+    public JSONResult delete(@PathVariable Long id) {
+        return service.delete_(id);
     }
 
     @ApiOperation(value = "获取足迹列表数据", notes = "请求足迹时，需要所在位置信息，默认以时间（DESC）、距离(ASC)为条件进行排序展示<br>" +

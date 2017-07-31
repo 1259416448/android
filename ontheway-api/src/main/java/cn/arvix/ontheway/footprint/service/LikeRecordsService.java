@@ -31,7 +31,7 @@ public class LikeRecordsService extends BaseServiceImpl<LikeRecords,Long> {
     public Long countByUserIdAndFootprintId(Long userId,Long footprintId){
         Map<String,Object> params = Maps.newHashMap();
         params.put("userId_eq",userId);
-        params.put("footprint_eq",footprintId);
+        params.put("footprintId_eq",footprintId);
         return super.count(Searchable.newSearchable(params));
     }
 

@@ -57,6 +57,7 @@ public class Comment extends BaseEntity<Long> {
         detailDTO.setUserNickname(this.getUser().getName());
         detailDTO.setDateCreate(TimeMaker.toTimeMillis(this.getDateCreated()));
         detailDTO.setDateCreatedStr(TimeMaker.dateCreatedStr(detailDTO.getDateCreate()));
+        detailDTO.setCommentId(this.getId());
         return detailDTO;
     }
 
