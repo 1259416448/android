@@ -101,7 +101,7 @@ public class AgileAttachmentService extends BaseServiceImpl<AgileAttachment, Lon
         params.put("agileModule_eq", agileModule);
         params.put("instanceId_eq", instanceId);
         List<AgileAttachment> agileAttachments = super.findAllWithSort(Searchable.newSearchable(params));
-        String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL) + "/";
+        String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL);
         Auth auth = qiniuUploadUtil.getAuth();
         //根据文件类型返回附件数据，图片直接返回地址，文件后缀如果是 jpg|gif|bmp|png|jpeg
         if (agileAttachments != null && agileAttachments.size() > 0) {

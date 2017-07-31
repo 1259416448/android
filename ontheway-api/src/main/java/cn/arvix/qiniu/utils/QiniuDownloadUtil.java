@@ -95,7 +95,7 @@ public class QiniuDownloadUtil {
      * @return 下载地址
      */
     public String getDownloadTokenAuto(String url, Integer time) {
-        String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL) + "/";
+        String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL);
         return getDownloadToken(urlFix + url, time);
     }
 
@@ -103,7 +103,7 @@ public class QiniuDownloadUtil {
      * 获取共有文件下载地址
      */
     public String getNormalDownload(String url){
-        String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL) + "/";
+        String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL);
         return urlFix+url;
     }
 }

@@ -327,17 +327,8 @@
         if(result){
             [hud hideAnimated:YES];
             if([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]){
-                [self errorTips:@"发布成功" userInteractionEnabled:NO];
-                dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-                dispatch_source_t _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
-                dispatch_source_set_timer(_timer,dispatch_walltime(NULL, 0),2.0*NSEC_PER_SEC, 0); //2秒后执行
-                dispatch_source_set_event_handler(_timer, ^{
-                    dispatch_source_cancel(_timer);
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self.navigationController popViewControllerAnimated:YES];
-                    });
-                });
-                dispatch_resume(_timer);
+                [self errorTips:@"发布成功" userInteractionEnabled:YES];
+                [self performSelector:@selector(cacelRelease) withObject:nil afterDelay:1.5f];
             }else{
                 DLog(@"message - %@  messageCode - %@",result[@"message"],result[@"messageCode"]);
                 [self errorTips:@"发布失败，请检查您的网络是否连接" userInteractionEnabled:YES];
@@ -346,6 +337,11 @@
             [self netWorkErrorTips:error];
         }
     }];
+}
+
+-(void) cacelRelease
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - UITextViewDelegate
@@ -520,6 +516,11 @@
     if(recognizer.direction == UISwipeGestureRecognizerDirectionDown){
         [self.footprintTextView resignFirstResponder];
     }
+}
+
+- (void) dealloc
+{
+    DLog(@"dealloc");
 }
 
 @end

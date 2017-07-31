@@ -19,6 +19,16 @@ public class TimeMaker {
 
     private static final Map<Integer, Integer> diffMap = Maps.newHashMap();
 
+    public static final Long ONE_MINUIT = 60 * 1000L;
+
+    public static final Long ONE_HOUR = 60 * 60 * 1000L;
+
+    public static final Long ONE_DAY = 24 * 60 * 60 * 1000L;
+
+    public static final Long ONE_MONTH = 30 * 24 * 60 * 60 * 1000L;
+
+    public static final Long ONE_YEAR = 365 * 30 * 24 * 60 * 60 * 1000L;
+
     static {
         dateFormat.setLenient(false);// 这个的功能是不把1996-13-3 转换为1997-1-3
         dateTimeFormat.setLenient(false);
@@ -590,6 +600,31 @@ public class TimeMaker {
             day = day2 - day1;
         }
         return day;
+    }
+
+    /**
+     * 根据传入的时间计算距离当前时间多久
+     * @param time 时间戳
+     * @return 时间字符串
+     */
+    public static String dateCreatedStr(Long time){
+        Long currentTime = System.currentTimeMillis();
+        Long diffTime = currentTime - time;
+        String str = "";
+        if(diffTime < ONE_MINUIT){
+            str = diffTime / 1000 +"秒前";
+        }else if(diffTime < ONE_HOUR){
+            str = diffTime / ONE_MINUIT + "分钟前";
+        }else if(diffTime < ONE_DAY){
+            str = diffTime / ONE_HOUR +"小时前";
+        }else if(diffTime < ONE_MONTH){
+            str = diffTime / ONE_DAY + "天前";
+        }else if(diffTime < ONE_YEAR){
+            str = diffTime / ONE_MONTH +"月前";
+        }else {
+            str = diffTime / ONE_YEAR +"年前";
+        }
+        return str;
     }
 
 }

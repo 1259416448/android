@@ -76,7 +76,7 @@ public class WebContextUtils {
      */
     public User getCurrentUser() {
         String principal = getCurrentPrincipal();
-        if (principal == null) throw new UserException("principal is null");
+        if (principal == null) return null;
         if (Objects.equals(principal,
                 configService.getConfigString(CommonContact.ROOT_NAME))) {
             return sysDevUser();

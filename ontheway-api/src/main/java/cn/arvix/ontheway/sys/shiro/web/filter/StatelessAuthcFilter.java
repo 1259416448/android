@@ -82,7 +82,7 @@ public class StatelessAuthcFilter extends AccessControlFilter {
             HttpServletRequest httpRequest = WebUtils.toHttp(request);
             //获取token
             String token = httpRequest.getHeader(CommonContact.HTTP_HEADER_AUTH_TOKEN);
-            System.out.println(token);
+            //System.out.println(token);
 //            if (SystemParms.ifDev()) {
 //                log.info("token：{} ", token);
 //            }

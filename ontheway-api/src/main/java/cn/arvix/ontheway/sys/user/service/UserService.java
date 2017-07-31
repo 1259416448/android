@@ -711,7 +711,7 @@ public class UserService extends BaseServiceImpl<User, Long> {
         user1.setHeadImgYuan(document.getNewName());
         user1.setHeadImg(document.getNewName());
         super.update(user1);
-        return JsonUtil.getSuccess(CommonContact.UPDATE_SUCCESS,CommonContact.UPDATE_SUCCESS);
+        return JsonUtil.getSuccess(CommonContact.UPDATE_SUCCESS,CommonContact.UPDATE_SUCCESS,user1.toSimpleMap());
     }
 
 }
