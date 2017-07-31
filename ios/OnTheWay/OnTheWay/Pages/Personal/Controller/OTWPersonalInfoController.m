@@ -21,14 +21,18 @@
 
 @property (nonatomic,strong) UIImage *arrowImge;
 
+@property (nonatomic,strong) UITableView *personalInfoTableView;
+
 @property (nonatomic,strong) NSMutableArray *tableViewLabelArray;
 
 @end
 
 @implementation OTWPersonalInfoController
 
+
 - (void)viewDidLoad{
     [super viewDidLoad];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getNotice) name:@"userEdit" object:nil];
     _arrowImge = [UIImage imageNamed:@"arrow_right"];
     //检查是否登陆，否则跳转到登录界面
     [self initData];
@@ -39,6 +43,17 @@
 {
     [super viewWillAppear:animated];
     [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
+}
+
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+-(void)getNotice
+{
+    [[OTWUserModel shared] load];
+    [self.personalInfoTableView reloadData];
 }
 
 #pragma mark - initData
@@ -64,13 +79,13 @@
     
     self.view.backgroundColor = [UIColor color_f4f4f4];
     //使用UITableView，展示基本信息
-    UITableView *personalInfoTableView = [[UITableView alloc] initWithFrame:CGRectMake(0,65, SCREEN_WIDTH, SCREEN_HEIGHT-65) style:UITableViewStyleGrouped];
-    personalInfoTableView.dataSource = self;
-    personalInfoTableView.delegate = self;
-    personalInfoTableView.backgroundColor = [UIColor clearColor];
+    self.personalInfoTableView = [[UITableView alloc] initWithFrame:CGRectMake(0,65, SCREEN_WIDTH, SCREEN_HEIGHT-65) style:UITableViewStyleGrouped];
+    self.personalInfoTableView.dataSource = self;
+    self.personalInfoTableView.delegate = self;
+    self.personalInfoTableView.backgroundColor = [UIColor clearColor];
     // 设置边框颜色
-    personalInfoTableView.separatorColor= [UIColor color_d5d5d5];
-    [self.view addSubview:personalInfoTableView];
+    self.personalInfoTableView.separatorColor= [UIColor color_d5d5d5];
+    [self.view addSubview:self.personalInfoTableView];
     
 }
 
@@ -138,8 +153,8 @@
     UITableViewCell *cell;
     
     static NSString *cellIdentifier=@"UITableViewCellIdentifierKey1";
-    
     cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    [self setCellLabel:cell cellForRowAtIndexPath:indexPath];
     if(!cell){
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
         cell.textLabel.text =_tableViewLabelArray[indexPath.row] ;
@@ -194,6 +209,22 @@
     }
     
     return cell;
+}
+
+- (void)setCellLabel:(UITableViewCell *)cell cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if(indexPath.row==1){
+        cell.detailTextLabel.text = [OTWUserModel shared].name;
+    }
+    if (indexPath.row==2) {
+        if([[OTWUserModel shared].gender isEqualToString:@"secrecy"]){
+            cell.detailTextLabel.text =@"未设置";
+        }else if([[OTWUserModel shared].gender isEqualToString:@"man"]){
+            cell.detailTextLabel.text =@"男";
+        }else{
+            cell.detailTextLabel.text =@"女";
+        }
+    }
 }
 
 @end
