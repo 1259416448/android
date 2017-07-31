@@ -18,6 +18,7 @@
 #import "OTWPersonalFootprintsListController.h"
 #import "OTWPersonalClaimViewController.h"
 #import "OTWPersonalCollectController.h"
+#import "OTWPersonalFindViewController.h"
 
 @interface OTWPersonalViewController() <UITableViewDataSource,UITableViewDelegate>
 
@@ -127,6 +128,11 @@
     if(indexPath.row==0){
         OTWPersonalCollectController *personalCollectVC = [[OTWPersonalCollectController alloc] init];
         [self.navigationController pushViewController:personalCollectVC animated:YES];
+    }
+
+    if(indexPath.row==1){
+        OTWPersonalFindViewController *personalFindVC = [[OTWPersonalFindViewController alloc] init];
+        [self.navigationController pushViewController:personalFindVC animated:YES];
     }
 }
 
