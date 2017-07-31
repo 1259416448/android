@@ -9,10 +9,15 @@
 #import "OTWPersonalEditNicknameController.h"
 #import "OTWCustomNavigationBar.h"
 #import "OTWUserModel.h"
+#import "MBProgressHUD+PYExtension.h"
+
+
+static NSString *nickNameUrl = @"/app/user/update/name";
 
 @interface OTWPersonalEditNicknameController()
 
 @property (nonatomic,strong) UITextField *nicknameTextField;
+
 
 @end
 
@@ -60,7 +65,56 @@
 
 -(void) saveNickname
 {
-   DLog(@"点击了保存按钮，当前的nickname：%@", self.nicknameTextField.text);
+    NSString *name = self.nicknameTextField.text;
+    name = [name stringByReplacingOccurrencesOfString:@" " withString:@""];
+    if (name.length == 0) {
+        [self errorTips:@"请输入名称" userInteractionEnabled:NO];
+        return;
+    }
+    NSDictionary *userDict = [NSDictionary dictionaryWithObjectsAndKeys:name,@"name",nil];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.label.textColor = [UIColor whiteColor];
+    hud.bezelView.color = [UIColor blackColor];
+    hud.activityIndicatorColor = [UIColor whiteColor];
+    hud.label.text = @"正在保存";
+    [self sendRequest:userDict completion:^(id result, NSError *error) {
+        if (result) {
+            [hud hideAnimated:YES];
+            if ([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]) {
+                [self errorTips:@"修改成功" userInteractionEnabled:NO];
+                //保存用户信息
+                [OTWUserModel shared].name = name;
+                [[OTWUserModel shared] dump];
+                //推送通知
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"userEdit" object:self];
+                dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+                dispatch_source_t _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
+                dispatch_source_set_timer(_timer,dispatch_walltime(NULL, 0),2.0*NSEC_PER_SEC, 0); //2秒后执行
+                dispatch_source_set_event_handler(_timer, ^{
+                    dispatch_source_cancel(_timer);
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.navigationController popViewControllerAnimated:YES];
+                    });
+                });
+                dispatch_resume(_timer);
+            } else {
+                [self netWorkErrorTips:error];
+            }
+        }
+    }];
+}
+
+-(void)sendRequest:(NSDictionary *)params completion:(requestCompletionBlock)block
+{
+    [OTWNetworkManager doPOST:nickNameUrl parameters:params success:^(id responseObject) {
+        if (block) {
+            block(responseObject,nil);
+        }
+    } failure:^(NSError *error) {
+        if (block) {
+            block(nil,error);
+        }
+    }];
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event

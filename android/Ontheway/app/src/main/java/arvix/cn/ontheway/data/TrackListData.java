@@ -3,20 +3,18 @@ package arvix.cn.ontheway.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import arvix.cn.ontheway.been.MyTrackBean;
-import arvix.cn.ontheway.been.MyTrackDayBean;
-import arvix.cn.ontheway.been.MyTrackMonthBean;
+import arvix.cn.ontheway.been.TrackBean;
 
 /**
  * Created by asdtiang on 2017/7/25 0025.
  * asdtiangxia@163.com
  */
 
-public class MyTrackListData {
+public class TrackListData {
 
-    public static List<MyTrackBean> genData(){
+    public static List<TrackBean> genData(){
 
-        List<MyTrackBean> resultList = new ArrayList<>();
+        List<TrackBean> resultList = new ArrayList<>();
         long id = 1;
         resultList.add(genData(7,13,id++,1));
         resultList.add(genData(7,9,id++,2));
@@ -28,11 +26,13 @@ public class MyTrackListData {
         return resultList;
     }
 
-    private static MyTrackBean genData(int month,int day,long id,int photoCount){
-        MyTrackBean trackBean = new MyTrackBean();
-        trackBean.setContent("清粥小菜，服务很好，环境干净，菜是一般，有名气，开了很连接店。建议你去看看");
+    public static TrackBean genData(int month, int day, long id, int photoCount){
+        TrackBean trackBean = new TrackBean();
+        trackBean.setUserHeaderUrl(GenTestData.genRandomUserHeader());
+        trackBean.setContent(GenTestData.genContent());
         trackBean.setDateCreated(System.currentTimeMillis());
         trackBean.setAddress("成都市菁蓉国际广场A1栋");
+        trackBean.setNickname(GenTestData.genNickname());
         trackBean.setId(id);
         trackBean.setMonth(month);
         trackBean.setDay(day);

@@ -1,11 +1,8 @@
 package arvix.cn.ontheway.ui.usercenter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.StringDef;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +20,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import arvix.cn.ontheway.R;
-import arvix.cn.ontheway.been.MyTrackBean;
+import arvix.cn.ontheway.been.TrackBean;
 import arvix.cn.ontheway.utils.StaticMethod;
 
 /**
@@ -31,9 +28,9 @@ import arvix.cn.ontheway.utils.StaticMethod;
  * asdtiangxia@163.com
  */
 
-public class MyTrackListAdapter extends ArrayAdapter<MyTrackBean> {
+public class MyTrackListAdapter extends ArrayAdapter<TrackBean> {
     Context ctx;
-    List<MyTrackBean> dataList;
+    List<TrackBean> dataList;
     LayoutInflater mInflater;
     int layout;
     int currentDay;
@@ -45,7 +42,7 @@ public class MyTrackListAdapter extends ArrayAdapter<MyTrackBean> {
     LinearLayout.LayoutParams marginLeft ;
     LinearLayout.LayoutParams marginTop;
     LinearLayout.LayoutParams marginLeftAndTop;
-    public MyTrackListAdapter(@NonNull Context context, @LayoutRes int resource,List<MyTrackBean> dataList) {
+    public MyTrackListAdapter(@NonNull Context context, @LayoutRes int resource,List<TrackBean> dataList) {
         super(context, resource);
         this.layout = resource;
         this.ctx = context;
@@ -71,7 +68,7 @@ public class MyTrackListAdapter extends ArrayAdapter<MyTrackBean> {
         return dataList.size();
     }
 
-    public MyTrackBean getItem(int position) {
+    public TrackBean getItem(int position) {
         return dataList.get(position);
     }
 
@@ -93,14 +90,14 @@ public class MyTrackListAdapter extends ArrayAdapter<MyTrackBean> {
         } else {
             h = (MyTrackListAdapter.ViewHolder) convertView.getTag();
         }
-        MyTrackBean bean = getItem(position);
+        TrackBean bean = getItem(position);
         h.monthTimeLine.setVisibility(View.VISIBLE);
         h.dayTimeTv.setVisibility(View.VISIBLE);
         if( position==0 && currentDay==bean.getDay()){
             h.monthTimeLine.setVisibility(View.GONE);
             h.dayTimeTv.setVisibility(View.INVISIBLE);
         }if(position>0){
-            MyTrackBean lastBean = getItem(position-1);
+            TrackBean lastBean = getItem(position-1);
             if (bean.getMonth()==lastBean.getMonth()) {
                 h.monthTimeLine.setVisibility(View.GONE);
             }
@@ -165,8 +162,8 @@ public class MyTrackListAdapter extends ArrayAdapter<MyTrackBean> {
         h.gridLayout.setRowCount(row);
         h.monthTimeTv.setText(bean.getMonth()+"月");
         h.dayTimeTv.setText(bean.getDay()+"日");
-        h.contentTv.setText(StaticMethod.genLesStr(bean.getContent(),200));
-        h.addressTv.setText(StaticMethod.genLesStr(bean.getAddress(),20));
+        h.contentTv.setText(StaticMethod.genLesStr(bean.getContent(),30));
+        h.addressTv.setText(StaticMethod.genLesStr(bean.getAddress(),15));
         return convertView;
     }
 

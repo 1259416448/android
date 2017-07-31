@@ -10,10 +10,20 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import "MCYARAnnotation.h"
 
+@interface SpotView : UIView
+
+@end
+
+@implementation SpotView
+
+@end
+
+
 @interface MCYARRadar ()
 
 @property (nonatomic, strong) UIImageView *radarImageView;
 @property (nonatomic, strong) NSMutableDictionary *theSpots;
+@property (nonatomic, strong) NSMutableArray<SpotView*> *spots; // 雷达上的点 保存的view
 
 @end
 
@@ -69,6 +79,7 @@
         
         [self setBackgroundColor:[UIColor clearColor]];
         self.theSpots = [NSMutableDictionary dictionary];
+        self.spots = [NSMutableArray array];
         
         [self setupRadarImages];
         //[self turnRadar];
@@ -103,6 +114,12 @@
         
         return (NSComparisonResult)NSOrderedSame;
     }];
+    
+    // 先移除雷达上的数据后在添加
+    for (SpotView *spotview in self.spots) {
+        [spotview removeFromSuperview];
+    }
+    [self.spots removeAllObjects];
     
     // 比较两点是否相交， 相交的话，x，y分别+1
     CGRect rect2 = CGRectZero;
@@ -157,12 +174,11 @@
         }
         rect2 = CGRectMake(pointX, pointY, pointWidth, pointWidth);
         
-        UIView *tempView = [[UIView alloc] initWithFrame:rect1];
-        tempView.backgroundColor = [UIColor redColor];
-        tempView.layer.cornerRadius = 2;
-        [self addSubview:tempView];
-        
-        NSLog(@"角度:%f  坐标位置：(x:%f y:%f)", annotation.azimuth, pointX, pointY);
+        SpotView *spotview = [[SpotView alloc] initWithFrame:rect1];
+        spotview.backgroundColor = [UIColor redColor];
+        spotview.layer.cornerRadius = 2;
+        [self addSubview:spotview];
+        [self.spots addObject:spotview];
     }
 }
 

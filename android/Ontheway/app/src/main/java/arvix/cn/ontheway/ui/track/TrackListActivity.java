@@ -1,4 +1,4 @@
-package arvix.cn.ontheway.ui.usercenter;
+package arvix.cn.ontheway.ui.track;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -29,66 +29,48 @@ import arvix.cn.ontheway.async.Result;
 import arvix.cn.ontheway.been.TrackBean;
 import arvix.cn.ontheway.data.TrackListData;
 import arvix.cn.ontheway.ui.BaseActivity;
+import arvix.cn.ontheway.ui.head.HeaderHolder;
+import arvix.cn.ontheway.ui.usercenter.MyTrackDetailActivity;
+import arvix.cn.ontheway.ui.usercenter.MyTrackListActivity;
+import arvix.cn.ontheway.ui.usercenter.MyTrackListAdapter;
+import arvix.cn.ontheway.ui.usercenter.MyTrackMapActivity;
 import arvix.cn.ontheway.ui.view.ListViewHolder;
 import arvix.cn.ontheway.utils.StaticMethod;
 
 /**
- * Created by asdtiang on 2017/7/25 0025.
+ * Created by asdtiang on 2017/7/28 0028.
  * asdtiangxia@163.com
  */
 
-public class MyTrackListActivity  extends BaseActivity   implements AdapterView.OnItemClickListener, PullToRefreshBase.OnRefreshListener2<ListView>{
+public class TrackListActivity   extends BaseActivity implements AdapterView.OnItemClickListener, PullToRefreshBase.OnRefreshListener2<ListView>{
 
-    private MyTrackListAdapter adapter;
+    private TrackListAdapter adapter;
     private List<TrackBean> datas;
     private ListViewHolder listHolder;
-    @ViewInject(R.id.header_img_track)
-    private ImageView headerIV;
-    @ViewInject(R.id.to_my_track_map_btn)
-    private Button toMyTrackMapBtn ;
     private int pageNum = 0;
-    private final int pageSize = 30;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_track_list);
-        initView();
+        setContentView(R.layout.activity_track_list);
         datas = new ArrayList();
-
         initData(true);
-        Log.i("tag","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-        adapter = new MyTrackListAdapter(this, R.layout.my_track_list_item,datas);
-        Log.i("tag","bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
+        adapter = new TrackListAdapter(this, R.layout.track_list_item,datas);
         listHolder = ListViewHolder.initList(this);
         listHolder.list.setAdapter(adapter);
-        listHolder.list.getRefreshableView().setDividerHeight(0);
-        listHolder.list.getRefreshableView().addHeaderView(LayoutInflater.from (self).inflate(R.layout.my_track_info_frag,listHolder.list,false));
+        listHolder.list.getRefreshableView().setDividerHeight(StaticMethod.dip2px(self,10));
         x.view().inject(this);
-        StaticMethod.setCircularHeaderImg(headerIV,180,180);
-        toMyTrackMapBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i("route","MyTrackListActivity btnnnnnn---------------------------------------------------->");
-                startActivity(new Intent(self,MyTrackMapActivity.class));
-            }
-        });
-
         listHolder.list.setOnItemClickListener(this);
-        Log.i("tag","ccccccccccccccccccccccccccccccccccccccccc");
         listHolder.list.setMode(PullToRefreshBase.Mode.BOTH);
         listHolder.list.setOnRefreshListener(this);
         listHolder.list.setRefreshing();
+        HeaderHolder head=new HeaderHolder();
+        head.init(self,"足迹列表");
     }
 
     //正整数，小于等于0会导致不响应onActivityResult
     private final int REQ_GET_NAME_EDIT = new Random().nextInt(Integer.MAX_VALUE);
 
-    private void initView() {
-
-
-    }
 
     private void initData(final boolean refresh) {
         final int reqPage = refresh ? 0 : pageNum;
@@ -96,7 +78,7 @@ public class MyTrackListActivity  extends BaseActivity   implements AdapterView.
 
             @Override
             public Result<List<TrackBean>> call() throws Exception {
-                Result<List<TrackBean> > ret = new Result<List<TrackBean> >();
+                Result<List<TrackBean> > ret = new Result<>();
                 ret.setData(TrackListData.genData());
                 return ret;
             }
@@ -117,7 +99,7 @@ public class MyTrackListActivity  extends BaseActivity   implements AdapterView.
                     datas.addAll(result.getData());
                     adapter.notifyDataSetChanged();
                 } else {
-                    new AlertDialog.Builder(MyTrackListActivity.this).setMessage(result.getErrorMsg()).show();
+                    new AlertDialog.Builder(TrackListActivity.this).setMessage(result.getErrorMsg()).show();
                 }
                 listHolder.mayShowEmpty(adapter.getCount());
                 listHolder.list.onRefreshComplete();
@@ -131,8 +113,8 @@ public class MyTrackListActivity  extends BaseActivity   implements AdapterView.
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-      //  MsgBean m = (MsgBean) parent.getItemAtPosition(position);
-      //  UIUtils.toast(this, m.getTitle(), Toast.LENGTH_SHORT);
+        //  MsgBean m = (MsgBean) parent.getItemAtPosition(position);
+        //  UIUtils.toast(this, m.getTitle(), Toast.LENGTH_SHORT);
         startActivity(new Intent(self,MyTrackDetailActivity.class));
     }
 
