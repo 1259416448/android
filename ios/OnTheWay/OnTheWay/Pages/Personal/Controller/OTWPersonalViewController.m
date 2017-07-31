@@ -51,8 +51,14 @@
 -(void)viewDidLoad {
     [super viewDidLoad];
     _arrowImge = [UIImage imageNamed:@"arrow_right"];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(buildPersonalInfo) name:@"userEdit" object:nil];
     [self buildUI];
     [self initData];
+}
+
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - initData
