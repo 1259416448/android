@@ -1,4 +1,4 @@
-package arvix.cn.ontheway.been;
+package arvix.cn.ontheway.bean;
 
 import android.location.Location;
 

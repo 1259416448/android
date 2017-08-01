@@ -203,7 +203,7 @@
     _username.text = praise.username;
     _username.frame = usernameRect;
     
-    CGFloat replyButtonX = self.frame.size.width - OTWTableViewPadding - 45;
+    CGFloat replyButtonX = SCREEN_WIDTH - OTWTableViewPadding - 45;
     CGFloat replyButtonY = userImageY;
     CGRect replyButtonRect = CGRectMake(replyButtonX, replyButtonY, OTWPraiseReplyButtonWidth, OTWPraiseReplyButtonHeigth);
     _replyButton.frame = replyButtonRect;
@@ -218,7 +218,7 @@
     
     CGFloat contentX = userImageX;
     CGFloat contentY = CGRectGetMaxY(_userImage.frame) + OTWStatusTableViewCellControlSpacing;
-    CGFloat conteneW = self.frame.size.width - OTWTableViewPadding*2;
+    CGFloat conteneW = SCREEN_WIDTH - OTWTableViewPadding*2;
     CGSize contentSize=[praise.content boundingRectWithSize:CGSizeMake(conteneW, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin
                                               attributes:@{NSFontAttributeName: OTWPraiseUserNameFont} context:nil].size;
     CGRect contentRect = CGRectMake(contentX, contentY, conteneW, contentSize.height);
@@ -227,7 +227,7 @@
     
     CGFloat topicBGX = userImageX;
     CGFloat topicBGY = CGRectGetMaxY(_content.frame) + OTWStatusTableViewCellControlSpacing;
-    CGFloat topicBGW = self.frame.size.width - OTWTableViewPadding*2;
+    CGFloat topicBGW = SCREEN_WIDTH - OTWTableViewPadding*2;
     CGRect topicBGRect = CGRectMake(topicBGX, topicBGY, topicBGW, OTWPraiseTopicImageWidth);
     _topicBG.frame = topicBGRect;
     
@@ -246,13 +246,13 @@
     
     CGFloat topicContentX = topicTitleX;
     CGFloat topicContentY = CGRectGetMaxY(_topicTitle.frame) + OTWPraiseContentSpacing;
-    CGFloat topicContentW = self.frame.size.width - OTWTableViewPadding*2 - OTWPraiseTopicImageWidth - OTWStatusTableViewCellControlSpacing*2;
+    CGFloat topicContentW = SCREEN_WIDTH - OTWTableViewPadding*2 - OTWPraiseTopicImageWidth - OTWStatusTableViewCellControlSpacing*2;
     CGRect topicContentRect = CGRectMake(topicContentX, topicContentY, topicContentW, OTWTopicConentHeight);
     _topicContent.text = praise.topicContent;
     _topicContent.frame = topicContentRect;
     
     CGFloat cellSpaceH = CGRectGetMaxY(_topicBG.frame) + OTWStatusTableViewCellControlSpacing;
-    CGRect cellSpaceRect = CGRectMake(0, 0, self.frame.size.width, cellSpaceH);
+    CGRect cellSpaceRect = CGRectMake(0, 0, SCREEN_WIDTH, cellSpaceH);
     _cellBG.frame = cellSpaceRect;
     
     _height = CGRectGetMaxY(_topicBG.frame) + OTWStatusTableViewCellControlSpacing*2;

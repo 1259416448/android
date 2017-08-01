@@ -12,6 +12,10 @@
 
 #import "OTWCustomNavigationBar.h"
 
+#import "OTWShopActiveViewController.h"
+
+#import "OTWShopDetailsController.h"
+
 @interface OTWPersonalClaimViewController ()<UITableViewDataSource,UITableViewDelegate>{
     UITableView *tableView;
     NSMutableArray *status;
@@ -81,6 +85,9 @@
         //在此模块，以便重新布局
         
     }
+    [cell.claimShopActiveBtn addTarget:self action:@selector(activeClick) forControlEvents:UIControlEventTouchUpInside];
+    
+    [cell.claimShopDetailBtn addTarget:self action:@selector(detailClick) forControlEvents:UIControlEventTouchUpInside];
     
     return cell;
 }
@@ -91,6 +98,20 @@
                                                                      cellForRowAtIndexPath:indexPath];
     return cell.frame.size.height;
 }
+
+-(void)activeClick{
+    
+    DLog(@"点击了活动");
+    OTWShopActiveViewController *ShopActiveViewVC = [[OTWShopActiveViewController alloc] init];
+    [self.navigationController pushViewController:ShopActiveViewVC animated:YES];
+}
+
+
+
+-(void)detailClick{
+    DLog(@"点击了商家详情");
+    OTWShopDetailsController *ShopDetailsViewVC = [[OTWShopDetailsController alloc] init];
+    [self.navigationController pushViewController:ShopDetailsViewVC animated:YES];}
 /*
 #pragma mark - Navigation
 

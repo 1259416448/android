@@ -1,5 +1,6 @@
-package arvix.cn.ontheway.been;
+package arvix.cn.ontheway.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,7 +8,7 @@ import java.util.List;
  * asdtiangxia@163.com
  */
 
-public class MyTrackBean {
+public class TrackBean  implements Serializable{
 
     private long dateCreated;
     private long id;
@@ -16,6 +17,8 @@ public class MyTrackBean {
     private List<String> photoList;
     private String address;
     private String content;
+    private String userHeaderUrl;
+    private String nickname;
 
 
     public long getDateCreated() {
@@ -72,5 +75,21 @@ public class MyTrackBean {
 
     public void setDay(int day) {
         this.day = day;
+    }
+
+    public String getUserHeaderUrl() {
+        return userHeaderUrl;
+    }
+
+    public void setUserHeaderUrl(String userHeaderUrl) {
+        this.userHeaderUrl = userHeaderUrl;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 }

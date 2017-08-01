@@ -45,7 +45,7 @@
 - (UITableView *)tableV
 {
     if (!_tableV) {
-        _tableV = [[UITableView alloc] initWithFrame:CGRectMake(0, self.navigationHeight, self.view.width, self.view.height) style:UITableViewStylePlain];
+        _tableV = [[UITableView alloc] initWithFrame:CGRectMake(0, self.navigationHeight, SCREEN_WIDTH, SCREEN_HEIGHT) style:UITableViewStylePlain];
         _tableV.dataSource = self;
         _tableV.delegate = self;
         _tableV.separatorColor = [UIColor color_f4f4f4];
@@ -60,7 +60,7 @@
     if (!_headerV) {
         _headerV = [[UIView alloc] init];
         _headerV.backgroundColor = [UIColor color_f4f4f4];
-        _headerV.frame = CGRectMake(0, 0, self.view.width, 10);
+        _headerV.frame = CGRectMake(0, 0, SCREEN_WIDTH, 10);
     }
     return _headerV;
 }

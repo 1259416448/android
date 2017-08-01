@@ -211,20 +211,20 @@
     
     CGFloat commentContentX = userImageX;
     CGFloat commentContentY = CGRectGetMaxY(_userImageV.frame) + OTWSpacing_10;
-    CGFloat commentContentW = self.frame.size.width - OTWSpacing_15*2;
+    CGFloat commentContentW = SCREEN_WIDTH - OTWSpacing_15*2;
     CGSize commentContentSize = [commentModel.sCommentContent boundingRectWithSize:CGSizeMake(commentContentW, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:OTWCommentUserNameFontSize} context:nil].size;
     CGRect commentContentRect = CGRectMake(commentContentX, commentContentY, commentContentW, commentContentSize.height);
     _commentContentV.text = commentModel.sCommentContent;
     _commentContentV.frame = commentContentRect;
     
-    CGFloat replyButtonX = self.frame.size.width - OTWSpacing_15 - 45;
+    CGFloat replyButtonX = SCREEN_WIDTH - OTWSpacing_15 - 45;
     CGFloat replyButtonY = userNameY;
     CGRect replyButtonRect = CGRectMake(replyButtonX, replyButtonY, 50, 25);
     _replyButtonV.frame = replyButtonRect;
     
     CGFloat topicBGVX = userImageX;
     CGFloat topicBGVY = CGRectGetMaxY(_commentContentV.frame) + OTWSpacing_10;
-    CGFloat topicBGVW = self.frame.size.width - OTWSpacing_15*2;
+    CGFloat topicBGVW = SCREEN_WIDTH - OTWSpacing_15*2;
     CGRect topicBGRect = CGRectMake(topicBGVX, topicBGVY, topicBGVW, 79);
     _topicBGV.frame = topicBGRect;
     
@@ -243,14 +243,14 @@
     
     CGFloat topicContentX = topicuserNameVX;
     CGFloat topicContentY = CGRectGetMaxY(_topicuserNameV.frame) + OTWSpacing_5;
-    CGFloat topicContentW = self.frame.size.width - OTWSpacing_15*2 - 79 - OTWSpacing_10*2;
+    CGFloat topicContentW = SCREEN_WIDTH - OTWSpacing_15*2 - 79 - OTWSpacing_10*2;
     CGSize topicContentSize = [commentModel.footprint.footprintContent boundingRectWithSize:CGSizeMake(topicContentW, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:OTWCommentButtonFontSize} context:nil].size;
     CGRect topicContentRect = CGRectMake(topicContentX, topicContentY, topicContentW, topicContentSize.height);
     _topicContentV.text = commentModel.footprint.footprintContent;
     _topicContentV.frame = topicContentRect;
     
     CGFloat cellBGH = CGRectGetMaxY(_topicBGV.frame) + OTWSpacing_10;
-    CGRect cellBGRect = CGRectMake(0, 0, self.frame.size.width, cellBGH);
+    CGRect cellBGRect = CGRectMake(0, 0, SCREEN_WIDTH, cellBGH);
     _cellBGV.frame = cellBGRect;
     
     _height = CGRectGetMaxY(_cellBGV.frame) + OTWSpacing_10;

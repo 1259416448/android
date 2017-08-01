@@ -1,6 +1,7 @@
 package arvix.cn.ontheway.ui.ar;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.hardware.Sensor;
@@ -14,7 +15,6 @@ import android.opengl.Matrix;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
@@ -30,6 +30,8 @@ import org.xutils.x;
 import arvix.cn.ontheway.BaiduActivity;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.ui.BaseActivity;
+import arvix.cn.ontheway.ui.track.TrackListActivity;
+import arvix.cn.ontheway.ui.track.TrackMapActivity;
 
 public class ArTrackActivity extends BaseActivity implements SensorEventListener, LocationListener {
 
@@ -57,16 +59,23 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
     private View timeLine;
     @ViewInject(R.id.range_btn_line)
     private View rangeLine;
-
     @ViewInject(R.id.time_btn)
     private Button timeButton;
     @ViewInject(R.id.range_btn)
     private Button rangeButton;
+    @ViewInject(R.id.to_track_list_btn)
+    private Button toTrackListBtn;
+
+    @ViewInject(R.id.to_map_btn)
+    private Button toMapBtn;
+
+    @ViewInject(R.id.to_ar_btn)
+    private Button toArBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_zuji);
+        setContentView(R.layout.activity_ar_track);
         x.view().inject(self);
         searchKeyWord = getIntent().getStringExtra(BaiduActivity.EXTRA_KEYWORD);
         sensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);
@@ -94,6 +103,31 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
                 }else{
                     timeLine.setVisibility(View.VISIBLE);
                 }
+            }
+        });
+
+
+        toTrackListBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(self, TrackListActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        toMapBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(self, TrackMapActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        toArBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(self, ArTrackActivity.class);
+                startActivity(intent);
             }
         });
 

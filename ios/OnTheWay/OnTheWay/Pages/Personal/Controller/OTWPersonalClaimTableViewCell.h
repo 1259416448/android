@@ -10,4 +10,7 @@
 
 @interface OTWPersonalClaimTableViewCell : UITableViewCell
 
+@property (nonatomic,strong) UIButton *claimShopActiveBtn;
+@property (nonatomic,strong) UIButton *claimShopDetailBtn;
+
 @end

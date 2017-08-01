@@ -3,8 +3,7 @@ package arvix.cn.ontheway.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import arvix.cn.ontheway.been.MyTrackBean;
-import arvix.cn.ontheway.been.ReplyBean;
+import arvix.cn.ontheway.bean.ReplyBean;
 
 /**
  * Created by asdtiang on 2017/7/27 0027.
@@ -17,24 +16,21 @@ public class NewReplyData {
     public static List<ReplyBean> genData(){
         List<ReplyBean> resultList = new ArrayList<>();
         for(int i=0;i<10;i++){
-            resultList.add(genData(UserHeaderGen.genRandomUserHeader(),"陈立"+i,UserHeaderGen.genRandomUserHeader(),
-                    UserHeaderGen.genRandomUserHeader(),"高迪"+i,
-                    "content"+i,"sContent"+i));
+            resultList.add(genBean());
         }
         return resultList;
     }
 
-    private static ReplyBean  genData(String sUserHeader,String sUserName,String mainPhoto,String replyHeader,String replyName,
-                                      String content,String sContent){
+    private static ReplyBean  genBean(){
         ReplyBean replyBean = new ReplyBean();
-        replyBean.setContent(content);
-        replyBean.setSourceContent(sContent);
-        replyBean.setSourceMsgUserHeader(sUserHeader);
-        replyBean.setSourceMsgUserName(sUserName);
+        replyBean.setContent(GenTestData.genContent());
+        replyBean.setSourceContent(GenTestData.genContent());
+        replyBean.setSourceMsgUserHeader(GenTestData.genRandomUserHeader());
+        replyBean.setSourceMsgUserName(GenTestData.genNickname());
         replyBean.setDateCreated(System.currentTimeMillis());
-        replyBean.setMainPhoto(mainPhoto);
-        replyBean.setReplayUserName(replyName);
-        replyBean.setReplyUserHeader(replyHeader);
+        replyBean.setMainPhoto(GenTestData.genRandomUserHeader());
+        replyBean.setReplayUserName(GenTestData.genNickname());
+        replyBean.setReplyUserHeader(GenTestData.genRandomUserHeader());
         return replyBean;
     }
 

@@ -42,6 +42,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.+'
     compile 'com.android.support:design:23.+'
     compile 'com.android.support:support-v4:23.+'
+    compile 'com.youth.banner:banner:1.4.9'  //最新版本
     compile project(':PullToRefreshLibrary')
     compile project(path: ':ViewPagerLibrary')
 }

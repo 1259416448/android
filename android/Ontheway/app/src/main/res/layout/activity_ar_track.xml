@@ -76,24 +76,30 @@
                    android:text="三里屯白家坊"/>
            </LinearLayout>
         </LinearLayout>
+
         <Button
-            android:layout_marginLeft="8dp"
-            android:layout_marginBottom="30dp"
-            android:background="@drawable/ar_fabu"
+            android:id="@+id/to_ar_btn"
             android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:layout_marginBottom="30dp"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/ar_fabu" />
+
         <Button
-            android:layout_marginLeft="8dp"
-            android:layout_marginBottom="30dp"
-            android:background="@drawable/ar_list"
+            android:id="@+id/to_track_list_btn"
             android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:layout_marginBottom="30dp"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/ar_list" />
+
         <Button
-            android:layout_marginLeft="8dp"
-            android:layout_marginBottom="30dp"
-            android:background="@drawable/ar_pingmian"
+            android:id="@+id/to_map_btn"
             android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:layout_marginBottom="30dp"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/ar_pingmian" />
     </LinearLayout>
     <LinearLayout
         android:layout_alignParentRight="true"
@@ -216,4 +222,11 @@
                 android:background="@drawable/juli" />
         </LinearLayout>
     </LinearLayout>
+    <Button
+        android:background="@drawable/back_1"
+        android:id="@+id/back_img"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginLeft="15dp"
+    />
 </RelativeLayout>

@@ -102,6 +102,7 @@
                 android:layout_marginTop="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:layout_marginRight="15dp"
                 android:textColor="@color/text_label_default"
                 android:text="清粥小菜，服务很好，环境干净，菜是一般，有名气，建议你去看看"
                 android:textSize="15sp" />
