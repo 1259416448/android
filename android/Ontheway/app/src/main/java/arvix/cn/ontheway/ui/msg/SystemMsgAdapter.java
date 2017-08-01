@@ -13,7 +13,7 @@ import org.xutils.x;
 import java.util.List;
 
 import arvix.cn.ontheway.R;
-import arvix.cn.ontheway.been.MsgBean;
+import arvix.cn.ontheway.bean.MsgBean;
 import arvix.cn.ontheway.utils.StaticMethod;
 
 /**

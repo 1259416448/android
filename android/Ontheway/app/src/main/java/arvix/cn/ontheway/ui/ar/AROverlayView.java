@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import arvix.cn.ontheway.App;
-import arvix.cn.ontheway.been.ARPoint;
+import arvix.cn.ontheway.bean.ARPoint;
 import arvix.cn.ontheway.service.inter.BaiduPoiServiceInterface;
 import arvix.cn.ontheway.service.inter.CacheInterface;
 import arvix.cn.ontheway.utils.LocationHelper;

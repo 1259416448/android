@@ -1,4 +1,4 @@
-package arvix.cn.ontheway.been;
+package arvix.cn.ontheway.bean;
 
 /**
  * Created by asdtiang on 2017/7/27 0027.
