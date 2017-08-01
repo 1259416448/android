@@ -15,7 +15,6 @@ import android.opengl.Matrix;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
@@ -76,7 +75,7 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_zuji);
+        setContentView(R.layout.activity_ar_track);
         x.view().inject(self);
         searchKeyWord = getIntent().getStringExtra(BaiduActivity.EXTRA_KEYWORD);
         sensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);

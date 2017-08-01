@@ -3,7 +3,7 @@ package arvix.cn.ontheway.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import arvix.cn.ontheway.been.TrackBean;
+import arvix.cn.ontheway.bean.TrackBean;
 
 /**
  * Created by asdtiang on 2017/7/25 0025.

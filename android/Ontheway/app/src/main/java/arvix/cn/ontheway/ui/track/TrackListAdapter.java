@@ -13,7 +13,7 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 import java.util.List;
 import arvix.cn.ontheway.R;
-import arvix.cn.ontheway.been.TrackBean;
+import arvix.cn.ontheway.bean.TrackBean;
 import arvix.cn.ontheway.utils.StaticMethod;
 
 /**

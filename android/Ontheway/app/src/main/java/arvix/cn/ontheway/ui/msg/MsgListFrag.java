@@ -22,7 +22,7 @@ import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.async.AsyncUtil;
 import arvix.cn.ontheway.async.Callback;
 import arvix.cn.ontheway.async.Result;
-import arvix.cn.ontheway.been.MsgBean;
+import arvix.cn.ontheway.bean.MsgBean;
 import arvix.cn.ontheway.ui.BaseFragment;
 import arvix.cn.ontheway.ui.view.ListViewHolder;
 import arvix.cn.ontheway.utils.UIUtils;

@@ -12,6 +12,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.CAMERA"/>
+    <!-- if you want to load images from a file OR from the internet -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-feature android:name="android.hardware.camera"/>
     <!-- 这个权限用于进行网络定位-->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
@@ -119,7 +121,11 @@
             android:label="TrackMapActivity"
             />
 
-
+        <activity
+            android:name=".ui.track.TrackDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="TrackDetailActivity"
+            />
         <activity android:name=".ui.ar.ArTrackActivity">
 
         </activity>
