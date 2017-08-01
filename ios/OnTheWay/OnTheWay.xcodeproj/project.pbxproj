@@ -18,6 +18,7 @@
 		1843A7DC1F27447000A285A3 /* OTWPersonalClaimTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1843A7DB1F27447000A285A3 /* OTWPersonalClaimTableViewCell.m */; };
 		1843A7DF1F2837B100A285A3 /* OTWPersonalCollectController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1843A7DE1F2837B100A285A3 /* OTWPersonalCollectController.m */; };
 		1843A7E21F28380D00A285A3 /* OTWPersonalCollectTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1843A7E11F28380D00A285A3 /* OTWPersonalCollectTableViewCell.m */; };
+		1895A8511F2F4D2F00AB8C7D /* OTWFootprintSearchParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 1895A8501F2F4D2F00AB8C7D /* OTWFootprintSearchParams.m */; };
 		189954C61F1CE986004CCEBE /* OTWShopDetailsViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 189954C51F1CE986004CCEBE /* OTWShopDetailsViewCell.m */; };
 		189954C91F1DAD3C004CCEBE /* OTWPersonalFootprintsListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 189954C81F1DAD3C004CCEBE /* OTWPersonalFootprintsListController.m */; };
 		189954CC1F1DAD5E004CCEBE /* OTWPersonalFootprintsListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 189954CB1F1DAD5E004CCEBE /* OTWPersonalFootprintsListModel.m */; };
@@ -182,6 +183,8 @@
 		1843A7DE1F2837B100A285A3 /* OTWPersonalCollectController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPersonalCollectController.m; sourceTree = "<group>"; };
 		1843A7E01F28380D00A285A3 /* OTWPersonalCollectTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTWPersonalCollectTableViewCell.h; path = OnTheWay/Pages/Personal/Controller/OTWPersonalCollectTableViewCell.h; sourceTree = SOURCE_ROOT; };
 		1843A7E11F28380D00A285A3 /* OTWPersonalCollectTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTWPersonalCollectTableViewCell.m; path = OnTheWay/Pages/Personal/Controller/OTWPersonalCollectTableViewCell.m; sourceTree = SOURCE_ROOT; };
+		1895A84F1F2F4D2F00AB8C7D /* OTWFootprintSearchParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWFootprintSearchParams.h; sourceTree = "<group>"; };
+		1895A8501F2F4D2F00AB8C7D /* OTWFootprintSearchParams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWFootprintSearchParams.m; sourceTree = "<group>"; };
 		189954C41F1CE986004CCEBE /* OTWShopDetailsViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTWShopDetailsViewCell.h; path = OnTheWay/Pages/Find/Controller/OTWShopDetailsViewCell.h; sourceTree = SOURCE_ROOT; };
 		189954C51F1CE986004CCEBE /* OTWShopDetailsViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTWShopDetailsViewCell.m; path = OnTheWay/Pages/Find/Controller/OTWShopDetailsViewCell.m; sourceTree = SOURCE_ROOT; };
 		189954C71F1DAD3C004CCEBE /* OTWPersonalFootprintsListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPersonalFootprintsListController.h; sourceTree = "<group>"; };
@@ -445,6 +448,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1895A84E1F2F187E00AB8C7D /* Service */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
 		9E536E53A17984A468176170 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -833,6 +843,8 @@
 				1822EE621F20845A00E07665 /* OTWFootprintsChangeAddressModel.m */,
 				1822EE691F209E4900E07665 /* OTWFootprintChangeAddressArrayModel.h */,
 				1822EE6A1F209E4900E07665 /* OTWFootprintChangeAddressArrayModel.m */,
+				1895A84F1F2F4D2F00AB8C7D /* OTWFootprintSearchParams.h */,
+				1895A8501F2F4D2F00AB8C7D /* OTWFootprintSearchParams.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -859,6 +871,7 @@
 		D7F6B06B1F0DD3800013090A /* News */ = {
 			isa = PBXGroup;
 			children = (
+				1895A84E1F2F187E00AB8C7D /* Service */,
 				D7F6B0C71F1626E60013090A /* Model */,
 				D7F6B0C81F1626E60013090A /* View */,
 				D7F6B06C1F0DD3800013090A /* Controller */,
@@ -1517,6 +1530,7 @@
 				D7F6B0BF1F15C09E0013090A /* OTWTabBarController.m in Sources */,
 				18B034C81F171BE400F53461 /* OTWFindBusinessmenModel.m in Sources */,
 				DDC0A9461F207C3100A6E4DB /* OTWFootprintReleaseViewController.m in Sources */,
+				1895A8511F2F4D2F00AB8C7D /* OTWFootprintSearchParams.m in Sources */,
 				189954C91F1DAD3C004CCEBE /* OTWPersonalFootprintsListController.m in Sources */,
 				D7F6B04C1F0DCB9D0013090A /* OTWCustomNavigationBar.m in Sources */,
 				DDEA15FB1F298A5A00056166 /* QiniuUploadService.m in Sources */,
