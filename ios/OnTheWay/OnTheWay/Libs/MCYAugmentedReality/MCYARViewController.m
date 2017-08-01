@@ -84,10 +84,7 @@
     self.presenter = [[MCYARPresenter alloc] initWithARViewController:self];
     self.trackingManager.delegate = self;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationNotification:) name:@"kNotificationLocationSet" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
-    
+    [self addNotification];
     [self initialize];
 }
 
@@ -109,8 +106,20 @@
 
 - (void)deinit
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self removeNotification];
     [self stopCameraAndTracking];
+}
+
+- (void)addNotification
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationNotification:) name:@"kNotificationLocationSet" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+}
+
+- (void)removeNotification
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - View's lifecycle
@@ -153,11 +162,12 @@
 
 - (void)onViewDidAppear
 {
-    
+    [self addNotification];
 }
 
 - (void)onViewDidDisappear
 {
+    [self removeNotification];
     [self stopCameraAndTracking];
 }
 
@@ -705,7 +715,6 @@
     return _uiOptions;
 }
 
-#warning 此处可能需要修改
 - (void)setPresenter:(MCYARPresenter *)presenter
 {
     if (presenter) {
