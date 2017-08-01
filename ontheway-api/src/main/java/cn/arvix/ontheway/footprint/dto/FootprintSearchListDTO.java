@@ -22,7 +22,7 @@ public class FootprintSearchListDTO implements Serializable {
 
     private Long dateCreated;
 
-    private String dataCreatedStr;
+    private String dateCreatedStr;
 
     private String footprintPhoto;
 
@@ -84,12 +84,12 @@ public class FootprintSearchListDTO implements Serializable {
         this.dateCreated = dateCreated;
     }
 
-    public String getDataCreatedStr() {
-        return dataCreatedStr;
+    public String getDateCreatedStr() {
+        return dateCreatedStr;
     }
 
-    public void setDataCreatedStr(String dataCreatedStr) {
-        this.dataCreatedStr = dataCreatedStr;
+    public void setDateCreatedStr(String dateCreatedStr) {
+        this.dateCreatedStr = dateCreatedStr;
     }
 
     public String getFootprintPhoto() {

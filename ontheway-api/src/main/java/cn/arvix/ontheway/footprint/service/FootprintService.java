@@ -183,7 +183,7 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
                 dto.setFootprintContent(x.getContent());
                 dto.setFootprintAddress(x.getAddress());
                 dto.setDateCreated(TimeMaker.toTimeMillis(x.getDateCreated()));
-                dto.setDataCreatedStr(TimeMaker.dateCreatedStr(dto.getDateCreated()));
+                dto.setDateCreatedStr(TimeMaker.dateCreatedStr(dto.getDateCreated()));
                 dto.setFootprintPhoto(x.getFootprintPhoto() == null ? null : urlFix + x.getFootprintPhoto());
                 dto.setFootprintId(x.getId());
                 dto.setFootprintType(x.getType());
@@ -280,7 +280,7 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
                 dto.setFootprintContent(x.getContent());
                 dto.setFootprintAddress(x.getAddress());
                 dto.setDateCreated(TimeMaker.toTimeMillis(x.getDateCreated()));
-                dto.setDataCreatedStr(TimeMaker.dateCreatedStr(dto.getDateCreated()));
+                dto.setDateCreatedStr(TimeMaker.dateCreatedStr(dto.getDateCreated()));
                 dto.setFootprintPhoto(x.getFootprintPhoto() == null ? null : urlFix + x.getFootprintPhoto());
                 dto.setFootprintId(x.getId());
                 dto.setFootprintType(x.getType());
