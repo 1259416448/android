@@ -36,5 +36,21 @@ public interface CommonErrorCode {
      */
     String REGISTER_MOBILE_USED = "000105";
 
+    /**
+     * 足迹操作错误代码
+     * 操作的不是自己的足迹
+     */
+    String FOOTPRINT_DELETE_NO_PERMISSION = "000201";
+
+    /**
+     * 足迹已被删除
+     */
+    String FOOTPRINT_ALREADY_DELETE = "000202";
+
+    /**
+     * 评论信息删除错误代码
+     * 不能操作别人的评论
+     */
+    String COMMENT_DELETE_NO_PERMISSION = "000301";
 
 }

@@ -49,6 +49,8 @@
 		B18A430D1F208515002C7A5A /* OTWNewsToOtherCommentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B18A430C1F208515002C7A5A /* OTWNewsToOtherCommentModel.m */; };
 		B18A43101F2088C2002C7A5A /* OTWNewsCommentTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B18A430F1F2088C2002C7A5A /* OTWNewsCommentTableCell.m */; };
 		B1A2B5C71F2987B300EAABE0 /* OTWPersonalSiteGanderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B1A2B5C61F2987B300EAABE0 /* OTWPersonalSiteGanderViewController.m */; };
+		B1FE42331F2B08FE00D7D5D9 /* OTWPersonalFindViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B1FE42321F2B08FE00D7D5D9 /* OTWPersonalFindViewController.m */; };
+		B1FE42361F2B0A0400D7D5D9 /* OTWPersonalFindTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B1FE42351F2B0A0400D7D5D9 /* OTWPersonalFindTableViewCell.m */; };
 		D72091971F27466500153542 /* MCYARAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D72091831F27466500153542 /* MCYARAnnotation.m */; };
 		D72091981F27466500153542 /* MCYARAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = D72091851F27466500153542 /* MCYARAnnotationView.m */; };
 		D72091991F27466500153542 /* MCYARConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = D72091871F27466500153542 /* MCYARConfiguration.m */; };
@@ -242,6 +244,10 @@
 		B18A430F1F2088C2002C7A5A /* OTWNewsCommentTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWNewsCommentTableCell.m; sourceTree = "<group>"; };
 		B1A2B5C51F2987B300EAABE0 /* OTWPersonalSiteGanderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPersonalSiteGanderViewController.h; sourceTree = "<group>"; };
 		B1A2B5C61F2987B300EAABE0 /* OTWPersonalSiteGanderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPersonalSiteGanderViewController.m; sourceTree = "<group>"; };
+		B1FE42311F2B08FE00D7D5D9 /* OTWPersonalFindViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPersonalFindViewController.h; sourceTree = "<group>"; };
+		B1FE42321F2B08FE00D7D5D9 /* OTWPersonalFindViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPersonalFindViewController.m; sourceTree = "<group>"; };
+		B1FE42341F2B0A0400D7D5D9 /* OTWPersonalFindTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTWPersonalFindTableViewCell.h; path = OnTheWay/Pages/Personal/Controller/OTWPersonalFindTableViewCell.h; sourceTree = SOURCE_ROOT; };
+		B1FE42351F2B0A0400D7D5D9 /* OTWPersonalFindTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTWPersonalFindTableViewCell.m; path = OnTheWay/Pages/Personal/Controller/OTWPersonalFindTableViewCell.m; sourceTree = SOURCE_ROOT; };
 		D72091821F27466500153542 /* MCYARAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCYARAnnotation.h; sourceTree = "<group>"; };
 		D72091831F27466500153542 /* MCYARAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCYARAnnotation.m; sourceTree = "<group>"; };
 		D72091841F27466500153542 /* MCYARAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCYARAnnotationView.h; sourceTree = "<group>"; };
@@ -906,6 +912,8 @@
 				1843A7DE1F2837B100A285A3 /* OTWPersonalCollectController.m */,
 				B1A2B5C51F2987B300EAABE0 /* OTWPersonalSiteGanderViewController.h */,
 				B1A2B5C61F2987B300EAABE0 /* OTWPersonalSiteGanderViewController.m */,
+				B1FE42311F2B08FE00D7D5D9 /* OTWPersonalFindViewController.h */,
+				B1FE42321F2B08FE00D7D5D9 /* OTWPersonalFindViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -932,6 +940,8 @@
 				1843A7DB1F27447000A285A3 /* OTWPersonalClaimTableViewCell.m */,
 				1843A7E01F28380D00A285A3 /* OTWPersonalCollectTableViewCell.h */,
 				1843A7E11F28380D00A285A3 /* OTWPersonalCollectTableViewCell.m */,
+				B1FE42341F2B0A0400D7D5D9 /* OTWPersonalFindTableViewCell.h */,
+				B1FE42351F2B0A0400D7D5D9 /* OTWPersonalFindTableViewCell.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1271,8 +1281,8 @@
 				TargetAttributes = {
 					D7F6AFF01F0D32FA0013090A = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = C6TF92USE6;
-						ProvisioningStyle = Manual;
+						DevelopmentTeam = SEMAPEJ292;
+						ProvisioningStyle = Automatic;
 					};
 					D7F6B0091F0D32FB0013090A = {
 						CreatedOnToolsVersion = 8.3.3;
@@ -1424,6 +1434,7 @@
 				DDABAA4B1F12801E00010532 /* OTWPersonalEditNicknameController.m in Sources */,
 				DDEA15DE1F25CCA500056166 /* PYPhotosNavigationController.m in Sources */,
 				D7F6B0431F0D39160013090A /* README.md in Sources */,
+				B1FE42361F2B0A0400D7D5D9 /* OTWPersonalFindTableViewCell.m in Sources */,
 				DDEA160C1F29DED300056166 /* OTWFootprintService.m in Sources */,
 				1822EE6E1F20E11C00E07665 /* CHCustomSearchBar.m in Sources */,
 				D7F6B09D1F0F75770013090A /* OTWLaunchManager.m in Sources */,
@@ -1448,6 +1459,7 @@
 				DD14F2401F113654004DFE4A /* HmacUtils.m in Sources */,
 				DDEA16011F29B35F00056166 /* QiniuUploadHelper.m in Sources */,
 				D7F6B0371F0D38EA0013090A /* README.md in Sources */,
+				B1FE42331F2B08FE00D7D5D9 /* OTWPersonalFindViewController.m in Sources */,
 				1843A7D31F26E5FD00A285A3 /* OTWNewFootprintsControllerViewController.m in Sources */,
 				DD35209D1F188FBF00E8D725 /* OTWFootprintDetailViewCell.m in Sources */,
 				18B034E41F1CE6B300F53461 /* OTWShopDetailsController.m in Sources */,
@@ -1665,15 +1677,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = C6TF92USE6;
+				DEVELOPMENT_TEAM = SEMAPEJ292;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/OnTheWay/PrefixHeader.pch";
 				INFOPLIST_FILE = OnTheWay/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.m.demo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.WeiHuan.OnTheWay;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "970d0695-c36a-422d-9ec7-581b360f9c0c";
-				PROVISIONING_PROFILE_SPECIFIER = Test_All_Dev;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
 		};
@@ -1683,15 +1695,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = C6TF92USE6;
+				DEVELOPMENT_TEAM = SEMAPEJ292;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/OnTheWay/PrefixHeader.pch";
 				INFOPLIST_FILE = OnTheWay/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.m.demo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.WeiHuan.OnTheWay;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "970d0695-c36a-422d-9ec7-581b360f9c0c";
-				PROVISIONING_PROFILE_SPECIFIER = Test_All_Dev;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};

@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+typedef void(^requestCompletionBlock) (id result, NSError *error);
+
 @interface OTWPersonalEditNicknameController : OTWBaseViewController
+
+-(void) sendRequest:(NSDictionary *) params completion:(requestCompletionBlock)block;
 
 @end

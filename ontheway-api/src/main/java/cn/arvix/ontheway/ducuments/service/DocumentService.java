@@ -1,6 +1,7 @@
 package cn.arvix.ontheway.ducuments.service;
 
 import cn.arvix.base.common.entity.JSONResult;
+import cn.arvix.base.common.entity.SystemModule;
 import cn.arvix.base.common.entity.search.PageRequest;
 import cn.arvix.base.common.entity.search.Searchable;
 import cn.arvix.base.common.service.impl.BaseServiceImpl;
@@ -131,8 +132,6 @@ public class DocumentService extends BaseServiceImpl<Document, Long> {
         AgileAttachmentService agileAttachmentService = SpringUtils.getBean(AgileAttachmentService.class);
         if (agileAttachmentService.checkDocument(document.getId()))
             return JsonUtil.getFailure(MessageUtils.message("document.delete.error1"), "document.delete.error1");
-        User user = webContextUtils.getCheckCurrentUser();
-        //如果用户拥有可以删除其他公司数据权限 也可以删除，这里等权限系统完善后加入
         try {
             qiniuResourceManagerUtil.deleteFile(document.getFileUrl());
         } catch (QiniuException e) {
@@ -146,6 +145,30 @@ public class DocumentService extends BaseServiceImpl<Document, Long> {
         return JsonUtil.getSuccess(MessageUtils.message(CommonContact.DELETE_SUCCESS), CommonContact.DELETE_SUCCESS);
     }
 
+    /**
+     * 根据parentId删除数据
+     * @param parentIds 数据ID
+     */
+    public void deleteByParentIds(List<Long> parentIds,SystemModule systemModule){
+        Map<String,Object> params = Maps.newHashMap();
+        params.put("parentId_in",parentIds);
+        params.put("systemModule_eq",systemModule);
+        List<Document> documents = super.findAllWithNoPageNoSort(Searchable.newSearchable(params));
+        if(documents!=null&&documents.size()>0){
+            String[] fileUrlStrs = new String[documents.size()];
+            Long[] ids = new Long[documents.size()];
+            for (int i = 0;i<documents.size();i++){
+                fileUrlStrs[i] = documents.get(i).getFileUrl();
+                ids[i] = documents.get(i).getId();
+            }
+            try {
+                qiniuResourceManagerUtil.deleteFileMore(fileUrlStrs);
+            } catch (QiniuException e) {
+                e.printStackTrace();
+            }
+            super.delete(ids);
+        }
+    }
 
     /**
      * 文件移动
@@ -234,7 +257,7 @@ public class DocumentService extends BaseServiceImpl<Document, Long> {
 
     private void bulidDocument(List<?> documentMapList, User user, DocumentDir documentDir) { //构建图片缩略图访问地址
         Auth auth = qiniuUploadUtil.getAuth();
-        String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL) + "/";
+        String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL);
         //增加目录权限后，这里需要获取一下当前用户对当前数据的访问权限 文库管理员可以管理所有文件，查看所有文件
         Boolean ifAdmin = SecurityUtils.getSubject().isPermitted("Document:admin");
         Integer authOpType = -1;
@@ -301,7 +324,7 @@ public class DocumentService extends BaseServiceImpl<Document, Long> {
         Document document = super.findOne(id);
         //目前这里不提供公司自定义七牛云存储，以后加上
         //final String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL, webContextUtils.getCompanyId());
-        String url = configService.getConfigString(CommonContact.QINIU_BUCKET_URL) + "/" + document.getFileUrl();
+        String url = configService.getConfigString(CommonContact.QINIU_BUCKET_URL) + document.getFileUrl();
         if (!StringUtils.isEmpty(fix)) {
             if (url.contains("?")) {
                 url = url + "|" + fix;
@@ -328,7 +351,7 @@ public class DocumentService extends BaseServiceImpl<Document, Long> {
         List<Document> documents = super.findAllWithNoPageNoSort(Searchable.newSearchable(params));
         //目前这里不提供公司自定义七牛云存储，以后加上
         //final String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL, webContextUtils.getCompanyId());
-        final String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL) + "/";
+        final String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL);
         if (documents != null && documents.size() > 0) {
             List<Map<String, Object>> list = new ArrayList<>(documents.size());
             documents.forEach(x -> {
@@ -366,7 +389,7 @@ public class DocumentService extends BaseServiceImpl<Document, Long> {
         if (RegExpValidatorUtils.match(CommonContact.DOCUMENT_IMG_PATTERN,
                 jsonMap.get("fileUrl").toString())) {
             Auth auth = qiniuUploadUtil.getAuth();
-            String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL) + "/";
+            String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL);
             jsonMap.put("ifImg", true);
             jsonMap.put("imgUrlTwo", qiniuDownloadUtil.getDownloadToken(auth, QiniuDocumentUrlUtil.getImgUrl(urlFix, jsonMap.get("fileUrl").toString(),
                     "imageView2/2/w/800/interlace/1"), null));
@@ -387,7 +410,7 @@ public class DocumentService extends BaseServiceImpl<Document, Long> {
     @Transactional(rollbackFor = Exception.class)
     public JSONResult qiniuRotate(QiniuImgEditDTO dto) {
         Document document = super.findOne(dto.getId());
-        String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL) + "/";
+        String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL);
         String[] vals = document.getNewName().split("\\.");
         String newName = UUID.randomUUID() + "_" + System.currentTimeMillis() + "." + vals[vals.length - 1];
         //七牛端重新抓取图片并命名
@@ -456,7 +479,7 @@ public class DocumentService extends BaseServiceImpl<Document, Long> {
      */
     public JSONResult qiniuCut(QiniuImgEditDTO dto) {
         Document document = super.findOne(dto.getId());
-        String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL) + "/";
+        String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL);
         String[] vals = document.getNewName().split("\\.");
         String newName = UUID.randomUUID() + "_" + System.currentTimeMillis() + "." + vals[vals.length - 1];
         try {
@@ -488,6 +511,19 @@ public class DocumentService extends BaseServiceImpl<Document, Long> {
             e.printStackTrace();
         }
         return JsonUtil.getFailure("图片裁剪操作失败，请重试！", CommonContact.OPTION_ERROR);
+    }
+
+    /**
+     * 通过parentId获取文件信息
+     * @param pId parentId
+     * @param systemModule 模块ID
+     * @return 请求结果
+     */
+    public List<Document> findByParentId(Long pId, SystemModule systemModule){
+        Map<String,Object> params = Maps.newHashMap();
+        params.put("parentId_eq",pId);
+        params.put("systemModule_eq",systemModule);
+        return super.findAllWithSort(Searchable.newSearchable(params,new Sort(Sort.Direction.ASC,"dateCreated")));
     }
 
 }

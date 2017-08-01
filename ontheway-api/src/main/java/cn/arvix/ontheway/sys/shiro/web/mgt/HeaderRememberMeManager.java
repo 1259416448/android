@@ -98,7 +98,6 @@ public class HeaderRememberMeManager extends AbstractRememberMeManager {
     protected byte[] getRememberedSerializedIdentity(HttpServletRequest request, HttpServletResponse response) {
 
         String var = request.getHeader(DEFAULT_REMEMBER_ME_COOKIE_NAME);
-        System.out.println(var);
         String[] var2 = var.split(":");
         if (var2.length != 2) return null;
         Long time = Checks.toLong(EndecryptUtils.decryptBase64(var2[1]));

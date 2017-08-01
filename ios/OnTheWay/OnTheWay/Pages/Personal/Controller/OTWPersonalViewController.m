@@ -18,6 +18,7 @@
 #import "OTWPersonalFootprintsListController.h"
 #import "OTWPersonalClaimViewController.h"
 #import "OTWPersonalCollectController.h"
+#import "OTWPersonalFindViewController.h"
 
 @interface OTWPersonalViewController() <UITableViewDataSource,UITableViewDelegate>
 
@@ -50,8 +51,14 @@
 -(void)viewDidLoad {
     [super viewDidLoad];
     _arrowImge = [UIImage imageNamed:@"arrow_right"];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(buildPersonalInfo) name:@"userEdit" object:nil];
     [self buildUI];
     [self initData];
+}
+
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - initData
@@ -127,6 +134,11 @@
     if(indexPath.row==0){
         OTWPersonalCollectController *personalCollectVC = [[OTWPersonalCollectController alloc] init];
         [self.navigationController pushViewController:personalCollectVC animated:YES];
+    }
+
+    if(indexPath.row==1){
+        OTWPersonalFindViewController *personalFindVC = [[OTWPersonalFindViewController alloc] init];
+        [self.navigationController pushViewController:personalFindVC animated:YES];
     }
 }
 
