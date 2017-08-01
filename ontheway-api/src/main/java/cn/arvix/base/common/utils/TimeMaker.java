@@ -280,8 +280,8 @@ public class TimeMaker {
     public static Integer getYear(Object theDate) {
         if (theDate == null)
             return null;
-        formater = new SimpleDateFormat("yyyy");
-        return Integer.parseInt(formater.format(theDate));
+        SimpleDateFormat format = new SimpleDateFormat("yyyy");
+        return Integer.parseInt(format.format(theDate));
     }
 
     /**
@@ -290,8 +290,8 @@ public class TimeMaker {
     public static Integer getMonth(Object theDate) {
         if (theDate == null)
             return null;
-        formater = new SimpleDateFormat("MM");
-        return Integer.parseInt(formater.format(theDate));
+        SimpleDateFormat format = new SimpleDateFormat("MM");
+        return Integer.parseInt(format.format(theDate));
     }
 
     /**
@@ -300,8 +300,8 @@ public class TimeMaker {
     public static Integer getDay(Object theDate) {
         if (theDate == null)
             return null;
-        formater = new SimpleDateFormat("dd");
-        return Integer.parseInt(formater.format(theDate));
+        SimpleDateFormat format = new SimpleDateFormat("dd");
+        return Integer.parseInt(format.format(theDate));
     }
 
     /**

@@ -26,6 +26,7 @@ public class FootprintDetailDTO implements Serializable {
     private Footprint.FootprintType footprintType;
     private Integer footprintCommentNum;
     private Integer footprintLikeNum;
+    private Long currentTime;
     //商家ID标示
     private Long business;
     private List<CommentDetailDTO> comments;
@@ -156,5 +157,13 @@ public class FootprintDetailDTO implements Serializable {
 
     public void setIfLike(Boolean ifLike) {
         this.ifLike = ifLike;
+    }
+
+    public Long getCurrentTime() {
+        return currentTime;
+    }
+
+    public void setCurrentTime(Long currentTime) {
+        this.currentTime = currentTime;
     }
 }
