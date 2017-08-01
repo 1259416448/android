@@ -15,7 +15,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,13 +46,14 @@ import java.util.List;
 import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.BaiduActivity;
 import arvix.cn.ontheway.R;
-import arvix.cn.ontheway.been.TrackBean;
+import arvix.cn.ontheway.bean.TrackBean;
 import arvix.cn.ontheway.data.TrackListData;
 import arvix.cn.ontheway.service.BaiduLocationListenerService;
 import arvix.cn.ontheway.service.inter.BaiduPoiServiceInterface;
 import arvix.cn.ontheway.service.inter.CacheInterface;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.ar.ArTrackActivity;
+import arvix.cn.ontheway.ui.usercenter.MyTrackDetailActivity;
 import arvix.cn.ontheway.ui.view.BottomDialog;
 import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticMethod;
@@ -336,6 +336,14 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
                     Log.i(logTag,"view clicked");
                 }
             });
+            headerClickedView.findViewById(R.id.to_track_detail).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(self,TrackDetailActivity.class);
+                    intent.putExtra(StaticVar.EXTRA_TRACK_BEAN,currentClickedTrack);
+                    startActivity(intent);
+                }
+            });
             bottomDialog.getView().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -399,6 +407,8 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
         ImageView imageTwo;
         @ViewInject(R.id.image_three)
         ImageView imageThree;
+        @ViewInject(R.id.to_track_detail)
+        Button toTrackDetailBtn;
     }
 
 }

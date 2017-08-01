@@ -162,7 +162,10 @@ public class ShiroConfig {
                 "/api/v1/check/username",
                 "/api/v1/login",
                 "/api/v1/login/sms/sent/**",
-                "/api/v1/login/sms");
+                "/api/v1/login/sms",
+                "/app/footprint/search/**",
+                "/app/footprint/view/**"
+        );
         return statelessAuthcFilter;
     }
 

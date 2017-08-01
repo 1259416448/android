@@ -11,6 +11,10 @@
 
 #import "OTWBaseViewController.h"
 
+typedef void(^requestCompletionBlock) (id result, NSError *error);
+
 @interface OTWPersonalSiteGanderViewController : OTWBaseViewController
+
+-(void) sendRequest:(NSDictionary *) params completion:(requestCompletionBlock)block;
 
 @end

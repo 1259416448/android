@@ -98,6 +98,13 @@ public class User extends BaseEntity<Long> implements LogicDeleteable {
     @Fetch(FetchMode.SELECT)
     private Set<UserOrganizationJob> organizationJobs = Sets.newHashSet();
 
+    public User() {
+    }
+
+    public User(Long id) {
+        setId(id);
+    }
+
     public String tableName() {
         return TABLE_NAME;
     }
