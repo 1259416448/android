@@ -116,9 +116,8 @@ public class CommentService extends BaseServiceImpl<Comment, Long> {
         super.delete(comment);
         statisticsService.updateCommentNumByInstanceId(comment.getFootprint().getId(), -1, SystemModule.footprint);
         getCommentRepository().updateReplyCommentId(id);
-        return JsonUtil.getSuccess(CommonContact.OPTION_SUCCESS, CommonContact.OPTION_SUCCESS);
+        return JsonUtil.getSuccess(CommonContact.DELETE_SUCCESS, CommonContact.DELETE_SUCCESS);
     }
-
 
     /**
      * 获取评论信息，评论按 dateCreated desc 排序
@@ -128,14 +127,15 @@ public class CommentService extends BaseServiceImpl<Comment, Long> {
      * @param footprintId 足迹ID
      * @return 评论数据
      */
-    public JSONResult search(Integer number, Integer size, Long footprintId) {
+    public JSONResult search(Integer number, Integer size, Long footprintId,Long currentTime) {
         return JsonUtil.getSuccess(CommonContact.FETCH_SUCCESS, CommonContact.FETCH_SUCCESS,
-                search(number,size,footprintId,Boolean.TRUE));
+                search(number,size,footprintId,currentTime,Boolean.TRUE));
     }
 
-    public Page search(Integer number, Integer size, Long footprintId, Boolean b) {
+    public Page search(Integer number, Integer size, Long footprintId,Long currentTime, Boolean b) {
         Map<String, Object> params = Maps.newHashMap();
         params.put("footprint.id_eq", footprintId);
+        params.put("dateCreated_lte",currentTime);
         Searchable searchable = Searchable.newSearchable(params, new PageRequest(number, size),
                 new Sort(Sort.Direction.DESC, "dateCreated"));
         Page<Comment> page = super.findAll(searchable);
@@ -145,6 +145,7 @@ public class CommentService extends BaseServiceImpl<Comment, Long> {
             page.getContent().forEach(x -> content.add(x.toDetailDTO(fixUrl)));
             page = new PageResult<>(content, searchable.getPage(), page.getTotalElements());
         }
+        ((PageResult)page).setCurrentTime(currentTime);
         return page;
     }
 

@@ -1,5 +1,7 @@
 package cn.arvix.ontheway.footprint.dto;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
 /**
@@ -8,12 +10,16 @@ import java.io.Serializable;
  */
 public class CommentCreateDTO implements Serializable{
 
+    @ApiModelProperty(value = "评论内容")
     private String content;
 
+    @ApiModelProperty(value = "回复用户ID")
     private Long commentUserId;
 
+    @ApiModelProperty(value = "关联评论ID")
     private Long replyCommentId;
 
+    @ApiModelProperty(value = "评论足迹ID")
     private Long footprintId;
 
     public String getContent() {

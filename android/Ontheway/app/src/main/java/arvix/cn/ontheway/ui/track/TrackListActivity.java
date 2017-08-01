@@ -4,17 +4,12 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 
-import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.util.ArrayList;
@@ -26,14 +21,11 @@ import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.async.AsyncUtil;
 import arvix.cn.ontheway.async.Callback;
 import arvix.cn.ontheway.async.Result;
-import arvix.cn.ontheway.been.TrackBean;
+import arvix.cn.ontheway.bean.TrackBean;
 import arvix.cn.ontheway.data.TrackListData;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.head.HeaderHolder;
 import arvix.cn.ontheway.ui.usercenter.MyTrackDetailActivity;
-import arvix.cn.ontheway.ui.usercenter.MyTrackListActivity;
-import arvix.cn.ontheway.ui.usercenter.MyTrackListAdapter;
-import arvix.cn.ontheway.ui.usercenter.MyTrackMapActivity;
 import arvix.cn.ontheway.ui.view.ListViewHolder;
 import arvix.cn.ontheway.utils.StaticMethod;
 

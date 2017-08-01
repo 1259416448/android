@@ -21,6 +21,9 @@ public class PageResult<M> extends PageImpl<M> {
 
     private static final List ms = Lists.newArrayList();
 
+    //分页时间，为了防止增加数据后，数据重复
+    private Long currentTime;
+
     /**
      * Constructor of {@code PageImpl}.
      *
@@ -37,5 +40,13 @@ public class PageResult<M> extends PageImpl<M> {
     public List getContent() {
         if(content==null) return ms;
         return content;
+    }
+
+    public Long getCurrentTime() {
+        return currentTime;
+    }
+
+    public void setCurrentTime(Long currentTime) {
+        this.currentTime = currentTime;
     }
 }

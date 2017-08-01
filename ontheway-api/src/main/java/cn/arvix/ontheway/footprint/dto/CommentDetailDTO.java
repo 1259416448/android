@@ -18,6 +18,8 @@ public class CommentDetailDTO {
 
     private Long dateCreate;
 
+    private Long commentId;
+
 
     public String getCommentContent() {
         return commentContent;
@@ -65,5 +67,13 @@ public class CommentDetailDTO {
 
     public void setDateCreate(Long dateCreate) {
         this.dateCreate = dateCreate;
+    }
+
+    public Long getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(Long commentId) {
+        this.commentId = commentId;
     }
 }

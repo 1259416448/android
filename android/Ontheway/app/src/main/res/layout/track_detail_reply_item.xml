@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/reply_header_iv"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/header_default"/>
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_marginTop="17.5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/reply_name_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/text_label_default"
+                android:text="陈立"/>
+            <TextView
+                android:id="@+id/reply_time_tv"
+                android:layout_marginTop="4.5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="02-12 13:23"
+                android:textSize="12sp"
+                android:textColor="@color/text_label_small"/>
+        </LinearLayout>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/reply_content_tv"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingRight="15dp"
+        android:paddingTop="10dp"
+        android:paddingLeft="15dp"
+        android:textSize="16sp"
+        android:textColor="@color/text_label_default"
+        android:layout_marginBottom="15dp"
+        android:text="玩的很嗨啊，你是修了多长时间的图，树都变形了，大家都知道你长啥样，哈哈！"
+        />
+</LinearLayout>

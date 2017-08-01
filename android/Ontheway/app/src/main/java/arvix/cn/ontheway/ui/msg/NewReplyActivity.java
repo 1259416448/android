@@ -2,7 +2,6 @@ package arvix.cn.ontheway.ui.msg;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -20,8 +19,8 @@ import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.async.AsyncUtil;
 import arvix.cn.ontheway.async.Callback;
 import arvix.cn.ontheway.async.Result;
-import arvix.cn.ontheway.been.MsgBean;
-import arvix.cn.ontheway.been.ReplyBean;
+import arvix.cn.ontheway.bean.MsgBean;
+import arvix.cn.ontheway.bean.ReplyBean;
 import arvix.cn.ontheway.data.NewReplyData;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.head.HeaderHolder;

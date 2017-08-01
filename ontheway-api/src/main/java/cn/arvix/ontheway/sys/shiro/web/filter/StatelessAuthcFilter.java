@@ -70,6 +70,43 @@ public class StatelessAuthcFilter extends AccessControlFilter {
             }
             pathPattern = iterator.next();
         } while (!this.pathsMatch(pathPattern, requestURI));
+
+        //通过认证,如果带有token类型的参数 也需要设置当前登陆用户
+        Subject subject = this.getSubject(request, response);
+        if (subject.getPrincipal() != null) return true;
+        HttpServletRequest httpRequest = WebUtils.toHttp(request);
+        //获取token
+        String token = httpRequest.getHeader(CommonContact.HTTP_HEADER_AUTH_TOKEN);
+        String rememberMe = httpRequest.getHeader(HeaderRememberMeManager.DEFAULT_REMEMBER_ME_COOKIE_NAME);
+        TokenInfo obj = null;
+        if (!StringUtils.isEmpty(token)) {
+            Cache.ValueWrapper wrapper = cache.get(token);
+            if (wrapper != null) {
+                obj = (TokenInfo) wrapper.get();
+            }
+        }
+        HttpServletResponse httpResponse = WebUtils.toHttp(response);
+        if (obj == null && rememberMe != null) { //记住我
+            PrincipalCollection principalCollection = rememberMeManager.getRememberedPrincipals(httpRequest, httpResponse);
+            if (principalCollection != null && principalCollection.iterator().hasNext()) {
+                String principal = principalCollection.iterator().next().toString();
+                //构建token
+                token = UUID.randomUUID().toString();
+                obj = new TokenInfo(token, principal, null);
+            }
+        }
+        if (obj != null) {
+            httpResponse.setHeader(CommonContact.HTTP_HEADER_AUTH_TOKEN, obj.getToken());
+            if (rememberMe != null) {
+                setRememberMe(httpResponse,httpRequest);
+            }
+            //生成无状态Token
+            StatelessToken statelessToken = new StatelessToken(obj.getUsername(), token);
+            //委托给Realm进行登录
+            getSubject(request, response).login(statelessToken);
+            //刷新redis中token缓存
+            cache.put(token, obj);
+        }
         return true;
     }
 
@@ -77,7 +114,6 @@ public class StatelessAuthcFilter extends AccessControlFilter {
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
         Subject subject = this.getSubject(request, response);
         if (subject.getPrincipal() != null) return true;
-
         try {
             HttpServletRequest httpRequest = WebUtils.toHttp(request);
             //获取token
@@ -114,10 +150,7 @@ public class StatelessAuthcFilter extends AccessControlFilter {
                     return false;
                 }
             } else {
-                httpResponse.setHeader(HeaderRememberMeManager.DEFAULT_REMEMBER_ME_COOKIE_NAME,
-                        httpRequest.getHeader(HeaderRememberMeManager.DEFAULT_REMEMBER_ME_COOKIE_NAME));
-                httpResponse.setHeader(HeaderRememberMeManager.DEFAULT_REMEMBER_ME_COOKIE_NAME_TIMEOUT,
-                        httpRequest.getHeader(HeaderRememberMeManager.DEFAULT_REMEMBER_ME_COOKIE_NAME_TIMEOUT));
+                setRememberMe(httpResponse, httpRequest);
             }
             //生成无状态Token
             StatelessToken statelessToken = new StatelessToken(obj.getUsername(), token);
@@ -140,6 +173,31 @@ public class StatelessAuthcFilter extends AccessControlFilter {
         httpResponse.setContentType("application/json;charset=utf-8");
         httpResponse.getWriter().write(JsonUtil.getFailure(MessageUtils.message(CommonContact.NO_LOGIN_ERROR),
                 CommonContact.NO_LOGIN_ERROR).toString());
+    }
+
+
+    private void setRememberMe(HttpServletResponse httpResponse, HttpServletRequest httpRequest) {
+//
+//        String rememberMe = httpRequest.getHeader(HeaderRememberMeManager.DEFAULT_REMEMBER_ME_COOKIE_NAME);
+//        if (rememberMe != null) {
+//            String[] var2 = rememberMe.split(":");
+//            if (var2.length != 2) return;
+//            Long time = Checks.toLong(EndecryptUtils.decryptBase64(var2[1]));
+//            if (time == null) time = 0L;
+//            Long rememberMeTimeout = Checks.toLong(httpRequest.getHeader(HeaderRememberMeManager.DEFAULT_REMEMBER_ME_COOKIE_NAME_TIMEOUT));
+//            if (rememberMeTimeout == null) rememberMeTimeout = 0L;
+//            Long diff = time - System.currentTimeMillis();
+//            if (diff >0 && diff < rememberMeTimeout && diff < 60000) {
+//                Subject subject = SecurityUtils.getSubject();
+//                rememberMeManager.rememberIdentity(subject);
+//            }
+//        }
+//
+
+        httpResponse.setHeader(HeaderRememberMeManager.DEFAULT_REMEMBER_ME_COOKIE_NAME,
+                httpRequest.getHeader(HeaderRememberMeManager.DEFAULT_REMEMBER_ME_COOKIE_NAME));
+        httpResponse.setHeader(HeaderRememberMeManager.DEFAULT_REMEMBER_ME_COOKIE_NAME_TIMEOUT,
+                httpRequest.getHeader(HeaderRememberMeManager.DEFAULT_REMEMBER_ME_COOKIE_NAME_TIMEOUT));
     }
 
 }

@@ -15,7 +15,6 @@ import android.opengl.Matrix;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
@@ -31,6 +30,7 @@ import org.xutils.x;
 import arvix.cn.ontheway.BaiduActivity;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.ui.BaseActivity;
+import arvix.cn.ontheway.ui.track.TrackCreateActivity;
 import arvix.cn.ontheway.ui.track.TrackListActivity;
 import arvix.cn.ontheway.ui.track.TrackMapActivity;
 
@@ -76,7 +76,7 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_zuji);
+        setContentView(R.layout.activity_ar_track);
         x.view().inject(self);
         searchKeyWord = getIntent().getStringExtra(BaiduActivity.EXTRA_KEYWORD);
         sensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);
@@ -127,7 +127,7 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
         toArBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(self, ArTrackActivity.class);
+                Intent intent = new Intent(self, TrackCreateActivity.class);
                 startActivity(intent);
             }
         });

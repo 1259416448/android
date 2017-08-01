@@ -98,12 +98,13 @@ public class HeaderRememberMeManager extends AbstractRememberMeManager {
     protected byte[] getRememberedSerializedIdentity(HttpServletRequest request, HttpServletResponse response) {
 
         String var = request.getHeader(DEFAULT_REMEMBER_ME_COOKIE_NAME);
-        System.out.println(var);
+        if(var==null) return null;
         String[] var2 = var.split(":");
         if (var2.length != 2) return null;
         Long time = Checks.toLong(EndecryptUtils.decryptBase64(var2[1]));
-        //必须在当前时间之前
-        if (time == null || System.currentTimeMillis() > time) {
+        if(time == null) time = 0L;
+        Long diff =  time - System.currentTimeMillis();
+        if(diff < 0){
             return null;
         }
         String base64 = var2[0];
@@ -144,6 +145,8 @@ public class HeaderRememberMeManager extends AbstractRememberMeManager {
     }
 
     private void forgetIdentity(HttpServletRequest request, HttpServletResponse response) {
-        response.setHeader(DEFAULT_REMEMBER_ME_COOKIE_NAME, "deleteMe");
+        if(response!=null){
+            response.setHeader(DEFAULT_REMEMBER_ME_COOKIE_NAME, "deleteMe");
+        }
     }
 }
