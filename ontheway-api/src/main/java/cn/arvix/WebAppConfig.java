@@ -1,7 +1,6 @@
 package cn.arvix;
 
 import cn.arvix.base.common.entity.search.utils.SearchableConvertUtils;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import org.redisson.Redisson;
@@ -94,7 +93,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
         httpMessageConverter.setSupportedMediaTypes(mediaTypes0);
         FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
-        fastJsonConfig.setSerializerFeatures(SerializerFeature.WriteMapNullValue);
+        //fastJsonConfig.setSerializerFeatures(SerializerFeature.WriteMapNullValue);
         fastConverter.setFastJsonConfig(fastJsonConfig);
         List<MediaType> mediaTypes = new ArrayList<>();
         mediaTypes.add(MediaType.APPLICATION_JSON_UTF8);

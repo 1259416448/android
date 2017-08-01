@@ -1,35 +1,30 @@
 //
-//  OTWPersonalClaimViewController.m
+//  OTWShopActiveViewController.m
 //  OnTheWay
 //
-//  Created by apple on 2017/7/25.
+//  Created by UI002 on 2017/7/31.
 //  Copyright © 2017年 WeiHuan. All rights reserved.
 //
 
-#import "OTWPersonalClaimViewController.h"
-
-#import "OTWPersonalClaimTableViewCell.h"
-
+#import "OTWShopActiveViewController.h"
+#import "OTWShopActiveViewCell.h"
 #import "OTWCustomNavigationBar.h"
 
-#import "OTWShopActiveViewController.h"
-
-#import "OTWShopDetailsController.h"
-
-@interface OTWPersonalClaimViewController ()<UITableViewDataSource,UITableViewDelegate>{
+@interface OTWShopActiveViewController ()<UITableViewDataSource,UITableViewDelegate>{
     UITableView *tableView;
     NSMutableArray *status;
 }
 
+
 @end
 
-@implementation OTWPersonalClaimViewController
+@implementation OTWShopActiveViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
-        [self buildUI];
+    [self buildUI];
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -38,9 +33,9 @@
 }
 -(void)buildUI {
     //设置标题
-    self.title = @"我认领的商家";
+    self.title = @"商家活动";
     [self setLeftNavigationImage:[UIImage imageNamed:@"back_2"]];
-    
+
     //大背景
     self.view.backgroundColor=[UIColor color_f4f4f4];
     
@@ -58,7 +53,6 @@
     [self.view addSubview:tableView];
     
 }
-
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     return 1;
 }
@@ -74,44 +68,32 @@
 #pragma mark返回每行的单元格
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *cellIdentifier=@"OTWPersonalClaimTableViewCellCellIdentifierK";
-    OTWPersonalClaimTableViewCell *cell;
+    static NSString *cellIdentifier=@"OTWShopActiveViewCellIdentifierK";
+    OTWShopActiveViewCell *cell;
     cell=[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if(!cell){
-        cell=[[OTWPersonalClaimTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-        cell.contentView.backgroundColor = [UIColor whiteColor];
-        cell.backgroundColor = [UIColor whiteColor];
+        cell=[[OTWShopActiveViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+        cell.contentView.backgroundColor = [UIColor clearColor];
+        cell.backgroundColor = [UIColor clearColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         //在此模块，以便重新布局
         
     }
-    [cell.claimShopActiveBtn addTarget:self action:@selector(activeClick) forControlEvents:UIControlEventTouchUpInside];
-    
-    [cell.claimShopDetailBtn addTarget:self action:@selector(detailClick) forControlEvents:UIControlEventTouchUpInside];
     
     return cell;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    OTWPersonalClaimTableViewCell *cell = (OTWPersonalClaimTableViewCell *)[self tableView:tableView
-                                                                     cellForRowAtIndexPath:indexPath];
+    OTWShopActiveViewCell *cell =(OTWShopActiveViewCell *)[self tableView:tableView
+    cellForRowAtIndexPath:indexPath];
     return cell.frame.size.height;
 }
 
--(void)activeClick{
-    
-    DLog(@"点击了活动");
-    OTWShopActiveViewController *ShopActiveViewVC = [[OTWShopActiveViewController alloc] init];
-    [self.navigationController pushViewController:ShopActiveViewVC animated:YES];
-}
 
 
 
--(void)detailClick{
-    DLog(@"点击了商家详情");
-    OTWShopDetailsController *ShopDetailsViewVC = [[OTWShopDetailsController alloc] init];
-    [self.navigationController pushViewController:ShopDetailsViewVC animated:YES];}
+
 /*
 #pragma mark - Navigation
 

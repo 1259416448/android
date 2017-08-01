@@ -65,16 +65,32 @@ public class FootprintController extends ExceptionHandlerController {
             @ApiImplicitParam(value = "每页大小", name = "size", required = true, paramType = "query"),
             @ApiImplicitParam(value = "纬度", name = "latitude", required = true, paramType = "query"),
             @ApiImplicitParam(value = "经度", name = "longitude", required = true, paramType = "query"),
-            @ApiImplicitParam(value = "范围", name = "distance", required = false, paramType = "query"),
-            @ApiImplicitParam(value = "时间", name = "time", required = false, paramType = "query")
+            @ApiImplicitParam(value = "范围", name = "distance", paramType = "query"),
+            @ApiImplicitParam(value = "时间", name = "time", paramType = "query"),
+            @ApiImplicitParam(value = "开始分页时间", name = "currentTime", paramType = "query"),
+            @ApiImplicitParam(value = "检索的半径范围", name = "distance", paramType = "query"),
     })
     public JSONResult search(@PathVariable FootprintService.SearchType type,
                              Integer number, Integer size,
                              Double latitude, Double longitude,
-                             FootprintService.SearchDistance distance,
-                             FootprintService.SearchTime time
+                             FootprintService.SearchDistance searchDistance,
+                             FootprintService.SearchTime time,
+                             Long currentTime,Double distance
     ) {
-        return service.search(type, number, size, latitude, longitude, distance, time);
+        return service.search(type, number, size, latitude, longitude, searchDistance, time,distance, currentTime);
+    }
+
+
+    @ApiOperation(value = "获取某个用户的足迹列表", notes = "每次最多加载30条数据")
+    @ResponseBody
+    @GetMapping(value = "/user/{userId}")
+    @ApiImplicitParams(value = {
+            @ApiImplicitParam(value = "当前页", name = "number", required = true, paramType = "query"),
+            @ApiImplicitParam(value = "每页大小", name = "size", required = true, paramType = "query"),
+            @ApiImplicitParam(value = "开始分页时间", name = "currentTime", paramType = "query")
+    })
+    public JSONResult searchByUserId(@PathVariable Long userId,Integer number, Integer size,Long currentTime) {
+        return service.searchByUserId(number, size, userId, currentTime);
     }
 
 }

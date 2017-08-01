@@ -7,6 +7,7 @@
 //
 
 #import "OTWPersonalClaimTableViewCell.h"
+
 #import <AFNetworking/UIImageView+AFNetworking.h>
 @interface OTWPersonalClaimTableViewCell (){
     UILabel *claimShopTime;
@@ -22,6 +23,8 @@
     UIView *claimShopBtnView;
      UILabel *claimShopDetail;
      UILabel *claimShopActive;
+//    UIButton *claimShopDetailBtn;
+//    UIButton *claimShopActiveBtn;
     UILabel *claimShoBtnViewCut;//中间分割线
     UIView *claimShopCellCut;
     
@@ -125,6 +128,9 @@
     claimShopDetail.textAlignment=NSTextAlignmentCenter;
     [claimShopBtnView addSubview:claimShopDetail];
     
+    _claimShopDetailBtn=[[UIButton alloc]initWithFrame:CGRectMake(0, 0.5, (SCREEN_WIDTH-0.5)/2, 43)];
+    [claimShopBtnView addSubview:_claimShopDetailBtn];
+    
     //商家活动
     claimShopActive=[[UILabel alloc]initWithFrame:CGRectMake(claimShopDetail.MaxX+0.5, 0.5, (SCREEN_WIDTH-0.5)/2, 43)];
     claimShopActive.text=@"商家活动";
@@ -133,6 +139,9 @@
     claimShopActive.backgroundColor=[UIColor color_fbfbfb];
     claimShopActive.textAlignment=NSTextAlignmentCenter;
     [claimShopBtnView addSubview:claimShopActive];
+    
+    _claimShopActiveBtn=[[UIButton alloc]initWithFrame:CGRectMake(claimShopDetail.MaxX+0.5, 0.5, (SCREEN_WIDTH-0.5)/2, 43)];
+     [claimShopBtnView addSubview:_claimShopActiveBtn];
     
     //中间分割线
     claimShoBtnViewCut=[[UILabel alloc]initWithFrame:CGRectMake(claimShopDetail.MaxX, 0.5, 0.5, 43)];
@@ -147,4 +156,5 @@
     [self setFrame:CGRectMake(0, 0, SCREEN_WIDTH, CGRectGetMaxY(claimShopCellCut.frame))];
 
 }
+
 @end
