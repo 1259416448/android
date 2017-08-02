@@ -9,6 +9,7 @@
 #import "OTWShopActiveViewController.h"
 #import "OTWShopActiveViewCell.h"
 #import "OTWCustomNavigationBar.h"
+#import "OTWShopActiveDetailsViewCellViewController.h"
 
 @interface OTWShopActiveViewController ()<UITableViewDataSource,UITableViewDelegate>{
     UITableView *tableView;
@@ -63,6 +64,9 @@
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     DLog(@"我点击了：%ld",indexPath.row);
+   
+     OTWShopActiveDetailsViewCellViewController *ShopActiveDetailsViewVC = [[ OTWShopActiveDetailsViewCellViewController alloc] init];
+    [self.navigationController pushViewController:ShopActiveDetailsViewVC animated:YES];
 }
 
 #pragma mark返回每行的单元格

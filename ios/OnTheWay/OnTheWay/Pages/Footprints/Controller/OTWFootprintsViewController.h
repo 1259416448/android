@@ -8,7 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+typedef void(^requestBackBlock) (id result);
+
 @interface OTWFootprintsViewController : OTWBaseViewController
 
+-(void) fetchFootprints:(NSDictionary *) params completion:(requestBackBlock) block;
 
 @end

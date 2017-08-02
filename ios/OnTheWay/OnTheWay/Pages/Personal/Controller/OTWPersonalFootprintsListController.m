@@ -7,15 +7,14 @@
 //
 
 #import "OTWPersonalFootprintsListController.h"
-#import "OTWPersonalFootprintsListModel.h"
-#import "OTWPersonalFootprintsListTableViewCell.h"
+#import "OTWPersonalFootprintTableViewCell.h"
 #import "OTWFootprintReleaseViewController.h"
+#import "OTWPersonalFootprintService.h"
 #import <AFNetworking/UIImageView+AFNetworking.h>
+#import "OTWCustomNavigationBar.h"
 
 @interface OTWPersonalFootprintsListController ()<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>
 
-@property (nonatomic,strong) UITableView *tableView;
-@property (nonatomic,strong) NSMutableArray<OTWPersonalFootprintsListModel *> *status;
 @property (nonatomic,strong) UIView *personalFootprintsListTableViewHeader;
 @property (nonatomic,strong) UILabel *userName;
 @property (nonatomic,strong) UIView *headerImgBg;
@@ -30,6 +29,7 @@
 @property (nonatomic,strong) UIView *likeView;
 @property (nonatomic,strong) UIView *myInfoView;
 @property (nonatomic,assign) CGFloat cellViewWidth;
+@property (nonatomic,strong) OTWPersonalFootprintService *service;
 
 @end
 
@@ -48,10 +48,13 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    //初始化数据
-    [self initData];
-    
     [self buildUI];
+    
+    if(_ifMyFootprint){ //增加一个发布通知
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addReleasedFootprint:) name:@"releasedFoorprint" object:nil];
+    }
+    
+    [self.view bringSubviewToFront:self.customNavigationBar];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -65,44 +68,36 @@
     return UIStatusBarStyleLightContent;
 }
 
--(void)initData{
-    NSString *fullPath = [[NSBundle mainBundle] pathForResource:@"OTWUserFootprintList.plist" ofType:nil];
-    NSMutableArray *array = [NSMutableArray arrayWithContentsOfFile:fullPath];
-    _status = [[NSMutableArray alloc] init];
-    if(array && array.count>0){
-        for (NSDictionary *dict in array) {
-            [_status addObject:[OTWPersonalFootprintsListModel initWithDict:dict]];
-            //计算所有cell高
-            for (OTWPersonalFootprintsListModel *one in _status) {
-                for (OTWPersonalFootprintMonthDataModel *two in one.monthData) {
-                    //如果包含图片 每条数据等于 80 不包含图片，需要计算文字的高度，每条数据不超过 80  地址 12
-                    two.cellHeight = 0;
-                    for (OTWFootprintListModel *three in two.dayData) {
-                        if(three.footprintPhotoArray && three.footprintPhotoArray.count>0){
-                            two.cellHeight += 95;
-                        }else{
-                            CGSize textSize = [self sizeWithString:three.footprintContent font:contentLabelFont maxSize:CGSizeMake(self.cellViewWidth, 60)];
-                            if(textSize.height == 60){
-                                two.cellHeight += 95;
-                            }else{
-                                two.cellHeight += textSize.height + 35;
-                            }
-                        }
-                    }
-                    if([two.day isEqualToString:@"0"] && _ifMyFootprint){
-                        two.cellHeight += 95;
-                    }
-                }
-            }
-        }
+- (void) insertCreateCell
+{
+    if(_ifMyFootprint){
+        OTWPersonalFootprintsListModel *model = [[OTWPersonalFootprintsListModel alloc] init];
+        model.month = @"0";
+        model.monthData = [[NSMutableArray alloc] init];
+        OTWFootprintListModel *footprintDetail = [[OTWFootprintListModel alloc] init];
+        footprintDetail.footprintContent = @"";
+        footprintDetail.footprintAddress = @"";
+        footprintDetail.day = @"今天";
+        OTWPersonalFootprintFrame *footprintFrame = [OTWPersonalFootprintFrame initWithFootprintDetail:footprintDetail];
+        footprintFrame.hasRelease = YES;
+        footprintFrame.leftContent = @"今天";
+        [footprintFrame initData];
+        [model.monthData addObject:footprintFrame];
+        [_status addObject:model];
     }
 }
 
 -(void)buildUI{
+    
+    _status = [[NSMutableArray alloc] init];
+    
+    [self insertCreateCell];
     //设置标题
     //    self.title = @"商家详情";
     [self setLeftNavigationImage:[UIImage imageNamed:@"wd_back_wirte"]];
     [self setNavigationImage:[UIImage imageNamed:@"wd_bg"]];
+    
+    [self.customNavigationBar clearShadowColor];
     
     if(!_ifMyFootprint){
         //关注
@@ -112,7 +107,9 @@
     //大背景
     self.view.backgroundColor=[UIColor whiteColor];
     
-    _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0,self.navigationHeight - 1, SCREEN_WIDTH, SCREEN_HEIGHT- self.navigationHeight - 1) style:UITableViewStyleGrouped];
+    _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0,self.navigationHeight - 20, SCREEN_WIDTH, SCREEN_HEIGHT) style:UITableViewStyleGrouped];
+    
+    _tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMore)];
     
     _tableView.dataSource = self;
     
@@ -130,7 +127,23 @@
     
     [self.view addSubview:self.button];
     
+    [_tableView.mj_footer beginRefreshing];
     
+}
+
+- (void) addReleasedFootprint:(NSNotification*)sender
+{
+    OTWFootprintListModel *footprintDetail = [OTWFootprintListModel initWithDict:sender.userInfo];
+    OTWPersonalFootprintFrame *footprintFrame = [OTWPersonalFootprintFrame initWithFootprintDetail:footprintDetail];
+    footprintFrame.leftContent = @"";
+    [footprintFrame initData];
+    [_status[0].monthData insertObject:footprintFrame atIndex:1];
+    [_tableView reloadData];
+}
+
+-(void) loadMore
+{
+    [self.service userFootprintList:nil userId:_userId viewController:self completion:nil];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -146,26 +159,13 @@
 
 #pragma mark 自定义cell
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    NSString *cellIdentifier=[@"findViewCellI" stringByAppendingString:[NSString stringWithFormat:@"%ld",(long)indexPath.section]];
-    OTWPersonalFootprintsListTableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    static NSString *cellIdentifier = @"OTWPersonalFootprintListCell";
+    OTWPersonalFootprintTableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if(!cell){
-        cell=[[OTWPersonalFootprintsListTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+        cell=[[OTWPersonalFootprintTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
         cell.contentView.backgroundColor = [UIColor whiteColor];
         cell.backgroundColor = [UIColor whiteColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        WeakSelf(self);
-        cell.tapOne = ^(NSString *opId){
-            OTWFootprintDetailController *detailVC = [[OTWFootprintDetailController alloc] init];
-            detailVC.fid = opId;
-            [weakself.navigationController pushViewController:detailVC animated:YES];
-        };
-        cell.ifMyFootprint = _ifMyFootprint;
-        if(_ifMyFootprint){
-            cell.tapRelease=^(){
-                OTWFootprintReleaseViewController *releaseVC = [[OTWFootprintReleaseViewController alloc] init];
-                [weakself.navigationController pushViewController:releaseVC animated:YES];
-            };
-        }
     }
     [cell setData:_status[indexPath.section].monthData[indexPath.row]];
     return cell;
@@ -176,6 +176,20 @@
     return _status[indexPath.section].monthData[indexPath.row].cellHeight;
 }
 
+#pragma mark 点击行
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    //判断点击行是否是创建
+    OTWPersonalFootprintFrame *footprintFrame = _status[indexPath.section].monthData[indexPath.row];
+    if(footprintFrame.hasRelease){ //发布
+        OTWFootprintReleaseViewController *releaseVC = [[OTWFootprintReleaseViewController alloc] init];
+        [self.navigationController pushViewController:releaseVC animated:YES];
+    }else{ //跳转
+        OTWFootprintDetailController *VC =  [[OTWFootprintDetailController alloc] init];
+        [VC setFid:footprintFrame.footprintDetal.footprintId.description];
+        [self.navigationController pushViewController:VC animated:YES];
+    }
+}
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
@@ -232,7 +246,7 @@
         sectionHeaderText.frame=CGRectMake(0, 0, 40, 15);
         sectionHeaderText.font=[UIFont fontWithName:@"HelveticaNeue-Medium" size:17];
         sectionHeaderText.textColor=[UIColor color_202020];
-        sectionHeaderText.backgroundColor=[UIColor whiteColor];
+        sectionHeaderText.backgroundColor=[UIColor clearColor];
         [sectionHeaderTextView addSubview:sectionHeaderText];
         [sectionHeader addSubview:sectionHeaderTextView];
         
@@ -282,7 +296,7 @@
 -(UILabel*)userName{
     if(!_userName){
         _userName=[[UILabel alloc] initWithFrame:CGRectMake(0,self.headerImgBg.MaxY+10 , SCREEN_WIDTH, 22.5)];
-        _userName.text=@"想起一个很长的名字";
+        _userName.text=_userNickname;
         _userName.textColor=[UIColor whiteColor];
         _userName.textAlignment=NSTextAlignmentCenter;
         _userName.font=[UIFont systemFontOfSize:16];
@@ -304,7 +318,7 @@
     if(!_headerImg){
         _headerImg=[[UIImageView alloc]init];
         _headerImg.frame=CGRectMake(4, 4, 82, 82);
-        [_headerImg setImageWithURL:[NSURL URLWithString:@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg?imageView2/1/w/180/h/180"]];
+        [_headerImg setImageWithURL:[NSURL URLWithString:_userHeaderImg]];
         _headerImg.layer.cornerRadius=82/2;
         _headerImg.layer.masksToBounds = YES;
     }
@@ -505,8 +519,17 @@
     return size;
 }
 
+- (OTWPersonalFootprintService *) service
+{
+    if(!_service){
+        _service = [[OTWPersonalFootprintService alloc] init];
+    }
+    return _service;
+}
+
 -(void) dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"releasedFoorprint" object:nil];
     DLog(@"OTWPersonalFootprintsListController dealloc");
 }
 

@@ -17,7 +17,6 @@ import java.util.Date;
  * @author Created by yangyang on 2017/7/26.
  *         e-mail ：yangyang_666@icloud.com ； tel ：18580128658 ；QQ ：296604153
  */
-
 @Entity
 @Table(name = "otw_footprint")
 public class Footprint extends BaseEntity<Long> {
@@ -87,7 +86,7 @@ public class Footprint extends BaseEntity<Long> {
     public Footprint(Long id, String content, String footprintPhoto, Long userId,
                      String address, Double latitude, Double longitude,
                      FootprintType type, Boolean ifBusinessComment,
-                     Long business, Double distance,Date dateCreated) {
+                     Long business, Double distance, Date dateCreated) {
         setId(id);
         this.content = content;
         this.footprintPhoto = footprintPhoto;
@@ -99,8 +98,16 @@ public class Footprint extends BaseEntity<Long> {
         this.type = type;
         this.ifBusinessComment = ifBusinessComment;
         this.business = business;
-        this.distance  = distance;
+        this.distance = distance;
         setDateCreated(dateCreated);
+    }
+
+    public Footprint(Long id, Long userId, Double latitude, Double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.user = new User();
+        this.user.setId(userId);
+        setId(id);
     }
 
     /**
