@@ -385,6 +385,8 @@
     
     double dLon = lon2 - lon1;
     
+    NSLog(@"start(lat1:%f, lon1:%f)  end(lat2:%f lon2:%f) dLon:%f", lat1, lon1, lat2, lon2, dLon);
+    
     double y = sin(dLon) * cos(lat2);
     double x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dLon);
     double radiansBearing = atan2(y, x);
@@ -414,6 +416,8 @@
     
     azimuth = radiansToDegrees(atan2(longitudeDistance, (latitudeDistance * (double)LAT_LON_FACTOR)));
     azimuth += 180.0;
+    
+    NSLog(@"方位角:%f", azimuth);
     
     return azimuth;
 }
@@ -524,10 +528,13 @@
     //===== Disregarding old and low quality location detections
     CLLocation *location = [locations firstObject];
     NSTimeInterval age = location.timestamp.timeIntervalSinceNow;
+    
+    NSLog(@"Disregarding location: age:%f, self.minimumLocationAge:%f , self.minimumLocationHorizontalAccuracy:%f, location.horizontalAccuracy:%f", age, self.minimumLocationAge, self.minimumLocationHorizontalAccuracy, location.horizontalAccuracy);
+    
     if (age < -self.minimumLocationAge
         || location.horizontalAccuracy > self.minimumLocationHorizontalAccuracy
         || location.horizontalAccuracy < 0) {
-        NSLog(@"Disregarding location: age:%f, ha:%f", age, location.horizontalAccuracy);
+        
         return;
     }
     

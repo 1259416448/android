@@ -12,6 +12,8 @@
 
 static NSString *footprintReleaseUrl = @"/app/footprint/create";
 static NSString *footprintList = @"/app/footprint/search/{type}";
+static NSString *footprintDetail = @"/app/footprint/view/{id}";
+static NSString *releaseComment = @"/app/footprint/comment/create";
 
 +(void) footprintRelease:(NSDictionary *) params completion:(requestCompletionBlock)block
 {
@@ -33,6 +35,33 @@ static NSString *footprintList = @"/app/footprint/search/{type}";
             responseCache(reponseCache);
         }
     } success:^(id responseObject) {
+        if (block) {
+            block(responseObject,nil);
+        }
+    } failure:^(NSError *error) {
+        if (block) {
+            block(nil,error);
+        }
+    }];
+}
+
+#pragma mark 根据id获取足迹详情
++(void) getFootprintDetailById:(NSString *)footprintId completion:(requestCompletionBlock)block
+{
+    [OTWNetworkManager doGET:[footprintDetail stringByReplacingOccurrencesOfString:@"{id}" withString:footprintId] parameters:footprintId success:^(id responseObject) {
+        if (block) {
+            block(responseObject,nil);
+        }
+    } failure:^(NSError *error) {
+        if (block) {
+            block(nil,error);
+        }
+    }];
+}
+
++(void) releaseComment:(NSDictionary *)params completion:(requestCompletionBlock)block
+{
+    [OTWNetworkManager doPOST:releaseComment parameters:params success:^(id responseObject) {
         if (block) {
             block(responseObject,nil);
         }

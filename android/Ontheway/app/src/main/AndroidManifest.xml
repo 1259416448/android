@@ -135,6 +135,12 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="TrackCreateActivity"
             />
+
+        <activity
+            android:name=".ui.AddressSelectActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="AddressSelectActivity"
+            />
         <activity android:name=".ui.ar.ArTrackActivity">
 
         </activity>

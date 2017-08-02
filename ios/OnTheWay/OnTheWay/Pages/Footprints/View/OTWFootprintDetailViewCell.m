@@ -32,31 +32,27 @@
 
 @implementation OTWFootprintDetailViewCell
 
-+ (instancetype)cellWithTableView:(UITableView *)tableView data:(OTWCommentFrame *)data
-{
-    static NSString *identifier = @"OTWFootprintDetail";
-    OTWFootprintDetailViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-    if(!cell){
-        cell = [[OTWFootprintDetailViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier data:data];
-    }
++ (instancetype)cellWithTableView:(UITableView *)tableView reuseIdentifier:(NSString*)identifier{
+    OTWFootprintDetailViewCell *cell = [[OTWFootprintDetailViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+   
     return cell;
 }
 
 //重写cell生成方法
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier data:(OTWCommentFrame *)data
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if(self){
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         self.backgroundColor = [UIColor clearColor];
-        _commentFrame = data;
-        [self buildComment];
     }
     return self;
 }
 
-- (void)buildComment
+- (void)buildComment:(OTWCommentFrame *)data
 {
+    _commentFrame = data;
+    DLog(@"获取cell的commontText:%@", _commentFrame.commentModel.commentContent);
     [self addSubview:self.commentBGView];
     [self.commentBGView addSubview:self.commentUserHeadImgView];
     [self.commentBGView addSubview:self.commentUserNicknameLabel];

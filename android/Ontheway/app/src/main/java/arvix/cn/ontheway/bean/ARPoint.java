@@ -2,26 +2,26 @@ package arvix.cn.ontheway.bean;
 
 import android.location.Location;
 
+import com.baidu.mapapi.search.core.PoiInfo;
+
 /**
- * Created by ntdat on 1/16/17.
+ *
  */
 
 public class ARPoint {
     Location location;
-    String name;
+    PoiInfo poiInfo;
 
     /**
      *
-     * @param name
-     * @param lat 纬度
-     * @param lon 经度
+     * @param poiInfo
      * @param altitude
      */
-    public ARPoint(String name, double lat, double lon, double altitude) {
-        this.name = name;
+    public ARPoint(PoiInfo poiInfo, double altitude) {
         location = new Location("ARPoint");
-        location.setLatitude(lat);
-        location.setLongitude(lon);
+        this.poiInfo = poiInfo;
+        location.setLatitude(poiInfo.location.latitude);
+        location.setLongitude(poiInfo.location.longitude);
         location.setAltitude(altitude);
     }
 
@@ -29,7 +29,18 @@ public class ARPoint {
         return location;
     }
 
-    public String getName() {
-        return name;
+
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+
+    public PoiInfo getPoiInfo() {
+        return poiInfo;
+    }
+
+    public void setPoiInfo(PoiInfo poiInfo) {
+        this.poiInfo = poiInfo;
     }
 }

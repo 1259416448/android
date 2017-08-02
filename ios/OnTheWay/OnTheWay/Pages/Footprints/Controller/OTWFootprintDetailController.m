@@ -18,6 +18,8 @@
 #import <IQKeyboardManager.h>
 #import <IQKeyboardReturnKeyHandler.h>
 #import "PYPhotoBrowser.h"
+#import "OTWFootprintService.h"
+#import <MJExtension.h>
 
 #define footprintContentFont [UIFont systemFontOfSize:17]
 #define padding 15
@@ -212,7 +214,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     [self model];
     //表格的初始化需要等数据请求完毕
     [self.view addSubview:self.tableView];
-    self.tableView.tableHeaderView = [self buildTableHeaderView];
+    //self.tableView.tableHeaderView = [self buildTableHeaderView];
     //增加底部评论信息
     [self.view addSubview:self.commentBGView];
     [self.commentBGView addSubview:self.writeCommentView];
@@ -222,7 +224,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     [self.writeCommentView addSubview:self.writeCommentTextView];
     [self.writeCommentView addSubview:self.writeCommentImageView];
     [self.writeCommentView addSubview:self.commentLabel];
-    self.commentSunLabel.text = [[NSString stringWithFormat:@"%ld",(long)_detailFrame.footprintDetailModel.footprintCommentNum] stringByAppendingString:@"条评论"];
+    self.commentSunLabel.text = [[NSString stringWithFormat:@"%ld",(long)self.detailFrame.footprintDetailModel.footprintCommentNum] stringByAppendingString:@"条评论"];
 }
 
 - (UIView *) buildTableHeaderView
@@ -242,32 +244,72 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     [self.footprintDetailBGView addSubview:self.footprintAddressLabel];
     [self.footprintDetailBGView addSubview:self.bottomLine];
     
-    [self.userHeadImgImageView setImageWithURL:[NSURL URLWithString:_detailFrame.footprintDetailModel.userHeadImg]];
-    self.userNicknameLabel.text = _detailFrame.footprintDetailModel.userNickname;
-    self.footprintDateCreateLabel.text = _detailFrame.footprintDetailModel.dateCreatedStr;
-    self.footprintContentLabel.text = _detailFrame.footprintDetailModel.footprintContent;
-    self.footprintAddressLabel.text = _detailFrame.footprintDetailModel.footprintAddress;
+    [self.userHeadImgImageView setImageWithURL:[NSURL URLWithString:self.detailFrame.footprintDetailModel.userHeadImg]];
+    self.userNicknameLabel.text = self.detailFrame.footprintDetailModel.userNickname;
+    self.footprintDateCreateLabel.text = self.detailFrame.footprintDetailModel.dateCreatedStr;
+    self.footprintContentLabel.text = self.detailFrame.footprintDetailModel.footprintContent;
+    self.footprintAddressLabel.text = self.detailFrame.footprintDetailModel.footprintAddress;
     return self.tableHeaderView;
 }
 
 - (OTWFootprintDetailModel *) model
 {
-    if(!_model){
-        NSString *fullPath = [[NSBundle mainBundle] pathForResource:@"OTWFootprintDetail.plist" ofType:nil];
-        NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:fullPath];
-        _model = [OTWFootprintDetailModel initWithDict:dict];
-        _detailFrame = [[OTWFootprintDetailFrame alloc] init];
-        [_detailFrame setFootprintDetailModel: _model.footprintDetail];
+    if (!_model) {
+        _model = [[OTWFootprintDetailModel alloc] init];
+    }
+    
+    //[self resetFootprintData];
+    return _model;
+}
+
+#pragma mark - Setter
+
+- (NSMutableArray<OTWCommentFrame*>*)commentFrameArray
+{
+    if (!_commentFrameArray) {
         _commentFrameArray = [[NSMutableArray alloc] init];
-        if(_model.comments){
-            for (OTWCommentModel *commentModel in _model.comments) {
-                OTWCommentFrame *commentFrame = [[OTWCommentFrame alloc] init];
-                [commentFrame setCommentModel:commentModel];
-                [_commentFrameArray addObject:commentFrame];
-            }
+    }
+    
+    return _commentFrameArray;
+}
+
+- (OTWFootprintDetailFrame*)detailFrame
+{
+    if (!_detailFrame) {
+        _detailFrame = [[OTWFootprintDetailFrame alloc] init];
+    }
+    
+    return _detailFrame;
+}
+
+-(void)resetFootprintData
+{
+    [self.detailFrame setFootprintDetailModel: self.model.footprintDetail];
+    DLog(@"当前评论——————%@",self.model.footprintDetail);
+    if(self.model.comments){
+        for (OTWCommentModel *commentModel in self.model.comments) {
+            OTWCommentFrame *commentFrame = [[OTWCommentFrame alloc] init];
+            [commentFrame setCommentModel:commentModel];
+            [self.commentFrameArray addObject:commentFrame];
         }
     }
-    return _model;
+}
+
+-(void)fetchFootprintDetailById:(id)footprintId
+{
+    [OTWFootprintService getFootprintDetailById:footprintId completion:^(id result, NSError *error) {
+        if (result) {
+            if ([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]) {
+                self.model.footprintDetail = [OTWFootprintListModel mj_objectWithKeyValues:result[@"body"]];
+                self.model.comments = [OTWCommentModel mj_objectArrayWithKeyValuesArray:result[@"body"][@"comments"]];
+                [self resetFootprintData];
+                self.tableView.tableHeaderView = [self buildTableHeaderView];
+                self.commentSunLabel.text = [[NSString stringWithFormat:@"%ld",(long)self.commentFrameArray.count] stringByAppendingString:@"条评论"];
+//                DLog(@"当前评论——————%@",self.commentFrameArray.mj_keyValues);
+                [self.tableView reloadData];
+            }
+        }
+    }];
 }
 
 - (UITableView*) tableView
@@ -285,8 +327,8 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 
 #pragma mark 这一组里面有多少行
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    if(_commentFrameArray){
-        return _commentFrameArray.count;
+    if(self.commentFrameArray){
+        return self.commentFrameArray.count;
     }
     return 0;
 }
@@ -299,8 +341,8 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 
 #pragma mark 设置每行高度（每行高度可以不一样）
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if(_commentFrameArray){
-        return [_commentFrameArray objectAtIndex:indexPath.row].cellHeight;
+    if(self.commentFrameArray){
+        return [self.commentFrameArray objectAtIndex:indexPath.row].cellHeight;
     }
     return 0;
 }
@@ -315,7 +357,16 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 #pragma mark - 返回第indexPath这行对应的内容
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [OTWFootprintDetailViewCell cellWithTableView:tableView data:[_commentFrameArray objectAtIndex:indexPath.row]];
+    static NSString *identifier = @"OTWFootprintDetail";
+    OTWFootprintDetailViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    if (!cell) {
+        cell = [OTWFootprintDetailViewCell cellWithTableView:tableView reuseIdentifier:identifier];
+    }
+    
+    // 设置数据
+    [cell buildComment:[self.commentFrameArray objectAtIndex:indexPath.row]];
+    
+    return cell;
 }
 
 
@@ -449,7 +500,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     if(!_footprintDetailBGView){
         _footprintDetailBGView = [[UIView alloc] init];
         _footprintDetailBGView.backgroundColor = [UIColor whiteColor];
-        _footprintDetailBGView.frame = CGRectMake(0, 10, SCREEN_WIDTH, _detailFrame.cellHeight - 10);
+        _footprintDetailBGView.frame = CGRectMake(0, 10, SCREEN_WIDTH, self.detailFrame.cellHeight - 10);
     }
     return _footprintDetailBGView;
 }
@@ -492,7 +543,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 {
     if(!_footprintPhotoView){
         _footprintPhotoView = [[UIView alloc] init];
-        _footprintPhotoView.frame = CGRectMake(padding, self.userHeadImgImageView.MaxY + 15, SCREEN_WIDTH-padding*2, _detailFrame.photoViewH);
+        _footprintPhotoView.frame = CGRectMake(padding, self.userHeadImgImageView.MaxY + 15, SCREEN_WIDTH-padding*2, self.detailFrame.photoViewH);
     }
     return _footprintPhotoView;
 }
@@ -505,9 +556,9 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
         _footprintContentLabel.font = footprintContentFont;
         _footprintContentLabel.numberOfLines = 0;
         //需计算文字高度
-        if(_detailFrame){
+        if(self.detailFrame){
             CGFloat W = SCREEN_WIDTH - padding *2;
-            _footprintContentLabel.frame = CGRectMake(padding, self.footprintPhotoView.MaxY+10, W, _detailFrame.contentH);
+            _footprintContentLabel.frame = CGRectMake(padding, self.footprintPhotoView.MaxY+10, W, self.detailFrame.contentH);
         }
     }
     return _footprintContentLabel;
@@ -556,7 +607,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 - (UIView *) tableHeaderView
 {
     if(!_tableHeaderView){
-        _tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, _detailFrame.cellHeight)];
+        _tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, self.detailFrame.cellHeight)];
         _tableHeaderView.backgroundColor = [UIColor clearColor];
         //        _tableHeaderView.layer.shadowColor = [UIColor blackColor].CGColor;
         //        _tableHeaderView.layer.shadowOpacity = 0.1;
@@ -570,10 +621,11 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 {
     if(!_photoScrollView){
         NSMutableArray *imageUrlStringsGroup = [[NSMutableArray alloc] init];
-        for (NSString *url in _detailFrame.footprintDetailModel.footprintPhotoArray) {
+        for (NSString *url in self.detailFrame.footprintDetailModel.footprintPhotoArray) {
             //增加图片处理参数
             [imageUrlStringsGroup addObject:[url stringByAppendingString:imageView2Params]];
         }
+        DLog(@"图片轮播%@",imageUrlStringsGroup.mj_keyValues)
         _photoScrollView = [SDCycleScrollView cycleScrollViewWithFrame:CGRectMake(0, 0, self.footprintPhotoView.Witdh, self.footprintPhotoView.Height) imageURLStringsGroup:imageUrlStringsGroup];
         _photoScrollView.autoScroll = NO;
         _photoScrollView.showPageControl = NO;
@@ -617,9 +669,9 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 - (NSMutableArray *) footprintImageUrls
 {
     if(!_footprintImageUrls){
-        if(_detailFrame.footprintDetailModel.footprintPhotoArray && _detailFrame.footprintDetailModel.footprintPhotoArray.count>0){
+        if(self.detailFrame.footprintDetailModel.footprintPhotoArray && self.detailFrame.footprintDetailModel.footprintPhotoArray.count>0){
             _footprintImageUrls = [[NSMutableArray alloc] init];
-            for (NSString *url in _detailFrame.footprintDetailModel.footprintPhotoArray) {
+            for (NSString *url in self.detailFrame.footprintDetailModel.footprintPhotoArray) {
                 //这里可能要添加一些参数，目前未添加
                 [_footprintImageUrls addObject:url];
             }
@@ -654,10 +706,30 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
-    if ([text isEqualToString:@"\n"]){ //判断输入的字是否是回车，即按下return
-        DLog(@"点击了发送按钮");
-    }
     return YES;
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView
+{
+    NSDictionary *commentDict = [NSDictionary dictionaryWithObjectsAndKeys:textView.text,@"content",_fid,@"footprintId",nil];
+    [OTWFootprintService releaseComment:commentDict completion:^(id result, NSError *error) {
+        if (result) {
+            if ([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]) {
+                textView.text = @"";
+                DLog(@"%@",result[@"body"]);
+                OTWCommentModel *newCommentModel = [OTWCommentModel mj_objectWithKeyValues:result[@"body"]];
+                OTWCommentFrame *newCommentFrame = [[OTWCommentFrame alloc] init];
+                [newCommentFrame setCommentModel:newCommentModel];
+                
+                [self.commentFrameArray insertObject:newCommentFrame atIndex:0];
+                self.commentSunLabel.text = [[NSString stringWithFormat:@"%ld",(long)self.commentFrameArray.count] stringByAppendingString:@"条评论"];
+            
+                [self.tableView reloadData];
+            }else{
+                
+            }
+        }
+    }];
 }
 
 - (CGFloat) updateLastTextViewTextHeight{
@@ -703,6 +775,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 - (void) setFid:(NSString *)fid
 {
     _fid = fid;
+    [self fetchFootprintDetailById:fid];
 }
 
 @end
