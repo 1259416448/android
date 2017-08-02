@@ -125,7 +125,6 @@
 
 #pragma mark 点击行
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    DLog(@"我点击了：%ld",indexPath.row);
     if(indexPath.row==2){
         OTWPersonalClaimViewController *PersonalClaimVC = [[OTWPersonalClaimViewController alloc] init];
         [self.navigationController pushViewController:PersonalClaimVC animated:YES];
@@ -232,6 +231,10 @@
 }
 -(void)tapActionForFootprints{
     OTWPersonalFootprintsListController *personalSiteVC = [OTWPersonalFootprintsListController initWithIfMyFootprint:YES];
+    
+    personalSiteVC.userId = [OTWUserModel shared].userId.description;
+    personalSiteVC.userNickname = [OTWUserModel shared].name;
+    personalSiteVC.userHeaderImg = [OTWUserModel shared].headImg;
     [self.navigationController pushViewController:personalSiteVC animated:YES];
 }
 

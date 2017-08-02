@@ -305,6 +305,16 @@ public class TimeMaker {
     }
 
     /**
+     * 获取日期日
+     */
+    public static String getDayStr(Object theDate) {
+        if (theDate == null)
+            return null;
+        SimpleDateFormat format = new SimpleDateFormat("dd");
+        return format.format(theDate);
+    }
+
+    /**
      * 取昨天的日期
      */
     public static java.sql.Date getYesterdaySQLDate() {
@@ -604,25 +614,26 @@ public class TimeMaker {
 
     /**
      * 根据传入的时间计算距离当前时间多久
+     *
      * @param time 时间戳
      * @return 时间字符串
      */
-    public static String dateCreatedStr(Long time){
+    public static String dateCreatedStr(Long time) {
         Long currentTime = System.currentTimeMillis();
         Long diffTime = currentTime - time;
         String str = "";
-        if(diffTime < ONE_MINUIT){
-            str = diffTime / 1000 +"秒前";
-        }else if(diffTime < ONE_HOUR){
+        if (diffTime < ONE_MINUIT) {
+            str = diffTime / 1000 + "秒前";
+        } else if (diffTime < ONE_HOUR) {
             str = diffTime / ONE_MINUIT + "分钟前";
-        }else if(diffTime < ONE_DAY){
-            str = diffTime / ONE_HOUR +"小时前";
-        }else if(diffTime < ONE_MONTH){
+        } else if (diffTime < ONE_DAY) {
+            str = diffTime / ONE_HOUR + "小时前";
+        } else if (diffTime < ONE_MONTH) {
             str = diffTime / ONE_DAY + "天前";
-        }else if(diffTime < ONE_YEAR){
-            str = diffTime / ONE_MONTH +"月前";
-        }else {
-            str = diffTime / ONE_YEAR +"年前";
+        } else if (diffTime < ONE_YEAR) {
+            str = diffTime / ONE_MONTH + "月前";
+        } else {
+            str = diffTime / ONE_YEAR + "年前";
         }
         return str;
     }
