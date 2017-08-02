@@ -7,15 +7,25 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -269,21 +279,6 @@ public class UIUtils {
         return type;
     }
 
-    public static String showDistance(double d) {
-        if (d < 1000) {
-            return (int) d + "米";
-        } else {
-            BigDecimal bd = new BigDecimal(d / 1000 + "");
-            BigDecimal bd2 = bd.setScale(1, BigDecimal.ROUND_DOWN);
-            return bd2.toString() + "公里";
-        }
-    }
-
-    public static String showDistanceKm(double d) {
-        BigDecimal bd = new BigDecimal(d / 1000 + "");
-        BigDecimal bd2 = bd.setScale(1, BigDecimal.ROUND_DOWN);
-        return bd2.toString();
-    }
 
     public static boolean isForeground(Context context) {
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
@@ -311,20 +306,6 @@ public class UIUtils {
         return "";
     }
 
-    public static DecimalFormat moneyFormate = new DecimalFormat("0.00");
-
-    public static String delZero(float val) {
-        String ret = String.valueOf(val);
-        if (ret.startsWith("0.")) {
-            return ret;
-        } else if (ret.endsWith(".0")) {
-            return ret.substring(0, ret.length() - 2);
-        } else if (ret.endsWith(".00")) {
-            return ret.substring(0, ret.length() - 3);
-        } else {
-            return moneyFormate.format(val);
-        }
-    }
 
     public static class Patterns {
         public static Pattern NUMBER = Pattern.compile("[0-9]+");
@@ -381,71 +362,61 @@ public class UIUtils {
         }
     }
 
+    public static PopupWindow showPopUpWindow(final Context ctx, View anchor,
+                                              int xoff, int yoff, final String[] items,
+                                              final AdapterView.OnItemClickListener onItemListener) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(ctx,
+                R.layout.popup_menu_item, items) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View root = null;
+                if (convertView == null) {
+                    root = LayoutInflater.from(ctx).inflate(
+                            R.layout.popup_menu_item, parent, false);
+                } else {
+                    root = convertView;
+                }
+                TextView tv = (TextView) root.findViewById(R.id.text);
+                tv.setText(items[position]);
+                return root;
+            }
 
-    public static double add(double f1, double f2) {
-        BigDecimal f11 = new BigDecimal(f1 + "");
-        BigDecimal f22 = new BigDecimal(f2 + "");
-        return formatMoney(f11.add(f22).floatValue());
-    }
+        };
+        final ListView listView = new ListView(ctx);
+        listView.setCacheColorHint(Color.TRANSPARENT);
+        listView.setSelector(android.R.color.transparent);
+        listView.setAdapter(adapter);
+        final PopupWindow window = new PopupWindow(listView,
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-    public static double subtract(double f1, double f2) {
-        BigDecimal f11 = new BigDecimal(f1 + "");
-        BigDecimal f22 = new BigDecimal(f2 + "");
-        return formatMoney(f11.subtract(f22).floatValue());
-    }
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                window.dismiss();
+                if (onItemListener != null) {
+                    onItemListener.onItemClick(parent, listView, position, id);
+                }
+            }
+        });
+        window.setOutsideTouchable(true);
+        window.setFocusable(true);
+        Drawable bg = ctx.getResources().getDrawable(
+                R.drawable.nb_bg_dropdownlist);
+        int popWidth=UIUtils.dip2px(ctx,100);
+        window.setWidth(popWidth);
+        window.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        window.setBackgroundDrawable(bg);
 
-    public static Intent getGodModeIntent(Context ctx) {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-        intent.putExtra("package_name", ctx.getPackageName());
-        intent.putExtra("package_label", ctx.getString(R.string.app_name));
-        intent.setComponent(
-                new ComponentName("com.miui.powerkeeper", "com.miui.powerkeeper.ui.HiddenAppsConfigActivity"));
-        List<ResolveInfo> res = ctx.getPackageManager().queryIntentActivities(intent, 0);
-        if (!res.isEmpty()) {
-            return intent;
-        } else {
-            return null;
+        int offsetx=0;
+        if(popWidth>anchor.getWidth()){
+            offsetx=-(popWidth-anchor.getWidth())/2;
+        }else{
+            offsetx=(popWidth-anchor.getWidth())/2;
         }
+        window.showAsDropDown(anchor, offsetx, yoff);
+        return window;
     }
 
-    public static Intent getAutoStartModeIntent(Context ctx) {
-        Intent intent = new Intent();
-        // 小米
-        intent.setComponent(new ComponentName("com.miui.securitycenter",
-                "com.miui.permcenter.autostart.AutoStartManagementActivity"));
-        List<ResolveInfo> res = ctx.getPackageManager().queryIntentActivities(intent, 0);
-        if (!res.isEmpty()) {
-            intent.putExtra("package_name", ctx.getPackageName());
-            intent.putExtra("package_label", ctx.getString(R.string.app_name));
-            return intent;
-        }
-        // 华为
-        intent.setComponent(new ComponentName("com.huawei.systemmanager",
-                "com.huawei.systemmanager.startupmgr.ui.StartupNormalAppListActivity"));
-        res = ctx.getPackageManager().queryIntentActivities(intent, 0);
-        if (!res.isEmpty()) {
-            return intent;
-        }
-        return null;
-    }
-
-    public static double formatMoney(double d) {
-        BigDecimal bd = new BigDecimal(d + "");
-        BigDecimal bd2 = bd.setScale(2, BigDecimal.ROUND_DOWN);
-        return bd2.doubleValue();
-    }
-
-    public static int formatMin(int durationSeconds) {
-        return (int) Math.ceil(durationSeconds / 60d);
-    }
-
-    public static String validPwd(String strPassword) {
-        String regex = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,32}$";
-        if (!strPassword.matches(regex)) {
-            return "密码必须为至少8位的字母、数字组合";
-        }
-        return null;
-    }
 
 }

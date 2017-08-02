@@ -22,8 +22,9 @@
  *      4. Implement ARDataSource to provide annotation views in your data source
  *
  *      https://github.com/DanijelHuis/HDAugmentedReality.git
- *
+ * 
  */
+
 
 typedef enum : NSUInteger {
     ReloadTypeHeadingChanged = 0,

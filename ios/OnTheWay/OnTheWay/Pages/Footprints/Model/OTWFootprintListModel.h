@@ -40,6 +40,8 @@
 //足迹总点赞数,只有获取详情时，才会加载参数
 @property (nonatomic,assign) NSInteger footprintLikeNum;
 
+@property (nonatomic,strong) NSString *day;
+
 + (id) initWithDict:(NSDictionary *)dict;
 
 #pragma mark 根据字典初始化模块对象

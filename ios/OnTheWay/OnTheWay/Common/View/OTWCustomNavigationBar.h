@@ -27,4 +27,6 @@
 
 - (void)setBackgroundImage:(UIImage*)image;
 
+- (void) clearShadowColor;
+
 @end

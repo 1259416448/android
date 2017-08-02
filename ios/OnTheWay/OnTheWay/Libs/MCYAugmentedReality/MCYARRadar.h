@@ -19,6 +19,8 @@
 
 - (void)clearDots;
 
+- (void)moveDots:(int)angle;
+
 #pragma mark - 暂未使用
 
 /**
@@ -26,8 +28,6 @@
  * params spots 数组,存的NSDictionary对象，dictionary中保存的 angle(int)、distance(float)
  */
 - (instancetype)initWithFrame:(CGRect)frame withSpots:(NSArray<NSDictionary*>*)spots;
-
-- (void)moveDots:(int)angle;
 
 - (void)setupSpots:(NSArray*)spots;
 
