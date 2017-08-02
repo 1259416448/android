@@ -1292,8 +1292,8 @@
 				TargetAttributes = {
 					D7F6AFF01F0D32FA0013090A = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = SEMAPEJ292;
-						ProvisioningStyle = Automatic;
+						DevelopmentTeam = C6TF92USE6;
+						ProvisioningStyle = Manual;
 					};
 					D7F6B0091F0D32FB0013090A = {
 						CreatedOnToolsVersion = 8.3.3;
@@ -1690,15 +1690,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = SEMAPEJ292;
+				DEVELOPMENT_TEAM = C6TF92USE6;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/OnTheWay/PrefixHeader.pch";
 				INFOPLIST_FILE = OnTheWay/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.WeiHuan.OnTheWay;
+				PRODUCT_BUNDLE_IDENTIFIER = com.m.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "970d0695-c36a-422d-9ec7-581b360f9c0c";
+				PROVISIONING_PROFILE_SPECIFIER = Test_All_Dev;
 			};
 			name = Debug;
 		};
@@ -1708,15 +1708,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = SEMAPEJ292;
+				DEVELOPMENT_TEAM = C6TF92USE6;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/OnTheWay/PrefixHeader.pch";
 				INFOPLIST_FILE = OnTheWay/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.WeiHuan.OnTheWay;
+				PRODUCT_BUNDLE_IDENTIFIER = com.m.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "970d0695-c36a-422d-9ec7-581b360f9c0c";
+				PROVISIONING_PROFILE_SPECIFIER = Test_All_Dev;
 			};
 			name = Release;
 		};
