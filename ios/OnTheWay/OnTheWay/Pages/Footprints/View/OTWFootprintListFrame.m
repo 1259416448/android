@@ -8,6 +8,7 @@
 
 #import "OTWFootprintListFrame.h"
 #import "OTWFootprintListModel.h"
+#import <MJExtension.h>
 
 #define FootprintDateCreatedStrFont [UIFont systemFontOfSize:11]
 #define nicknameLabelFont [UIFont systemFontOfSize:15]
@@ -72,8 +73,6 @@
     _footprintAddressF = CGRectMake(footprintAddressFX, footprintAddressFY, footprintAddressFW, footprintAddressFH);
     
     CGSize textSize = [self sizeWithString:_footprint.dateCreatedStr font:FootprintDateCreatedStrFont maxSize:CGSizeMake(100, 12)];
-    
-    DLog(@"textSize w :%f",textSize.width);
     
     //时间图标
     CGFloat dataCreatedImageFX = SCREEN_WIDTH - 14 -padding*2 - textSize.width - 3 - 10 ;

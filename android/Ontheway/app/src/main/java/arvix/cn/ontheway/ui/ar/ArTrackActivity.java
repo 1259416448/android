@@ -30,6 +30,7 @@ import org.xutils.x;
 import arvix.cn.ontheway.BaiduActivity;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.ui.BaseActivity;
+import arvix.cn.ontheway.ui.track.TrackCreateActivity;
 import arvix.cn.ontheway.ui.track.TrackListActivity;
 import arvix.cn.ontheway.ui.track.TrackMapActivity;
 
@@ -126,7 +127,7 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
         toArBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(self, ArTrackActivity.class);
+                Intent intent = new Intent(self, TrackCreateActivity.class);
                 startActivity(intent);
             }
         });
