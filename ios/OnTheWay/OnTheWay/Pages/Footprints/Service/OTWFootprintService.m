@@ -28,6 +28,7 @@ static NSString *releaseComment = @"/app/footprint/comment/create";
     }];
 }
 
+#pragma mark 获取足迹列表
 +(void) getFootprintList:(NSDictionary *)params completion:(requestCompletionBlock)block responseCache:(PPHttpRequestCache) responseCache
 {
     [OTWNetworkManager doGET:[footprintList stringByReplacingOccurrencesOfString:@"{type}" withString:params[@"type"]] parameters:params responseCache:^(id reponseCache){
