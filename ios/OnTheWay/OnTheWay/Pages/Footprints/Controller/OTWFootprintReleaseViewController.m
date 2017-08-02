@@ -330,7 +330,7 @@
                 [self errorTips:@"发布成功" userInteractionEnabled:YES];
                 NSDictionary *dict = result[@"body"];
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"releasedFoorprint" object:nil userInfo:dict];
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"newRelease" object:self];
+                 [[NSNotificationCenter defaultCenter] postNotificationName:@"newRelease" object:self];
                 [self performSelector:@selector(cacelRelease) withObject:nil afterDelay:1.5f];
             }else{
                 DLog(@"message - %@  messageCode - %@",result[@"message"],result[@"messageCode"]);

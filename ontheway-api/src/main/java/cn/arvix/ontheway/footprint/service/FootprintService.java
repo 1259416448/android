@@ -125,6 +125,7 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
         detailDTO.setFootprintId(m.getId());
         detailDTO.setFootprintAddress(m.getAddress());
         detailDTO.setFootprintContent(m.getContent());
+        detailDTO.setDateCreatedStr(TimeMaker.dateCreatedStr(detailDTO.getDateCreated()));
         if (dto.getDocuments() != null) {
             List<String> footprintPhotoArray = Lists.newArrayListWithCapacity(dto.getDocuments().size());
             String fixUrl = configService.getConfigString(CommonContact.QINIU_BUCKET_URL);

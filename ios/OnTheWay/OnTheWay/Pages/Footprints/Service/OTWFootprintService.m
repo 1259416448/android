@@ -26,9 +26,13 @@ static NSString *footprintList = @"/app/footprint/search/{type}";
     }];
 }
 
-+(void) getFootprintList:(NSDictionary *)params completion:(requestCompletionBlock)block
++(void) getFootprintList:(NSDictionary *)params completion:(requestCompletionBlock)block responseCache:(PPHttpRequestCache) responseCache
 {
-    [OTWNetworkManager doGET:[footprintList stringByReplacingOccurrencesOfString:@"{type}" withString:params[@"type"]] parameters:params success:^(id responseObject) {
+    [OTWNetworkManager doGET:[footprintList stringByReplacingOccurrencesOfString:@"{type}" withString:params[@"type"]] parameters:params responseCache:^(id reponseCache){
+        if(responseCache){
+            responseCache(reponseCache);
+        }
+    } success:^(id responseObject) {
         if (block) {
             block(responseObject,nil);
         }

@@ -11,10 +11,10 @@
 
 @interface OTWFootprintListTableViewCell : UITableViewCell
 
-@property (nonatomic,strong) OTWFootprintListFrame *footprintListFrame;
-
 //cell中每条足迹点击事件
 @property (nonatomic,copy) void (^tapOne)(NSString *);
+
+- (void)setFootprintListFrame:(OTWFootprintListFrame *) frame;
 
 + (instancetype)cellWithTableView:(UITableView *)tableView identifier:(NSString *) identifier;
 

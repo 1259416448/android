@@ -501,15 +501,6 @@
     DLog(@"点击了按钮");
 }
 
-//cell 可视宽度
--(CGFloat) cellViewWidth
-{
-    if(!_cellViewWidth || _cellViewWidth == 0){
-        _cellViewWidth = SCREEN_WIDTH - 15 - 80;
-    }
-    return _cellViewWidth;
-}
-
 - (CGSize)sizeWithString:(NSString *)str font:(UIFont *)font maxSize:(CGSize)maxSize
 {
     NSDictionary *dict = @{NSFontAttributeName : font};
