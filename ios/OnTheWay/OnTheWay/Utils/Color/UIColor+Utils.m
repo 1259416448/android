@@ -133,6 +133,9 @@
 + (UIColor *)color_202020 {
     return [UIColor colorWithHexString:@"202020"];
 }
++ (UIColor *)color_f9f9f9 {
+    return [UIColor colorWithHexString:@"f9f9f9"];
+}
 + (UIColor *)color_c4c4c4{
     return [UIColor colorWithHexString:@"c4c4c4"];
 }

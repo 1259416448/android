@@ -7,13 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "OTWPersonalFootprintMonthDataModel.h"
+#import "OTWPersonalFootprintFrame.h"
 
 @interface OTWPersonalFootprintsListModel  : NSObject
 
 @property (nonatomic,strong) NSString  *month;
-@property (nonatomic,strong) NSMutableArray<OTWPersonalFootprintMonthDataModel *>  *monthData;
-
-+ (instancetype) initWithDict:(NSDictionary *) dict;
+@property (nonatomic,strong) NSMutableArray<OTWPersonalFootprintFrame *>  *monthData;
 
 @end

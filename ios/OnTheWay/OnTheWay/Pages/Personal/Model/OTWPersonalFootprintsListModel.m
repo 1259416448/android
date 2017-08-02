@@ -11,14 +11,5 @@
 
 @implementation OTWPersonalFootprintsListModel
 
-+ (instancetype) initWithDict:(NSDictionary *) dict{
-    return [OTWPersonalFootprintsListModel mj_objectWithKeyValues:dict];
-}
-
-+ (NSDictionary *) objectClassInArray{
-    return @{
-             @"monthData" : @"OTWPersonalFootprintMonthDataModel"
-             };
-}
 
 @end

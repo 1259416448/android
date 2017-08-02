@@ -31,6 +31,7 @@
 + (UIColor *)color_f4f4f4;
 + (UIColor *)color_d5d5d5;
 + (UIColor *)color_202020;
++ (UIColor *)color_f9f9f9;
 + (UIColor *)color_ff134c;
 + (UIColor *)color_ff9144;
 + (UIColor *)color_979797;
