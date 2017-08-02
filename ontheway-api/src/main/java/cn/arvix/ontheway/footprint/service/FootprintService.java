@@ -119,7 +119,21 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
                 }
             });
         }
-        return JsonUtil.getSuccess(CommonContact.SAVE_SUCCESS, CommonContact.SAVE_SUCCESS);
+        //返回简单信息
+        FootprintDetailDTO detailDTO = new FootprintDetailDTO();
+        detailDTO.setDateCreated(TimeMaker.toTimeMillis(m.getDateCreated()));
+        detailDTO.setFootprintId(m.getId());
+        detailDTO.setFootprintAddress(m.getAddress());
+        detailDTO.setFootprintContent(m.getContent());
+        if (dto.getDocuments() != null) {
+            List<String> footprintPhotoArray = Lists.newArrayListWithCapacity(dto.getDocuments().size());
+            String fixUrl = configService.getConfigString(CommonContact.QINIU_BUCKET_URL);
+            dto.getDocuments().forEach(x -> footprintPhotoArray.add(fixUrl + x.getFileUrl()));
+            //照片数据
+            detailDTO.setFootprintPhotoArray(footprintPhotoArray);
+        }
+        detailDTO.setDay(TimeMaker.getDayStr(detailDTO.getDateCreated()));
+        return JsonUtil.getSuccess(CommonContact.SAVE_SUCCESS, CommonContact.SAVE_SUCCESS,detailDTO);
     }
 
 
@@ -490,11 +504,10 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
         footprints.forEach(x -> {
             Map<String, Object> monthMap = null;
             String month = "0";
-            String day = "0";
-            System.out.println(TimeMaker.toDateStr(x.getDateCreated()));
+            String day = "今天";
             if (!currentTimeStr.equals(TimeMaker.toDateStr(x.getDateCreated()))) {
                 month = TimeMaker.getMonth(x.getDateCreated()).toString();
-                day = TimeMaker.getDay(x.getDateCreated()).toString();
+                day = TimeMaker.getDayStr(x.getDateCreated()) + "日";
             }
             for (Map<String, Object> c : list) {
                 if (month.equals(c.get("month"))) {
@@ -509,21 +522,22 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
                 list.add(monthMap);
             }
             //天数据
-            List<Map<String, Object>> monthDataList = (List<Map<String, Object>>) monthMap.get("monthData");
-            Map<String, Object> dayMap = null;
-            for (Map<String, Object> c : monthDataList) {
-                if (day.equals(c.get("day"))) {
-                    dayMap = c;
-                }
-            }
-            if (dayMap == null) {
-                dayMap = Maps.newHashMap();
-                dayMap.put("day", day);
-                dayMap.put("dayData", Lists.newArrayList());
-                monthDataList.add(dayMap);
-            }
+//            List<Map<String, Object>> monthDataList = (List<Map<String, Object>>) monthMap.get("monthData");
+//            Map<String, Object> dayMap = null;
+//            for (Map<String, Object> c : monthDataList) {
+//                if (day.equals(c.get("day"))) {
+//                    dayMap = c;
+//                }
+//            }
+//            if (dayMap == null) {
+//                dayMap = Maps.newHashMap();
+//                dayMap.put("day", day);
+//                dayMap.put("dayData", Lists.newArrayList());
+//                monthDataList.add(dayMap);
+//            }
 
-            List<FootprintDetailDTO> dayList = (List<FootprintDetailDTO>) dayMap.get("dayData");
+            //List<FootprintDetailDTO> dayList = (List<FootprintDetailDTO>) dayMap.get("dayData");
+            List<FootprintDetailDTO> dayList = (List<FootprintDetailDTO>) monthMap.get("monthData");
 
             FootprintDetailDTO detailDTO = new FootprintDetailDTO();
             detailDTO.setDateCreated(TimeMaker.toTimeMillis(x.getDateCreated()));
@@ -532,6 +546,7 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
             detailDTO.setFootprintContent(x.getContent());
             //照片数据
             detailDTO.setFootprintPhotoArray(photoListMap.get(x.getId()));
+            detailDTO.setDay(day);
             dayList.add(detailDTO);
         });
         return list;

@@ -131,6 +131,8 @@
         double azimuth = annotation.azimuth;
         double screenDistance = annotation.distanceFromUser / distanceScale;
         
+        NSLog(@"实际距离：%f  屏幕宽度:%f  (实际x:%f, y:%f)", annotation.distanceFromUser, self.frame.size.width, pointX, pointY);
+        
         if (azimuth < 90 && azimuth > 0) {
             azimuth = azimuth;
             pointX = (cos(annotation.azimuth)*screenDistance + Radius);
@@ -224,7 +226,6 @@
         self.theSpots = [NSMutableDictionary dictionary];
         
         [self setupRadarImages];
-        [self setupSpots:spots];
         
         //[self turnRadar];
         

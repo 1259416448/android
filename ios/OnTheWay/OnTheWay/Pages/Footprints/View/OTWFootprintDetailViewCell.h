@@ -13,6 +13,8 @@
 /**
  *创建cell
  */
-+ (instancetype)cellWithTableView:(UITableView *)tableView data:(OTWCommentFrame *)data;
++ (instancetype)cellWithTableView:(UITableView *)tableView reuseIdentifier:(NSString*)identifier;
+
+- (void)buildComment:(OTWCommentFrame *)data;
 
 @end

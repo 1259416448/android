@@ -46,18 +46,19 @@ public class AROverlayView extends View {
     private Location currentLocation;
     private List<ARPoint> arPoints;
     private double latAndLonAndAltLast = 0.0;
+    CacheInterface cache;
 
 
     public AROverlayView(Context context) {
         super(context);
         this.context = context;
+        cache = OnthewayApplication.getInstahce(CacheInterface.class);
         updateLocationData();
-        arPoints = new ArrayList<ARPoint>();
+        arPoints = new ArrayList();
     }
 
     public  void updateLocationData(){
-        arPoints = new ArrayList<ARPoint>();
-        CacheInterface cache = OnthewayApplication.getInstahce(CacheInterface.class);
+        arPoints = new ArrayList();
         Double latCache = cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LAT);
         Double lonCache = 0.0;
         if(latCache!=null){
@@ -99,11 +100,12 @@ public class AROverlayView extends View {
                             Toast.LENGTH_LONG).show();
                     return;
                 }
+                cache.putObjectMem(StaticVar.LAST_POIRESULT,poiResult);
                 //获取POI检索结果
                 List<PoiInfo> allAddr = poiResult.getAllPoi();
                 for (PoiInfo p: allAddr) {
                     Log.i("MainActivity", "p.name--->" + p.name +"p.phoneNum" + p.phoneNum +" -->p.address:" + p.address + "p.location" + p.location);
-                    arPoints.add(new ARPoint(p.name, p.location.latitude,p.location.longitude,  alt));
+                    arPoints.add(new ARPoint(p , alt));
                 }
             }
             @Override
@@ -169,7 +171,7 @@ public class AROverlayView extends View {
                 float y = (0.5f - cameraCoordinateVector[1]/cameraCoordinateVector[3]) * canvas.getHeight();
 
                 canvas.drawCircle(x, y, radius, paint);
-                canvas.drawText(arPoints.get(i).getName(), x - (30 * arPoints.get(i).getName().length() / 2), y - 80, paint);
+                canvas.drawText(arPoints.get(i).getPoiInfo().name, x - (30 * arPoints.get(i).getPoiInfo().name.length() / 2), y - 80, paint);
             }
         }
     }

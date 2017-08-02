@@ -81,7 +81,7 @@ public class FaXianFrag extends BaseFragment {
 
     private void initView(View root) {
         //android:hint="搜索附近的美食、商场"
-        SpannableStringBuilder ssb = new SpannableStringBuilder("  icon搜索附近的美食、商场");
+        SpannableStringBuilder ssb = new SpannableStringBuilder("  icon  搜索附近的美食、商场");
         int length = ssb.length();
         AbsoluteSizeSpan absoluteSizeSpan = new AbsoluteSizeSpan(12, true);
         ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#979797"));

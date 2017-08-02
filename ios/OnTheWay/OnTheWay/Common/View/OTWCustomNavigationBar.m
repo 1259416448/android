@@ -197,4 +197,9 @@
     return _rightButton;
 }
 
+- (void) clearShadowColor
+{
+    self.layer.shadowColor = [UIColor clearColor].CGColor;
+}
+
 @end

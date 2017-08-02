@@ -17,4 +17,8 @@ typedef void(^requestCompletionBlock)(id result, NSError *error);
 
 +(void) getFootprintList:(NSDictionary *) params completion:(requestCompletionBlock)block;
 
++(void) getFootprintDetailById:(NSString *)footprintId completion:(requestCompletionBlock)block;
+
++(void) releaseComment:(NSDictionary *) params completion:(requestCompletionBlock)block;
+
 @end

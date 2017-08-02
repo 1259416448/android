@@ -1,17 +1,24 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center"
-    android:layout_marginLeft="15dp">
-
-    <ImageView
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="87.5dp"
+    android:orientation="horizontal"
+    android:layout_height="87.5dp"
+    android:layout_gravity="center">
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="12.5dp"
-        android:src="@drawable/header_default" />
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:src="@drawable/fb_delete" />
-</RelativeLayout>
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/img_iv"
+            android:layout_marginRight="12.5dp"
+            android:layout_marginTop="12.5dp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:src="@drawable/header_default" />
+        <ImageView
+            android:id="@+id/del_btn"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/fb_delete" />
+    </RelativeLayout>
+</LinearLayout>

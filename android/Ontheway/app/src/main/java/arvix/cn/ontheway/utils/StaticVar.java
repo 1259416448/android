@@ -13,4 +13,7 @@ public interface StaticVar {
     String HEADER_URL_CACHE_KEY = "headerUrl";
 
     String EXTRA_TRACK_BEAN = "trackBean";
+    String LAST_POIRESULT = "lastPoiResult";
+
+    int MAX_PHOTO_SELECT = 9;
 }
