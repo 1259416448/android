@@ -18,14 +18,16 @@ public interface CacheInterface {
     /**
      *
      * @param key
-
+    */
 
     void putObject(String key,Object Value);
-     */
+
+    void putObjectMem(String key,Object Value);
+
     String get(String key);
     Double getDouble(String key);
     Integer getInt(String key);
-/**
+
     <T> T getT(String key,Class<T> t);
-*/
+    <T> T getTMem(String key,Class<T> t);
 }

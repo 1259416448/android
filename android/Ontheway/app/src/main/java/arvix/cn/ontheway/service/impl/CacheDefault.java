@@ -2,11 +2,16 @@ package arvix.cn.ontheway.service.impl;
 
 import android.util.Log;
 
+import com.alibaba.fastjson.JSON;
+
 import org.xutils.cache.DiskCacheEntity;
 import org.xutils.cache.LruDiskCache;
 import org.xutils.config.DbConfigs;
 import org.xutils.ex.DbException;
 import org.xutils.x;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import arvix.cn.ontheway.service.inter.CacheInterface;
 
@@ -17,8 +22,8 @@ import arvix.cn.ontheway.service.inter.CacheInterface;
  */
 
 public class CacheDefault implements CacheInterface {
-   private static String logTag = CacheDefault.class.getName();
-
+    private static String logTag = CacheDefault.class.getName();
+    private static Map<String,Object> cacheMap = new ConcurrentHashMap<>();
     private static String cacheName = "onthewayCache";
 
     private static LruDiskCache diskCache = null;
@@ -58,12 +63,16 @@ public class CacheDefault implements CacheInterface {
     /**
      * @param key
 
-
+     */
     @Override
     public void putObject(String key, Object value) {
         put(key, JSON.toJSONString(value));
     }
 
+    @Override
+    public void putObjectMem(String key, Object Value) {
+        cacheMap.put(key,Value);
+    }
 
 
     @Override
@@ -78,7 +87,18 @@ public class CacheDefault implements CacheInterface {
         }
         return result;
     }
-     */
+
+    @Override
+    public <T> T getTMem(String key, Class<T> t) {
+        T result = null;
+        Object entity = cacheMap.get(key);
+        if(entity!=null){
+            Log.w(logTag,"entity.getTextContent():");
+            result = (T)entity;
+        }
+        return result;
+    }
+
     public  void remove(String key){
         DiskCacheEntity entity = this.getLruDiskCache().get(key);
         if(entity!=null){

@@ -38,7 +38,7 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'org.xutils:xutils:3.5.0'
-    compile 'com.alibaba:fastjson:1.1.59.android'
+    compile 'com.alibaba:fastjson:1.1.60.android'
     compile 'com.android.support:appcompat-v7:23.+'
     compile 'com.android.support:design:23.+'
     compile 'com.android.support:support-v4:23.+'
