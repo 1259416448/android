@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
@@ -22,16 +24,19 @@ import arvix.cn.ontheway.ui.msg.MsgIndexFrag;
 import arvix.cn.ontheway.ui.usercenter.MyProfileFragment;
 import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticVar;
+import arvix.cn.ontheway.utils.UIUtils;
 
 /**
  * Created by yd on 2017/7/19.
  */
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
     @ViewInject(R.id.tab_group)
     private RadioGroup tabRG;
     @ViewInject(R.id.tab_zuji)
     private TextView zuJiTextView;
+    @ViewInject(R.id.btn_fx)
+    private View fxBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +53,7 @@ public class MainActivity extends BaseActivity {
             }
         });
         CacheInterface cache = OnthewayApplication.getInstahce(CacheInterface.class);
-        cache.put(StaticVar.HEADER_URL_CACHE_KEY,"http://p2.so.qhmsg.com/sdr/599_900_/t019e91b7618003e862.jpg");
+        cache.put(StaticVar.HEADER_URL_CACHE_KEY, "http://p2.so.qhmsg.com/sdr/599_900_/t019e91b7618003e862.jpg");
         initView();
     }
 
@@ -63,6 +68,7 @@ public class MainActivity extends BaseActivity {
 
         });
         tabRG.check(R.id.tab_faxian);
+        fxBtn.setOnClickListener(this);
     }
 
     private HashMap<Integer, Fragment> frags = new HashMap<>();
@@ -76,7 +82,7 @@ public class MainActivity extends BaseActivity {
                 targetFrag = new FaXianFrag();
             } else if (checkedId == R.id.tab_xiaoxi) {
                 targetFrag = new MsgIndexFrag();
-               //list Msg targetFrag = MsgListFrag.newInstance();
+                //list Msg targetFrag = MsgListFrag.newInstance();
             } else if (checkedId == R.id.tab_wode) {
                 targetFrag = new MyProfileFragment();
             }
@@ -107,4 +113,18 @@ public class MainActivity extends BaseActivity {
     }
 
 
+    @Override
+    public void onClick(View view) {
+        if (view == fxBtn) {
+            String[] items = new String[]{"one", "two", "three"};
+            //40是R.layout.popup_menu_item的高度
+            int offsetY = -UIUtils.dip2px(self, 40) * items.length - view.getHeight();
+            UIUtils.showPopUpWindow(self, findViewById(R.id.tab_xiaoxi), 0, offsetY, items, new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    UIUtils.toast(self, i + "", Toast.LENGTH_SHORT);
+                }
+            });
+        }
+    }
 }
