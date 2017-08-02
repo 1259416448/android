@@ -11,6 +11,7 @@
 @implementation OTWFootprintService
 
 static NSString *footprintReleaseUrl = @"/app/footprint/create";
+static NSString *footprintList = @"/app/footprint/search/{type}";
 
 +(void) footprintRelease:(NSDictionary *) params completion:(requestCompletionBlock)block
 {
@@ -20,6 +21,19 @@ static NSString *footprintReleaseUrl = @"/app/footprint/create";
         }
     }failure:^(NSError *error){
         if(block){
+            block(nil,error);
+        }
+    }];
+}
+
++(void) getFootprintList:(NSDictionary *)params completion:(requestCompletionBlock)block
+{
+    [OTWNetworkManager doGET:[footprintList stringByReplacingOccurrencesOfString:@"{type}" withString:params[@"type"]] parameters:params success:^(id responseObject) {
+        if (block) {
+            block(responseObject,nil);
+        }
+    } failure:^(NSError *error) {
+        if (block) {
             block(nil,error);
         }
     }];

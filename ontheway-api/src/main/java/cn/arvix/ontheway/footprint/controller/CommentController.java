@@ -45,13 +45,14 @@ public class CommentController extends ExceptionHandlerController {
     @ApiImplicitParams(value = {
             @ApiImplicitParam(value = "当前页", name = "number", required = true, paramType = "query"),
             @ApiImplicitParam(value = "每页大小", name = "size", required = true, paramType = "query"),
-            @ApiImplicitParam(value = "足迹ID", name = "footprintId", required = true, paramType = "query")
+            @ApiImplicitParam(value = "足迹ID", name = "footprintId", required = true, paramType = "query"),
+            @ApiImplicitParam(value = "开始分页时间", name = "currentTime", paramType = "query")
     })
     @ApiOperation(value = "获取评论数据", notes = "分页获取评论数据")
     @ResponseBody
     @GetMapping(value = "/search")
-    public JSONResult search(Integer number, Integer size, Long footprintId) {
-        return service.search(number,size,footprintId);
+    public JSONResult search(Integer number, Integer size, Long footprintId,Long currentTime) {
+        return service.search(number,size,footprintId,currentTime);
     }
 
 }

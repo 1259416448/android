@@ -17,8 +17,19 @@
 #import "OTWCustomNavigationBar.h"
 #import "OTWFootprintReleaseViewController.h"
 #import "OTWPlaneMapViewController.h"
+#import "OTWFootprintService.h"
 
-@interface OTWFootprintsViewController () <UITableViewDataSource,UITableViewDelegate>
+#import "OTWFootprintsChangeAddressController.h"
+#import "OTWFootprintsChangeAddressModel.h"
+#import "OTWFootprintSearchParams.h"
+
+#import <BaiduMapAPI_Location/BMKLocationService.h>
+#import <BaiduMapAPI_Map/BMKMapComponent.h>
+#import <BaiduMapAPI_Search/BMKGeoCodeSearch.h>
+#import <BaiduMapAPI_Search/BMKPoiSearchType.h>
+#import <MJExtension.h>
+
+@interface OTWFootprintsViewController () <UITableViewDataSource,UITableViewDelegate,BMKLocationServiceDelegate,BMKGeoCodeSearchDelegate>
 
 @property (nonatomic,strong) UITableView *footprintTableView;
 @property (nonatomic,strong) NSMutableArray<OTWFootprintListFrame *> *footprintFrames;
@@ -26,18 +37,44 @@
 @property (nonatomic,strong) UIView * fabuImageView;
 @property (nonatomic,strong) UIView * pingmianImageView;
 
+@property (nonatomic,strong) OTWFootprintChangeAddressArrayModel *defaultChooseModel;
+@property (nonatomic,strong) OTWFootprintSearchParams *footprintSearchParams;
+@property (nonatomic,strong) BMKLocationService *locService;  //定位
+@property (nonatomic,strong) BMKGeoCodeSearch *geoCodeSearch;
+@property (nonatomic,copy) BMKUserLocation *userLocation;
+@property (nonatomic,assign) BOOL ifFirstLocation;
+
+@property (nonatomic,strong) NSMutableArray *footprints;
+@property (nonatomic,assign) BOOL isFirstSearch;
+
 @end
 
 @implementation OTWFootprintsViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pullNotice) name:@"newRelease" object:nil];
+    _locService = [[BMKLocationService alloc] init];
+    _locService.delegate = self;
+    _geoCodeSearch = [[BMKGeoCodeSearch alloc] init];
+    _geoCodeSearch.delegate = self;
+    _locService.desiredAccuracy = kCLLocationAccuracyBest;
+    [_locService startUserLocationService];
+    _ifFirstLocation = YES;
+    _isFirstSearch = YES;
     // Do any additional setup after loading the view.
     self.customNavigationBar.leftButtonClicked = ^(){
         //这里直接回到上一个首页
         [[OTWLaunchManager sharedManager].mainTabController didSelectedItemByIndex:0];
     };
+    self.footprints = [NSMutableArray new];
     [self buildUI];
+}
+
+
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -59,11 +96,11 @@
     //大背景
     self.view.backgroundColor=[UIColor color_f4f4f4];
     
-    //默认【下拉刷新】
-    self.footprintTableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(refresh)];
-    //默认【上拉加载】
-    self.footprintTableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMore)];
     
+    //默认【下拉刷新】
+    self.footprintTableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(pullNewFootprints)];
+    //默认【上拉加载】
+    self.footprintTableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreFootprints)];
     [self.view addSubview:self.footprintTableView];
     
     [self.view addSubview:self.ARdituImageView];
@@ -73,6 +110,28 @@
     [self.view addSubview:self.pingmianImageView];
     
     [self.view bringSubviewToFront:self.customNavigationBar];
+}
+
+
+-(OTWFootprintSearchParams *)footprintSearchParams
+{
+    if (!_footprintSearchParams) {
+        _footprintSearchParams = [[OTWFootprintSearchParams alloc] init];
+        //列表查询
+        _footprintSearchParams.type = @"list";
+        //默认当前页为 0
+        _footprintSearchParams.number = 0;
+        //默认总页数 0
+        _footprintSearchParams.totalPages = 0;
+        //默认每页大小为 10
+        _footprintSearchParams.size = 10;
+        //范围
+        _footprintSearchParams.distance = @"";
+        //时间
+        _footprintSearchParams.time = @"";
+    }
+
+    return _footprintSearchParams;
 }
 
 -(void)refresh
@@ -114,7 +173,6 @@
     if(cell == nil){
         cell = [OTWFootprintListTableViewCell cellWithTableView:tableView identifier:identifier];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        [cell setFootprintListFrame:self.footprintFrames[indexPath.row]];
         WeakSelf(self);
         cell.tapOne = ^(NSString *opId){
             OTWPersonalFootprintsListController *listVC = [[OTWPersonalFootprintsListController alloc] init];
@@ -123,6 +181,7 @@
             [weakself.navigationController pushViewController:listVC animated:YES];
         };
     }
+    [cell setFootprintListFrame:self.footprintFrames[indexPath.row]];
     return cell;
 }
 
@@ -138,21 +197,23 @@
 
 -(NSMutableArray*)footprintFrames{
     if(!_footprintFrames){
-        NSString *fullPath = [[NSBundle mainBundle] pathForResource:@"OTWFootprintList.plist" ofType:nil];
-        NSArray *dictArray = [NSArray arrayWithContentsOfFile:fullPath];
-        NSMutableArray *models = [NSMutableArray arrayWithCapacity:dictArray.count];
-        for (NSDictionary *dict in dictArray) {
-            // 创建模型
-            OTWFootprintListModel *model = [OTWFootprintListModel initWithDict:dict];
-            // 根据模型数据创建frame模型
-            OTWFootprintListFrame *frame = [[OTWFootprintListFrame alloc] init];
-            [frame setFootprint:model];
-            [models addObject:frame];
-        }
-        self.footprintFrames = [models copy];
-        
+//        [self.footprintTableView.mj_footer beginRefreshing];
     }
+    self.footprintFrames = [self setFrameByData:self.footprints];
+
     return _footprintFrames;
+}
+
+-(NSMutableArray *)setFrameByData:(NSMutableArray*)footprints
+{
+    NSMutableArray *models = [NSMutableArray arrayWithCapacity:footprints.count];
+    for (OTWFootprintListModel *footprintModel in footprints) {
+        // 根据模型数据创建frame模型
+        OTWFootprintListFrame *footprintFrame = [[OTWFootprintListFrame alloc] init];
+        [footprintFrame setFootprint:footprintModel];
+        [models addObject:footprintFrame];
+    }
+    return [models copy];
 }
 
 -(UITableView*)footprintTableView{
@@ -225,6 +286,126 @@
     DLog(@"我点击了pingmianClick");
     OTWPlaneMapViewController *planeMapVC = [[OTWPlaneMapViewController alloc] init];
     [self.navigationController pushViewController:planeMapVC animated:YES];
+}
+
+-(void)loadMoreFootprints
+{
+    NSDictionary *footprintSearchParamsDict = self.footprintSearchParams.mj_keyValues;
+    [self fetchFootprints:footprintSearchParamsDict completion:^(id result) {
+        if (self.footprints.count == [result[@"body"][@"totalElements"] intValue]) {
+            [self.footprintTableView.mj_footer endRefreshingWithNoMoreData];
+            [self.footprintTableView.mj_footer endRefreshing];
+            return;
+        }
+        if ([result[@"body"][@"content"] count] > 0) {
+            for (int i = 0; i < [result[@"body"][@"content"] count]; i++) {
+                OTWFootprintListModel *footprintModel = [OTWFootprintListModel mj_objectWithKeyValues:[result[@"body"][@"content"] objectAtIndex:i]];
+                [self.footprints addObject:footprintModel];
+            }
+            if (self.footprints.count != [result[@"body"][@"totalElements"] intValue]) {
+                self.footprintSearchParams.number += 1;
+            }
+        }
+        [self.footprintTableView reloadData];
+        [self.footprintTableView.mj_footer endRefreshing];
+    }];
+}
+
+-(void)pullNewFootprints
+{
+    [self.footprints removeAllObjects];
+    self.footprintSearchParams.number = 0;
+    [self fetchFootprints:self.footprintSearchParams.mj_keyValues completion:^(id result) {
+        if ([result[@"body"][@"content"] count] > 0) {
+            for (int i = 0; i < [result[@"body"][@"content"] count]; i++) {
+                OTWFootprintListModel *footprintModel = [OTWFootprintListModel mj_objectWithKeyValues:[result[@"body"][@"content"] objectAtIndex:i]];
+                [self.footprints addObject:footprintModel];
+            }
+            if (self.footprints.count != [result[@"body"][@"totalElements"] intValue]) {
+                self.footprintSearchParams.number += 1;
+            }
+        }
+        [self.footprintTableView reloadData];
+        [self.footprintTableView.mj_header endRefreshing];
+    }];
+}
+
+-(void)pullNotice
+{
+    [self.footprintTableView.mj_header beginRefreshing];
+}
+
+-(void)fetchFootprints:(NSDictionary *)params completion:(requestBackBlock)block
+{
+    DLog(@"当前查询参数：%@",params);
+    [OTWFootprintService getFootprintList:params completion:^(id result, NSError *error) {
+        if (result) {
+            if ([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]) {
+                if (block) {
+                    block(result);
+                }
+            }
+        }
+    }];
+}
+
+#pragma mark - BMKLocationServiceDelegate
+
+- (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation
+{
+    DLog(@"didUpdateUserLocation lat %f,long %f",userLocation.location.coordinate.latitude,userLocation.location.coordinate.longitude);
+    
+    BMKReverseGeoCodeOption *reverseGeocodeSearchOption = [[BMKReverseGeoCodeOption alloc]init];
+    reverseGeocodeSearchOption.reverseGeoPoint = userLocation.location.coordinate;
+    BOOL flag = [_geoCodeSearch reverseGeoCode:reverseGeocodeSearchOption];
+    if(flag){
+        NSLog(@"反geo检索发送成功");
+        _userLocation = userLocation;
+        [_locService stopUserLocationService];
+    }else{
+        NSLog(@"反geo检索发送失败");
+    }
+}
+
+
+- (void)didFailToLocateUserWithError:(NSError *)error
+{
+    DLog(@"error :%@",error);
+}
+
+#pragma mark - BMKGeoCodeSearchDelegate
+
+- (void)onGetReverseGeoCodeResult:(BMKGeoCodeSearch *)searcher result:(BMKReverseGeoCodeResult *)result errorCode:(BMKSearchErrorCode)error
+{
+    if (error ==BMK_SEARCH_NO_ERROR){
+        if(result.poiList.count>0){
+            OTWFootprintChangeAddressArrayModel *model = [[OTWFootprintChangeAddressArrayModel alloc] init];
+            BMKPoiInfo *poiInfo = ((BMKPoiInfo *)result.poiList[0]);
+            model.latitude = poiInfo.pt.latitude;
+            model.longitude = poiInfo.pt.longitude;
+            self.footprintSearchParams.latitude = poiInfo.pt.latitude;
+            self.footprintSearchParams.longitude = poiInfo.pt.longitude;
+            _ifFirstLocation = NO;
+            [self fetchFootprints:self.footprintSearchParams.mj_keyValues completion:^(id result) {
+                if (self.footprints.count == [result[@"body"][@"totalElements"] intValue]) {
+                    [self.footprintTableView.mj_footer endRefreshingWithNoMoreData];
+                    [self.footprintTableView.mj_footer endRefreshing];
+                    return;
+                }
+                if ([result[@"body"][@"content"] count] > 0) {
+                    for (int i = 0; i < [result[@"body"][@"content"] count]; i++) {
+                        OTWFootprintListModel *footprintModel = [OTWFootprintListModel mj_objectWithKeyValues:[result[@"body"][@"content"] objectAtIndex:i]];
+                        [self.footprints addObject:footprintModel];
+                    }
+                    if (self.footprints.count != [result[@"body"][@"totalElements"] intValue]) {
+                        self.footprintSearchParams.number += 1;
+                    }
+                }
+                [self.footprintTableView reloadData];
+                [self.footprintTableView.mj_footer endRefreshing];
+            }];
+        }
+    }
 }
 
 @end
