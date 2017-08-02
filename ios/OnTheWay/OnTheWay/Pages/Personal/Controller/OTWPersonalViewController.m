@@ -165,7 +165,7 @@
 
         cell.textLabel.text =_tableViewLabelArray[indexPath.row][0];
         cell.textLabel.textColor = [UIColor color_202020];
-        cell.textLabel.font = [UIFont systemFontOfSize:17];
+        cell.textLabel.font = [UIFont systemFontOfSize:16];
         cell.backgroundColor = [UIColor whiteColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         UIImageView *backImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0 , 8, 15)];

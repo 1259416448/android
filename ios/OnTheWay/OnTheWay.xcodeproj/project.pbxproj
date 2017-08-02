@@ -53,6 +53,7 @@
 		B1B055871F305C0C008274FE /* OTWPersonalCollectTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B1B055831F305C0C008274FE /* OTWPersonalCollectTableViewCell.m */; };
 		B1B055881F305C0C008274FE /* OTWPersonalFindTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B1B055851F305C0C008274FE /* OTWPersonalFindTableViewCell.m */; };
 		B1B0558B1F305C3D008274FE /* OTWPersonalFootprintsListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B1B0558A1F305C3D008274FE /* OTWPersonalFootprintsListTableViewCell.m */; };
+		B1B0558F1F305E00008274FE /* OTWShopActiveDetailsViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B1B0558E1F305E00008274FE /* OTWShopActiveDetailsViewCell.m */; };
 		B1FE42331F2B08FE00D7D5D9 /* OTWPersonalFindViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B1FE42321F2B08FE00D7D5D9 /* OTWPersonalFindViewController.m */; };
 		D72091971F27466500153542 /* MCYARAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D72091831F27466500153542 /* MCYARAnnotation.m */; };
 		D72091981F27466500153542 /* MCYARAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = D72091851F27466500153542 /* MCYARAnnotationView.m */; };
@@ -255,6 +256,8 @@
 		B1B055851F305C0C008274FE /* OTWPersonalFindTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPersonalFindTableViewCell.m; sourceTree = "<group>"; };
 		B1B055891F305C3D008274FE /* OTWPersonalFootprintsListTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPersonalFootprintsListTableViewCell.h; sourceTree = "<group>"; };
 		B1B0558A1F305C3D008274FE /* OTWPersonalFootprintsListTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPersonalFootprintsListTableViewCell.m; sourceTree = "<group>"; };
+		B1B0558D1F305E00008274FE /* OTWShopActiveDetailsViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWShopActiveDetailsViewCell.h; sourceTree = "<group>"; };
+		B1B0558E1F305E00008274FE /* OTWShopActiveDetailsViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWShopActiveDetailsViewCell.m; sourceTree = "<group>"; };
 		B1FE42311F2B08FE00D7D5D9 /* OTWPersonalFindViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPersonalFindViewController.h; sourceTree = "<group>"; };
 		B1FE42321F2B08FE00D7D5D9 /* OTWPersonalFindViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPersonalFindViewController.m; sourceTree = "<group>"; };
 		D72091821F27466500153542 /* MCYARAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCYARAnnotation.h; sourceTree = "<group>"; };
@@ -482,6 +485,8 @@
 				B1B055731F305B8A008274FE /* OTWShopActiveViewCell.m */,
 				B1B055741F305B8A008274FE /* OTWShopDetailsViewCell.h */,
 				B1B055751F305B8A008274FE /* OTWShopDetailsViewCell.m */,
+				B1B0558D1F305E00008274FE /* OTWShopActiveDetailsViewCell.h */,
+				B1B0558E1F305E00008274FE /* OTWShopActiveDetailsViewCell.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1438,6 +1443,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B1B0558F1F305E00008274FE /* OTWShopActiveDetailsViewCell.m in Sources */,
 				D720919A1F27466500153542 /* MCYARPresenter+Stacking.m in Sources */,
 				D7F6B0401F0D390D0013090A /* README.md in Sources */,
 				D72091971F27466500153542 /* MCYARAnnotation.m in Sources */,
