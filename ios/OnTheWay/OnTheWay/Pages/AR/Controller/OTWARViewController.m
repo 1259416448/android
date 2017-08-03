@@ -9,23 +9,36 @@
 #import "OTWARViewController.h"
 #import "MCYARConfiguration.h"
 #import "MCYARAnnotation.h"
+#import "OTWARCustomAnnotation.h"
 #import "MCYARAnnotationView.h"
 #import "MCYARViewController.h"
 
 #import "OTWCustomAnnotationView.h"
 #import "OTWFootprintSearchParams.h"
-#warning test
 #import "OTWFootprintsChangeAddressController.h"
+#import "OTWFootprintService.h"
 
-@interface OTWARViewController ()<MCYARDataSource>
+#import <BaiduMapAPI_Location/BMKLocationService.h>
+#import <BaiduMapAPI_Map/BMKMapComponent.h>
+#import <BaiduMapAPI_Search/BMKGeoCodeSearch.h>
+#import <BaiduMapAPI_Search/BMKPoiSearchType.h>
+#import <MJExtension.h>
+
+@interface OTWARViewController ()<MCYARDataSource,BMKLocationServiceDelegate>
+//查询对象
 @property (nonatomic,strong) OTWFootprintSearchParams *footprintSearchParams;
+//定位
+@property (nonatomic,strong) BMKLocationService *locService;
+@property (nonatomic,copy) BMKUserLocation *userLocation;
+
+@property (nonatomic,strong) NSDictionary *reponseCacheData;
 @end
 
 @implementation OTWARViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    [self initLocService];
     [self showARViewController];
     [self buildUI];
 }
@@ -38,25 +51,27 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+    _locService.delegate = self;
     [self.navigationController setNavigationBarHidden:YES];
     [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
-    
-    double lat = 30.540017;
-    double lon = 104.063377;
-    double deltaLat = 0.04;
-    double deltaLon = 0.07;
-    double altitudeDelta = 0;
-    NSInteger count = 20;
-    
-#warning 这是假数据，需要换为真实数据
-    NSArray *dummyAnnotations = [self getDummyAnnotation:lat centerLongitude:lon deltaLat:deltaLat deltaLon:deltaLon altitudeDelta:altitudeDelta count:count];
-    [self setAnnotations:dummyAnnotations];
+    [self getFootprints];
+//    
+//    double lat = 30.540017;
+//    double lon = 104.063377;
+//    double deltaLat = 0.04;
+//    double deltaLon = 0.07;
+//    double altitudeDelta = 0;
+//    NSInteger count = 20;
+//    
+//#warning 这是假数据，需要换为真实数据
+//    NSArray *dummyAnnotations = [self getDummyAnnotation:lat centerLongitude:lon deltaLat:deltaLat deltaLon:deltaLon altitudeDelta:altitudeDelta count:count];
+//    [self setAnnotations:dummyAnnotations];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    _locService.delegate = nil;
 }
 
 - (void)buildUI // test
@@ -124,6 +139,18 @@
     [planeMapButton addTarget:self action:@selector(searchButtonClick) forControlEvents:UIControlEventTouchUpInside];
     [self.view insertSubview:planeMapButton aboveSubview:self.presenter];
     
+    if ([ CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
+        [self initCLLocationManager];
+        if(_locService){
+            _locService.delegate = nil;
+            _locService = nil;
+        }
+        return;
+    }
+    //开始定位服务
+    [_locService startUserLocationService];
+    
+    
 //    UIButton *searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
 //    searchButton.frame = CGRectMake(SCREEN_WIDTH-80, 100, 80, 80);
 //    searchButton.backgroundColor = [UIColor whiteColor];
@@ -139,6 +166,34 @@
 //    [nextButton addTarget:self action:@selector(nextButtonClick) forControlEvents:UIControlEventTouchUpInside];
 //    [self.view insertSubview:nextButton aboveSubview:self.presenter];
     
+}
+
+- (void) initLocService{
+    _locService = [[BMKLocationService alloc] init];
+    _locService.delegate = self;
+    _locService.desiredAccuracy = kCLLocationAccuracyBest;
+}
+
+- (void)initCLLocationManager
+{
+    BOOL enable=[CLLocationManager locationServicesEnabled];
+    NSInteger status=[CLLocationManager authorizationStatus];
+    if(!enable || status<3)
+    {
+        if ([[UIDevice currentDevice].systemVersion floatValue] >= 8)
+        {
+            CLLocationManager  *locationManager = [[CLLocationManager alloc] init];
+            [locationManager requestAlwaysAuthorization];
+            [locationManager requestWhenInUseAuthorization];
+        }
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"打开定位开关"
+                                                            message:@"定位服务未开启，请进入系统［设置］> [隐私] > [定位服务]中打开开关，并允许使用定位服务"
+                                                           delegate:self
+                                                  cancelButtonTitle:nil
+                                                  otherButtonTitles:@"立即开启",@"好", nil];
+        [alertView show];
+        
+    }
 }
 
 - (void)nextButtonClick
@@ -202,6 +257,8 @@
         _footprintSearchParams = [[OTWFootprintSearchParams alloc] init];
         //列表查询
         _footprintSearchParams.type = @"ar";
+        //默认搜索半径为1.5公里
+        _footprintSearchParams.searchDistance = @"three";
         //默认当前页为 0
         _footprintSearchParams.number = 0;
         //默认每页大小为 15
@@ -213,6 +270,49 @@
     }
     
     return _footprintSearchParams;
+}
+
+-(void)fetchARFootprints:(NSDictionary *)params completion:(requestBackBlock)block
+{
+    
+    [OTWFootprintService getFootprintList:params completion:^(id result, NSError *error) {
+        if (result) {
+            if([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]){
+                if (block) {
+                    self.footprintSearchParams.currentTime = result[@"currentTime"];
+                    block(result);
+                }
+            }else{
+                if(self.reponseCacheData){
+                    if (block) {
+                        block(self.reponseCacheData);
+                    }
+                }
+            }
+        } else {
+            if(self.reponseCacheData){
+                if (block) {
+                    block(self.reponseCacheData);
+                }
+            }
+        }
+    } responseCache:^(id responseCache) {
+        self.reponseCacheData = responseCache;
+    }];
+}
+
+- (void)getFootprints
+{
+    DLog(@"搜索结果：%@",self.footprintSearchParams.mj_keyValues);
+    [self fetchARFootprints:self.footprintSearchParams.mj_keyValues completion:^(id result) {
+        NSMutableArray *footprintModels = [OTWFootprintListModel mj_objectArrayWithKeyValuesArray:result[@"body"][@"content"]];
+        if (footprintModels.count == 0) {
+            return;
+        }
+        NSArray *dummyAnnotations = [self assembleAnnotation:footprintModels];
+        DLog(@"数组长度——————%l",dummyAnnotations.count);
+        [self setAnnotations:dummyAnnotations];
+    }];
 }
 
 - (NSArray*)getDummyAnnotation:(double)centerLatitude centerLongitude:(double)centerLongitude deltaLat:(double)deltaLat deltaLon:(double)deltaLon altitudeDelta:(double)altitudeDelta count:(NSInteger)count
@@ -227,6 +327,23 @@
         [annotations addObject:annotation];
     }
     
+    return annotations;
+}
+
+- (NSArray*)assembleAnnotation:(NSMutableArray<OTWFootprintListModel*>*)footprints
+{
+    double deltaLat = 0.04;
+    double deltaLon = 0.07;
+    double altitudeDelta = 0;
+    NSMutableArray *annotations = [NSMutableArray array];
+    for (OTWFootprintListModel *footprint in footprints) {
+        CLLocation *location = [self getRandomLocation:footprint.latitude centerLongitude:footprint.longitude deltaLat:deltaLat deltaLon:deltaLon altitudeDelta:altitudeDelta];
+        //MCYARAnnotation *annotation = [[MCYARAnnotation alloc] init];
+        OTWARCustomAnnotation *annotation = [[OTWARCustomAnnotation alloc] init];
+        annotation.footprint = footprint;
+        annotation.location = location;
+        [annotations addObject:annotation];
+    }
     return annotations;
 }
 
@@ -286,6 +403,25 @@
     annotationView.frame = CGRectMake(0, 0, 164, 42);
     
     return annotationView;
+}
+
+#pragma mark - BMKLocationServiceDelegate
+- (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation
+{
+    DLog(@"didUpdateUserLocation lat %f,long %f",userLocation.location.coordinate.latitude,userLocation.location.coordinate.longitude);
+    _userLocation = userLocation;
+    //定位信息加载成功，一般刷新时会调用
+    self.footprintSearchParams.latitude = userLocation.location.coordinate.latitude;
+    self.footprintSearchParams.longitude = userLocation.location.coordinate.longitude;
+    self.footprintSearchParams.number = 0;
+    self.footprintSearchParams.currentTime = nil;
+    [self getFootprints];
+    [_locService stopUserLocationService];
+}
+
+- (void)didFailToLocateUserWithError:(NSError *)error
+{
+    [_locService stopUserLocationService];
 }
 
 @end

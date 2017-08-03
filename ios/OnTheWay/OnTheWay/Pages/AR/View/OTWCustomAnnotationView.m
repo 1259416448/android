@@ -7,6 +7,7 @@
 //
 
 #import "OTWCustomAnnotationView.h"
+#import "OTWARCustomAnnotation.h"
 #import <AFNetworking/UIImageView+AFNetworking.h>
 
 #define OTWPrintArSpacing_15 15
@@ -46,14 +47,21 @@
 
 - (void)bindUi
 {
-    if (self.annotaion && self.annotaion.title) {
-        MCYARAnnotation *annotation = self.annotaion;
-        NSString *title = self.annotaion.title;
-        DLog(@"annotaion.title__%@",title);
-        NSString *distance = annotation.distanceFromUser > 1000 ? [NSString stringWithFormat:@"%.1fkm", annotation.distanceFromUser / 1000] : [NSString stringWithFormat:@"%.0fm", annotation.distanceFromUser];
-        NSString *text = [NSString stringWithFormat:@"%@\nAZ: %.0f°\nDST: %@", title, annotation.azimuth, distance];
+    if (self.annotaion) {
+        //MCYARAnnotation *annotation = self.annotaion;
+        OTWARCustomAnnotation *annotation = (OTWARCustomAnnotation*)self.annotaion;
+//        NSString *title = self.annotaion.title;
+//        DLog(@"annotaion.title__%@",title);
+//        NSString *distance = annotation.distanceFromUser > 1000 ? [NSString stringWithFormat:@"%.1fkm", annotation.distanceFromUser / 1000] : [NSString stringWithFormat:@"%.0fm", annotation.distanceFromUser];
+//        NSString *text = [NSString stringWithFormat:@"%@\nAZ: %.0f°\nDST: %@", title, annotation.azimuth, distance];
         
-        self.titleLabel.text = text;
+//        self.titleLabel.text = text;
+        DLog(@"图片url地址-----%@",annotation.footprint.userHeadImg);
+        [self.printImageV setImageWithURL:[NSURL URLWithString:annotation.footprint.footprintPhoto]];
+        [self.printUserImageV setImageWithURL:[NSURL URLWithString:annotation.footprint.userHeadImg]];
+        self.printTitleV.text = annotation.footprint.footprintContent;
+        self.printLocationNameV.text = annotation.footprint.footprintAddress;
+        self.printDateContentV.text = annotation.footprint.dateCreatedStr;
     }
 }
 
