@@ -12,6 +12,7 @@
 		1822EE681F20903100E07665 /* OTWFindprintChangeAddress.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1822EE671F20903100E07665 /* OTWFindprintChangeAddress.plist */; };
 		1822EE6B1F209E4900E07665 /* OTWFootprintChangeAddressArrayModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1822EE6A1F209E4900E07665 /* OTWFootprintChangeAddressArrayModel.m */; };
 		1822EE6E1F20E11C00E07665 /* CHCustomSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 1822EE6D1F20E11C00E07665 /* CHCustomSearchBar.m */; };
+		182FDFD11F332274003AF0F4 /* OTWARCustomAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 182FDFD01F332274003AF0F4 /* OTWARCustomAnnotation.m */; };
 		1843A7D31F26E5FD00A285A3 /* OTWNewFootprintsControllerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1843A7D21F26E5FD00A285A3 /* OTWNewFootprintsControllerViewController.m */; };
 		1843A7D61F26E67800A285A3 /* OTWNewFootprintsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1843A7D51F26E67800A285A3 /* OTWNewFootprintsTableViewCell.m */; };
 		1843A7D91F2737D600A285A3 /* OTWPersonalClaimViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1843A7D81F2737D600A285A3 /* OTWPersonalClaimViewController.m */; };
@@ -177,6 +178,8 @@
 		1822EE6A1F209E4900E07665 /* OTWFootprintChangeAddressArrayModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWFootprintChangeAddressArrayModel.m; sourceTree = "<group>"; };
 		1822EE6C1F20E11C00E07665 /* CHCustomSearchBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHCustomSearchBar.h; sourceTree = "<group>"; };
 		1822EE6D1F20E11C00E07665 /* CHCustomSearchBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHCustomSearchBar.m; sourceTree = "<group>"; };
+		182FDFCF1F332274003AF0F4 /* OTWARCustomAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTWARCustomAnnotation.h; path = OnTheWay/Pages/Footprints/Model/OTWARCustomAnnotation.h; sourceTree = SOURCE_ROOT; };
+		182FDFD01F332274003AF0F4 /* OTWARCustomAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTWARCustomAnnotation.m; path = OnTheWay/Pages/Footprints/Model/OTWARCustomAnnotation.m; sourceTree = SOURCE_ROOT; };
 		1843A7D11F26E5FD00A285A3 /* OTWNewFootprintsControllerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWNewFootprintsControllerViewController.h; sourceTree = "<group>"; };
 		1843A7D21F26E5FD00A285A3 /* OTWNewFootprintsControllerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWNewFootprintsControllerViewController.m; sourceTree = "<group>"; };
 		1843A7D41F26E67800A285A3 /* OTWNewFootprintsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWNewFootprintsTableViewCell.h; sourceTree = "<group>"; };
@@ -532,6 +535,8 @@
 		B1B0558C1F305C7D008274FE /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				182FDFCF1F332274003AF0F4 /* OTWARCustomAnnotation.h */,
+				182FDFD01F332274003AF0F4 /* OTWARCustomAnnotation.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1479,6 +1484,7 @@
 				D7F6B0401F0D390D0013090A /* README.md in Sources */,
 				D72091971F27466500153542 /* MCYARAnnotation.m in Sources */,
 				D720919B1F27466500153542 /* MCYARPresenter.m in Sources */,
+				182FDFD11F332274003AF0F4 /* OTWARCustomAnnotation.m in Sources */,
 				DD14F2451F11CB5F004DFE4A /* GCTokenManager.m in Sources */,
 				D72091991F27466500153542 /* MCYARConfiguration.m in Sources */,
 				DDEA15DF1F25CCA500056166 /* PYPhotosPreviewController.m in Sources */,
