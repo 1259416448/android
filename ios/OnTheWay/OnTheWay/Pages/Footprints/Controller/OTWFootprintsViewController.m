@@ -29,7 +29,7 @@
 #import <BaiduMapAPI_Search/BMKPoiSearchType.h>
 #import <MJExtension.h>
 
-@interface OTWFootprintsViewController () <UITableViewDataSource,UITableViewDelegate,BMKLocationServiceDelegate>
+@interface OTWFootprintsViewController () <UITableViewDataSource,UITableViewDelegate,BMKLocationServiceDelegate,UIAlertViewDelegate>
 
 @property (nonatomic,strong) UITableView *footprintTableView;
 @property (nonatomic,strong) UIView * ARdituImageView;
@@ -39,10 +39,12 @@
 @property (nonatomic,strong) BMKLocationService *locService;  //定位
 @property (nonatomic,copy) BMKUserLocation *userLocation;
 @property (nonatomic,assign) BOOL ifFirstLocation;
-
 @property (nonatomic,strong) NSMutableArray<OTWFootprintListFrame *> *footprintTableData;
-
 @property (nonatomic,strong) NSDictionary *reponseCacheData;
+
+//第一次进入页面时，加载提示View
+@property (nonatomic,strong) UIView *firstLoadingView;
+
 
 @end
 
@@ -53,9 +55,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addReleasedFootprint:) name:@"releasedFoorprint" object:nil];
     
-    _locService = [[BMKLocationService alloc] init];
-    _locService.delegate = self;
-    _locService.desiredAccuracy = kCLLocationAccuracyBest;
+    [self initLocService];
     _ifFirstLocation = YES;
     // Do any additional setup after loading the view.
     self.customNavigationBar.leftButtonClicked = ^(){
@@ -94,6 +94,7 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    _locService.delegate = self;
     [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
 }
 
@@ -112,7 +113,6 @@
     //大背景
     self.view.backgroundColor=[UIColor color_f4f4f4];
     
-    
     //默认【下拉刷新】
     self.footprintTableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(pullNewFootprints)];
     //默认【上拉加载】
@@ -125,11 +125,30 @@
     
     [self.view addSubview:self.pingmianImageView];
     
+    [self.view addSubview:self.firstLoadingView];
+    
     [self.view bringSubviewToFront:self.customNavigationBar];
     
-    //[self.footprintTableView.mj_footer beginRefreshing];
+    
+    self.footprintTableView.mj_footer.hidden = YES;
+    
+    if ([ CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
+        [self initCLLocationManager];
+        if(_locService){
+            _locService.delegate = nil;
+            _locService = nil;
+        }
+        self.firstLoadingView.hidden = YES;
+        return;
+    }
+    
     [_locService startUserLocationService];
-    DLog(@"%d",_ifFirstLocation);
+}
+
+- (void) initLocService{
+    _locService = [[BMKLocationService alloc] init];
+    _locService.delegate = self;
+    _locService.desiredAccuracy = kCLLocationAccuracyBest;
 }
 
 
@@ -273,9 +292,6 @@
 
 -(void)loadMoreFootprints:(BOOL)reflesh
 {
-    //定位没有执行完成
-    if(_ifFirstLocation) return;
-    
     NSDictionary *footprintSearchParamsDict = self.footprintSearchParams.mj_keyValues;
     [self fetchFootprints:footprintSearchParamsDict completion:^(id result) {
         NSDictionary *body = result[@"body"];
@@ -301,18 +317,33 @@
             [self.footprintTableView.mj_footer endRefreshing];
         }
         [self.footprintTableView.mj_header endRefreshing];
+        self.firstLoadingView.hidden = YES;
     }];
 }
 
 -(void)pullNewFootprints
 {
-    if(_ifFirstLocation) return;
+    self.firstLoadingView.hidden = YES;
+    if ([ CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
+        [self initCLLocationManager];
+        [self.footprintTableView.mj_header endRefreshing];
+        if(_locService){
+            _locService.delegate = nil;
+            _locService = nil;
+        }
+        return;
+    }
+    
     //没有定位信息
-    //_ifFirstLocation = YES;
-    //[_locService startUserLocationService];
-    self.footprintSearchParams.number = 0;
-    self.footprintSearchParams.currentTime = nil;
-    [self loadMoreFootprints:YES];
+    if(!_locService){
+        [self initLocService];
+    }
+    
+    _ifFirstLocation = YES;
+    [_locService startUserLocationService];
+//    self.footprintSearchParams.number = 0;
+//    self.footprintSearchParams.currentTime = nil;
+//    [self loadMoreFootprints:YES];
     [self.footprintTableView.mj_footer endRefreshing];
     self.footprintTableView.mj_footer.hidden = YES;
 }
@@ -335,8 +366,10 @@
                         block(self.reponseCacheData);
                     }
                 }
+                self.firstLoadingView.hidden = YES;
             }
         }else{
+            self.firstLoadingView.hidden = YES;
             [self netWorkErrorTips:error];
             [self.footprintTableView.mj_footer endRefreshing];
             [self.footprintTableView.mj_header endRefreshing];
@@ -363,6 +396,8 @@
     _userLocation = userLocation;
     _ifFirstLocation = NO;
     //定位信息加载成功，一般刷新时会调用
+    self.footprintSearchParams.latitude = userLocation.location.coordinate.latitude;
+    self.footprintSearchParams.longitude = userLocation.location.coordinate.longitude;
     self.footprintSearchParams.number = 0;
     self.footprintSearchParams.currentTime = nil;
     [self loadMoreFootprints:YES];
@@ -371,10 +406,58 @@
 
 - (void)didFailToLocateUserWithError:(NSError *)error
 {
-    [self errorTips:@"定位信息获取失败,请打开定位" userInteractionEnabled:YES];
+    [self errorTips:@"定位信息获取失败" userInteractionEnabled:YES];
     [self.footprintTableView.mj_footer endRefreshingWithNoMoreData];
     [self.footprintTableView.mj_header endRefreshing];
     [_locService stopUserLocationService];
+}
+
+- (UIView *) firstLoadingView
+{
+    if(!_firstLoadingView){
+        _firstLoadingView = [[UIView alloc] initWithFrame:CGRectMake(0, self.navigationHeight, SCREEN_WIDTH, 50)];
+        _firstLoadingView.backgroundColor = [UIColor clearColor];
+        UIActivityIndicatorView *indicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH / 2 - 15, 0, 30, 30)];
+        [indicatorView setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleGray];
+        [indicatorView startAnimating];
+        [_firstLoadingView addSubview:indicatorView];
+    }
+    return _firstLoadingView;
+}
+
+- (void)initCLLocationManager
+{
+    BOOL enable=[CLLocationManager locationServicesEnabled];
+    NSInteger status=[CLLocationManager authorizationStatus];
+    if(!enable || status<3)
+    {
+        if ([[UIDevice currentDevice].systemVersion floatValue] >= 8)
+        {
+            CLLocationManager  *locationManager = [[CLLocationManager alloc] init];
+            [locationManager requestAlwaysAuthorization];
+            [locationManager requestWhenInUseAuthorization];
+        }
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"打开定位开关"
+                                                            message:@"定位服务未开启，请进入系统［设置］> [隐私] > [定位服务]中打开开关，并允许使用定位服务"
+                                                           delegate:self
+                                                  cancelButtonTitle:nil
+                                                  otherButtonTitles:@"立即开启",@"好", nil];
+        //alertView.tag = ALERTTAGNUMBER;
+        [alertView show];
+        
+    }
+}
+
+#pragma marks -- UIAlertViewDelegate --
+//根据被点击按钮的索引处理点击事件
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(buttonIndex == 0){
+        NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+        if ([[UIApplication sharedApplication] canOpenURL:url]) {
+            [[UIApplication sharedApplication] openURL:url];
+        }
+    }
 }
 
 @end
