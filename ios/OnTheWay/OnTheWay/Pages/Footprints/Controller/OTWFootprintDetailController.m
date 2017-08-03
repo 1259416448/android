@@ -8,10 +8,10 @@
 
 #import "OTWFootprintDetailController.h"
 #import "OTWFootprintDetailViewCell.h"
-#import "OTWCommentModel.h"
-#import "OTWFootprintDetailFrame.h"
-#import "OTWCommentFrame.h"
 #import "OTWFootprintsChangeAddressController.h"
+#import "OTWCustomNavigationBar.h"
+#import "OTWCommentService.h"
+#import "OTWUserModel.h"
 
 #import <SDCycleScrollView.h>
 #import <AFNetworking/UIImageView+AFNetworking.h>
@@ -26,17 +26,7 @@
 
 @interface OTWFootprintDetailController () <UITableViewDataSource,UITableViewDelegate,SDCycleScrollViewDelegate,UITextViewDelegate>
 
-@property (nonatomic,strong) OTWFootprintDetailModel *model;
-
-@property (nonatomic,strong) UITableView *tableView;
-//详情
-@property (nonatomic,strong) OTWFootprintDetailFrame *detailFrame;
-
-//评论数据
-@property (nonatomic,strong) NSMutableArray<OTWCommentFrame *> *commentFrameArray;
-
 //评论填写区域 start
-@property (nonatomic,strong) UIView *commentBGView;
 @property (nonatomic,strong) UILabel *commentSunLabel;
 @property (nonatomic,strong) UIView *likeView;
 @property (nonatomic,strong) UIImageView *likeImageView;
@@ -49,12 +39,9 @@
 @property (nonatomic,assign) CGFloat lastTextViewTextHeight;
 @property (nonatomic,assign) CGFloat lastTextViewDifHeight;
 
-
-
 //评论填写区域 end
 
 //足迹详情 start
-
 @property (nonatomic,strong) UIView *tableHeaderView;
 @property (nonatomic,strong) UIView *footprintDetailBGView;
 @property (nonatomic,strong) UIImageView *userHeadImgImageView;
@@ -77,6 +64,12 @@
 @property (nonatomic, strong) IQKeyboardReturnKeyHandler  *returnKeyHandler;
 
 @property (nonatomic, strong) NSMutableArray *footprintImageUrls;
+
+@property (nonatomic,strong) OTWCommentService *commentService;
+
+@property (nonatomic,strong) UIAlertController *alertController;
+
+@property (nonatomic,strong) NSString *deleteCommentId;
 
 @end
 
@@ -122,16 +115,12 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     [[IQKeyboardManager sharedManager] setEnable:_wasKeyboardManagerEnabled];
     
 }
+
 -(void)dealloc
 {
     NSLog(@"%@ dealloc",NSStringFromClass([self class]));
 }
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
-    DLog(@">>>>>>>>>:%@", textField.text);
-    return YES;
-}
 /**
  *  当键盘改变了frame(位置和尺寸)的时候调用
  */
@@ -211,10 +200,15 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     //大背景
     self.view.backgroundColor=[UIColor color_f4f4f4];
     //先通过上一界面传递的id数据   获取足迹详情和加载最近评论信息,在构建页面
-    [self model];
-    //表格的初始化需要等数据请求完毕
+    [self.view addSubview:self.firstLoadingView];
+}
+
+- (void) buildTableView
+{
+    self.firstLoadingView.hidden = YES;
     [self.view addSubview:self.tableView];
-    //self.tableView.tableHeaderView = [self buildTableHeaderView];
+    self.tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreComment)];
+    self.tableView.tableHeaderView = [self buildTableHeaderView];
     //增加底部评论信息
     [self.view addSubview:self.commentBGView];
     [self.commentBGView addSubview:self.writeCommentView];
@@ -225,6 +219,19 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     [self.writeCommentView addSubview:self.writeCommentImageView];
     [self.writeCommentView addSubview:self.commentLabel];
     self.commentSunLabel.text = [[NSString stringWithFormat:@"%ld",(long)self.detailFrame.footprintDetailModel.footprintCommentNum] stringByAppendingString:@"条评论"];
+    [self.view bringSubviewToFront:self.customNavigationBar];
+    //设置一下下拉刷新初始化状态
+    if(self.commentFrameArray.count==0){
+        self.tableView.mj_footer.hidden = YES;
+    }else if(self.commentFrameArray.count<10){
+        [self.tableView.mj_footer endRefreshingWithNoMoreData];
+    }
+}
+
+#pragma mark - 加载更多评论
+- (void) loadMoreComment
+{
+    [self.commentService commentList:nil footprintId:_fid viewController:self completion:nil];
 }
 
 - (UIView *) buildTableHeaderView
@@ -252,16 +259,6 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     return self.tableHeaderView;
 }
 
-- (OTWFootprintDetailModel *) model
-{
-    if (!_model) {
-        _model = [[OTWFootprintDetailModel alloc] init];
-    }
-    
-    //[self resetFootprintData];
-    return _model;
-}
-
 #pragma mark - Setter
 
 - (NSMutableArray<OTWCommentFrame*>*)commentFrameArray
@@ -282,37 +279,6 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     return _detailFrame;
 }
 
--(void)resetFootprintData
-{
-    [self.detailFrame setFootprintDetailModel: self.model.footprintDetail];
-    DLog(@"当前评论——————%@",self.model.footprintDetail);
-    if(self.model.comments){
-        for (OTWCommentModel *commentModel in self.model.comments) {
-            OTWCommentFrame *commentFrame = [[OTWCommentFrame alloc] init];
-            [commentFrame setCommentModel:commentModel];
-            [self.commentFrameArray addObject:commentFrame];
-        }
-    }
-}
-
-
-#pragma mark 获取足迹详情
--(void)fetchFootprintDetailById:(id)footprintId
-{
-    [OTWFootprintService getFootprintDetailById:footprintId completion:^(id result, NSError *error) {
-        if (result) {
-            if ([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]) {
-                self.model.footprintDetail = [OTWFootprintListModel mj_objectWithKeyValues:result[@"body"]];
-                self.model.comments = [OTWCommentModel mj_objectArrayWithKeyValuesArray:result[@"body"][@"comments"]];
-                [self resetFootprintData];
-                self.tableView.tableHeaderView = [self buildTableHeaderView];
-                self.commentSunLabel.text = [[NSString stringWithFormat:@"%ld",(long)self.commentFrameArray.count] stringByAppendingString:@"条评论"];
-                [self.tableView reloadData];
-            }
-        }
-    }];
-}
-
 #pragma mark 点赞
 -(void)likeFootprint:(id)footprintId
 {
@@ -320,7 +286,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
         if (result) {
             if ([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]) {
                 
-//                [self.tableView reloadData];
+                //                [self.tableView reloadData];
             }
         }
     }];
@@ -341,10 +307,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 
 #pragma mark 这一组里面有多少行
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    if(self.commentFrameArray){
-        return self.commentFrameArray.count;
-    }
-    return 0;
+    return self.commentFrameArray.count;
 }
 
 #pragma mark - 代理方法
@@ -355,34 +318,63 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 
 #pragma mark 设置每行高度（每行高度可以不一样）
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if(self.commentFrameArray){
-        return [self.commentFrameArray objectAtIndex:indexPath.row].cellHeight;
-    }
-    return 0;
+    return [self.commentFrameArray objectAtIndex:indexPath.row].cellHeight;
 }
 #pragma mark 点击行
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     DLog(@"我点击了：%ld",indexPath.row);
-    OTWFootprintsChangeAddressController *changeAddressVC =
-    [[OTWFootprintsChangeAddressController alloc] init];
-    [self.navigationController pushViewController:changeAddressVC animated:YES];
 }
 
 #pragma mark - 返回第indexPath这行对应的内容
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *identifier = @"OTWFootprintDetail";
+    static NSString *identifier = @"OTWFootprintComment";
     OTWFootprintDetailViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
         cell = [OTWFootprintDetailViewCell cellWithTableView:tableView reuseIdentifier:identifier];
     }
-    
     // 设置数据
-    [cell buildComment:[self.commentFrameArray objectAtIndex:indexPath.row]];
-    
+    [cell setData:self.commentFrameArray[indexPath.row]];
+    //添加长按手势
+    UILongPressGestureRecognizer *longPressed = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPressedAct:)];
+    [cell.contentView addGestureRecognizer:longPressed];
     return cell;
 }
 
+- (void) longPressedAct:(UILongPressGestureRecognizer *)gesture
+{
+    if(gesture.state == UIGestureRecognizerStateBegan){
+        CGPoint point = [gesture locationInView:self.tableView];
+        NSIndexPath * indexPath = [self.tableView indexPathForRowAtPoint:point];
+        if(indexPath == nil) return;
+        //判断评论用户是否是自己
+        if([[OTWUserModel shared].userId.description isEqualToString:self.commentFrameArray[indexPath.row].commentModel.userId.description]){
+            _deleteCommentId = self.commentFrameArray[indexPath.row].commentModel.commentId.description;
+            [self presentViewController:self.alertController animated:YES completion:nil];
+        }
+    }
+}
+
+-(UIAlertController*)alertController
+{
+    if(!_alertController){
+        _alertController = [UIAlertController alertControllerWithTitle:@"" message:@"删除当前评论后数据不可恢复，确定请点击删除。" preferredStyle:UIAlertControllerStyleActionSheet];
+        WeakSelf(self);
+        [_alertController addAction:[UIAlertAction actionWithTitle:@"删除" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            //执行删除方法
+            [weakself deleteCommentById];
+        }]];
+        [_alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    }
+    return _alertController;
+}
+
+- (void) deleteCommentById
+{
+    if(_deleteCommentId){
+        [self.commentService deleteCommentById:_deleteCommentId viewController:self completion:nil];
+    }
+}
 
 #pragma mark - 底部评论布局
 - (UIView *) commentBGView
@@ -721,28 +713,87 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
+    if ([text isEqualToString:@"\n"]){ //判断输入的字是否是回车，即按下return
+        [self sentComment];
+        [self.writeCommentTextView resignFirstResponder];
+        return NO;
+    }
     return YES;
 }
 
-- (void)textViewDidEndEditing:(UITextView *)textView
+#pragma mark - 发送评论
+- (void) sentComment
 {
-    NSDictionary *commentDict = [NSDictionary dictionaryWithObjectsAndKeys:textView.text,@"content",_fid,@"footprintId",nil];
+    //判断一下  comment内容不能为空
+    NSString *content = self.writeCommentTextView.text;
+    content = [content stringByReplacingOccurrencesOfString:@" " withString:@""];
+    if(content.length == 0){
+        return ;
+    }
+    NSDictionary *commentDict = [NSDictionary dictionaryWithObjectsAndKeys:[self.writeCommentTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]],@"content",_fid,@"footprintId",nil];
     [OTWFootprintService releaseComment:commentDict completion:^(id result, NSError *error) {
         if (result) {
             if ([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]) {
-                textView.text = @"";
-                DLog(@"%@",result[@"body"]);
+                self.writeCommentTextView.text = @"";
+                [self textViewDidChange:self.writeCommentTextView];
+                self.commentLabel.hidden = NO;
                 OTWCommentModel *newCommentModel = [OTWCommentModel mj_objectWithKeyValues:result[@"body"]];
                 OTWCommentFrame *newCommentFrame = [[OTWCommentFrame alloc] init];
                 [newCommentFrame setCommentModel:newCommentModel];
-                
                 [self.commentFrameArray insertObject:newCommentFrame atIndex:0];
-                self.commentSunLabel.text = [[NSString stringWithFormat:@"%ld",(long)self.commentFrameArray.count] stringByAppendingString:@"条评论"];
-            
+                self.detailFrame.footprintDetailModel.footprintCommentNum++;
+                self.commentSunLabel.text = [[NSString stringWithFormat:@"%ld",(long)self.detailFrame.footprintDetailModel.footprintCommentNum] stringByAppendingString:@"条评论"];
                 [self.tableView reloadData];
             }else{
-                
+                if([result[@"messageCode"] isEqualToString:@"000202"]){
+                    [self.indicatorView stopAnimating];
+                    self.errorTipsLabel.text = @"足迹已被删除";
+                    self.firstLoadingView.hidden = NO;
+                    self.tableView.hidden = YES;
+                    self.commentBGView.hidden = YES;
+                    //发出足迹删除通知
+                    NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:_fid,@"footprintId", nil];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"foorprintAlreadyDeleted" object:nil userInfo:dict];
+                }else{
+                    [self errorTips:@"服务端繁忙，请稍后再试" userInteractionEnabled:NO];
+                }
             }
+        }else{
+            [self netWorkErrorTips:error];
+        }
+    }];
+}
+
+#pragma mark 获取足迹详情
+-(void)fetchFootprintDetailById:(id)footprintId
+{
+    [OTWFootprintService getFootprintDetailById:footprintId completion:^(id result, NSError *error) {
+        if (result) {
+            if ([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]) {
+                OTWFootprintListModel *footprintDetail = [OTWFootprintListModel mj_objectWithKeyValues:result[@"body"]];
+                NSArray<OTWCommentModel *> *commentArray = [OTWCommentModel mj_objectArrayWithKeyValuesArray:result[@"body"][@"comments"]];
+                if(commentArray && commentArray.count>0){
+                    for (OTWCommentModel *commentModel in commentArray) {
+                        OTWCommentFrame *commentFrame = [[OTWCommentFrame alloc] init];
+                        [commentFrame setCommentModel:commentModel];
+                        [self.commentFrameArray addObject:commentFrame];
+                    }
+                }
+                [self.detailFrame setFootprintDetailModel:footprintDetail];
+                [self buildTableView];
+            }else{
+                if([result[@"messageCode"] isEqualToString:@"000202"]){
+                    [self.indicatorView stopAnimating];
+                    self.errorTipsLabel.text = @"足迹已被删除";
+                    //发出足迹删除通知
+                    NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:_fid,@"footprintId", nil];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"foorprintAlreadyDeleted" object:nil userInfo:dict];
+                }else{
+                    [self errorTips:@"服务端繁忙，请稍后再试" userInteractionEnabled:NO];
+                }
+            }
+        }else{
+            [self netWorkErrorTips:error];
         }
     }];
 }
@@ -787,10 +838,50 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     return _lastTextViewTextHeight;
 }
 
+- (UIView *) firstLoadingView
+{
+    if(!_firstLoadingView){
+        _firstLoadingView = [[UIView alloc] initWithFrame:CGRectMake(0, self.navigationHeight, SCREEN_WIDTH, 50)];
+        _firstLoadingView.backgroundColor = [UIColor clearColor];
+        [_firstLoadingView addSubview:self.indicatorView];
+        [_firstLoadingView addSubview:self.errorTipsLabel];
+    }
+    return _firstLoadingView;
+}
+
+- (UIActivityIndicatorView *) indicatorView
+{
+    if(!_indicatorView){
+        _indicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH / 2 - 15, 0, 30, 30)];
+        [_indicatorView setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleGray];
+        [_indicatorView startAnimating];
+    }
+    return _indicatorView;
+}
+
+- (UILabel *) errorTipsLabel
+{
+    if(!_errorTipsLabel){
+        _errorTipsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 50)];
+        _errorTipsLabel.textColor = [UIColor color_757575];
+        _errorTipsLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:15];
+        _errorTipsLabel.textAlignment = NSTextAlignmentCenter;
+    }
+    return _errorTipsLabel;
+}
+
 - (void) setFid:(NSString *)fid
 {
     _fid = fid;
     [self fetchFootprintDetailById:fid];
+}
+
+- (OTWCommentService *) commentService
+{
+    if(!_commentService){
+        _commentService = [[OTWCommentService alloc] init];
+    }
+    return _commentService;
 }
 
 @end

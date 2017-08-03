@@ -54,7 +54,7 @@
     [super viewDidLoad];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addReleasedFootprint:) name:@"releasedFoorprint" object:nil];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deletedFootprint:) name:@"foorprintAlreadyDeleted" object:nil];
     [self initLocService];
     _ifFirstLocation = YES;
     // Do any additional setup after loading the view.
@@ -81,6 +81,19 @@
     [self.footprintTableView reloadData];
 }
 
+#pragma mark - 详情页面中发现有被删除的足迹
+- (void) deletedFootprint:(NSNotification*)sender
+{
+    NSDictionary *dict = sender.userInfo;
+    for (int i = 0; _footprintTableData.count; i++) {
+        if([_footprintTableData[i].footprint.footprintId.description isEqualToString:dict[@"footprintId"]]){
+            [_footprintTableData removeObjectAtIndex:i];
+            break;
+        }
+    }
+    [self.footprintTableView reloadData];
+}
+
 -(void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -103,6 +116,14 @@
     [super viewWillDisappear:YES];
     _locService.delegate = nil;
 }
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
+        self.navigationController.interactivePopGestureRecognizer.enabled = NO;    //让rootView禁止滑动
+    }
+}
+
 -(void)buildUI
 {
     _footprintTableData = [[NSMutableArray alloc] init];

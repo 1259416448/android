@@ -121,6 +121,7 @@
 		DDD4AB4E1F1B020400D42CF3 /* OTWCommentFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = DDD4AB4D1F1B020400D42CF3 /* OTWCommentFrame.m */; };
 		DDDAE08F1F1CFA5B00981E60 /* OTWFootprintDetail.plist in Resources */ = {isa = PBXBuildFile; fileRef = DDDAE08E1F1CFA5B00981E60 /* OTWFootprintDetail.plist */; };
 		DDDAE0931F1F0D4C00981E60 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DDDAE0921F1F0D4C00981E60 /* Assets.xcassets */; };
+		DDE0B7421F3323490016E59C /* OTWCommentService.m in Sources */ = {isa = PBXBuildFile; fileRef = DDE0B7411F3323490016E59C /* OTWCommentService.m */; };
 		DDEA15B61F21A91200056166 /* OTWNewsCommentList.plist in Resources */ = {isa = PBXBuildFile; fileRef = DDEA15B51F21A91200056166 /* OTWNewsCommentList.plist */; };
 		DDEA15B91F22177900056166 /* OTWUITapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = DDEA15B81F22177900056166 /* OTWUITapGestureRecognizer.m */; };
 		DDEA15DC1F25CCA500056166 /* MBProgressHUD+PYExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = DDEA15BD1F25CCA500056166 /* MBProgressHUD+PYExtension.m */; };
@@ -384,6 +385,8 @@
 		DDD4AB4D1F1B020400D42CF3 /* OTWCommentFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWCommentFrame.m; sourceTree = "<group>"; };
 		DDDAE08E1F1CFA5B00981E60 /* OTWFootprintDetail.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = OTWFootprintDetail.plist; sourceTree = "<group>"; };
 		DDDAE0921F1F0D4C00981E60 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DDE0B7401F3323490016E59C /* OTWCommentService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWCommentService.h; sourceTree = "<group>"; };
+		DDE0B7411F3323490016E59C /* OTWCommentService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWCommentService.m; sourceTree = "<group>"; };
 		DDEA15B51F21A91200056166 /* OTWNewsCommentList.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = OTWNewsCommentList.plist; sourceTree = "<group>"; };
 		DDEA15B71F22177900056166 /* OTWUITapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWUITapGestureRecognizer.h; sourceTree = "<group>"; };
 		DDEA15B81F22177900056166 /* OTWUITapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWUITapGestureRecognizer.m; sourceTree = "<group>"; };
@@ -1252,6 +1255,8 @@
 			children = (
 				DDEA160A1F29DED300056166 /* OTWFootprintService.h */,
 				DDEA160B1F29DED300056166 /* OTWFootprintService.m */,
+				DDE0B7401F3323490016E59C /* OTWCommentService.h */,
+				DDE0B7411F3323490016E59C /* OTWCommentService.m */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -1542,6 +1547,7 @@
 				DDEA15B91F22177900056166 /* OTWUITapGestureRecognizer.m in Sources */,
 				D7F6B05E1F0DD1D80013090A /* OTWRootViewController.m in Sources */,
 				DD35209A1F18715400E8D725 /* OTWCommentModel.m in Sources */,
+				DDE0B7421F3323490016E59C /* OTWCommentService.m in Sources */,
 				D7F6B0CB1F1627000013090A /* OTWNewsCell.m in Sources */,
 				B183D9981F221D9900CF3E1F /* OTWPrintARViewController.m in Sources */,
 				DD3520941F18670800E8D725 /* OTWFootprintDetailController.m in Sources */,

@@ -15,6 +15,6 @@
  */
 + (instancetype)cellWithTableView:(UITableView *)tableView reuseIdentifier:(NSString*)identifier;
 
-- (void)buildComment:(OTWCommentFrame *)data;
+- (void)setData:(OTWCommentFrame *)data;
 
 @end
