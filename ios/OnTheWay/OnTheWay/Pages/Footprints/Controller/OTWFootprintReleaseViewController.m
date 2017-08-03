@@ -25,7 +25,7 @@
 #import <MJExtension.h>
 
 
-@interface OTWFootprintReleaseViewController () <UITextViewDelegate,PYPhotosViewDelegate,TZImagePickerControllerDelegate,BMKLocationServiceDelegate,BMKGeoCodeSearchDelegate>
+@interface OTWFootprintReleaseViewController () <UITextViewDelegate,PYPhotosViewDelegate,TZImagePickerControllerDelegate,BMKLocationServiceDelegate,BMKGeoCodeSearchDelegate,UIAlertViewDelegate>
 
 @property (nonatomic,strong) UIView *customRightNavigationBarView;
 
@@ -49,6 +49,8 @@
 
 @property (nonatomic,strong) UILabel *addressLabel;
 
+@property (nonatomic,assign) BOOL refleshLocation;
+
 //定位信息相关
 @property (nonatomic,strong) BMKLocationService *locService;  //定位
 @property (nonatomic,strong) BMKGeoCodeSearch *geoCodeSearch;
@@ -69,19 +71,37 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    _locService = [[BMKLocationService alloc] init];
-    _locService.delegate = self;
-    
-    _geoCodeSearch = [[BMKGeoCodeSearch alloc] init];
-    _geoCodeSearch.delegate = self;
-    _locService.desiredAccuracy = kCLLocationAccuracyBest;
-    [_locService startUserLocationService];
-    
     _ifFirstLocation = YES;
+    _refleshLocation = NO;
     
     [self bulidUI];
+    
+    //检查定位服务
+    
     [IQKeyboardManager sharedManager].enableAutoToolbar = NO;
     [IQKeyboardManager sharedManager].shouldResignOnTouchOutside = YES;
+    
+    if ([ CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
+        [self initCLLocationManager];
+        //显示请打开定位服务
+        self.addressLabel.text = @"点击打开定位服务";
+        return;
+    }
+    
+    [self initLocService];
+    [self initGeoCodeSearch];
+    [_locService startUserLocationService];
+}
+
+- (void) initLocService{
+    _locService = [[BMKLocationService alloc] init];
+    _locService.delegate = self;
+    _locService.desiredAccuracy = kCLLocationAccuracyBest;
+}
+
+- (void) initGeoCodeSearch{
+    _geoCodeSearch = [[BMKGeoCodeSearch alloc] init];
+    _geoCodeSearch.delegate = self;
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -265,6 +285,27 @@
         };
         [self presentViewController:changeAdAC animated:YES completion:nil];
     }else{
+        //判断是否开启定位服务
+        if ([ CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
+            [self initCLLocationManager];
+            //显示请打开定位服务
+            self.addressLabel.text = @"点击打开定位服务";
+            return;
+        }else{
+           //判断是否加载了locService
+            if(!_locService){
+                [self initLocService];
+                [self initGeoCodeSearch];
+                self.addressLabel.text = @"定位信息加载中~";
+                [_locService startUserLocationService];
+            }else if(_refleshLocation){ //重新执行定位，加载定位信息
+                [_locService startUserLocationService];
+                self.addressLabel.text = @"定位信息加载中~";
+                _refleshLocation = NO;
+            }else{
+                [self errorTips:@"定位信息加载中，请稍后" userInteractionEnabled:YES];
+            }
+        }
         DLog(@"定位信息加载失败");
     }
 }
@@ -330,7 +371,7 @@
                 [self errorTips:@"发布成功" userInteractionEnabled:YES];
                 NSDictionary *dict = result[@"body"];
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"releasedFoorprint" object:nil userInfo:dict];
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"newRelease" object:self];
+                 [[NSNotificationCenter defaultCenter] postNotificationName:@"newRelease" object:self];
                 [self performSelector:@selector(cacelRelease) withObject:nil afterDelay:1.5f];
             }else{
                 DLog(@"message - %@  messageCode - %@",result[@"message"],result[@"messageCode"]);
@@ -481,16 +522,19 @@
     if(flag){
         NSLog(@"反geo检索发送成功");
         _userLocation = userLocation;
-        [_locService stopUserLocationService];
     }else{
         NSLog(@"反geo检索发送失败");
     }
+    [_locService stopUserLocationService];
 }
 
 
 - (void)didFailToLocateUserWithError:(NSError *)error
 {
-    DLog(@"error :%@",error);
+    //定位信息加载错误，需要点击重试
+    self.addressLabel.text = @"定位信息加载失败，点击重试";
+    _refleshLocation = YES;
+    
 }
 
 #pragma mark - BMKGeoCodeSearchDelegate
@@ -510,6 +554,9 @@
             self.addressLabel.text = _addressModel.address;
             _ifFirstLocation = NO;
         }
+    }else{
+        self.addressLabel.text = @"定位信息加载失败，点击重试";
+        _refleshLocation = YES;
     }
 }
 
@@ -525,5 +572,41 @@
 {
     DLog(@"dealloc");
 }
+
+- (void)initCLLocationManager
+{
+    BOOL enable=[CLLocationManager locationServicesEnabled];
+    NSInteger status=[CLLocationManager authorizationStatus];
+    if(!enable || status<3)
+    {
+        if ([[UIDevice currentDevice].systemVersion floatValue] >= 8)
+        {
+            CLLocationManager  *locationManager = [[CLLocationManager alloc] init];
+            [locationManager requestAlwaysAuthorization];
+            [locationManager requestWhenInUseAuthorization];
+        }
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"打开定位开关"
+                                                            message:@"定位服务未开启，请进入系统［设置］> [隐私] > [定位服务]中打开开关，并允许使用定位服务"
+                                                           delegate:self
+                                                  cancelButtonTitle:nil
+                                                  otherButtonTitles:@"立即开启",@"好", nil];
+        //alertView.tag = ALERTTAGNUMBER;
+        [alertView show];
+        
+    }
+}
+
+#pragma marks -- UIAlertViewDelegate --
+//根据被点击按钮的索引处理点击事件
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(buttonIndex == 0){
+        NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+        if ([[UIApplication sharedApplication] canOpenURL:url]) {
+            [[UIApplication sharedApplication] openURL:url];
+        }
+    }
+}
+
 
 @end

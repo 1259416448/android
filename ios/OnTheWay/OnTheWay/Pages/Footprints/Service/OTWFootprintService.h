@@ -15,10 +15,12 @@ typedef void(^requestCompletionBlock)(id result, NSError *error);
 
 +(void) footprintRelease:(NSDictionary *) params completion:(requestCompletionBlock)block;
 
-+(void) getFootprintList:(NSDictionary *) params completion:(requestCompletionBlock)block;
++(void) getFootprintList:(NSDictionary *)params completion:(requestCompletionBlock)block responseCache:(PPHttpRequestCache) responseCache;
 
 +(void) getFootprintDetailById:(NSString *)footprintId completion:(requestCompletionBlock)block;
 
 +(void) releaseComment:(NSDictionary *) params completion:(requestCompletionBlock)block;
+
++(void) likeFootprint:(NSDictionary *) params completion:(requestCompletionBlock)block;
 
 @end
