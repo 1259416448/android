@@ -295,6 +295,8 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     }
 }
 
+
+#pragma mark 获取足迹详情
 -(void)fetchFootprintDetailById:(id)footprintId
 {
     [OTWFootprintService getFootprintDetailById:footprintId completion:^(id result, NSError *error) {
@@ -305,8 +307,20 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
                 [self resetFootprintData];
                 self.tableView.tableHeaderView = [self buildTableHeaderView];
                 self.commentSunLabel.text = [[NSString stringWithFormat:@"%ld",(long)self.commentFrameArray.count] stringByAppendingString:@"条评论"];
-//                DLog(@"当前评论——————%@",self.commentFrameArray.mj_keyValues);
                 [self.tableView reloadData];
+            }
+        }
+    }];
+}
+
+#pragma mark 点赞
+-(void)likeFootprint:(id)footprintId
+{
+    [OTWFootprintService likeFootprint:footprintId completion:^(id result, NSError *error) {
+        if (result) {
+            if ([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]) {
+                
+//                [self.tableView reloadData];
             }
         }
     }];
@@ -467,6 +481,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     if(!_likeImageView){
         _likeImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 17, 17)];
         _likeImageView.image = [UIImage imageNamed:@"zan"];
+        _likeImageView.tintColor = [UIColor redColor];
     }
     return _likeImageView;
 }
