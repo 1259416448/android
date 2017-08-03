@@ -17,8 +17,6 @@
 @property (nonatomic,assign) int number;
 //每页大小
 @property (nonatomic,assign) int size;
-//总数
-@property (nonatomic,assign) int totalElements;
 
 @end
 
@@ -43,7 +41,6 @@ static NSString *userFootprintUrl = @"/app/footprint/user/{userId}";
             //构建数据
             NSDictionary *body = responseobject[@"body"];
             _currentTime = body[@"currentTime"];
-            _totalElements = [body[@"totalElements"] intValue];
             //处理数据
             NSArray *array = body[@"content"];
             if(array && array.count >0){

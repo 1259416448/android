@@ -30,9 +30,13 @@ static NSString *likeFootprint = @"/app/footprint/like/{id}";
 }
 
 #pragma mark 获取足迹列表
-+(void) getFootprintList:(NSDictionary *)params completion:(requestCompletionBlock)block
++(void) getFootprintList:(NSDictionary *)params completion:(requestCompletionBlock)block responseCache:(PPHttpRequestCache) responseCache
 {
-    [OTWNetworkManager doGET:[footprintList stringByReplacingOccurrencesOfString:@"{type}" withString:params[@"type"]] parameters:params success:^(id responseObject) {
+    [OTWNetworkManager doGET:[footprintList stringByReplacingOccurrencesOfString:@"{type}" withString:params[@"type"]] parameters:params responseCache:^(id reponseCache){
+        if(responseCache){
+            responseCache(reponseCache);
+        }
+    } success:^(id responseObject) {
         if (block) {
             block(responseObject,nil);
         }

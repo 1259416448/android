@@ -78,23 +78,23 @@
 
 - (void)setFootprintListFrame:(OTWFootprintListFrame *) frame
 {
-    _footprintListFrame = frame;
-    [self settingData];
-    [self setttingFrame];
+    [self settingData:frame];
+    [self setttingFrame:frame];
 }
 
 /**
  * 设置数据
  */
-- (void)settingData
+- (void)settingData:(OTWFootprintListFrame *) frame
 {
-    OTWFootprintListModel *model = self.footprintListFrame.footprint;
+    OTWFootprintListModel *model = frame.footprint;
     [self.userheadImgView setImageWithURL:[NSURL URLWithString:model.userHeadImg]];
     [self.userNicknameLabel setText:model.userNickname];
     [self.footprintContentLabel setText:model.footprintContent];
     [self.footprintAddressLabel setText:model.footprintAddress];
     [self.dateCreatedLabel setText:model.dateCreatedStr];
     if(model.footprintPhoto && ![model.footprintPhoto isEqualToString:@""]){
+        self.footprintPhotoImgView.hidden = NO;
         [self.footprintPhotoImgView setImageWithURL:[NSURL URLWithString:[model.footprintPhoto stringByAppendingString:@"?imageView2/1/w/160/h/160"]]];
     }else{
         self.footprintPhotoImgView.hidden = YES;
@@ -104,23 +104,23 @@
 /**
  * 设置frame
  */
-- (void)setttingFrame
+- (void)setttingFrame:(OTWFootprintListFrame *) frame
 {
-    self.footprintBGView.frame = self.footprintListFrame.footprintBGF;
+    self.footprintBGView.frame = frame.footprintBGF;
     self.footprintBGView.layer.shadowPath = [UIBezierPath bezierPathWithRect:_footprintBGView.bounds].CGPath;
-    self.userheadImgBGView.frame = self.footprintListFrame.userHeadImgF;
+    self.userheadImgBGView.frame = frame.userHeadImgF;
     self.userheadImgBGView.layer.cornerRadius = self.userheadImgBGView.Witdh/2.0;
     struct CGPath *path = CGPathCreateMutable();
     CGPathAddArc(path, nil, 17 , 17, 17, 0, M_PI*2, true);
     self.userheadImgBGView.layer.shadowPath = path;
-    self.userNicknameView.frame = self.footprintListFrame.userNicknameF;
+    self.userNicknameView.frame = frame.userNicknameF;
     self.userNicknameLabel.frame = CGRectMake(0, 0, self.userNicknameView.Witdh, self.userNicknameView.Height);
-    self.footprintContentLabel.frame = self.footprintListFrame.footprintContentF;
-    self.footprintPhotoImgView.frame = self.footprintListFrame.footprintPhotoImgF;
-    self.footprintAddressImageView.frame = self.footprintListFrame.footprintAddressImageF;
-    self.footprintAddressLabel.frame = self.footprintListFrame.footprintAddressF;
-    self.dateCreatedImageView.frame = self.footprintListFrame.dataCreatedImageF;
-    self.dateCreatedLabel.frame = self.footprintListFrame.dataCreatedF;
+    self.footprintContentLabel.frame = frame.footprintContentF;
+    self.footprintPhotoImgView.frame = frame.footprintPhotoImgF;
+    self.footprintAddressImageView.frame = frame.footprintAddressImageF;
+    self.footprintAddressLabel.frame = frame.footprintAddressF;
+    self.dateCreatedImageView.frame = frame.dataCreatedImageF;
+    self.dateCreatedLabel.frame = frame.dataCreatedF;
 }
 
 #pragma mark - Setter Getter
@@ -149,9 +149,9 @@
     if(!_userNicknameView){
         _userNicknameView = [[UIView alloc] init];
         _userNicknameView.backgroundColor = [UIColor clearColor];
-        OTWUITapGestureRecognizer *tapRecognizer = [[OTWUITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOneAction:)];
-        tapRecognizer.opId = self.footprintListFrame.footprint.userId.description;
-        [_userNicknameView addGestureRecognizer:tapRecognizer];
+//        OTWUITapGestureRecognizer *tapRecognizer = [[OTWUITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOneAction:)];
+//        tapRecognizer.opId = self.footprintListFrame.footprint.userId.description;
+//        [_userNicknameView addGestureRecognizer:tapRecognizer];
         [_userNicknameView addSubview:self.userNicknameLabel];
     }
     return _userNicknameView;
@@ -229,9 +229,9 @@
         _userheadImgBGView.layer.shadowOpacity = 0.3;
         [_userheadImgBGView addSubview:self.userheadImgView];
         //增加一个头像点击事件
-        OTWUITapGestureRecognizer *tapRecognizer = [[OTWUITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOneAction:)];
-        tapRecognizer.opId = self.footprintListFrame.footprint.userId.description;
-        [_userheadImgBGView addGestureRecognizer:tapRecognizer];
+//        OTWUITapGestureRecognizer *tapRecognizer = [[OTWUITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOneAction:)];
+//        tapRecognizer.opId = self.footprintListFrame.footprint.userId.description;
+//        [_userheadImgBGView addGestureRecognizer:tapRecognizer];
     }
     return _userheadImgBGView;
 }
