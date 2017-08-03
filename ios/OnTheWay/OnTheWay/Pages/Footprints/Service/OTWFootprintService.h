@@ -21,4 +21,6 @@ typedef void(^requestCompletionBlock)(id result, NSError *error);
 
 +(void) releaseComment:(NSDictionary *) params completion:(requestCompletionBlock)block;
 
++(void) likeFootprint:(NSDictionary *) params completion:(requestCompletionBlock)block;
+
 @end
