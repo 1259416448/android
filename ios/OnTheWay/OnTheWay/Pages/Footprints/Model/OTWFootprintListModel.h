@@ -47,6 +47,8 @@
 //经度
 @property (nonatomic,assign) double longitude;
 
+@property (nonatomic,assign) BOOL ifLike;
+
 + (id) initWithDict:(NSDictionary *)dict;
 
 #pragma mark 根据字典初始化模块对象

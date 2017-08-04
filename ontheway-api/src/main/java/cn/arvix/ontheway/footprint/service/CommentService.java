@@ -128,6 +128,9 @@ public class CommentService extends BaseServiceImpl<Comment, Long> {
      * @return 评论数据
      */
     public JSONResult search(Integer number, Integer size, Long footprintId,Long currentTime) {
+        //检查足迹是否被删除
+        Footprint footprint = footprintService.findOne(footprintId);
+        if(footprint.getIfDelete()) return JsonUtil.getFailure("footprint already deleted",CommonErrorCode.FOOTPRINT_ALREADY_DELETE);
         return JsonUtil.getSuccess(CommonContact.FETCH_SUCCESS, CommonContact.FETCH_SUCCESS,
                 search(number,size,footprintId,currentTime,Boolean.TRUE));
     }
@@ -138,7 +141,7 @@ public class CommentService extends BaseServiceImpl<Comment, Long> {
         params.put("dateCreated_lte",currentTime);
         Searchable searchable = Searchable.newSearchable(params, new PageRequest(number, size),
                 new Sort(Sort.Direction.DESC, "dateCreated"));
-        Page<Comment> page = super.findAll(searchable);
+        Page<Comment> page = super.findAllWithNoCount(searchable);
         if (page.getContent() != null && page.getContent().size() > 0) {
             String fixUrl = configService.getConfigString(CommonContact.QINIU_BUCKET_URL);
             List<CommentDetailDTO> content = Lists.newArrayListWithCapacity(page.getContent().size());

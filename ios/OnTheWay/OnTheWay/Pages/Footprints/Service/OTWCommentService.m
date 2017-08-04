@@ -52,12 +52,14 @@ static NSString *commentDeleteUrl = @"/app/footprint/comment/delete/{id}";
                     [viewController.commentFrameArray addObject:commentFrame];
                 }
                 [viewController.tableView reloadData];
-            }
-            if([[NSString stringWithFormat:@"%@",body[@"last"]] isEqualToString:@"1"]){
-                [viewController.tableView.mj_footer endRefreshingWithNoMoreData];
+                if(commentArray.count < _size){ //查询的数据小于分页数据 表示已完成 这里可能会存在多请求一次数据库
+                    [viewController.tableView.mj_footer endRefreshingWithNoMoreData];
+                }else{
+                    _number ++;
+                    [viewController.tableView.mj_footer endRefreshing];
+                }
             }else{
-                _number ++;
-                [viewController.tableView.mj_footer endRefreshing];
+                [viewController.tableView.mj_footer endRefreshingWithNoMoreData];
             }
         }else{
             if([responseObject[@"messageCode"] isEqualToString:@"000202"]){

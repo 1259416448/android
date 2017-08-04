@@ -52,6 +52,8 @@
     
     if(_ifMyFootprint){ //增加一个发布通知
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addReleasedFootprint:) name:@"releasedFoorprint" object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deletedFootprint:) name:@"foorprintAlreadyDeleted" object:nil];
     }
     
     [self.view bringSubviewToFront:self.customNavigationBar];
@@ -141,6 +143,27 @@
     [_tableView reloadData];
 }
 
+- (void) deletedFootprint:(NSNotification*)sender
+{
+    NSDictionary *dict = sender.userInfo;
+    for (int i = 0; i<_status.count; i++) {
+        NSMutableArray<OTWPersonalFootprintFrame *> *monthDate = _status[i].monthData;
+        BOOL remove = NO;
+        for (int n = 0;n< monthDate.count; n++) {
+            if([monthDate[n].footprintDetal.footprintId.description isEqualToString:dict[@"footprintId"]]){
+                [monthDate removeObjectAtIndex:n];
+                remove = YES;
+                break;
+            }
+        }
+        if(remove && monthDate.count == 0){
+            [_status removeObjectAtIndex:i];
+            break;
+        }
+    }
+    [_tableView reloadData];
+}
+
 -(void) loadMore
 {
     [self.service userFootprintList:nil userId:_userId viewController:self completion:nil];
@@ -193,7 +216,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    if(section==0){
+    if(section==0 && _status.count>0 && [_status[0].month isEqualToString:@"0"]){
         return 0;
     }else{
         return 30;
@@ -220,9 +243,14 @@
 #pragma mark - 自定义分组头
 - (UIView *) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     
+    BOOL check = YES;
+    if(section==0 && _status.count>0 && [_status[0].month isEqualToString:@"0"]){
+        check = NO;
+    }
+    
     UIView * sectionHeader=[[UIView alloc] init];
     
-    if(section!=0){
+    if(check){
         sectionHeader.frame=CGRectMake(0, 0, SCREEN_WIDTH,30);
         sectionHeader .backgroundColor=[UIColor clearColor];
         
@@ -521,6 +549,7 @@
 -(void) dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"releasedFoorprint" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"foorprintAlreadyDeleted" object:nil];
     DLog(@"OTWPersonalFootprintsListController dealloc");
 }
 

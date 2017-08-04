@@ -186,7 +186,7 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
         Searchable searchable = Searchable.newSearchable(params, new PageRequest(number, size));
         //new Sort(Sort.Direction.ASC,"distance")
         //.and(new Sort(Sort.Direction.DESC,"dateCreated")));
-        Page<Footprint> page = super.findAll(searchable);
+        Page<Footprint> page = super.findAllWithNoCount(searchable);
         if (page.getContent() != null && page.getContent().size() > 0) {
             List<FootprintSearchListDTO> content = Lists.newArrayList();
             page.getContent().forEach(x -> {
@@ -464,11 +464,12 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
         Map<String, Object> params = Maps.newHashMap();
         params.put("dateCreated_lte", new Date(currentTime));
         params.put("user.id_eq", userId);
+        params.put("ifDelete_eq", Boolean.FALSE);
         if (size == null || size > 30) size = 15;
         if (number == null) number = 0;
         Searchable searchable = Searchable.newSearchable(params, new PageRequest(number, size),
                 new Sort(Sort.Direction.DESC, "dateCreated"));
-        Page<Footprint> page = super.findAll(searchable);
+        Page<Footprint> page = super.findAllWithNoCount(searchable);
         if (page.getContent() != null && page.getContent().size() > 0) {
             //构建dto，数据需要分组展示
             page = new PageResult<>(userFootprintList(page.getContent()), searchable.getPage(), page.getTotalElements());

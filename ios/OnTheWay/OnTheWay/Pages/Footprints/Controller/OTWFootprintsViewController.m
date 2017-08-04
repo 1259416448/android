@@ -81,22 +81,24 @@
     [self.footprintTableView reloadData];
 }
 
+
 #pragma mark - 详情页面中发现有被删除的足迹
 - (void) deletedFootprint:(NSNotification*)sender
 {
     NSDictionary *dict = sender.userInfo;
-    for (int i = 0; _footprintTableData.count; i++) {
+    for (int i = 0; i<_footprintTableData.count; i++) {
         if([_footprintTableData[i].footprint.footprintId.description isEqualToString:dict[@"footprintId"]]){
             [_footprintTableData removeObjectAtIndex:i];
+            [self.footprintTableView reloadData];
             break;
         }
     }
-    [self.footprintTableView reloadData];
 }
 
 -(void)dealloc
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"releasedFoorprint" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"foorprintAlreadyDeleted" object:nil];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -329,14 +331,16 @@
                 [_footprintTableData addObject:footprintFrame];
             }
             [self.footprintTableView reloadData];
+            if(array.count < self.footprintSearchParams.size){
+                [self.footprintTableView.mj_footer endRefreshingWithNoMoreData];
+            }else{
+                self.footprintSearchParams.number += 1;
+                [self.footprintTableView.mj_footer endRefreshing];
+            }
+        }else{
+            [self.footprintTableView.mj_footer endRefreshingWithNoMoreData];
         }
         self.footprintTableView.mj_footer.hidden = NO;
-        if([[NSString stringWithFormat:@"%@",body[@"last"]] isEqualToString:@"1"]){
-            [self.footprintTableView.mj_footer endRefreshingWithNoMoreData];
-        }else{
-            self.footprintSearchParams.number += 1;
-            [self.footprintTableView.mj_footer endRefreshing];
-        }
         [self.footprintTableView.mj_header endRefreshing];
         self.firstLoadingView.hidden = YES;
     }];

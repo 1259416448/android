@@ -299,6 +299,9 @@
                 self.addressLabel.text = @"定位信息加载中~";
                 [_locService startUserLocationService];
             }else if(_refleshLocation){ //重新执行定位，加载定位信息
+//                _geoCodeSearch.delegate = self;
+//                _geoCodeSearch = nil;
+//                [self initGeoCodeSearch];
                 [_locService startUserLocationService];
                 self.addressLabel.text = @"定位信息加载中~";
                 _refleshLocation = NO;
@@ -514,13 +517,12 @@
 - (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation
 {
     DLog(@"didUpdateUserLocation lat %f,long %f",userLocation.location.coordinate.latitude,userLocation.location.coordinate.longitude);
-    
+    _userLocation = userLocation;
     BMKReverseGeoCodeOption *reverseGeocodeSearchOption = [[BMKReverseGeoCodeOption alloc]init];
     reverseGeocodeSearchOption.reverseGeoPoint = userLocation.location.coordinate;
     BOOL flag = [_geoCodeSearch reverseGeoCode:reverseGeocodeSearchOption];
     if(flag){
         NSLog(@"反geo检索发送成功");
-        _userLocation = userLocation;
     }else{
         NSLog(@"反geo检索发送失败");
     }

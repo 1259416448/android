@@ -23,4 +23,7 @@ typedef void(^requestCompletionBlock)(id result, NSError *error);
 
 +(void) likeFootprint:(NSDictionary *) params completion:(requestCompletionBlock)block;
 
++(void) deleteFootprintById:(NSString *) footprintId viewController:(UIViewController *)viewController completion:(requestCompletionBlock)block;
+
+
 @end

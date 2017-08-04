@@ -12,6 +12,7 @@
 #import "OTWCustomNavigationBar.h"
 #import "OTWCommentService.h"
 #import "OTWUserModel.h"
+#import "OTWPersonalFootprintsListController.h"
 
 #import <SDCycleScrollView.h>
 #import <AFNetworking/UIImageView+AFNetworking.h>
@@ -45,8 +46,10 @@
 @property (nonatomic,strong) UIView *tableHeaderView;
 @property (nonatomic,strong) UIView *footprintDetailBGView;
 @property (nonatomic,strong) UIImageView *userHeadImgImageView;
-@property (nonatomic,strong) UILabel *userNicknameLabel;
+@property (nonatomic,strong) UIButton *userNicknameButton;
 @property (nonatomic,strong) UILabel *footprintDateCreateLabel;
+@property (nonatomic,strong) UIButton *deleteButton;
+@property (nonatomic,strong) UIAlertController *deleteAlertController;
 @property (nonatomic,strong) UIView *footprintPhotoView;
 @property (nonatomic,strong) UILabel *footprintContentLabel;
 @property (nonatomic,strong) UIImageView *footprintAddressImageView;
@@ -234,13 +237,17 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     [self.commentService commentList:nil footprintId:_fid viewController:self completion:nil];
 }
 
+#pragma mark - 构建足迹详情View
 - (UIView *) buildTableHeaderView
 {
     [self.tableHeaderView addSubview:self.footprintDetailBGView];
     [self.footprintDetailBGView addSubview:self.topLine];
     [self.footprintDetailBGView addSubview:self.userHeadImgImageView];
-    [self.footprintDetailBGView addSubview:self.userNicknameLabel];
+    [self.footprintDetailBGView addSubview:self.userNicknameButton];
     [self.footprintDetailBGView addSubview:self.footprintDateCreateLabel];
+    if([[OTWUserModel shared].userId.description isEqualToString:self.detailFrame.footprintDetailModel.userId.description]){
+        [self.footprintDetailBGView addSubview:self.deleteButton];
+    }
     if(self.detailFrame.footprintDetailModel.footprintPhotoArray && self.detailFrame.footprintDetailModel.footprintPhotoArray.count>0){
         [self.footprintDetailBGView addSubview:self.footprintPhotoView];
         [self.footprintPhotoView addSubview:self.photoScrollView];
@@ -252,7 +259,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     [self.footprintDetailBGView addSubview:self.bottomLine];
     
     [self.userHeadImgImageView setImageWithURL:[NSURL URLWithString:self.detailFrame.footprintDetailModel.userHeadImg]];
-    self.userNicknameLabel.text = self.detailFrame.footprintDetailModel.userNickname;
+    [self.userNicknameButton setTitle:self.detailFrame.footprintDetailModel.userNickname forState:UIControlStateNormal];
     self.footprintDateCreateLabel.text = self.detailFrame.footprintDetailModel.dateCreatedStr;
     self.footprintContentLabel.text = self.detailFrame.footprintDetailModel.footprintContent;
     self.footprintAddressLabel.text = self.detailFrame.footprintDetailModel.footprintAddress;
@@ -279,15 +286,38 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     return _detailFrame;
 }
 
-#pragma mark 点赞
+#pragma mark - 点赞
 -(void)likeFootprint:(id)footprintId
 {
+    if(!footprintId) return;
     [OTWFootprintService likeFootprint:footprintId completion:^(id result, NSError *error) {
         if (result) {
             if ([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]) {
-                
-                //                [self.tableView reloadData];
+                NSString *tips = @"取消赞";
+                if(self.detailFrame.footprintDetailModel.ifLike){
+                    self.detailFrame.footprintDetailModel.ifLike = NO;
+                }else{
+                    tips = @"已点赞";
+                    self.detailFrame.footprintDetailModel.ifLike = YES;
+                }
+                MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                //                UIImage *image = [[UIImage imageNamed:@"Checkmark"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+                //                UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+                //                hud.customView = imageView;
+                //                hud.mode = MBProgressHUDModeCustomView;
+                hud.mode = MBProgressHUDModeText;
+                hud.label.text = tips;
+                hud.label.numberOfLines = 0;
+                hud.userInteractionEnabled = NO;
+                hud.label.textColor = [UIColor whiteColor];
+                hud.bezelView.color = [UIColor blackColor];
+                [hud hideAnimated:YES afterDelay:1.5];
+                [self setlikeImageViewImage:self.detailFrame.footprintDetailModel.ifLike];
+            }else{
+                [self errorTips:@"服务端繁忙，请稍后再试" userInteractionEnabled:NO];
             }
+        }else{
+            [self netWorkErrorTips:error];
         }
     }];
 }
@@ -472,10 +502,20 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 {
     if(!_likeImageView){
         _likeImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 17, 17)];
-        _likeImageView.image = [UIImage imageNamed:@"zan"];
+        [self setlikeImageViewImage:self.detailFrame.footprintDetailModel.ifLike];
         _likeImageView.tintColor = [UIColor redColor];
     }
     return _likeImageView;
+}
+
+- (void) setlikeImageViewImage:(BOOL) ifLike
+{
+    if(ifLike){
+        self.likeImageView.image = [UIImage imageNamed:@"zj_zan_selected"];
+    }else{
+        self.likeImageView.image = [UIImage imageNamed:@"zj_zan"];
+    }
+    
 }
 
 - (UIImageView *) shareImageView
@@ -491,7 +531,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 
 - (void) tapLikeAction
 {
-    DLog(@"点击了点赞按钮");
+    [self likeFootprint:self.detailFrame.footprintDetailModel.footprintId.description];
 }
 
 #pragma mark - share tap
@@ -519,31 +559,96 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
         _userHeadImgImageView.frame = CGRectMake(padding, 15, 45, 45);
         _userHeadImgImageView.layer.cornerRadius = _userHeadImgImageView.Witdh/2.0;
         _userHeadImgImageView.layer.masksToBounds = YES;
+        UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(userInfoAction)];
+        _userHeadImgImageView.userInteractionEnabled = YES;
+        [_userHeadImgImageView addGestureRecognizer:recognizer];
     }
     return _userHeadImgImageView;
 }
 
-- (UILabel *) userNicknameLabel{
-    if(!_userNicknameLabel){
-        _userNicknameLabel = [[UILabel alloc] init];
+- (UIButton *) userNicknameButton{
+    if(!_userNicknameButton){
+        _userNicknameButton = [UIButton buttonWithType:UIButtonTypeCustom];
         CGFloat X = self.userHeadImgImageView.MaxX+10;
-        CGFloat W = SCREEN_WIDTH - X - padding;
-        _userNicknameLabel.frame = CGRectMake(X, 17.5, W, 20);
-        _userNicknameLabel.textColor = [UIColor color_202020];
-        _userNicknameLabel.font = [UIFont systemFontOfSize:16];
+        //CGFloat W = SCREEN_WIDTH - X - padding;
+        _userNicknameButton.frame = CGRectMake(X, 17.5, self.detailFrame.nicknameH, 20);
+        [_userNicknameButton setTitleColor:[UIColor color_202020] forState:UIControlStateNormal];
+        _userNicknameButton.titleLabel.font = [UIFont systemFontOfSize:16];
+        UIImage *imageSeleted = [UIImage imageWithColor:[UIColor color_f4f4f4] size:CGSizeMake(self.detailFrame.nicknameH, 20)];
+        UIImage *imageNormal = [UIImage imageWithColor:[UIColor whiteColor] size:CGSizeMake(self.detailFrame.nicknameH, 20)];
+        [_userNicknameButton setBackgroundImage:imageNormal forState:UIControlStateNormal];
+        [_userNicknameButton setBackgroundImage:imageSeleted forState:UIControlStateHighlighted];
+        [_userNicknameButton addTarget:self action:@selector(userInfoAction) forControlEvents:UIControlEventTouchUpInside];
     }
-    return _userNicknameLabel;
+    return _userNicknameButton;
+}
+
+- (void) userInfoAction
+{
+    OTWPersonalFootprintsListController *personalSiteVC = [OTWPersonalFootprintsListController initWithIfMyFootprint:[[OTWUserModel shared].userId.description isEqualToString:self.detailFrame.footprintDetailModel.userId.description]];
+    personalSiteVC.userId = self.detailFrame.footprintDetailModel.userId.description;
+    personalSiteVC.userNickname = self.detailFrame.footprintDetailModel.userNickname;
+    personalSiteVC.userHeaderImg = self.detailFrame.footprintDetailModel.userHeadImg;
+    [self.navigationController pushViewController:personalSiteVC animated:YES];
 }
 
 - (UILabel *) footprintDateCreateLabel{
     if(!_footprintDateCreateLabel){
         _footprintDateCreateLabel = [[UILabel alloc] init];
-        CGFloat Y = self.userNicknameLabel.MaxY + 5;
-        _footprintDateCreateLabel.frame = CGRectMake(self.userNicknameLabel.X, Y , self.userNicknameLabel.Witdh, 15);
+        CGFloat Y = self.userNicknameButton.MaxY + 5;
+        _footprintDateCreateLabel.frame = CGRectMake(self.userNicknameButton.X, Y , self.detailFrame.dateCreatedStrW, 15);
         _footprintDateCreateLabel.textColor = [UIColor color_979797];
-        _footprintDateCreateLabel.font = [UIFont systemFontOfSize:12];
+        _footprintDateCreateLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:12];
     }
     return _footprintDateCreateLabel;
+}
+
+- (UIButton *) deleteButton
+{
+    if(!_deleteButton){
+        _deleteButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        _deleteButton.frame =CGRectMake(self.footprintDateCreateLabel.MaxX + 5, self.footprintDateCreateLabel.MinY, 31, 15);
+        [_deleteButton addTarget:self action:@selector(deleteButtonClicked) forControlEvents:UIControlEventTouchUpInside];
+        _deleteButton.backgroundColor = [UIColor clearColor];
+        [_deleteButton setTitle:@"删除" forState:UIControlStateNormal];
+        [_deleteButton setTitleColor:[UIColor color_202020] forState:UIControlStateNormal];
+        _deleteButton.titleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:12];
+    }
+    return _deleteButton;
+}
+
+#pragma mark - 点击删除按钮
+- (void) deleteButtonClicked
+{
+    [self presentViewController:self.deleteAlertController animated:YES completion:nil];
+}
+
+- (UIAlertController *) deleteAlertController
+{
+    if(!_deleteAlertController){
+        _deleteAlertController = [UIAlertController alertControllerWithTitle:@"" message:@"删除当前足迹后数据不可恢复，确定请点击删除。" preferredStyle:UIAlertControllerStyleActionSheet];
+        WeakSelf(self);
+        [_deleteAlertController addAction:[UIAlertAction actionWithTitle:@"删除" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            //执行删除方法
+            [weakself deleteFootprintById];
+        }]];
+        [_deleteAlertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    }
+    return _deleteAlertController;
+}
+
+- (void) deleteFootprintById
+{
+    [OTWFootprintService deleteFootprintById:self.detailFrame.footprintDetailModel.footprintId.description viewController:self completion:^(id result, NSError *error) {
+        if(result){
+            [self performSelector:@selector(cacelDetail) withObject:nil afterDelay:1.5f];
+        }
+    }];
+}
+
+- (void) cacelDetail
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (UIView *) footprintPhotoView
@@ -565,7 +670,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
         //需计算文字高度
         if(self.detailFrame){
             CGFloat W = SCREEN_WIDTH - padding *2;
-            _footprintContentLabel.frame = CGRectMake(padding, self.footprintPhotoView.MaxY+10, W, self.detailFrame.contentH);
+            _footprintContentLabel.frame = CGRectMake(padding, self.detailFrame.photoViewH==0?self.footprintPhotoView.MaxY:self.footprintPhotoView.MaxY+10, W, self.detailFrame.contentH);
         }
     }
     return _footprintContentLabel;
@@ -764,7 +869,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     }];
 }
 
-#pragma mark 获取足迹详情
+#pragma mark - 获取足迹详情
 -(void)fetchFootprintDetailById:(id)footprintId
 {
     [OTWFootprintService getFootprintDetailById:footprintId completion:^(id result, NSError *error) {

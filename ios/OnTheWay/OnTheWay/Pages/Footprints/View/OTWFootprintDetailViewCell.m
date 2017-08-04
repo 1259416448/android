@@ -93,7 +93,7 @@
     if(!_commentUserNicknameLabel){
         _commentUserNicknameLabel = [[UILabel alloc] init];
         _commentUserNicknameLabel.textColor = [UIColor color_202020];
-        _commentUserNicknameLabel.font = [UIFont systemFontOfSize:14];
+        _commentUserNicknameLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
         CGFloat X = self.commentUserHeadImgView.MaxX+10;
         CGFloat W = SCREEN_WIDTH - padding - X;
         _commentUserNicknameLabel.frame = CGRectMake(X, 16, W, 15);

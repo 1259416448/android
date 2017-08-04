@@ -67,6 +67,12 @@ public interface BaseRepository<M, ID extends Serializable> extends JpaRepositor
      */
     Page<M> findAll(Searchable searchable);
 
+    /**
+     * 根据条件查询 不统计总数
+     * @param searchable
+     * @return
+     */
+    Page<M> findAllNoCount(final Searchable searchable);
 
     /**
      * 根据条件统计所有记录数
