@@ -15,6 +15,7 @@ static NSString *footprintList = @"/app/footprint/search/{type}";
 static NSString *footprintDetail = @"/app/footprint/view/{id}";
 static NSString *releaseComment = @"/app/footprint/comment/create";
 static NSString *likeFootprint = @"/app/footprint/like/{id}";
+static NSString *deleteFootprintUrl = @"/app/footprint/delete/{id}";
 
 +(void) footprintRelease:(NSDictionary *) params completion:(requestCompletionBlock)block
 {
@@ -76,7 +77,7 @@ static NSString *likeFootprint = @"/app/footprint/like/{id}";
 
 +(void)likeFootprint:(NSString *)footprintId completion:(requestCompletionBlock)block
 {
-    [OTWNetworkManager doPOST:[likeFootprint stringByReplacingOccurrencesOfString:@"{id}" withString:footprintId] parameters:footprintId success:^(id responseObject) {
+    [OTWNetworkManager doPOST:[likeFootprint stringByReplacingOccurrencesOfString:@"{id}" withString:footprintId] parameters:nil success:^(id responseObject) {
         if (block) {
             block(responseObject,nil);
         }
@@ -85,6 +86,32 @@ static NSString *likeFootprint = @"/app/footprint/like/{id}";
             block(nil,error);
         }
     }];
+}
+
+#pragma mark - 删除足迹
++(void) deleteFootprintById:(NSString *) footprintId viewController:(OTWFootprintDetailController *)viewController completion:(requestCompletionBlock)block{
+    if(!footprintId) return;
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:viewController.view animated:YES];
+    hud.label.textColor = [UIColor whiteColor];
+    hud.bezelView.color = [UIColor blackColor];
+    hud.activityIndicatorColor = [UIColor whiteColor];
+    [OTWNetworkManager doPOST:[deleteFootprintUrl stringByReplacingOccurrencesOfString:@"{id}" withString:footprintId] parameters:nil success:^(id responseObject) {
+        [hud hideAnimated:YES];
+        if([[NSString stringWithFormat:@"%@",responseObject[@"code"]] isEqualToString:@"0"]){
+            [viewController errorTips:@"删除成功" userInteractionEnabled:YES];
+            //发送删除成功通知
+            NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:footprintId,@"footprintId", nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"foorprintAlreadyDeleted" object:nil userInfo:dict];
+            if(block){
+                block(responseObject,nil);
+            }
+        }else{
+            [viewController errorTips:@"服务端繁忙，请稍后再试" userInteractionEnabled:NO];
+        }
+    } failure:^(NSError *error) {
+        [viewController netWorkErrorTips:error];
+    }];
+    
 }
 
 @end

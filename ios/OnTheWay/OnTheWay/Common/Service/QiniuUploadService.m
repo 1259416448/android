@@ -106,7 +106,7 @@ static NSString* getTokenUrl = @"/api/v1/qiniu/upToken";
     }else{
         QNUploadOption *option = [[QNUploadOption alloc] initWithProgressHandler:progress];
         QNUploadManager *upManager = [QNUploadManager sharedInstanceWithConfiguration:nil];
-        [upManager putData:data key:nil token:token complete:^(QNResponseInfo *info,NSString *key,NSDictionary *resp){
+        [upManager putData:data key:[QiniuUploadService getDocumentKey] token:token complete:^(QNResponseInfo *info,NSString *key,NSDictionary *resp){
             if(info.statusCode == 200 && resp){
                 DLog(@"图片上传成功信息 %@",resp);
                 OTWDocument *document = [[OTWDocument alloc] init];
@@ -141,6 +141,11 @@ static NSString* getTokenUrl = @"/api/v1/qiniu/upToken";
             block(nil,error);
         }
     }];
+}
+
++ (NSString *) getDocumentKey
+{
+    return [[[NSUUID UUID] UUIDString] stringByReplacingOccurrencesOfString:@"-" withString:@""];
 }
 
 @end

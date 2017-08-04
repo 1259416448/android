@@ -43,7 +43,7 @@
         textBGViewFH = contentLabelFH + 20;
     }
     
-    _contentLabelF = CGRectMake(0, 0, textBGViewFW, contentLabelFH);
+    _contentLabelF = CGRectMake(0, -2, textBGViewFW, contentLabelFH);
     _textBGViewF = CGRectMake(textBGViewFX, 0, textBGViewFW, textBGViewFH);
 
     CGFloat addressImageViewFW = 10;

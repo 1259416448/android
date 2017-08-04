@@ -36,6 +36,17 @@ public class PageResult<M> extends PageImpl<M> {
         this.content = content;
     }
 
+    /**
+     * Creates a new {@link PageImpl} with the given content. This will result in the created {@link Page} being identical
+     * to the entire {@link List}.
+     *
+     * @param content must not be {@literal null}.
+     */
+    public PageResult(List content) {
+        super(ms);
+        this.content = content;
+    }
+
     @Override
     public List getContent() {
         if(content==null) return ms;

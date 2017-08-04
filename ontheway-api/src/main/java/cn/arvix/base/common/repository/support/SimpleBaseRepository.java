@@ -525,6 +525,14 @@ public class SimpleBaseRepository<M, ID extends Serializable> extends SimpleJpaR
         );
     }
 
+    public Page<M> findAllNoCount(final Searchable searchable) {
+        List<M> list = repositoryHelper.findAll(findAllQL, searchable, searchCallback);
+        return new PageResult<>(
+                searchable.getEnableToMap() ? JsonUtil.getBaseEntityMapList(list) : list
+        );
+    }
+
+
     @Override
     public long count(final Searchable searchable) {
         return repositoryHelper.count(countAllQL, searchable, searchCallback);

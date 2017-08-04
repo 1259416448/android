@@ -269,6 +269,15 @@ public abstract class BaseServiceImpl<M extends AbstractEntity, ID extends Seria
 
 
     /**
+     * 按条件分页并排序查询实体 但 不统计总数
+     * @param searchable
+     * @return
+     */
+    public Page<M> findAllWithNoCount(Searchable searchable){
+        return baseRepository.findAllNoCount(searchable);
+    }
+
+    /**
      * 按条件分页并排序统计实体数量
      *
      * @param searchable 条件
