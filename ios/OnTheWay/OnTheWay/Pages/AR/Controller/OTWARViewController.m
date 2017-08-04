@@ -336,6 +336,7 @@
     NSMutableDictionary *condition = tapGesture.opId;
     self.footprintSearchParams.time = [condition objectForKey:@"searchParamValue"];
     DLog(@"OTWUITapGestureRecognizer手势----%@",self.footprintSearchParams.mj_keyValues);
+    [self getFootprints];
 }
 
 - (void)searchByDistance:(OTWUITapGestureRecognizer*)tapGesture
@@ -343,6 +344,7 @@
     NSMutableDictionary *condition = tapGesture.opId;
     self.footprintSearchParams.searchDistance = [condition objectForKey:@"searchParamValue"];
     DLog(@"OTWUITapGestureRecognizer手势----%@",self.footprintSearchParams.mj_keyValues);
+    [self getFootprints];
 }
 
 
@@ -448,6 +450,7 @@
         if (footprintModels.count == 0) {
             return;
         }
+        DLog(@"足迹数量%l",footprintModels.count);
         NSArray *dummyAnnotations = [self assembleAnnotation:footprintModels];
         [self setAnnotations:dummyAnnotations];
     }];
