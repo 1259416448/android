@@ -15,6 +15,8 @@ public interface CacheInterface {
 
     void remove(String key);
 
+    void clear();
+
     /**
      *
      * @param key
@@ -29,5 +31,13 @@ public interface CacheInterface {
     Integer getInt(String key);
 
     <T> T getT(String key,Class<T> t);
+
+    /**
+     * get from mem first ,not found ,then get from disk
+     * @param key
+     * @param t
+     * @param <T>
+     * @return
+     */
     <T> T getTMem(String key,Class<T> t);
 }

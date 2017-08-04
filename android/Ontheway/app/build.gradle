@@ -1,6 +1,9 @@
 apply plugin: 'com.android.application'
 
 android {
+    lintOptions {
+        abortOnError false
+    }
     aaptOptions.cruncherEnabled = false
     aaptOptions.useNewCruncher = false
     signingConfigs {
@@ -37,12 +40,15 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'org.xutils:xutils:3.5.0'
+    compile('commons-codec:commons-codec:1.9')
     compile 'com.alibaba:fastjson:1.1.60.android'
     compile 'com.android.support:appcompat-v7:23.+'
     compile 'com.android.support:design:23.+'
     compile 'com.android.support:support-v4:23.+'
+
     compile 'com.youth.banner:banner:1.4.9'  //最新版本
+    compile 'com.qiniu:qiniu-android-sdk:7.3.+'
+
     compile project(':PullToRefreshLibrary')
     compile project(path: ':ViewPagerLibrary')
     compile project(path: ':photopicker')

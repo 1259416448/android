@@ -18,6 +18,7 @@ import arvix.cn.ontheway.R;
 
 public class BaseActivity extends Activity {
     protected BaseActivity self;
+    protected String logTag = this.getClass().getName();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
