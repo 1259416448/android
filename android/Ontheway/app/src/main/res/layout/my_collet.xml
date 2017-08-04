@@ -45,6 +45,15 @@
                     android:layout_marginLeft="5dp"
                     android:src="@drawable/zj_pinglun"/>
             </LinearLayout>
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:paddingLeft="10dp"
+                android:text="2017.09.02"
+                android:textSize="11sp" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"

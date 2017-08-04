@@ -9,35 +9,7 @@
         android:background="@drawable/shop_item_border"
         android:padding="15dp">
 
-        <RelativeLayout
-            android:layout_width="110dp"
-            android:layout_height="80dp"
-            android:layout_marginRight="10dp"
-            >
 
-            <ImageView
-                android:layout_width="110dp"
-                android:layout_height="80dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/header_default" />
-
-            <TextView
-                android:id="@+id/show_count_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:layout_margin="5dp"
-                android:background="#99000000"
-                android:gravity="center"
-                android:paddingBottom="2.5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingTop="2.5dp"
-                android:text="2546"
-                android:textColor="#ffffffff"
-                android:textSize="12sp" />
-        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -50,21 +22,16 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:maxLines="1"
                     android:text="胡大饭店（东直门总店）"
                     android:textColor="@color/text_label_default"
                     android:textSize="16sp" />
-
                 <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="8dp"
-                    android:src="@drawable/ar_daohang" />
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/wd_qianbao"/>
             </LinearLayout>
 
             <LinearLayout
@@ -75,7 +42,7 @@
                 <ImageView
                     android:layout_width="10dp"
                     android:layout_height="10dp"
-                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="3dp"
                     android:src="@drawable/dingwei" />
 
                 <TextView
@@ -83,15 +50,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="东城区东直门内大街233号" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:text="到这去" />
+                    android:text="东城区东直门内大街233号东城区东直门内大街233号" />
             </LinearLayout>
 
             <LinearLayout
@@ -107,14 +66,13 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
+                        android:layout_marginTop="5dp"
                         android:layout_height="wrap_content">
-
                         <ImageView
                             android:layout_width="10dp"
                             android:layout_height="10dp"
                             android:layout_gravity="center_vertical"
                             android:src="@drawable/ar_dianhua" />
-
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -125,65 +83,213 @@
                             android:text="88888888" />
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <ImageView
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:layout_marginLeft="5dp"
-                            android:src="@drawable/zj_pinglun" />
-
-                        <ImageView
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:layout_marginLeft="5dp"
-                            android:src="@drawable/zj_pinglun" />
-
-                        <ImageView
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:layout_marginLeft="5dp"
-                            android:src="@drawable/zj_pinglun" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="74dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center_vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="25dp"
-                        android:background="#FF134C"
-                        android:gravity="center_vertical">
-
-                        <ImageView
-                            android:layout_width="12.5dp"
-                            android:layout_height="12.5dp"
-                            android:layout_marginLeft="5dp"
-                            android:src="@drawable/ar_renling" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_weight="1"
-                            android:text="认领商家"
-                            android:textColor="#ffffff"
-                            android:textSize="11sp" />
-                    </LinearLayout>
-
                 </LinearLayout>
 
             </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+                    <TableRow>
+                        <ImageView
+                            android:id="@+id/comment_photo_1"
+                            android:layout_width="97dp"
+                            android:layout_height="78dp"
+                            android:layout_marginLeft="7dp"
+                            android:layout_weight="1"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/header_default" />
+                        <ImageView
+                            android:id="@+id/comment_photo_2"
+                            android:layout_width="97dp"
+                            android:layout_height="78dp"
+                            android:layout_marginLeft="7dp"
+                            android:layout_weight="1"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/header_default" />
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            >
+                            <ImageView
+                                android:id="@+id/comment_photo_3"
+                                android:layout_width="97dp"
+                                android:layout_height="78dp"
+                                android:layout_marginLeft="7dp"
+                                android:layout_weight="1"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/header_default" />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_marginLeft="7dp"
+                                android:text="查看更多"
+                                android:gravity="center"
+                                android:textColor="@color/white"
+                                android:background="#99000000"
+                                android:layout_height="78dp" />
+                        </RelativeLayout>
 
+                    </TableRow>
+                </TableLayout>
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="15dp"
+                android:src="@drawable/wd_qianbao"
+                android:layout_height="15dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="显示活动名称"
+                android:layout_marginLeft="5dp"
+                android:textSize="16sp"
+                android:layout_weight="1"
+                android:textColor="@color/text_label_default"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="优惠说明"
+                android:textSize="14sp"
+                />
+            <ImageView
+                android:layout_width="8dp"
+                android:layout_height="10dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/arrow_right"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#d5d5d5"
+            android:layout_marginLeft="15dp"></LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="15dp"
+                android:src="@drawable/wd_qianbao"
+                android:layout_height="15dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="显示活动名称"
+                android:layout_marginLeft="5dp"
+                android:textSize="13sp"
+                android:layout_weight="1"
+                android:textColor="@color/text_label_default"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="优惠说明"
+                android:textSize="12sp"
+                />
+            <ImageView
+                android:layout_width="8dp"
+                android:layout_height="10dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/arrow_right"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#d5d5d5"
+   ></LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TableRow>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:background="#fbfbfb"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:layout_height="44dp">
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_gravity="center"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ar_daohang"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="到这里去"
+                        android:layout_marginLeft="10dp"
+                        android:textSize="14sp"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0.5dp"
+                    android:background="#d5d5d5"
+                    android:layout_height="44dp"></LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:background="#fbfbfb"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:layout_height="44dp">
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_gravity="center"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ar_daohang"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="踩一脚"
+                        android:layout_marginLeft="10dp"
+                        android:textSize="14sp"
+                        />
+                </LinearLayout>
+            </TableRow>
+
+        </TableLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#d5d5d5"
+        ></LinearLayout>
     <LinearLayout android:layout_height="10dp"
         android:layout_width="match_parent"
         android:background="@color/bg_default">
