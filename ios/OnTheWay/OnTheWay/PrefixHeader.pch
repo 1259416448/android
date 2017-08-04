@@ -22,4 +22,5 @@
 #import "OTWLaunchManager.h"
 #import <YSCategorys/YSKit.h>
 #import "UIImageView+WebCache.h"
+#import <MBProgressHUD.h>
 #endif /* PrefixHeader_pch */

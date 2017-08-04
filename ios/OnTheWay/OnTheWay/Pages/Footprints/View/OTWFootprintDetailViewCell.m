@@ -21,9 +21,6 @@
 @property (nonatomic,strong) UIView *bottomLine;
 //评论相关 end
 
-//当indexPath > 0 时，内容都为评论内容
-@property (nonatomic,copy) OTWCommentFrame *commentFrame;
-
 @end
 
 #define footprintContentFont [UIFont systemFontOfSize:17]
@@ -32,42 +29,41 @@
 
 @implementation OTWFootprintDetailViewCell
 
-+ (instancetype)cellWithTableView:(UITableView *)tableView data:(OTWCommentFrame *)data
-{
-    static NSString *identifier = @"OTWFootprintDetail";
-    OTWFootprintDetailViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-    if(!cell){
-        cell = [[OTWFootprintDetailViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier data:data];
-    }
++ (instancetype)cellWithTableView:(UITableView *)tableView reuseIdentifier:(NSString*)identifier{
+    OTWFootprintDetailViewCell *cell = [[OTWFootprintDetailViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+   
     return cell;
 }
 
 //重写cell生成方法
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier data:(OTWCommentFrame *)data
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if(self){
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         self.backgroundColor = [UIColor clearColor];
-        _commentFrame = data;
-        [self buildComment];
+        [self.contentView addSubview:self.commentBGView];
+        [self.commentBGView addSubview:self.commentUserHeadImgView];
+        [self.commentBGView addSubview:self.commentUserNicknameLabel];
+        [self.commentBGView addSubview:self.commentDateCreatedLabel];
+        [self.commentBGView addSubview:self.commentContentLabel];
+        [self.commentBGView addSubview:self.bottomLine];
     }
     return self;
 }
 
-- (void)buildComment
+- (void)setData:(OTWCommentFrame *)data
 {
-    [self addSubview:self.commentBGView];
-    [self.commentBGView addSubview:self.commentUserHeadImgView];
-    [self.commentBGView addSubview:self.commentUserNicknameLabel];
-    [self.commentBGView addSubview:self.commentDateCreatedLabel];
-    [self.commentBGView addSubview:self.commentContentLabel];
-    [self.commentBGView addSubview:self.bottomLine];
     //设值
-    [self.commentUserHeadImgView setImageWithURL:[NSURL URLWithString:_commentFrame.commentModel.userHeadImg]];
-    self.commentUserNicknameLabel.text = _commentFrame.commentModel.userNickname;
-    self.commentDateCreatedLabel.text = _commentFrame.commentModel.dateCreatedStr;
-    self.commentContentLabel.text = _commentFrame.commentModel.commentContent;
+    [self.commentUserHeadImgView setImageWithURL:[NSURL URLWithString:data.commentModel.userHeadImg]];
+    self.commentUserNicknameLabel.text = data.commentModel.userNickname;
+    self.commentDateCreatedLabel.text = data.commentModel.dateCreatedStr;
+    self.commentContentLabel.text = data.commentModel.commentContent;
+    //设置frame
+    self.commentBGView.frame = CGRectMake(0, 0, SCREEN_WIDTH, data.cellHeight);
+    CGFloat X = self.commentUserNicknameLabel.MinX;
+    CGFloat W = SCREEN_WIDTH - X - padding;
+    self.commentContentLabel.frame = CGRectMake(X, self.commentDateCreatedLabel.MaxY+10, W, data.contentH);
 }
 
 #pragma mark - Getter Setter
@@ -76,7 +72,6 @@
     if(!_commentBGView){
         _commentBGView = [[UIView alloc] init];
         _commentBGView.backgroundColor = [UIColor whiteColor];
-        _commentBGView.frame = CGRectMake(0, 0, SCREEN_WIDTH, _commentFrame.cellHeight);
     }
     return _commentBGView;
 }
@@ -98,7 +93,7 @@
     if(!_commentUserNicknameLabel){
         _commentUserNicknameLabel = [[UILabel alloc] init];
         _commentUserNicknameLabel.textColor = [UIColor color_202020];
-        _commentUserNicknameLabel.font = [UIFont systemFontOfSize:14];
+        _commentUserNicknameLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
         CGFloat X = self.commentUserHeadImgView.MaxX+10;
         CGFloat W = SCREEN_WIDTH - padding - X;
         _commentUserNicknameLabel.frame = CGRectMake(X, 16, W, 15);
@@ -124,9 +119,7 @@
         _commentContentLabel.textColor = [UIColor color_202020];
         _commentContentLabel.font = commentContentFont;
         _commentContentLabel.numberOfLines = 0;
-        CGFloat X = self.commentUserNicknameLabel.MinX;
-        CGFloat W = SCREEN_WIDTH - X - padding;
-        _commentContentLabel.frame = CGRectMake(X, self.commentDateCreatedLabel.MaxY+10, W, _commentFrame.contentH);
+        
     }
     return _commentContentLabel;
 }

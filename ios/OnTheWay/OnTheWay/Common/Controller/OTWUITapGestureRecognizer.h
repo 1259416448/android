@@ -10,6 +10,6 @@
 
 @interface OTWUITapGestureRecognizer : UITapGestureRecognizer
 
-@property (nonatomic, copy) NSString *opId;
+@property (nonatomic, strong) id opId;
 
 @end

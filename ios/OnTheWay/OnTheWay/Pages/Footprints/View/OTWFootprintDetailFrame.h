@@ -14,7 +14,9 @@
 
 @property (nonatomic,strong) OTWFootprintListModel *footprintDetailModel;
 @property (nonatomic,assign) CGFloat contentH;
+@property (nonatomic,assign) CGFloat nicknameH;
 @property (nonatomic,assign) CGFloat photoViewH;
+@property (nonatomic,assign) CGFloat dateCreatedStrW;
 
 /**
  * 行高

@@ -11,6 +11,8 @@
 #define paddingTop 75
 #define paddingBottom 42
 #define footprintContentFont [UIFont systemFontOfSize:17]
+#define userNicknameFont [UIFont systemFontOfSize:16]
+#define footprintDateCreatedStrFont [UIFont fontWithName:@"PingFangSC-Regular" size:12]
 
 @implementation OTWFootprintDetailFrame
 
@@ -32,6 +34,16 @@
     CGSize textSize = [self sizeWithString:_footprintDetailModel.footprintContent font:footprintContentFont maxSize:CGSizeMake(SCREEN_WIDTH-padding*2, 2000)];
     _contentH = textSize.height;
     _cellHeight = textSize.height+paddingTop+paddingBottom + _photoViewH + 20;
+    
+    if(_photoViewH == 0){
+        _cellHeight -= 10;
+    }
+    
+    CGSize dateCreatedStrSize = [self sizeWithString:_footprintDetailModel.dateCreatedStr font:footprintDateCreatedStrFont maxSize:CGSizeMake(150, 12)];
+    _dateCreatedStrW = dateCreatedStrSize.width;
+    
+    CGSize nicknameSize = [self sizeWithString:_footprintDetailModel.userNickname font:userNicknameFont maxSize:CGSizeMake(SCREEN_WIDTH - padding - 45 - 15 - 10, 20)];
+    _nicknameH = nicknameSize.width;
 }
 
 #pragma mark - 计算文字高度

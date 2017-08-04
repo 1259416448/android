@@ -8,7 +8,6 @@
 
 #import "OTWBaseViewController.h"
 #import "OTWCustomNavigationBar.h"
-#import <MBProgressHUD.h>
 
 @interface OTWBaseViewController ()<UIGestureRecognizerDelegate>
 

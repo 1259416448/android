@@ -231,7 +231,6 @@
 }
 -(void)tapActionForFootprints{
     OTWPersonalFootprintsListController *personalSiteVC = [OTWPersonalFootprintsListController initWithIfMyFootprint:YES];
-    
     personalSiteVC.userId = [OTWUserModel shared].userId.description;
     personalSiteVC.userNickname = [OTWUserModel shared].name;
     personalSiteVC.userHeaderImg = [OTWUserModel shared].headImg;

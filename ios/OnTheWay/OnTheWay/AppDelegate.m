@@ -59,6 +59,18 @@
 //变得活跃
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     DLog(@"applicationDidBecomeActive");
+    //监听网络变化，需要重新初始化一下百度地图
+    [OTWNetworkManager networkStatusWithBlock:^(PPNetworkStatusType status){
+        if(status != PPNetworkStatusNotReachable){
+            _mapManager = [[BMKMapManager alloc]init];
+            BOOL ret = [_mapManager start:@"13I7baCnebotHFHdyywGKZtPIVkzVM6h"  generalDelegate:nil];
+            if (!ret) {
+                DLog(@"manager start failed!");
+            }
+        }
+    }];
+    
+    
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
 

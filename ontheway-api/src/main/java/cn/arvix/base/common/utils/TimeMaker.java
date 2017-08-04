@@ -622,7 +622,9 @@ public class TimeMaker {
         Long currentTime = System.currentTimeMillis();
         Long diffTime = currentTime - time;
         String str = "";
-        if (diffTime < ONE_MINUIT) {
+        if(diffTime < 1000){
+            str = "刚刚";
+        }else if (diffTime < ONE_MINUIT) {
             str = diffTime / 1000 + "秒前";
         } else if (diffTime < ONE_HOUR) {
             str = diffTime / ONE_MINUIT + "分钟前";

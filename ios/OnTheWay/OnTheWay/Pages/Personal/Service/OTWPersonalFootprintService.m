@@ -17,8 +17,6 @@
 @property (nonatomic,assign) int number;
 //每页大小
 @property (nonatomic,assign) int size;
-//总数
-@property (nonatomic,assign) int totalElements;
 
 @end
 
@@ -43,7 +41,6 @@ static NSString *userFootprintUrl = @"/app/footprint/user/{userId}";
             //构建数据
             NSDictionary *body = responseobject[@"body"];
             _currentTime = body[@"currentTime"];
-            _totalElements = [body[@"totalElements"] intValue];
             //处理数据
             NSArray *array = body[@"content"];
             if(array && array.count >0){
@@ -77,12 +74,14 @@ static NSString *userFootprintUrl = @"/app/footprint/user/{userId}";
                     i++;
                 }
                 [viewController.tableView reloadData];
-            }
-            if([[NSString stringWithFormat:@"%@",body[@"last"]] isEqualToString:@"1"]){
-                [viewController.tableView.mj_footer endRefreshingWithNoMoreData];
+                if(array.count < _size){ //查询的数据小于分页数据 表示已完成 这里可能会存在多请求一次数据库
+                    [viewController.tableView.mj_footer endRefreshingWithNoMoreData];
+                }else{
+                    _number ++;
+                    [viewController.tableView.mj_footer endRefreshing];
+                }
             }else{
-                _number ++;
-                [viewController.tableView.mj_footer endRefreshing];
+                [viewController.tableView.mj_footer endRefreshingWithNoMoreData];
             }
         }else{ //请求失败，服务端错误
             [viewController errorTips:@"服务端繁忙，请稍后再试" userInteractionEnabled:NO];

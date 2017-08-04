@@ -34,6 +34,8 @@
  */
 @property (nonatomic, strong) CLLocation *location;
 
+//@property (nonatomic, strong) OTWFootprintListModel *footprint;
+
 /**
  * View for annotation. It is set inside ARPresenter after fetching view from dataSource.
  */

@@ -8,33 +8,26 @@
 
 #import "OTWFootprintDetailController.h"
 #import "OTWFootprintDetailViewCell.h"
-#import "OTWCommentModel.h"
-#import "OTWFootprintDetailFrame.h"
-#import "OTWCommentFrame.h"
 #import "OTWFootprintsChangeAddressController.h"
+#import "OTWCustomNavigationBar.h"
+#import "OTWCommentService.h"
+#import "OTWUserModel.h"
+#import "OTWPersonalFootprintsListController.h"
 
 #import <SDCycleScrollView.h>
 #import <AFNetworking/UIImageView+AFNetworking.h>
 #import <IQKeyboardManager.h>
 #import <IQKeyboardReturnKeyHandler.h>
 #import "PYPhotoBrowser.h"
+#import "OTWFootprintService.h"
+#import <MJExtension.h>
 
 #define footprintContentFont [UIFont systemFontOfSize:17]
 #define padding 15
 
 @interface OTWFootprintDetailController () <UITableViewDataSource,UITableViewDelegate,SDCycleScrollViewDelegate,UITextViewDelegate>
 
-@property (nonatomic,strong) OTWFootprintDetailModel *model;
-
-@property (nonatomic,strong) UITableView *tableView;
-//详情
-@property (nonatomic,strong) OTWFootprintDetailFrame *detailFrame;
-
-//评论数据
-@property (nonatomic,strong) NSMutableArray<OTWCommentFrame *> *commentFrameArray;
-
 //评论填写区域 start
-@property (nonatomic,strong) UIView *commentBGView;
 @property (nonatomic,strong) UILabel *commentSunLabel;
 @property (nonatomic,strong) UIView *likeView;
 @property (nonatomic,strong) UIImageView *likeImageView;
@@ -47,17 +40,16 @@
 @property (nonatomic,assign) CGFloat lastTextViewTextHeight;
 @property (nonatomic,assign) CGFloat lastTextViewDifHeight;
 
-
-
 //评论填写区域 end
 
 //足迹详情 start
-
 @property (nonatomic,strong) UIView *tableHeaderView;
 @property (nonatomic,strong) UIView *footprintDetailBGView;
 @property (nonatomic,strong) UIImageView *userHeadImgImageView;
-@property (nonatomic,strong) UILabel *userNicknameLabel;
+@property (nonatomic,strong) UIButton *userNicknameButton;
 @property (nonatomic,strong) UILabel *footprintDateCreateLabel;
+@property (nonatomic,strong) UIButton *deleteButton;
+@property (nonatomic,strong) UIAlertController *deleteAlertController;
 @property (nonatomic,strong) UIView *footprintPhotoView;
 @property (nonatomic,strong) UILabel *footprintContentLabel;
 @property (nonatomic,strong) UIImageView *footprintAddressImageView;
@@ -75,6 +67,12 @@
 @property (nonatomic, strong) IQKeyboardReturnKeyHandler  *returnKeyHandler;
 
 @property (nonatomic, strong) NSMutableArray *footprintImageUrls;
+
+@property (nonatomic,strong) OTWCommentService *commentService;
+
+@property (nonatomic,strong) UIAlertController *alertController;
+
+@property (nonatomic,strong) NSString *deleteCommentId;
 
 @end
 
@@ -120,16 +118,12 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     [[IQKeyboardManager sharedManager] setEnable:_wasKeyboardManagerEnabled];
     
 }
+
 -(void)dealloc
 {
     NSLog(@"%@ dealloc",NSStringFromClass([self class]));
 }
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
-    DLog(@">>>>>>>>>:%@", textField.text);
-    return YES;
-}
 /**
  *  当键盘改变了frame(位置和尺寸)的时候调用
  */
@@ -209,9 +203,14 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     //大背景
     self.view.backgroundColor=[UIColor color_f4f4f4];
     //先通过上一界面传递的id数据   获取足迹详情和加载最近评论信息,在构建页面
-    [self model];
-    //表格的初始化需要等数据请求完毕
+    [self.view addSubview:self.firstLoadingView];
+}
+
+- (void) buildTableView
+{
+    self.firstLoadingView.hidden = YES;
     [self.view addSubview:self.tableView];
+    self.tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreComment)];
     self.tableView.tableHeaderView = [self buildTableHeaderView];
     //增加底部评论信息
     [self.view addSubview:self.commentBGView];
@@ -222,16 +221,33 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     [self.writeCommentView addSubview:self.writeCommentTextView];
     [self.writeCommentView addSubview:self.writeCommentImageView];
     [self.writeCommentView addSubview:self.commentLabel];
-    self.commentSunLabel.text = [[NSString stringWithFormat:@"%ld",(long)_detailFrame.footprintDetailModel.footprintCommentNum] stringByAppendingString:@"条评论"];
+    self.commentSunLabel.text = [[NSString stringWithFormat:@"%ld",(long)self.detailFrame.footprintDetailModel.footprintCommentNum] stringByAppendingString:@"条评论"];
+    [self.view bringSubviewToFront:self.customNavigationBar];
+    //设置一下下拉刷新初始化状态
+    if(self.commentFrameArray.count==0){
+        self.tableView.mj_footer.hidden = YES;
+    }else if(self.commentFrameArray.count<10){
+        [self.tableView.mj_footer endRefreshingWithNoMoreData];
+    }
 }
 
+#pragma mark - 加载更多评论
+- (void) loadMoreComment
+{
+    [self.commentService commentList:nil footprintId:_fid viewController:self completion:nil];
+}
+
+#pragma mark - 构建足迹详情View
 - (UIView *) buildTableHeaderView
 {
     [self.tableHeaderView addSubview:self.footprintDetailBGView];
     [self.footprintDetailBGView addSubview:self.topLine];
     [self.footprintDetailBGView addSubview:self.userHeadImgImageView];
-    [self.footprintDetailBGView addSubview:self.userNicknameLabel];
+    [self.footprintDetailBGView addSubview:self.userNicknameButton];
     [self.footprintDetailBGView addSubview:self.footprintDateCreateLabel];
+    if([[OTWUserModel shared].userId.description isEqualToString:self.detailFrame.footprintDetailModel.userId.description]){
+        [self.footprintDetailBGView addSubview:self.deleteButton];
+    }
     if(self.detailFrame.footprintDetailModel.footprintPhotoArray && self.detailFrame.footprintDetailModel.footprintPhotoArray.count>0){
         [self.footprintDetailBGView addSubview:self.footprintPhotoView];
         [self.footprintPhotoView addSubview:self.photoScrollView];
@@ -242,32 +258,68 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     [self.footprintDetailBGView addSubview:self.footprintAddressLabel];
     [self.footprintDetailBGView addSubview:self.bottomLine];
     
-    [self.userHeadImgImageView setImageWithURL:[NSURL URLWithString:_detailFrame.footprintDetailModel.userHeadImg]];
-    self.userNicknameLabel.text = _detailFrame.footprintDetailModel.userNickname;
-    self.footprintDateCreateLabel.text = _detailFrame.footprintDetailModel.dateCreatedStr;
-    self.footprintContentLabel.text = _detailFrame.footprintDetailModel.footprintContent;
-    self.footprintAddressLabel.text = _detailFrame.footprintDetailModel.footprintAddress;
+    [self.userHeadImgImageView setImageWithURL:[NSURL URLWithString:self.detailFrame.footprintDetailModel.userHeadImg]];
+    [self.userNicknameButton setTitle:self.detailFrame.footprintDetailModel.userNickname forState:UIControlStateNormal];
+    self.footprintDateCreateLabel.text = self.detailFrame.footprintDetailModel.dateCreatedStr;
+    self.footprintContentLabel.text = self.detailFrame.footprintDetailModel.footprintContent;
+    self.footprintAddressLabel.text = self.detailFrame.footprintDetailModel.footprintAddress;
     return self.tableHeaderView;
 }
 
-- (OTWFootprintDetailModel *) model
+#pragma mark - Setter
+
+- (NSMutableArray<OTWCommentFrame*>*)commentFrameArray
 {
-    if(!_model){
-        NSString *fullPath = [[NSBundle mainBundle] pathForResource:@"OTWFootprintDetail.plist" ofType:nil];
-        NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:fullPath];
-        _model = [OTWFootprintDetailModel initWithDict:dict];
-        _detailFrame = [[OTWFootprintDetailFrame alloc] init];
-        [_detailFrame setFootprintDetailModel: _model.footprintDetail];
+    if (!_commentFrameArray) {
         _commentFrameArray = [[NSMutableArray alloc] init];
-        if(_model.comments){
-            for (OTWCommentModel *commentModel in _model.comments) {
-                OTWCommentFrame *commentFrame = [[OTWCommentFrame alloc] init];
-                [commentFrame setCommentModel:commentModel];
-                [_commentFrameArray addObject:commentFrame];
-            }
-        }
     }
-    return _model;
+    
+    return _commentFrameArray;
+}
+
+- (OTWFootprintDetailFrame*)detailFrame
+{
+    if (!_detailFrame) {
+        _detailFrame = [[OTWFootprintDetailFrame alloc] init];
+    }
+    
+    return _detailFrame;
+}
+
+#pragma mark - 点赞
+-(void)likeFootprint:(id)footprintId
+{
+    if(!footprintId) return;
+    [OTWFootprintService likeFootprint:footprintId completion:^(id result, NSError *error) {
+        if (result) {
+            if ([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]) {
+                NSString *tips = @"取消赞";
+                if(self.detailFrame.footprintDetailModel.ifLike){
+                    self.detailFrame.footprintDetailModel.ifLike = NO;
+                }else{
+                    tips = @"已点赞";
+                    self.detailFrame.footprintDetailModel.ifLike = YES;
+                }
+                MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                //                UIImage *image = [[UIImage imageNamed:@"Checkmark"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+                //                UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+                //                hud.customView = imageView;
+                //                hud.mode = MBProgressHUDModeCustomView;
+                hud.mode = MBProgressHUDModeText;
+                hud.label.text = tips;
+                hud.label.numberOfLines = 0;
+                hud.userInteractionEnabled = NO;
+                hud.label.textColor = [UIColor whiteColor];
+                hud.bezelView.color = [UIColor blackColor];
+                [hud hideAnimated:YES afterDelay:1.5];
+                [self setlikeImageViewImage:self.detailFrame.footprintDetailModel.ifLike];
+            }else{
+                [self errorTips:@"服务端繁忙，请稍后再试" userInteractionEnabled:NO];
+            }
+        }else{
+            [self netWorkErrorTips:error];
+        }
+    }];
 }
 
 - (UITableView*) tableView
@@ -285,10 +337,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 
 #pragma mark 这一组里面有多少行
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    if(_commentFrameArray){
-        return _commentFrameArray.count;
-    }
-    return 0;
+    return self.commentFrameArray.count;
 }
 
 #pragma mark - 代理方法
@@ -299,25 +348,63 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 
 #pragma mark 设置每行高度（每行高度可以不一样）
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if(_commentFrameArray){
-        return [_commentFrameArray objectAtIndex:indexPath.row].cellHeight;
-    }
-    return 0;
+    return [self.commentFrameArray objectAtIndex:indexPath.row].cellHeight;
 }
 #pragma mark 点击行
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     DLog(@"我点击了：%ld",indexPath.row);
-    OTWFootprintsChangeAddressController *changeAddressVC =
-    [[OTWFootprintsChangeAddressController alloc] init];
-    [self.navigationController pushViewController:changeAddressVC animated:YES];
 }
 
 #pragma mark - 返回第indexPath这行对应的内容
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [OTWFootprintDetailViewCell cellWithTableView:tableView data:[_commentFrameArray objectAtIndex:indexPath.row]];
+    static NSString *identifier = @"OTWFootprintComment";
+    OTWFootprintDetailViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    if (!cell) {
+        cell = [OTWFootprintDetailViewCell cellWithTableView:tableView reuseIdentifier:identifier];
+    }
+    // 设置数据
+    [cell setData:self.commentFrameArray[indexPath.row]];
+    //添加长按手势
+    UILongPressGestureRecognizer *longPressed = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPressedAct:)];
+    [cell.contentView addGestureRecognizer:longPressed];
+    return cell;
 }
 
+- (void) longPressedAct:(UILongPressGestureRecognizer *)gesture
+{
+    if(gesture.state == UIGestureRecognizerStateBegan){
+        CGPoint point = [gesture locationInView:self.tableView];
+        NSIndexPath * indexPath = [self.tableView indexPathForRowAtPoint:point];
+        if(indexPath == nil) return;
+        //判断评论用户是否是自己
+        if([[OTWUserModel shared].userId.description isEqualToString:self.commentFrameArray[indexPath.row].commentModel.userId.description]){
+            _deleteCommentId = self.commentFrameArray[indexPath.row].commentModel.commentId.description;
+            [self presentViewController:self.alertController animated:YES completion:nil];
+        }
+    }
+}
+
+-(UIAlertController*)alertController
+{
+    if(!_alertController){
+        _alertController = [UIAlertController alertControllerWithTitle:@"" message:@"删除当前评论后数据不可恢复，确定请点击删除。" preferredStyle:UIAlertControllerStyleActionSheet];
+        WeakSelf(self);
+        [_alertController addAction:[UIAlertAction actionWithTitle:@"删除" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            //执行删除方法
+            [weakself deleteCommentById];
+        }]];
+        [_alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    }
+    return _alertController;
+}
+
+- (void) deleteCommentById
+{
+    if(_deleteCommentId){
+        [self.commentService deleteCommentById:_deleteCommentId viewController:self completion:nil];
+    }
+}
 
 #pragma mark - 底部评论布局
 - (UIView *) commentBGView
@@ -415,9 +502,20 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 {
     if(!_likeImageView){
         _likeImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 17, 17)];
-        _likeImageView.image = [UIImage imageNamed:@"zan"];
+        [self setlikeImageViewImage:self.detailFrame.footprintDetailModel.ifLike];
+        _likeImageView.tintColor = [UIColor redColor];
     }
     return _likeImageView;
+}
+
+- (void) setlikeImageViewImage:(BOOL) ifLike
+{
+    if(ifLike){
+        self.likeImageView.image = [UIImage imageNamed:@"zj_zan_selected"];
+    }else{
+        self.likeImageView.image = [UIImage imageNamed:@"zj_zan"];
+    }
+    
 }
 
 - (UIImageView *) shareImageView
@@ -433,7 +531,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 
 - (void) tapLikeAction
 {
-    DLog(@"点击了点赞按钮");
+    [self likeFootprint:self.detailFrame.footprintDetailModel.footprintId.description];
 }
 
 #pragma mark - share tap
@@ -449,7 +547,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     if(!_footprintDetailBGView){
         _footprintDetailBGView = [[UIView alloc] init];
         _footprintDetailBGView.backgroundColor = [UIColor whiteColor];
-        _footprintDetailBGView.frame = CGRectMake(0, 10, SCREEN_WIDTH, _detailFrame.cellHeight - 10);
+        _footprintDetailBGView.frame = CGRectMake(0, 10, SCREEN_WIDTH, self.detailFrame.cellHeight - 10);
     }
     return _footprintDetailBGView;
 }
@@ -461,38 +559,103 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
         _userHeadImgImageView.frame = CGRectMake(padding, 15, 45, 45);
         _userHeadImgImageView.layer.cornerRadius = _userHeadImgImageView.Witdh/2.0;
         _userHeadImgImageView.layer.masksToBounds = YES;
+        UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(userInfoAction)];
+        _userHeadImgImageView.userInteractionEnabled = YES;
+        [_userHeadImgImageView addGestureRecognizer:recognizer];
     }
     return _userHeadImgImageView;
 }
 
-- (UILabel *) userNicknameLabel{
-    if(!_userNicknameLabel){
-        _userNicknameLabel = [[UILabel alloc] init];
+- (UIButton *) userNicknameButton{
+    if(!_userNicknameButton){
+        _userNicknameButton = [UIButton buttonWithType:UIButtonTypeCustom];
         CGFloat X = self.userHeadImgImageView.MaxX+10;
-        CGFloat W = SCREEN_WIDTH - X - padding;
-        _userNicknameLabel.frame = CGRectMake(X, 17.5, W, 20);
-        _userNicknameLabel.textColor = [UIColor color_202020];
-        _userNicknameLabel.font = [UIFont systemFontOfSize:16];
+        //CGFloat W = SCREEN_WIDTH - X - padding;
+        _userNicknameButton.frame = CGRectMake(X, 17.5, self.detailFrame.nicknameH, 20);
+        [_userNicknameButton setTitleColor:[UIColor color_202020] forState:UIControlStateNormal];
+        _userNicknameButton.titleLabel.font = [UIFont systemFontOfSize:16];
+        UIImage *imageSeleted = [UIImage imageWithColor:[UIColor color_f4f4f4] size:CGSizeMake(self.detailFrame.nicknameH, 20)];
+        UIImage *imageNormal = [UIImage imageWithColor:[UIColor whiteColor] size:CGSizeMake(self.detailFrame.nicknameH, 20)];
+        [_userNicknameButton setBackgroundImage:imageNormal forState:UIControlStateNormal];
+        [_userNicknameButton setBackgroundImage:imageSeleted forState:UIControlStateHighlighted];
+        [_userNicknameButton addTarget:self action:@selector(userInfoAction) forControlEvents:UIControlEventTouchUpInside];
     }
-    return _userNicknameLabel;
+    return _userNicknameButton;
+}
+
+- (void) userInfoAction
+{
+    OTWPersonalFootprintsListController *personalSiteVC = [OTWPersonalFootprintsListController initWithIfMyFootprint:[[OTWUserModel shared].userId.description isEqualToString:self.detailFrame.footprintDetailModel.userId.description]];
+    personalSiteVC.userId = self.detailFrame.footprintDetailModel.userId.description;
+    personalSiteVC.userNickname = self.detailFrame.footprintDetailModel.userNickname;
+    personalSiteVC.userHeaderImg = self.detailFrame.footprintDetailModel.userHeadImg;
+    [self.navigationController pushViewController:personalSiteVC animated:YES];
 }
 
 - (UILabel *) footprintDateCreateLabel{
     if(!_footprintDateCreateLabel){
         _footprintDateCreateLabel = [[UILabel alloc] init];
-        CGFloat Y = self.userNicknameLabel.MaxY + 5;
-        _footprintDateCreateLabel.frame = CGRectMake(self.userNicknameLabel.X, Y , self.userNicknameLabel.Witdh, 15);
+        CGFloat Y = self.userNicknameButton.MaxY + 5;
+        _footprintDateCreateLabel.frame = CGRectMake(self.userNicknameButton.X, Y , self.detailFrame.dateCreatedStrW, 15);
         _footprintDateCreateLabel.textColor = [UIColor color_979797];
-        _footprintDateCreateLabel.font = [UIFont systemFontOfSize:12];
+        _footprintDateCreateLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:12];
     }
     return _footprintDateCreateLabel;
+}
+
+- (UIButton *) deleteButton
+{
+    if(!_deleteButton){
+        _deleteButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        _deleteButton.frame =CGRectMake(self.footprintDateCreateLabel.MaxX + 5, self.footprintDateCreateLabel.MinY, 31, 15);
+        [_deleteButton addTarget:self action:@selector(deleteButtonClicked) forControlEvents:UIControlEventTouchUpInside];
+        _deleteButton.backgroundColor = [UIColor clearColor];
+        [_deleteButton setTitle:@"删除" forState:UIControlStateNormal];
+        [_deleteButton setTitleColor:[UIColor color_202020] forState:UIControlStateNormal];
+        _deleteButton.titleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:12];
+    }
+    return _deleteButton;
+}
+
+#pragma mark - 点击删除按钮
+- (void) deleteButtonClicked
+{
+    [self presentViewController:self.deleteAlertController animated:YES completion:nil];
+}
+
+- (UIAlertController *) deleteAlertController
+{
+    if(!_deleteAlertController){
+        _deleteAlertController = [UIAlertController alertControllerWithTitle:@"" message:@"删除当前足迹后数据不可恢复，确定请点击删除。" preferredStyle:UIAlertControllerStyleActionSheet];
+        WeakSelf(self);
+        [_deleteAlertController addAction:[UIAlertAction actionWithTitle:@"删除" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            //执行删除方法
+            [weakself deleteFootprintById];
+        }]];
+        [_deleteAlertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    }
+    return _deleteAlertController;
+}
+
+- (void) deleteFootprintById
+{
+    [OTWFootprintService deleteFootprintById:self.detailFrame.footprintDetailModel.footprintId.description viewController:self completion:^(id result, NSError *error) {
+        if(result){
+            [self performSelector:@selector(cacelDetail) withObject:nil afterDelay:1.5f];
+        }
+    }];
+}
+
+- (void) cacelDetail
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (UIView *) footprintPhotoView
 {
     if(!_footprintPhotoView){
         _footprintPhotoView = [[UIView alloc] init];
-        _footprintPhotoView.frame = CGRectMake(padding, self.userHeadImgImageView.MaxY + 15, SCREEN_WIDTH-padding*2, _detailFrame.photoViewH);
+        _footprintPhotoView.frame = CGRectMake(padding, self.userHeadImgImageView.MaxY + 15, SCREEN_WIDTH-padding*2, self.detailFrame.photoViewH);
     }
     return _footprintPhotoView;
 }
@@ -505,9 +668,9 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
         _footprintContentLabel.font = footprintContentFont;
         _footprintContentLabel.numberOfLines = 0;
         //需计算文字高度
-        if(_detailFrame){
+        if(self.detailFrame){
             CGFloat W = SCREEN_WIDTH - padding *2;
-            _footprintContentLabel.frame = CGRectMake(padding, self.footprintPhotoView.MaxY+10, W, _detailFrame.contentH);
+            _footprintContentLabel.frame = CGRectMake(padding, self.detailFrame.photoViewH==0?self.footprintPhotoView.MaxY:self.footprintPhotoView.MaxY+10, W, self.detailFrame.contentH);
         }
     }
     return _footprintContentLabel;
@@ -556,7 +719,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 - (UIView *) tableHeaderView
 {
     if(!_tableHeaderView){
-        _tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, _detailFrame.cellHeight)];
+        _tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, self.detailFrame.cellHeight)];
         _tableHeaderView.backgroundColor = [UIColor clearColor];
         //        _tableHeaderView.layer.shadowColor = [UIColor blackColor].CGColor;
         //        _tableHeaderView.layer.shadowOpacity = 0.1;
@@ -570,10 +733,11 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 {
     if(!_photoScrollView){
         NSMutableArray *imageUrlStringsGroup = [[NSMutableArray alloc] init];
-        for (NSString *url in _detailFrame.footprintDetailModel.footprintPhotoArray) {
+        for (NSString *url in self.detailFrame.footprintDetailModel.footprintPhotoArray) {
             //增加图片处理参数
             [imageUrlStringsGroup addObject:[url stringByAppendingString:imageView2Params]];
         }
+        DLog(@"图片轮播%@",imageUrlStringsGroup.mj_keyValues)
         _photoScrollView = [SDCycleScrollView cycleScrollViewWithFrame:CGRectMake(0, 0, self.footprintPhotoView.Witdh, self.footprintPhotoView.Height) imageURLStringsGroup:imageUrlStringsGroup];
         _photoScrollView.autoScroll = NO;
         _photoScrollView.showPageControl = NO;
@@ -617,9 +781,9 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 - (NSMutableArray *) footprintImageUrls
 {
     if(!_footprintImageUrls){
-        if(_detailFrame.footprintDetailModel.footprintPhotoArray && _detailFrame.footprintDetailModel.footprintPhotoArray.count>0){
+        if(self.detailFrame.footprintDetailModel.footprintPhotoArray && self.detailFrame.footprintDetailModel.footprintPhotoArray.count>0){
             _footprintImageUrls = [[NSMutableArray alloc] init];
-            for (NSString *url in _detailFrame.footprintDetailModel.footprintPhotoArray) {
+            for (NSString *url in self.detailFrame.footprintDetailModel.footprintPhotoArray) {
                 //这里可能要添加一些参数，目前未添加
                 [_footprintImageUrls addObject:url];
             }
@@ -655,9 +819,88 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
     if ([text isEqualToString:@"\n"]){ //判断输入的字是否是回车，即按下return
-        DLog(@"点击了发送按钮");
+        [self sentComment];
+        [self.writeCommentTextView resignFirstResponder];
+        return NO;
     }
     return YES;
+}
+
+#pragma mark - 发送评论
+- (void) sentComment
+{
+    //判断一下  comment内容不能为空
+    NSString *content = self.writeCommentTextView.text;
+    content = [content stringByReplacingOccurrencesOfString:@" " withString:@""];
+    if(content.length == 0){
+        return ;
+    }
+    NSDictionary *commentDict = [NSDictionary dictionaryWithObjectsAndKeys:[self.writeCommentTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]],@"content",_fid,@"footprintId",nil];
+    [OTWFootprintService releaseComment:commentDict completion:^(id result, NSError *error) {
+        if (result) {
+            if ([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]) {
+                self.writeCommentTextView.text = @"";
+                [self textViewDidChange:self.writeCommentTextView];
+                self.commentLabel.hidden = NO;
+                OTWCommentModel *newCommentModel = [OTWCommentModel mj_objectWithKeyValues:result[@"body"]];
+                OTWCommentFrame *newCommentFrame = [[OTWCommentFrame alloc] init];
+                [newCommentFrame setCommentModel:newCommentModel];
+                [self.commentFrameArray insertObject:newCommentFrame atIndex:0];
+                self.detailFrame.footprintDetailModel.footprintCommentNum++;
+                self.commentSunLabel.text = [[NSString stringWithFormat:@"%ld",(long)self.detailFrame.footprintDetailModel.footprintCommentNum] stringByAppendingString:@"条评论"];
+                [self.tableView reloadData];
+            }else{
+                if([result[@"messageCode"] isEqualToString:@"000202"]){
+                    [self.indicatorView stopAnimating];
+                    self.errorTipsLabel.text = @"足迹已被删除";
+                    self.firstLoadingView.hidden = NO;
+                    self.tableView.hidden = YES;
+                    self.commentBGView.hidden = YES;
+                    //发出足迹删除通知
+                    NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:_fid,@"footprintId", nil];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"foorprintAlreadyDeleted" object:nil userInfo:dict];
+                }else{
+                    [self errorTips:@"服务端繁忙，请稍后再试" userInteractionEnabled:NO];
+                }
+            }
+        }else{
+            [self netWorkErrorTips:error];
+        }
+    }];
+}
+
+#pragma mark - 获取足迹详情
+-(void)fetchFootprintDetailById:(id)footprintId
+{
+    [OTWFootprintService getFootprintDetailById:footprintId completion:^(id result, NSError *error) {
+        if (result) {
+            if ([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]) {
+                OTWFootprintListModel *footprintDetail = [OTWFootprintListModel mj_objectWithKeyValues:result[@"body"]];
+                NSArray<OTWCommentModel *> *commentArray = [OTWCommentModel mj_objectArrayWithKeyValuesArray:result[@"body"][@"comments"]];
+                if(commentArray && commentArray.count>0){
+                    for (OTWCommentModel *commentModel in commentArray) {
+                        OTWCommentFrame *commentFrame = [[OTWCommentFrame alloc] init];
+                        [commentFrame setCommentModel:commentModel];
+                        [self.commentFrameArray addObject:commentFrame];
+                    }
+                }
+                [self.detailFrame setFootprintDetailModel:footprintDetail];
+                [self buildTableView];
+            }else{
+                if([result[@"messageCode"] isEqualToString:@"000202"]){
+                    [self.indicatorView stopAnimating];
+                    self.errorTipsLabel.text = @"足迹已被删除";
+                    //发出足迹删除通知
+                    NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:_fid,@"footprintId", nil];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"foorprintAlreadyDeleted" object:nil userInfo:dict];
+                }else{
+                    [self errorTips:@"服务端繁忙，请稍后再试" userInteractionEnabled:NO];
+                }
+            }
+        }else{
+            [self netWorkErrorTips:error];
+        }
+    }];
 }
 
 - (CGFloat) updateLastTextViewTextHeight{
@@ -700,9 +943,50 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     return _lastTextViewTextHeight;
 }
 
+- (UIView *) firstLoadingView
+{
+    if(!_firstLoadingView){
+        _firstLoadingView = [[UIView alloc] initWithFrame:CGRectMake(0, self.navigationHeight, SCREEN_WIDTH, 50)];
+        _firstLoadingView.backgroundColor = [UIColor clearColor];
+        [_firstLoadingView addSubview:self.indicatorView];
+        [_firstLoadingView addSubview:self.errorTipsLabel];
+    }
+    return _firstLoadingView;
+}
+
+- (UIActivityIndicatorView *) indicatorView
+{
+    if(!_indicatorView){
+        _indicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH / 2 - 15, 0, 30, 30)];
+        [_indicatorView setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleGray];
+        [_indicatorView startAnimating];
+    }
+    return _indicatorView;
+}
+
+- (UILabel *) errorTipsLabel
+{
+    if(!_errorTipsLabel){
+        _errorTipsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 50)];
+        _errorTipsLabel.textColor = [UIColor color_757575];
+        _errorTipsLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:15];
+        _errorTipsLabel.textAlignment = NSTextAlignmentCenter;
+    }
+    return _errorTipsLabel;
+}
+
 - (void) setFid:(NSString *)fid
 {
     _fid = fid;
+    [self fetchFootprintDetailById:fid];
+}
+
+- (OTWCommentService *) commentService
+{
+    if(!_commentService){
+        _commentService = [[OTWCommentService alloc] init];
+    }
+    return _commentService;
 }
 
 @end
