@@ -1,23 +1,37 @@
 package arvix.cn.ontheway.utils;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.view.Gravity;
 import android.widget.ImageView;
+import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.util.TypeUtils;
+
 import org.xutils.image.ImageOptions;
 import org.xutils.x;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
+import java.util.Random;
 
+import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.R;
+import arvix.cn.ontheway.bean.BaseResponse;
+import arvix.cn.ontheway.bean.UserInfo;
 import arvix.cn.ontheway.service.inter.CacheInterface;
+import arvix.cn.ontheway.ui.LoginActivity;
+import arvix.cn.ontheway.ui.usercenter.EditNicknameActivity;
 
 /**
  * Created by asdtiang on 2017/7/24 0024.
@@ -33,6 +47,8 @@ public class StaticMethod {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
+
+
 
     /**
      * 根据手机的分辨率从 px(像素) 的单位 转成为 dp
@@ -60,8 +76,7 @@ public class StaticMethod {
     }
 
     public static String getUserHeaderUrl(){
-        CacheInterface cache = OnthewayApplication.getInstahce(CacheInterface.class);
-        return cache.get(StaticVar.HEADER_URL_CACHE_KEY);
+        return App.userInfo.getHeadImg();
     }
 
     public static void setCircularHeaderImg(ImageView imageView,int w,int h){
@@ -144,9 +159,69 @@ public class StaticMethod {
         }catch(Exception e){
             e.printStackTrace();
         }
-
         return bitmap;
+    }
 
+    public static  BaseResponse genResponse(String jsonStr){
+        BaseResponse baseResponse = JSON.parseObject(jsonStr,BaseResponse.class);
+        return baseResponse;
+    }
+
+    public static <T> BaseResponse<T> genResponse(String jsonStr,Class<T> bodyType){
+        BaseResponse baseResponse = JSON.parseObject(jsonStr,BaseResponse.class);
+        baseResponse.setBodyBean(TypeUtils.castToJavaBean(baseResponse.getBody(), bodyType));
+        return baseResponse;
+    }
+
+    public static String genSexShow(){
+        String sex = "保密";
+        if("man".equals(App.userInfo.getGender())){
+            sex = "男";
+        }
+        if("woman".equals(App.userInfo.getGender())){
+            sex = "女";
+        }
+        return  sex;
+    }
+    public static String genPhoneShow(){
+        String phone = App.userInfo.getMobilePhoneNumber();
+        if(phone!=null && phone.length()==11){
+            phone = phone.substring(0,3)+"*****" + phone.substring(8);
+        }
+        return phone;
+    }
+
+    public static int  goToLogin(Activity activity){
+        int randomInt = new Random().nextInt(Integer.MAX_VALUE);
+        Intent intent = new Intent(activity, LoginActivity.class);
+        activity.startActivityForResult(intent, randomInt);
+        return randomInt;
+    }
+
+    public static void showToast(String text,Context context){
+        Toast toast = Toast.makeText(context,
+                text, Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
+    }
+    /**
+     * 把Bitmap转Byte
+     * @Author HEH
+     * @EditTime 2010-07-19 上午11:45:56
+     */
+    public static byte[] bitmap2Bytes(Bitmap bm){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        return baos.toByteArray();
+    }
+
+
+    public static void updateUserInfo(Activity activity,UserInfo userInfo){
+        CacheInterface cache = OnthewayApplication.getInstahce(CacheInterface.class);
+        cache.putObject(StaticVar.USER_INFO,userInfo);
+        cache.putObjectMem(StaticVar.USER_INFO,userInfo);
+        App.userInfo = userInfo;
+        LocalBroadcastManager.getInstance(activity).sendBroadcast(new Intent(StaticVar.BROADCAST_ACTION_USER_CHANGE));
     }
 
 

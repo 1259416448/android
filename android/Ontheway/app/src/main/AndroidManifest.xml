@@ -141,6 +141,13 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="AddressSelectActivity"
             />
+
+        <activity
+            android:name=".ui.LoginActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="LoginActivity"
+            />
+
         <activity android:name=".ui.ar.ArTrackActivity">
 
         </activity>

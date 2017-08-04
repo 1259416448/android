@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,13 +17,17 @@ import org.xutils.x;
 
 import java.util.HashMap;
 
+import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.BaiduActivity;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.service.inter.CacheInterface;
 import arvix.cn.ontheway.ui.ar.ArTrackActivity;
 import arvix.cn.ontheway.ui.msg.MsgIndexFrag;
+import arvix.cn.ontheway.ui.usercenter.EditNicknameActivity;
 import arvix.cn.ontheway.ui.usercenter.MyProfileFragment;
+import arvix.cn.ontheway.ui.usercenter.MyTrackListActivity;
 import arvix.cn.ontheway.utils.OnthewayApplication;
+import arvix.cn.ontheway.utils.StaticMethod;
 import arvix.cn.ontheway.utils.StaticVar;
 import arvix.cn.ontheway.utils.UIUtils;
 
@@ -35,8 +40,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private RadioGroup tabRG;
     @ViewInject(R.id.tab_zuji)
     private TextView zuJiTextView;
-    @ViewInject(R.id.btn_fx)
-    private View fxBtn;
+    CacheInterface cache;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +57,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 startActivity(intent);
             }
         });
-        CacheInterface cache = OnthewayApplication.getInstahce(CacheInterface.class);
-        cache.put(StaticVar.HEADER_URL_CACHE_KEY, "http://p2.so.qhmsg.com/sdr/599_900_/t019e91b7618003e862.jpg");
+        cache = OnthewayApplication.getInstahce(CacheInterface.class);
+        Log.i(logTag,"onCreate----->");
         initView();
     }
 
@@ -68,10 +73,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         });
         tabRG.check(R.id.tab_faxian);
-        fxBtn.setOnClickListener(this);
+       // fxBtn.setOnClickListener(this);
     }
 
     private HashMap<Integer, Fragment> frags = new HashMap<>();
+
+    private static int waitForResultValue = -1;
 
     public void changeFrag(int checkedId) {
         Fragment targetFrag = frags.get(checkedId);
@@ -84,15 +91,31 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 targetFrag = new MsgIndexFrag();
                 //list Msg targetFrag = MsgListFrag.newInstance();
             } else if (checkedId == R.id.tab_wode) {
-                targetFrag = new MyProfileFragment();
+                if(cache.get(StaticVar.AUTH_TOKEN)!=null){
+                    targetFrag = new MyProfileFragment();
+                }else{
+                    Log.i("MainThread----------->",Thread.currentThread().getName());
+                    waitForResultValue = StaticMethod.goToLogin(self);
+                }
             }
         }
         if (targetFrag != null) {
-            Log.i("zuji", "zuji--------------------------------->" + targetFrag.getTag());
+            Log.i("zuji", "zuji----------------targetFrag----------------->" + targetFrag.getClass().getName());
             getFragmentManager().beginTransaction().replace(R.id.main_frag_container, targetFrag).commit();
             frags.put(checkedId, targetFrag);
         }
     }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.i(logTag,"main onActivityResult---------> requestCode :" +requestCode +",waitForResultValue:"+waitForResultValue  +",resultCode:"+resultCode+",RESULT_OK:"+RESULT_OK);
+        if (requestCode == waitForResultValue) {
+           // changeFrag(R.id.tab_faxian);
+            tabRG.check(R.id.tab_wode);
+        }
+    }
+
+
+
 
     @Override
     protected void onDestroy() {
@@ -115,6 +138,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
+        /*
         if (view == fxBtn) {
             String[] items = new String[]{"one", "two", "three"};
             //40是R.layout.popup_menu_item的高度
@@ -125,6 +149,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     UIUtils.toast(self, i + "", Toast.LENGTH_SHORT);
                 }
             });
-        }
+        }*/
     }
 }

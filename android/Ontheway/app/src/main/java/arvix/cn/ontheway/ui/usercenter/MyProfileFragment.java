@@ -20,6 +20,7 @@ import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.ui.BaseFragment;
 import arvix.cn.ontheway.utils.StaticMethod;
+import arvix.cn.ontheway.utils.StaticVar;
 
 /**
  * Created by asdtiang on 2017/7/21 0021.
@@ -60,8 +61,8 @@ public class MyProfileFragment extends BaseFragment {
                 startActivity(new Intent(act,MySetActivity.class));
             }
         });
-        nameTv.setText(App.user.getString("nickname","默认昵称"));
-        IntentFilter filter=new IntentFilter(PersonInfoActivity.ACTION_USER_CHANGE);
+        nameTv.setText(App.userInfo.getName());
+        IntentFilter filter=new IntentFilter(StaticVar.BROADCAST_ACTION_USER_CHANGE);
         LocalBroadcastManager.getInstance(act).registerReceiver(receiver,filter);
         StaticMethod.setCircularHeaderImg(headerIV,110,110);
 
@@ -71,7 +72,8 @@ public class MyProfileFragment extends BaseFragment {
     private BroadcastReceiver receiver=new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            nameTv.setText(App.user.getString("nickname","默认昵称"));
+            StaticMethod.setCircularHeaderImg(headerIV,110,110);
+            nameTv.setText(App.userInfo.getName());
         }
     };
 

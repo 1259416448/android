@@ -74,14 +74,15 @@
         android:layout_marginTop="50dp"
 
         android:background="@color/white">
-         <Button
-             android:layout_width="match_parent"
-             android:layout_height="50dp"
-             android:background="@color/white"
-             android:text="退出登录"
-             android:textSize="16sp"
-             android:textColor="#E50834"
-             />
+
+        <Button
+            android:id="@+id/sign_out_btn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            android:text="退出登录"
+            android:textColor="#E50834"
+            android:textSize="16sp" />
     </LinearLayout>
     
 </LinearLayout>

@@ -12,3 +12,7 @@ Format: ![在AR的视图中找到有趣的人的足迹和有趣的地点](https:
 ## 产品开发说明
 
 原型图的PR如下：[OnTheWay](https://pro.modao.cc/app/d491abffbdc65414a1472cf38b59c4d379d605a0)
+
+# xutils:源码更改
+更改HttpTask类，增加filter: private static HttpFilterInterface httpFilter;
+

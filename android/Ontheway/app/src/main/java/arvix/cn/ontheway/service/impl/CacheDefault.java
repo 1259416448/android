@@ -95,6 +95,8 @@ public class CacheDefault implements CacheInterface {
         if(entity!=null){
             Log.w(logTag,"entity.getTextContent():");
             result = (T)entity;
+        }else{
+            result  = getT(key,t);
         }
         return result;
     }
@@ -108,6 +110,17 @@ public class CacheDefault implements CacheInterface {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void clear() {
+        this.getLruDiskCache().clearCacheFiles();
+        try {
+            x.getDb(DbConfigs.HTTP.getConfig()).dropDb();
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        cacheMap.clear();
     }
 
     @Override

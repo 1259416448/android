@@ -86,16 +86,17 @@ android:background="#F4F4F4"
             android:textSize="16sp"
             android:text="性别"
             />
+
         <TextView
+            android:id="@+id/sex_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="10dp"
-            android:textColor="@color/text_label_default"
-            android:layout_gravity="center"
-            android:textSize="16sp"
             android:text="女"
-            />
+            android:textColor="@color/text_label_default"
+            android:textSize="16sp" />
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -154,15 +155,16 @@ android:background="#F4F4F4"
             android:textSize="16sp"
             android:text="手机号"
             />
+
         <TextView
+            android:id="@+id/phone_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="10dp"
-            android:textColor="@color/text_label_default"
-            android:layout_gravity="center"
-            android:textSize="16sp"
             android:text="123****6547"
-            />
+            android:textColor="@color/text_label_default"
+            android:textSize="16sp" />
     </LinearLayout>
 </LinearLayout>

@@ -3,6 +3,8 @@ package arvix.cn.ontheway.utils;
 import java.util.HashMap;
 import java.util.Map;
 
+import arvix.cn.ontheway.App;
+import arvix.cn.ontheway.bean.UserInfo;
 import arvix.cn.ontheway.service.impl.BaiduPoiServiceImpl;
 import arvix.cn.ontheway.service.impl.BaiduServiceImpl;
 import arvix.cn.ontheway.service.impl.CacheDefault;
@@ -20,9 +22,17 @@ public class OnthewayApplication {
     private static CacheInterface cache;
     private static Map<Class,Object> iocMap = new HashMap<Class, Object>();
     private static boolean initBefore = false;
+
+    /**
+     * must init after xutils
+     */
     public static synchronized void init(){
         if(!initBefore){
             cache = new CacheDefault();
+            UserInfo userInfo = cache.getT(StaticVar.USER_INFO,UserInfo.class);
+            if(userInfo!=null){
+                App.userInfo = userInfo;
+            }
             iocMap.put(CacheInterface.class,cache);
             BaiduPoiServiceInterface poiService = new BaiduPoiServiceImpl();
             iocMap.put(BaiduPoiServiceInterface.class,poiService);
