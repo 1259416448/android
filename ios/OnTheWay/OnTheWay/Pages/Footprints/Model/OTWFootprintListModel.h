@@ -42,6 +42,11 @@
 
 @property (nonatomic,strong) NSString *day;
 
+//纬度
+@property (nonatomic,assign) double latitude;
+//经度
+@property (nonatomic,assign) double longitude;
+
 + (id) initWithDict:(NSDictionary *)dict;
 
 #pragma mark 根据字典初始化模块对象

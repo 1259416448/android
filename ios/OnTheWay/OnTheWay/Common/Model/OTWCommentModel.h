@@ -21,6 +21,12 @@
 //用户昵称
 @property (nonatomic,copy) NSString *userNickname;
 
+//用户Id
+@property (nonatomic,copy) NSNumber *userId;
+
+//评论ID
+@property (nonatomic,copy) NSNumber *commentId;
+
 //评论内容
 @property (nonatomic,copy) NSString *commentContent;
 

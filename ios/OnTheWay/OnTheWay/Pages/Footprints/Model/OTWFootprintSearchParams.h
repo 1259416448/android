@@ -12,6 +12,8 @@
 
 //查询类型
 @property (nonatomic,strong) NSString *type;
+//搜索雷达半径
+@property (nonatomic,strong) NSString *searchDistance;
 //当前页数
 @property (nonatomic,assign) int number;
 //每页大小
@@ -24,7 +26,7 @@
 @property (nonatomic,copy) NSString *distance;
 //时间
 @property (nonatomic,copy) NSString *time;
-
+//当前查询时间点
 @property (nonatomic,strong) NSNumber *currentTime;
 
 + (instancetype) initWithDict:(NSDictionary *) dict;
