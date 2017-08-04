@@ -16,7 +16,10 @@
 #import "OTWCustomAnnotationView.h"
 #import "OTWFootprintSearchParams.h"
 #import "OTWFootprintsChangeAddressController.h"
+#import "OTWFootprintReleaseViewController.h"
+#import "OTWFootprintsViewController.h"
 #import "OTWFootprintService.h"
+#import "OTWUITapGestureRecognizer.h"
 
 #import <BaiduMapAPI_Location/BMKLocationService.h>
 #import <BaiduMapAPI_Map/BMKMapComponent.h>
@@ -54,18 +57,6 @@
     _locService.delegate = self;
     [self.navigationController setNavigationBarHidden:YES];
     [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
-    [self getFootprints];
-//    
-//    double lat = 30.540017;
-//    double lon = 104.063377;
-//    double deltaLat = 0.04;
-//    double deltaLon = 0.07;
-//    double altitudeDelta = 0;
-//    NSInteger count = 20;
-//    
-//#warning 这是假数据，需要换为真实数据
-//    NSArray *dummyAnnotations = [self getDummyAnnotation:lat centerLongitude:lon deltaLat:deltaLat deltaLon:deltaLon altitudeDelta:altitudeDelta count:count];
-//    [self setAnnotations:dummyAnnotations];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -118,7 +109,7 @@
     cameraButton.frame = CGRectMake(cameraButtonX, cameraButtonY, 50, 50);
     cameraButton.backgroundColor = [UIColor clearColor];
     [cameraButton setImage:[UIImage imageNamed:@"ar_fabu"] forState:UIControlStateNormal];
-    [cameraButton addTarget:self action:@selector(searchButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    [cameraButton addTarget:self action:@selector(toReleaseFootprintView) forControlEvents:UIControlEventTouchUpInside];
     [self.view insertSubview:cameraButton aboveSubview:self.presenter];
     
     //列表
@@ -127,7 +118,7 @@
     arListButton.frame = CGRectMake(arListButtonX, cameraButtonY, 50, 50);
     arListButton.backgroundColor = [UIColor clearColor];
     [arListButton setImage:[UIImage imageNamed:@"ar_list"] forState:UIControlStateNormal];
-    [arListButton addTarget:self action:@selector(searchButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    [arListButton addTarget:self action:@selector(toFootprintListView) forControlEvents:UIControlEventTouchUpInside];
     [self.view insertSubview:arListButton aboveSubview:self.presenter];
     
     //平面地图
@@ -221,6 +212,20 @@
 {
     OTWFootprintsChangeAddressController *personalInfo = [[OTWFootprintsChangeAddressController alloc] init];
     [self.navigationController pushViewController:personalInfo animated:YES];
+}
+
+#pragma mark 跳转至足迹列表页面
+- (void)toFootprintListView
+{
+    OTWFootprintsViewController *footprintListVC = [[OTWFootprintsViewController alloc] init];
+    [self.navigationController pushViewController:footprintListVC animated:YES];
+}
+
+#pragma mark 跳转至足迹发布页面
+- (void)toReleaseFootprintView
+{
+    OTWFootprintReleaseViewController *footprintReleaseVC = [[OTWFootprintReleaseViewController alloc] init];
+    [self.navigationController pushViewController:footprintReleaseVC animated:YES];
 }
 
 - (void)showARViewController
@@ -338,7 +343,6 @@
     NSMutableArray *annotations = [NSMutableArray array];
     for (OTWFootprintListModel *footprint in footprints) {
         CLLocation *location = [self getRandomLocation:footprint.latitude centerLongitude:footprint.longitude deltaLat:deltaLat deltaLon:deltaLon altitudeDelta:altitudeDelta];
-        //MCYARAnnotation *annotation = [[MCYARAnnotation alloc] init];
         OTWARCustomAnnotation *annotation = [[OTWARCustomAnnotation alloc] init];
         annotation.footprint = footprint;
         annotation.location = location;
@@ -396,12 +400,26 @@
         [self presentViewController:alert animated:YES completion:nil];
     }
 }
+
+
+-(void)jumpToFootprintDetail:(OTWUITapGestureRecognizer*)gesture
+{
+    OTWARCustomAnnotation *annotation = gesture.opId;
+    DLog(@"OTWUITapGestureRecognizer手势----%@",annotation.footprint.footprintId.description);
+    OTWFootprintDetailController *VC =  [[OTWFootprintDetailController alloc] init];
+    [VC setFid:annotation.footprint.footprintId.description];
+    [self.navigationController pushViewController:VC animated:YES];
+}
+
+
 #pragma mark - MCYARDatasource
 - (MCYARAnnotationView*)ar:(MCYARViewController*)arViewController viewForAnnotation:(MCYARAnnotation*)annotation
 {
     OTWCustomAnnotationView *annotationView = [[OTWCustomAnnotationView alloc] init];
     annotationView.frame = CGRectMake(0, 0, 164, 42);
-    
+    OTWUITapGestureRecognizer *tapGesture=[[OTWUITapGestureRecognizer alloc]initWithTarget:self action:@selector(jumpToFootprintDetail:)];
+    tapGesture.opId = annotation;
+    [annotationView addGestureRecognizer:tapGesture];
     return annotationView;
 }
 
