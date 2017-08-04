@@ -68,20 +68,18 @@
 
 - (void)loadUi
 {
-    [self.printARV removeFromSuperview];
-    [self addSubview:self.printARV];
-    [self.printARV addSubview:self.printImageV];
-    [self.printARV addSubview:self.printTitleV];
-    [self.printARV addSubview:self.printLocationImageV];
-    [self.printARV addSubview:self.printLocationNameV];
-    [self.printARV addSubview:self.printDateImageV];
-    [self.printARV addSubview:self.printDateContentV];
-    [self.printARV addSubview:self.printUserImageV];
+    [self addSubview:self.printImageV];
+    [self addSubview:self.printTitleV];
+    [self addSubview:self.printLocationImageV];
+    [self addSubview:self.printLocationNameV];
+    [self addSubview:self.printDateImageV];
+    [self addSubview:self.printDateContentV];
+    [self addSubview:self.printUserImageV];
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGesture)];
     [self addGestureRecognizer:tapGesture];
     
-    self.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:0.5];
+    self.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.9];
     self.layer.cornerRadius = 5;
     
     if (self.annotaion != nil) {
