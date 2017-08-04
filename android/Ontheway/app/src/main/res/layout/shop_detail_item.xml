@@ -65,12 +65,14 @@
                         android:layout_width="97dp"
                         android:scaleType="centerCrop"
                         android:layout_height="78dp"
+                        android:layout_weight="1"
                         android:src="@drawable/header_default" />
                     <ImageView
                         android:id="@+id/comment_photo_2"
                         android:layout_width="97dp"
                         android:layout_height="78dp"
                         android:layout_marginLeft="7dp"
+                        android:layout_weight="1"
                         android:scaleType="centerCrop"
                         android:src="@drawable/header_default" />
                     <ImageView
@@ -78,6 +80,7 @@
                         android:layout_width="97dp"
                         android:layout_height="78dp"
                         android:layout_marginLeft="7dp"
+                        android:layout_weight="1"
                         android:scaleType="centerCrop"
                         android:src="@drawable/header_default" />
                 </LinearLayout>
@@ -92,12 +95,14 @@
                         android:layout_width="97dp"
                         android:scaleType="centerCrop"
                         android:layout_height="78dp"
+                        android:layout_weight="1"
                         android:src="@drawable/header_default" />
                     <ImageView
                         android:id="@+id/comment_photo_5"
                         android:layout_width="97dp"
                         android:layout_height="78dp"
                         android:layout_marginLeft="7dp"
+                        android:layout_weight="1"
                         android:scaleType="centerCrop"
                         android:src="@drawable/header_default" />
                     <ImageView
@@ -105,6 +110,7 @@
                         android:layout_width="97dp"
                         android:layout_height="78dp"
                         android:layout_marginLeft="7dp"
+                        android:layout_weight="1"
                         android:scaleType="centerCrop"
                         android:src="@drawable/header_default" />
                 </LinearLayout>
@@ -121,9 +127,17 @@
                     android:textSize="11sp"
                     android:textColor="#979797"
                     android:text="126条回复"
-                    android:layout_weight="1"
                     android:gravity="center_vertical"
                     />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:textSize="11sp"
+                    android:textColor="#979797"
+                    android:layout_marginLeft="10dp"
+                    android:text="43赞"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:layout_height="match_parent" />
                 <LinearLayout
                     android:layout_width="60dp"
                     android:layout_height="25dp"
