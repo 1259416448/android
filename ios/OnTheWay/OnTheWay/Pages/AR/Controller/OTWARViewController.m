@@ -252,9 +252,6 @@
 #pragma mark 刷新-换一批足迹
 - (void)refreshFootprints
 {
-    if (self.footprintSearchParams.isFirstPage && self.footprintSearchParams.isLastPage) {
-        return;
-    }
     DLog(@"OTWUITapGestureRecognizer手势----%@",self.footprintSearchParams.mj_keyValues);
     [self getFootprints];
 }
