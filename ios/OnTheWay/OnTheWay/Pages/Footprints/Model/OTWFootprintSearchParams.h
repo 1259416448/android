@@ -28,6 +28,10 @@
 @property (nonatomic,copy) NSString *time;
 //当前查询时间点
 @property (nonatomic,strong) NSNumber *currentTime;
+//是否是最后一页
+@property (nonatomic,assign) BOOL isLastPage;
+//是否是第一页
+@property (nonatomic,assign) BOOL isFirstPage;
 
 + (instancetype) initWithDict:(NSDictionary *) dict;
 
