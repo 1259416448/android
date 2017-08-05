@@ -73,6 +73,12 @@
 {
     [super viewWillAppear:animated];
     _locService.delegate = self;
+    self.dateButton_oneDay.hidden = YES;
+    self.dateButton_sevenDay.hidden = YES;
+    self.dateButton_oneMonth.hidden = YES;
+    self.locationBtton_100m.hidden = YES;
+    self.locationBtton_500m.hidden = YES;
+    self.locationBtton_1000m.hidden = YES;
     [self.navigationController setNavigationBarHidden:YES];
     [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
 }
@@ -123,37 +129,31 @@
     //时间筛选-1天内
     CGFloat dateButton_oneDayX = CGRectGetMaxX(self.dateButton.frame) - 65*3 - 5*3 - 35;
     self.dateButton_oneDay.frame = CGRectMake(dateButton_oneDayX, dateButtonY, 65, 35);
-    self.dateButton_oneDay.hidden = YES;
     [self.view insertSubview:self.dateButton_oneDay aboveSubview:self.presenter];
     
     //时间筛选-7天内
     CGFloat dateButton_sevenDayX = CGRectGetMaxX(self.dateButton.frame) - 65*2 - 5*2- 35;
     self.dateButton_sevenDay.frame = CGRectMake(dateButton_sevenDayX, dateButtonY, 65, 35);
-    self.dateButton_sevenDay.hidden = YES;
     [self.view insertSubview:self.dateButton_sevenDay aboveSubview:self.presenter];
     
     //时间筛选-一个月内
     CGFloat dateButton_oneMonthX = CGRectGetMaxX(self.dateButton.frame) - 65 - 5- 35;
     self.dateButton_oneMonth.frame = CGRectMake(dateButton_oneMonthX, dateButtonY, 65, 35);
-    self.dateButton_oneMonth.hidden = YES;
     [self.view insertSubview:self.dateButton_oneMonth aboveSubview:self.presenter];
     
     //距离筛选-100米内
     CGFloat locationBtton_100mX = CGRectGetMaxX(self.dateButton.frame) - 45*3 - 5*3 - 35;
     self.locationBtton_100m.frame = CGRectMake(locationBtton_100mX, locationButtonY, 45, 35);
-    self.locationBtton_100m.hidden = YES;
     [self.view insertSubview:self.locationBtton_100m aboveSubview:self.presenter];
     
     //距离筛选-500米内
     CGFloat locationBtton_500mX = CGRectGetMaxX(self.dateButton.frame) - 45*2 - 5*2 - 35;
     self.locationBtton_500m.frame = CGRectMake(locationBtton_500mX, locationButtonY, 45, 35);
-    self.locationBtton_500m.hidden = YES;
     [self.view insertSubview:self.locationBtton_500m aboveSubview:self.presenter];
     
-    //距离筛选-500米内
+    //距离筛选-1000米内
     CGFloat locationBtton_1000mX = CGRectGetMaxX(self.dateButton.frame) - 45 - 5 - 35;
     self.locationBtton_1000m.frame = CGRectMake(locationBtton_1000mX, locationButtonY, 45, 35);
-    self.locationBtton_1000m.hidden = YES;
     [self.view insertSubview:self.locationBtton_1000m aboveSubview:self.presenter];
     
     if ([ CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
