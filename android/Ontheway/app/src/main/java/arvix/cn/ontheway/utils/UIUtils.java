@@ -418,5 +418,18 @@ public class UIUtils {
         return window;
     }
 
-
+    public static int getStatusBarHeight(Context ctx){
+        int statusBarHeight = 0;
+        try{
+            //获取status_bar_height资源的ID
+            int resourceId = ctx.getResources().getIdentifier("status_bar_height", "dimen", "android");
+            if (resourceId > 0) {
+                //根据资源ID获取响应的尺寸值
+                statusBarHeight = ctx.getResources().getDimensionPixelSize(resourceId);
+            }return statusBarHeight;}
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return statusBarHeight;
+    }
 }

@@ -296,7 +296,7 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
     }
 
     private void updateLatestLocation() {
-        if (arOverlayView !=null) {
+        if (arOverlayView !=null&&location!=null) {
             arOverlayView.updateCurrentLocation(location);
             tvCurrentLocation.setText(String.format("lat: %s \nlon: %s \naltitude: %s \n",
                     location.getLatitude(), location.getLongitude(), location.getAltitude()));

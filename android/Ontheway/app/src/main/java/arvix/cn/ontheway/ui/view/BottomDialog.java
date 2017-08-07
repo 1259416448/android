@@ -3,6 +3,7 @@ package arvix.cn.ontheway.ui.view;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.view.Display;
 import android.view.Gravity;
@@ -99,6 +100,11 @@ public class BottomDialog {
         if (dialog != null) {
             dialog.setCancelable(flag);
             dialog.setCanceledOnTouchOutside(flag);
+        }
+    }
+    public void setOnDismissListener(DialogInterface.OnDismissListener listener) {
+        if (dialog != null) {
+            dialog.setOnDismissListener(listener);
         }
     }
 
