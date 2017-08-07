@@ -49,11 +49,10 @@ import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.bean.TrackBean;
 import arvix.cn.ontheway.data.TrackListData;
 import arvix.cn.ontheway.service.BaiduLocationListenerService;
-import arvix.cn.ontheway.service.inter.BaiduPoiServiceInterface;
-import arvix.cn.ontheway.service.inter.CacheInterface;
+import arvix.cn.ontheway.service.inter.BaiduPoiService;
+import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.ar.ArTrackActivity;
-import arvix.cn.ontheway.ui.usercenter.MyTrackDetailActivity;
 import arvix.cn.ontheway.ui.view.BottomDialog;
 import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticMethod;
@@ -109,7 +108,7 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
         mBaiduMap.setMapStatus(mMapStatusUpdate);
         Log.i(logTag,"init location from cache");
 
-        BaiduPoiServiceInterface poiService = OnthewayApplication.getInstahce(BaiduPoiServiceInterface.class);
+        BaiduPoiService poiService = OnthewayApplication.getInstahce(BaiduPoiService.class);
         if(TextUtils.isEmpty(searchKeyWord)){
             searchKeyWord = "美食";
         }
@@ -181,7 +180,7 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
 
 
     public  void updateLocation(){
-        CacheInterface cache = OnthewayApplication.getInstahce(CacheInterface.class);
+        CacheService cache = OnthewayApplication.getInstahce(CacheService.class);
         Double latCache = cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LAT);
         Double lonCache = 0.0;
         if(latCache!=null){

@@ -6,13 +6,13 @@ import com.baidu.location.LocationClientOption;
 
 import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.service.BaiduLocationListenerService;
-import arvix.cn.ontheway.service.inter.BaiduServiceInterface;
+import arvix.cn.ontheway.service.inter.BaiduService;
 
 /**
  * Created by asdtiang on 2017/7/18 0018.
  */
 
-public class BaiduServiceImpl implements BaiduServiceInterface{
+public class BaiduServiceImpl implements BaiduService {
     private LocationClient mLocationClient = null;
     private BDLocationListener bdLocationListener = null;
 

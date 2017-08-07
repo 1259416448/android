@@ -13,7 +13,7 @@ import org.xutils.x;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import arvix.cn.ontheway.service.inter.CacheInterface;
+import arvix.cn.ontheway.service.inter.CacheService;
 
 /**
  * Created by asdtiang on 2017/7/18 0018.
@@ -21,7 +21,7 @@ import arvix.cn.ontheway.service.inter.CacheInterface;
  * 采用xutils
  */
 
-public class CacheDefault implements CacheInterface {
+public class CacheDefault implements CacheService {
     private static String logTag = CacheDefault.class.getName();
     private static Map<String,Object> cacheMap = new ConcurrentHashMap<>();
     private static String cacheName = "onthewayCache";

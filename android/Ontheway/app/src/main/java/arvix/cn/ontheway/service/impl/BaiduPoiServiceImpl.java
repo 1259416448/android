@@ -7,14 +7,14 @@ import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
 import com.baidu.mapapi.search.poi.PoiNearbySearchOption;
 import com.baidu.mapapi.search.poi.PoiSearch;
 
-import arvix.cn.ontheway.service.inter.BaiduPoiServiceInterface;
+import arvix.cn.ontheway.service.inter.BaiduPoiService;
 
 /**
  * Created by asdtiang on 2017/7/19 0019.
  * asdtiangxia@163.com
  */
 
-public class BaiduPoiServiceImpl implements BaiduPoiServiceInterface {
+public class BaiduPoiServiceImpl implements BaiduPoiService {
     private static String logTag = BaiduPoiServiceImpl.class.getName();
 
 

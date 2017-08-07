@@ -44,8 +44,8 @@ import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.BaiduActivity;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.service.BaiduLocationListenerService;
-import arvix.cn.ontheway.service.inter.BaiduPoiServiceInterface;
-import arvix.cn.ontheway.service.inter.CacheInterface;
+import arvix.cn.ontheway.service.inter.BaiduPoiService;
+import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.MainActivity;
 import arvix.cn.ontheway.utils.OnthewayApplication;
@@ -109,7 +109,7 @@ public class MyTrackMapActivity extends BaseActivity {
         mBaiduMap.setMapStatus(mMapStatusUpdate);
         Log.i(logTag,"init location from cache");
 
-        BaiduPoiServiceInterface poiService = OnthewayApplication.getInstahce(BaiduPoiServiceInterface.class);
+        BaiduPoiService poiService = OnthewayApplication.getInstahce(BaiduPoiService.class);
         if(TextUtils.isEmpty(searchKeyWord)){
             searchKeyWord = "美食";
         }
@@ -160,7 +160,7 @@ public class MyTrackMapActivity extends BaseActivity {
 
 
     public  void updateLocation(){
-        CacheInterface cache = OnthewayApplication.getInstahce(CacheInterface.class);
+        CacheService cache = OnthewayApplication.getInstahce(CacheService.class);
         Double latCache = cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LAT);
         Double lonCache = 0.0;
         if(latCache!=null){

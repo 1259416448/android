@@ -30,15 +30,10 @@ import arvix.cn.ontheway.async.AsyncUtil;
 import arvix.cn.ontheway.async.Callback;
 import arvix.cn.ontheway.async.Result;
 import arvix.cn.ontheway.bean.ARPoint;
-import arvix.cn.ontheway.bean.TrackBean;
-import arvix.cn.ontheway.data.TrackListData;
-import arvix.cn.ontheway.service.inter.CacheInterface;
+import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.ui.head.HeaderHolder;
-import arvix.cn.ontheway.ui.track.TrackListActivity;
-import arvix.cn.ontheway.ui.track.TrackListAdapter;
 import arvix.cn.ontheway.ui.view.ListViewHolder;
 import arvix.cn.ontheway.utils.OnthewayApplication;
-import arvix.cn.ontheway.utils.StaticMethod;
 import arvix.cn.ontheway.utils.StaticVar;
 
 
@@ -56,11 +51,11 @@ public class AddressSelectActivity extends BaseActivity  implements AdapterView.
     private ListViewHolder listHolder;
     View lastSelected;
     ARPoint selectedPoint;
-    CacheInterface cache;
+    CacheService cache;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        cache = OnthewayApplication.getInstahce(CacheInterface.class);
+        cache = OnthewayApplication.getInstahce(CacheService.class);
         setContentView(R.layout.activity_address_select);
         x.view().inject(this);
         initView();

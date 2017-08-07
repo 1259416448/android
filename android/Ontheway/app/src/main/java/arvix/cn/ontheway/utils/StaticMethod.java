@@ -29,9 +29,8 @@ import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.bean.BaseResponse;
 import arvix.cn.ontheway.bean.UserInfo;
-import arvix.cn.ontheway.service.inter.CacheInterface;
+import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.ui.LoginActivity;
-import arvix.cn.ontheway.ui.usercenter.EditNicknameActivity;
 
 /**
  * Created by asdtiang on 2017/7/24 0024.
@@ -217,7 +216,7 @@ public class StaticMethod {
 
 
     public static void updateUserInfo(Activity activity,UserInfo userInfo){
-        CacheInterface cache = OnthewayApplication.getInstahce(CacheInterface.class);
+        CacheService cache = OnthewayApplication.getInstahce(CacheService.class);
         cache.putObject(StaticVar.USER_INFO,userInfo);
         cache.putObjectMem(StaticVar.USER_INFO,userInfo);
         App.userInfo = userInfo;

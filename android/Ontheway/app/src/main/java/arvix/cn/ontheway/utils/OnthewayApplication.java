@@ -8,9 +8,11 @@ import arvix.cn.ontheway.bean.UserInfo;
 import arvix.cn.ontheway.service.impl.BaiduPoiServiceImpl;
 import arvix.cn.ontheway.service.impl.BaiduServiceImpl;
 import arvix.cn.ontheway.service.impl.CacheDefault;
-import arvix.cn.ontheway.service.inter.BaiduPoiServiceInterface;
-import arvix.cn.ontheway.service.inter.BaiduServiceInterface;
-import arvix.cn.ontheway.service.inter.CacheInterface;
+import arvix.cn.ontheway.service.impl.FileUploadServiceImpl;
+import arvix.cn.ontheway.service.inter.BaiduPoiService;
+import arvix.cn.ontheway.service.inter.BaiduService;
+import arvix.cn.ontheway.service.inter.CacheService;
+import arvix.cn.ontheway.service.inter.FileUploadService;
 
 /**
  * Created by asdtiang on 2017/7/18 0018.
@@ -19,7 +21,7 @@ import arvix.cn.ontheway.service.inter.CacheInterface;
  */
 
 public class OnthewayApplication {
-    private static CacheInterface cache;
+    private static CacheService cache;
     private static Map<Class,Object> iocMap = new HashMap<Class, Object>();
     private static boolean initBefore = false;
 
@@ -33,12 +35,15 @@ public class OnthewayApplication {
             if(userInfo!=null){
                 App.userInfo = userInfo;
             }
-            iocMap.put(CacheInterface.class,cache);
-            BaiduPoiServiceInterface poiService = new BaiduPoiServiceImpl();
-            iocMap.put(BaiduPoiServiceInterface.class,poiService);
-            BaiduServiceInterface baiduService = new BaiduServiceImpl();
+            iocMap.put(CacheService.class,cache);
+            BaiduPoiService poiService = new BaiduPoiServiceImpl();
+            iocMap.put(BaiduPoiService.class,poiService);
+            BaiduService baiduService = new BaiduServiceImpl();
             baiduService.initLocation();
-            iocMap.put(BaiduServiceInterface.class,baiduService);
+            iocMap.put(BaiduService.class,baiduService);
+
+            FileUploadService fileUploadService = new FileUploadServiceImpl();
+            iocMap.put(FileUploadService.class,fileUploadService);
         }
         initBefore = true;
     }

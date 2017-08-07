@@ -4,7 +4,7 @@ package arvix.cn.ontheway.service.inter;
  * Created by asdtiang on 2017/7/18 0018.
  */
 
-public interface CacheInterface {
+public interface CacheService {
 
     /**
      *
