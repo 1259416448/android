@@ -397,13 +397,13 @@
     }];
 }
 
-- (NSArray*)getDummyAnnotation:(double)centerLatitude centerLongitude:(double)centerLongitude deltaLat:(double)deltaLat deltaLon:(double)deltaLon altitudeDelta:(double)altitudeDelta count:(NSInteger)count
+- (NSArray*)getDummyAnnotation:(double)centerLatitude centerLongitude:(double)centerLongitude altitudeDelta:(double)altitudeDelta count:(NSInteger)count
 {
     NSMutableArray *annotations = [NSMutableArray array];
     srand48(2);
     
     for (int i = 0; i < count; i++) {
-        CLLocation *location = [self getRandomLocation:centerLatitude centerLongitude:centerLongitude deltaLat:deltaLat deltaLon:deltaLon altitudeDelta:altitudeDelta];
+        CLLocation *location = [self getRandomLocation:centerLatitude centerLongitude:centerLongitude altitudeDelta:altitudeDelta];
         
         MCYARAnnotation *annotation = [[MCYARAnnotation alloc] initWithIdentifier:nil title:[NSString stringWithFormat:@"PppI(%d)", i] location:location];
         [annotations addObject:annotation];
@@ -415,12 +415,10 @@
 #pragma mark 组装足迹annotation
 - (NSArray*)assembleAnnotation:(NSMutableArray<OTWFootprintListModel*>*)footprints
 {
-    double deltaLat = 0.04;
-    double deltaLon = 0.07;
     double altitudeDelta = 0;
     NSMutableArray *annotations = [NSMutableArray array];
     for (OTWFootprintListModel *footprint in footprints) {
-        CLLocation *location = [self getRandomLocation:footprint.latitude centerLongitude:footprint.longitude deltaLat:deltaLat deltaLon:deltaLon altitudeDelta:altitudeDelta];
+        CLLocation *location = [self getRandomLocation:footprint.latitude centerLongitude:footprint.longitude altitudeDelta:altitudeDelta];
         OTWARCustomAnnotation *annotation = [[OTWARCustomAnnotation alloc] init];
         annotation.footprint = footprint;
         annotation.location = location;
@@ -439,16 +437,10 @@
     return annotations;
 }
 
-- (CLLocation*)getRandomLocation:(double)centerLatitude centerLongitude:(double)centerLongitude deltaLat:(double)deltaLat deltaLon:(double)deltaLon altitudeDelta:(double)altitudeDelta
+- (CLLocation*)getRandomLocation:(double)centerLatitude centerLongitude:(double)centerLongitude altitudeDelta:(double)altitudeDelta
 {
     double lat = centerLatitude;
     double lon = centerLongitude;
-    
-    double latDelta = -(deltaLat / 2) + drand48() * deltaLat;
-    double lonDelta = -(deltaLon / 2) + drand48() * deltaLon;
-    lat = lat + latDelta;
-    lon = lon + lonDelta;
-    
     double altitude = drand48() * altitudeDelta;
     
     return [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(lat, lon) altitude:altitude horizontalAccuracy:1 verticalAccuracy:1 timestamp:[NSDate date]];
