@@ -9,6 +9,7 @@
 #import "OTWPlaneMapViewController.h"
 #import "BottomSheetDemoViewController.h"
 #import <STPopup.h>
+#import "OTWFootprintReleaseViewController.h"
 
 @interface OTWPlaneMapViewController ()
 
@@ -16,6 +17,10 @@
 @property (nonatomic,strong) UIButton *openModalButtonV;
 @property (nonatomic,strong) UILabel *label;
 @property (nonatomic,strong) STPopupController *popupController;
+
+@property (nonatomic,strong) UIView * ARdituImageView;
+@property (nonatomic,strong) UIView * fabuImageView;
+@property (nonatomic,strong) UIView * pingmianImageView;
 
 @end
 
@@ -31,6 +36,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setUpBase];
+    
+    [self test];
 }
 
 - (void)setUpBase
@@ -80,6 +87,79 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - test
+
+- (void)test
+{
+    //设置标题
+    self.title = @"地图列表";
+    [self setLeftNavigationImage:[UIImage imageNamed:@"back_2"]];
+    
+    [self.view addSubview:self.ARdituImageView];
+    [self.view addSubview:self.fabuImageView];
+    [self.view addSubview:self.pingmianImageView];
+}
+
+-(UIView*)ARdituImageView{
+    if(!_ARdituImageView){
+        _ARdituImageView = [[UIControl alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-15-50-50-4, SCREEN_HEIGHT-30-49, 50, 50)] ;
+        _ARdituImageView.backgroundColor = [UIColor clearColor];
+        [(UIControl *)_ARdituImageView addTarget:self action:@selector(ARdituClick) forControlEvents:UIControlEventTouchUpInside];
+        UIImageView *imgARditu=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+        imgARditu.image=[UIImage imageNamed:@"ar_ARditu"];
+        [_ARdituImageView addSubview:imgARditu];
+    }
+    return _ARdituImageView;
+}
+
+-(UIView*)fabuImageView{
+    if(!_fabuImageView){
+        _fabuImageView = [[UIControl alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-15-50-50-50-8, SCREEN_HEIGHT-30-49, 50, 50)] ;
+        _fabuImageView.backgroundColor = [UIColor clearColor];
+        [(UIControl *)_fabuImageView addTarget:self action:@selector(fubuClick) forControlEvents:UIControlEventTouchUpInside];
+        UIImageView *imgfabu=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+        imgfabu.image=[UIImage imageNamed:@"ar_fabu"];
+        [_fabuImageView addSubview:imgfabu];
+    }
+    return _fabuImageView;
+}
+
+-(UIView*)pingmianImageView{
+    if(!_pingmianImageView){
+        _pingmianImageView = [[UIControl alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-15-50, SCREEN_HEIGHT-30-49, 50, 50)] ;
+        _pingmianImageView.backgroundColor = [UIColor clearColor];
+        [(UIControl *)_pingmianImageView addTarget:self action:@selector(pingmianClick) forControlEvents:UIControlEventTouchUpInside];
+        UIImageView *imgpingmian=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+        imgpingmian.image=[UIImage imageNamed:@"ar_list"];
+        [_pingmianImageView addSubview:imgpingmian];
+        
+    }
+    return _pingmianImageView;
+}
+
+- (void)ARdituClick
+{
+    NSLog(@"点击了ARdituClick");
+    [self.navigationController popViewControllerAnimated:NO];
+    [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexAR];
+}
+
+- (void)fubuClick
+{
+    NSLog(@"点击了fubuClick");
+    if(![[OTWLaunchManager sharedManager] showLoginViewWithController:self completion:nil]){
+        OTWFootprintReleaseViewController *releaseVC = [[OTWFootprintReleaseViewController alloc] init];
+        [self.navigationController pushViewController:releaseVC animated:YES];
+    };
+}
+
+- (void)pingmianClick
+{
+    NSLog(@"点击了pingmianClick");
+    [self.navigationController popViewControllerAnimated:NO];
+    [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexFootprints];
 }
 
 /*

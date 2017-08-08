@@ -60,7 +60,7 @@
     // Do any additional setup after loading the view.
     self.customNavigationBar.leftButtonClicked = ^(){
         //这里直接回到上一个首页
-        [[OTWLaunchManager sharedManager].mainTabController didSelectedItemByIndex:0];
+        [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexFind];
     };
     [self buildUI];
 }
@@ -291,6 +291,8 @@
 
 -(void)ARdituClick{
     DLog(@"我点击了ARditu");
+//    [self.navigationController pushViewController:[OTWLaunchManager sharedManager].arViewController animated:YES];
+    [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexAR];
 }
 
 -(void)fubuClick{
@@ -305,12 +307,12 @@
 -(void)toPlaneMap
 {
     OTWPlaneMapViewController *planeMapVC = [[OTWPlaneMapViewController alloc] init];
-    [self.navigationController pushViewController:planeMapVC animated:YES];
+    [self.navigationController pushViewController:planeMapVC animated:NO];
 }
 -(void)pingmianClick{
     DLog(@"我点击了pingmianClick");
     OTWPlaneMapViewController *planeMapVC = [[OTWPlaneMapViewController alloc] init];
-    [self.navigationController pushViewController:planeMapVC animated:YES];
+    [self.navigationController pushViewController:planeMapVC animated:NO];
 }
 
 -(void)loadMoreFootprints:(BOOL)reflesh
