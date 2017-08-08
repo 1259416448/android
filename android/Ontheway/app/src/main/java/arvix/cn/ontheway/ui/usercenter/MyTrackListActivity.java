@@ -31,6 +31,7 @@ import arvix.cn.ontheway.data.TrackListData;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.view.ListViewHolder;
 import arvix.cn.ontheway.utils.StaticMethod;
+import arvix.cn.ontheway.utils.UIUtils;
 
 /**
  * Created by asdtiang on 2017/7/25 0025.
@@ -54,6 +55,7 @@ public class MyTrackListActivity  extends BaseActivity   implements AdapterView.
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_track_list);
+        UIUtils.setBarStyle(self);
         initView();
         datas = new ArrayList();
 
@@ -64,7 +66,7 @@ public class MyTrackListActivity  extends BaseActivity   implements AdapterView.
         listHolder = ListViewHolder.initList(this);
         listHolder.list.setAdapter(adapter);
         listHolder.list.getRefreshableView().setDividerHeight(0);
-        listHolder.list.getRefreshableView().addHeaderView(LayoutInflater.from (self).inflate(R.layout.my_track_info_frag,listHolder.list,false));
+        listHolder.list.getRefreshableView().addHeaderView(LayoutInflater.from (self).inflate(R.layout.my_track_info_frag,listHolder.list.getRefreshableView(),false));
         x.view().inject(this);
         StaticMethod.setCircularHeaderImg(headerIV,180,180);
         toMyTrackMapBtn.setOnClickListener(new View.OnClickListener() {

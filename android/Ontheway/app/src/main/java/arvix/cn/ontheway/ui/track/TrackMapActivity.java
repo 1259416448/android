@@ -300,6 +300,9 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
         if(mMapView!=null) {
             mMapView.onResume();
         }
+        if(highLightView!=null){
+            highLightView.setVisibility(View.VISIBLE);
+        }
     }
     @Override
     protected void onPause() {
@@ -307,6 +310,9 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
         //在activity执行onPause时执行mMapView. onPause ()，实现地图生命周期管理
         if(mMapView!=null) {
             mMapView.onPause();
+        }
+        if(highLightView!=null){
+            highLightView.setVisibility(View.GONE);
         }
     }
 
