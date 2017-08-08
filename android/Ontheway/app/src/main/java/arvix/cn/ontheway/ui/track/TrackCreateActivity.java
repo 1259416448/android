@@ -21,6 +21,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.pizidea.imagepicker.AndroidImagePicker;
@@ -29,6 +30,7 @@ import com.pizidea.imagepicker.UilImgLoader;
 import com.pizidea.imagepicker.Util;
 import com.pizidea.imagepicker.bean.ImageItem;
 
+import org.w3c.dom.Text;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
@@ -37,11 +39,13 @@ import java.util.List;
 
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.bean.TrackBean;
+import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.ui.AddressSelectActivity;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.head.HeaderHolder;
 import arvix.cn.ontheway.ui.usercenter.MyTrackDetailActivity;
 import arvix.cn.ontheway.ui.view.ListViewHolder;
+import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticMethod;
 import arvix.cn.ontheway.utils.StaticVar;
 
@@ -55,7 +59,9 @@ public class TrackCreateActivity extends BaseActivity {
     private GridView mGridView;
     @ViewInject(R.id.change_address_line)
     private View changeAddressLine;
-
+    @ViewInject(R.id.address_tv)
+    private TextView addressTV;
+    CacheService cache;
     private static String TAG = TrackCreateActivity.class.getName();
    // GridView mGridView;
     SelectAdapter mAdapter;
@@ -67,7 +73,7 @@ public class TrackCreateActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_create);
-
+        cache = OnthewayApplication.getInstahce(CacheService.class);
         HeaderHolder head=new HeaderHolder();
         head.init(self,"发布足迹");
         head.setUpRightTextBtn("发布", new View.OnClickListener() {
@@ -76,6 +82,7 @@ public class TrackCreateActivity extends BaseActivity {
             }
         });
         x.view().inject(this);
+        addressTV.setText(cache.get(StaticVar.BAIDU_LOC_CACHE_ADDRESS));
         mAdapter = new SelectAdapter(this);
         mGridView.setAdapter(mAdapter);
         //init grid item and img width;

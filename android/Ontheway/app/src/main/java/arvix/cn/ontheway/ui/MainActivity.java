@@ -1,25 +1,35 @@
 package arvix.cn.ontheway.ui;
 
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-
+import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
+import com.baidu.mapapi.search.poi.PoiDetailResult;
+import com.baidu.mapapi.search.poi.PoiIndoorResult;
+import com.baidu.mapapi.search.poi.PoiResult;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
-
 import java.util.HashMap;
 import java.util.concurrent.Callable;
 
+import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.BaiduActivity;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.async.AsyncUtil;
 import arvix.cn.ontheway.async.Callback;
 import arvix.cn.ontheway.async.Result;
+import arvix.cn.ontheway.service.BaiduLocationListenerService;
+import arvix.cn.ontheway.service.inter.BaiduPoiService;
 import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.ui.ar.ArTrackActivity;
 import arvix.cn.ontheway.ui.msg.MsgIndexFrag;
@@ -29,6 +39,7 @@ import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticMethod;
 import arvix.cn.ontheway.utils.StaticVar;
 import arvix.cn.ontheway.utils.Windows;
+import arvix.cn.ontheway.service.impl.BaiduPoiServiceImpl;
 
 /**
  * Created by yd on 2017/7/19.
@@ -40,7 +51,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @ViewInject(R.id.tab_zuji)
     private TextView zuJiTextView;
     CacheService cache;
-
+    LocalBroadcastManager mLocalBroadcastManager;
+    BroadcastReceiver mReceiver;
+    BaiduPoiService poiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +70,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             }
         });
         cache = OnthewayApplication.getInstahce(CacheService.class);
+        poiService = OnthewayApplication.getInstahce(BaiduPoiService.class);
         Log.i(logTag,"onCreate----->");
         initView();
-
-        final MyProgressDialog wait=Windows.waiting(self);
+        initLocation();
+        final MyProgressDialog wait= Windows.waiting(self);
         AsyncUtil.goAsync(new Callable<Result<Void>>() {
             @Override
             public Result<Void> call() throws Exception {
@@ -75,7 +89,38 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         });
     }
 
-    private int lastCheckedTab;
+    private void initLocation(){
+
+        //register localroadcast
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(BaiduLocationListenerService.BROADCAST_LOCATION);
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.i(logTag,"receive broadcast----------->"+intent.getAction());
+                if (intent.getAction().equals(BaiduLocationListenerService.BROADCAST_LOCATION)) {
+                    double lat = intent.getDoubleExtra(StaticVar.BAIDU_LOC_CACHE_LAT,0.0);
+                    double lon = intent.getDoubleExtra(StaticVar.BAIDU_LOC_CACHE_LON,0.0);
+
+                    poiService.search(lat,lon, "美食",1000,new OnGetPoiSearchResultListener(){
+                        @Override
+                        public void onGetPoiResult(PoiResult poiResult) {
+                            cache.putObjectMem(StaticVar.LAST_POIRESULT,poiResult);
+                        }
+                        @Override
+                        public void onGetPoiDetailResult(PoiDetailResult poiDetailResult) {
+                        }
+
+                        @Override
+                        public void onGetPoiIndoorResult(PoiIndoorResult poiIndoorResult) {
+                        }
+                    });
+                }
+            }
+        };
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(App.self);
+        mLocalBroadcastManager.registerReceiver(mReceiver, filter);
+    }
 
     private void initView() {
         tabRG.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -133,7 +178,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        //在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
+        mLocalBroadcastManager.unregisterReceiver(mReceiver);
     }
 
     @Override

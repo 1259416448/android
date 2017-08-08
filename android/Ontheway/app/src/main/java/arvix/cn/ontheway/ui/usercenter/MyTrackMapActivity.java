@@ -193,8 +193,8 @@ public class MyTrackMapActivity extends BaseActivity {
             public void onReceive(Context context, Intent intent) {
                 Log.i(logTag,"receive broadcast-->"+intent.getAction());
                 if (intent.getAction().equals(BaiduLocationListenerService.BROADCAST_LOCATION)) {
-                    double lat = intent.getDoubleExtra(BaiduLocationListenerService.EXTRA_LAT,0.0);
-                    double lon = intent.getDoubleExtra(BaiduLocationListenerService.EXTRA_LON,0.0);
+                    double lat = intent.getDoubleExtra(StaticVar.BAIDU_LOC_CACHE_LAT,0.0);
+                    double lon = intent.getDoubleExtra(StaticVar.BAIDU_LOC_CACHE_LON,0.0);
                     updateLocation(lat,lon);
                 }
             }
