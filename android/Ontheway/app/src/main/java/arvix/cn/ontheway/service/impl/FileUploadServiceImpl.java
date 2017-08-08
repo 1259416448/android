@@ -51,6 +51,21 @@ public class FileUploadServiceImpl implements FileUploadService {
         this.upload(act, DataType.BYTE, data, uploadUrl, fileUploadCallBack);
     }
 
+    @Override
+    public void upload(Activity act, String filePath, FileUploadCallBack fileUploadCallBack) {
+        this.upload(act, DataType.FILEPATH, filePath, null, fileUploadCallBack);
+    }
+
+    @Override
+    public void upload(Activity act, File File, FileUploadCallBack fileUploadCallBack) {
+        this.upload(act, DataType.FILE, File, null, fileUploadCallBack);
+    }
+
+    @Override
+    public void upload(Activity act, byte[] data, FileUploadCallBack fileUploadCallBack) {
+        this.upload(act, DataType.BYTE, data, null, fileUploadCallBack);
+    }
+
     private void upload(final Activity act, final DataType dataType, final Object data, final String uploadUrl, final FileUploadCallBack fileUploadCallBack) {
         RequestParams requestParams = new RequestParams(ServerUrl.QINIU_UPTOKEN);
         try {
@@ -62,7 +77,6 @@ public class FileUploadServiceImpl implements FileUploadService {
                     if (response.getCode() == StaticVar.SUCCESS) {
                         String key = UUID.randomUUID().toString().replace("-", "");
                         String token = response.getBody().getString("uptoken");
-
                         UpCompletionHandler upCompletionHandler = new UpCompletionHandler() {
                             @Override
                             public void complete(String key, ResponseInfo info, JSONObject res) {
@@ -77,35 +91,42 @@ public class FileUploadServiceImpl implements FileUploadService {
                                         qiniuBean.setFileType(res.getString("type"));
                                         qiniuBean.setW(res.getInt("w"));
                                         qiniuBean.setH(res.getInt("h"));
-                                        RequestParams requestParams = new RequestParams();
-                                        requestParams.setUri(uploadUrl);
-                                        requestParams.setBodyContent(JSON.toJSONString(qiniuBean));
-                                        x.http().post(requestParams, new Callback.CommonCallback<String>() {
-                                            @Override
-                                            public void onSuccess(String result) {
-                                                try {
-                                                    BaseResponse response = StaticMethod.genResponse(result);
-                                                    fileUploadCallBack.uploadBack(response);
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
+                                        if(uploadUrl!=null){
+                                            RequestParams requestParams = new RequestParams();
+                                            requestParams.setUri(uploadUrl);
+                                            requestParams.setBodyContent(JSON.toJSONString(qiniuBean));
+                                            x.http().post(requestParams, new Callback.CommonCallback<String>() {
+                                                @Override
+                                                public void onSuccess(String result) {
+                                                    try {
+                                                        BaseResponse response = StaticMethod.genResponse(result);
+                                                        fileUploadCallBack.uploadBack(response);
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                    }
                                                 }
-                                            }
 
-                                            @Override
-                                            public void onError(Throwable throwable, boolean b) {
-                                                Log.e(logTag, "error", throwable);
-                                            }
+                                                @Override
+                                                public void onError(Throwable throwable, boolean b) {
+                                                    Log.e(logTag, "error", throwable);
+                                                }
 
-                                            @Override
-                                            public void onCancelled(CancelledException e) {
-                                                Log.w(logTag, "onCancelled", e);
-                                            }
+                                                @Override
+                                                public void onCancelled(CancelledException e) {
+                                                    Log.w(logTag, "onCancelled", e);
+                                                }
 
-                                            @Override
-                                            public void onFinished() {
-                                                Log.i(logTag, "onFinished");
-                                            }
-                                        });
+                                                @Override
+                                                public void onFinished() {
+                                                    Log.i(logTag, "onFinished");
+                                                }
+                                            });
+                                        }else{
+                                            BaseResponse response = new BaseResponse();
+                                            response.setBodyBean(qiniuBean);
+                                            response.setCode(StaticVar.SUCCESS);
+                                            fileUploadCallBack.uploadBack(response);
+                                        }
                                     } catch (JSONException e) {
                                         Log.i(logTag, "JSONException", e);
                                     }
