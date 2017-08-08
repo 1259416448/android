@@ -267,7 +267,7 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
         } else if (SearchDistance.two.equals(searchDistance)) {
             params.put("distance", 0.5);
         } else {
-            params.put("distance", 1);
+            params.put("distance", 1.0);
         }
         Long minTime = null;
         if (SearchTime.oneDay.equals(time)) {
