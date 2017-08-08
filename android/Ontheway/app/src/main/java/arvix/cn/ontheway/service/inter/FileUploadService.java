@@ -15,5 +15,8 @@ public interface FileUploadService {
      void upload(final Activity act, final String filePath, final String uploadUrl, final FileUploadCallBack fileUploadCallBack) ;
      void upload(final Activity act, final File File, final String uploadUrl, final FileUploadCallBack fileUploadCallBack) ;
      void upload(final Activity act, final byte[] data, final String uploadUrl, final FileUploadCallBack fileUploadCallBack) ;
+     void upload(final Activity act, final String filePath,final FileUploadCallBack fileUploadCallBack) ;
+     void upload(final Activity act, final File File,  final FileUploadCallBack fileUploadCallBack) ;
+     void upload(final Activity act, final byte[] data,  final FileUploadCallBack fileUploadCallBack) ;
 
 }
