@@ -11,6 +11,7 @@
 #import "MCYARTrackingManager.h"
 #import "MCYARPresenter.h"
 #import "MCYCameraView.h"
+#import "MCYARRadar.h"
 
 /**
  *      Augmented reality view controller.
@@ -41,6 +42,8 @@ typedef void(^onDidFailToFindLocation)(NSTimeInterval timeElapsed, BOOL acquired
 @protocol MCYARDataSource;
 
 @interface MCYARViewController : UIViewController
+
+@property (nonatomic, strong) MCYARRadar *radar; // 雷达
 
 /**
  * Data source - source of annotation views for ARViewController/ARPresenter, implement it to provide annotation views.

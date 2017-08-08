@@ -8,7 +8,6 @@
 
 #import "MCYARViewController.h"
 #import "MCYARTrackingManager.h"
-#import "MCYARRadar.h"
 #import <BaiduMapAPI_Utils/BMKUtilsComponent.h>
 
 @interface MCYARViewController ()<MCYARTrackingManagerDelegate>
@@ -27,8 +26,6 @@
 @property (nonatomic, strong) UIButton *debugMapButton;
 @property (nonatomic, strong) UISlider *debugHeadingSlider;
 @property (nonatomic, strong) UISlider *debugPitchSlider;
-
-@property (nonatomic, strong) MCYARRadar *radar; // 雷达
 
 
 
@@ -347,10 +344,10 @@
         || highestRankingReload == ReloadTypeUserLocationChanged) {
         [self calculateDistancesForAnnotations];
         [self calculateAzimuthsForAnnotations];
-        
+        [self.radar moveDots:0];
         [self.radar setupAnnotations:self.annotations];
     }
-    [self.radar moveDots:self.arStatus.heading]; // 雷达移动
+    [self.radar moveDots:-self.arStatus.heading + 90]; // 雷达移动
     [self.presenter reload:self.annotations reloadType:(PresenterReloadType)highestRankingReload];
 }
 
