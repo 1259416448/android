@@ -70,7 +70,7 @@
 
 #define Radius 40         // 雷达半径
 #define pointWidth 3      // 小圆点的宽度
-#define distanceScale 100 // 两点间的实际距离缩放比例尺
+//#define distanceScale 100 // 两点间的实际距离缩放比例尺
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -122,63 +122,49 @@
     [self.spots removeAllObjects];
     
     // 比较两点是否相交， 相交的话，x，y分别+1
-    CGRect rect2 = CGRectZero;
+    //CGRect rect2 = CGRectZero;
     for (MCYARAnnotation *annotation in sortedAnnotationViews) {
         // 获取x，y
         double pointX = sin(annotation.azimuth)*annotation.distanceFromUser;
         double pointY =  cos(annotation.azimuth)*annotation.distanceFromUser;
         
-        double azimuth = annotation.azimuth;
-        double screenDistance = annotation.distanceFromUser / distanceScale;
+        double azimuth = annotation.azimuth / 180.0 * M_PI;
+      //  double screenDistance = annotation.distanceFromUser / 100;
         
-        NSLog(@"实际距离：%f  屏幕宽度:%f  (实际x:%f, y:%f)", annotation.distanceFromUser, self.frame.size.width, pointX, pointY);
+        double screenDistance = Radius * annotation.distanceFromUser/self.maxDistance;
         
-        if (azimuth < 90 && azimuth > 0) {
-            azimuth = azimuth;
-            pointX = (cos(annotation.azimuth)*screenDistance + Radius);
-            pointY = (sin(annotation.azimuth)*screenDistance + Radius);
-        } else if (azimuth > 90 && azimuth < 180) {
-            azimuth -= 90;
+        if (azimuth <= 90 && azimuth > 0) {
+            pointX = (cos(azimuth)*screenDistance + Radius);
+            pointY = (Radius - sin(azimuth)*screenDistance);
+        } else if (azimuth > 90 && azimuth <= 180) {
+            //azimuth -= 90;
             pointX = cos(azimuth)*screenDistance + Radius;
-            pointY = sin(azimuth)*screenDistance + Radius;
-        } else if (azimuth > 180 && azimuth < 270){
-            azimuth -= 180;
-            pointX = Radius - cos(azimuth)*screenDistance;
             pointY = Radius - sin(azimuth)*screenDistance;
-        } else if (azimuth > 270 && azimuth < 360) {
-            azimuth -= 270;
-            pointX = Radius - cos(azimuth)*screenDistance;
-            pointY = Radius - cos(azimuth)*screenDistance;
-        } else {
-            if (azimuth == 0) {
-                pointX = Radius;
-                pointY = Radius - screenDistance;
-            } else if (azimuth == 90) {
-                pointX = screenDistance + Radius;
-                pointY = Radius;
-            } else if (azimuth == 180) {
-                pointX = Radius + screenDistance;
-                pointY = Radius;
-            } else if (azimuth == 270) {
-                pointX = Radius - screenDistance;
-                pointY = Radius;
-            } else {
-                pointX = Radius;
-                pointY = Radius - screenDistance;
-            }
+        } else if (azimuth > 180 && azimuth <= 270){
+            //azimuth -= 180;
+            pointX = Radius + cos(azimuth)*screenDistance;
+            pointY = Radius - sin(azimuth)*screenDistance;
+        } else if (azimuth > 270 && azimuth <= 360) {
+            //azimuth -= 270;
+            pointX = Radius + cos(azimuth)*screenDistance;
+            pointY = Radius - sin(azimuth)*screenDistance;
         }
         
         CGRect rect1 = CGRectMake(pointX, pointY, pointWidth, pointWidth);
         
-        BOOL hasCollision =  CGRectIntersectsRect(rect1, rect2);
-        if (hasCollision) {
-            rect1 = CGRectMake(pointX + 1, pointY + 1, pointWidth, pointWidth);
-        }
-        rect2 = CGRectMake(pointX, pointY, pointWidth, pointWidth);
+        //暂时不考虑点重合问题
+//        BOOL hasCollision =  CGRectIntersectsRect(rect1, rect2);
+//        if (hasCollision) {
+//            rect1 = CGRectMake(pointX + 1, pointY + 1, pointWidth, pointWidth);
+//        }
+//        rect2 = CGRectMake(pointX, pointY, pointWidth, pointWidth);
         
         SpotView *spotview = [[SpotView alloc] initWithFrame:rect1];
         spotview.backgroundColor = [UIColor redColor];
-        spotview.layer.cornerRadius = 2;
+        spotview.layer.cornerRadius = 3;
+        
+        NSLog(@"实际距离：%f  屏幕宽度:%f  (实际x:%f, y:%f) 方位角 %f 雷达距离 %f 地址:", annotation.distanceFromUser, self.frame.size.width, pointX, pointY,azimuth,screenDistance);
+        
         [self addSubview:spotview];
         [self.spots addObject:spotview];
     }
