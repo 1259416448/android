@@ -473,7 +473,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
     private static RequestParams createRequestParams(String url, ImageOptions options) {
         RequestParams params = new RequestParams(url);
-        params.setCacheDirName(DISK_CACHE_DIR_NAME);
+      //  params.setCacheDirName(DISK_CACHE_DIR_NAME);
         params.setConnectTimeout(1000 * 8);
         params.setPriority(Priority.BG_LOW);
         params.setExecutor(EXECUTOR);

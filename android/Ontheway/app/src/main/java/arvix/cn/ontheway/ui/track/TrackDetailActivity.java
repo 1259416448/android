@@ -2,14 +2,11 @@ package arvix.cn.ontheway.ui.track;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.AbsoluteSizeSpan;
@@ -17,17 +14,13 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.viewpagerindicator.CirclePageIndicator;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
@@ -45,17 +38,14 @@ import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.async.AsyncUtil;
 import arvix.cn.ontheway.async.Callback;
 import arvix.cn.ontheway.async.Result;
-import arvix.cn.ontheway.bean.MsgBean;
 import arvix.cn.ontheway.bean.ReplyBean;
 import arvix.cn.ontheway.bean.TrackBean;
 import arvix.cn.ontheway.data.NewReplyData;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.head.HeaderHolder;
-import arvix.cn.ontheway.ui.usercenter.MyTrackDetailActivity;
 import arvix.cn.ontheway.ui.view.ListViewHolder;
 import arvix.cn.ontheway.utils.StaticMethod;
 import arvix.cn.ontheway.utils.StaticVar;
-import arvix.cn.ontheway.utils.UIUtils;
 
 import static android.text.style.DynamicDrawableSpan.ALIGN_BASELINE;
 
@@ -115,11 +105,11 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
 
     private void initView() {
         //init field;
-        StaticMethod.setCircularHeaderImg(trackBean.getUserHeaderUrl(),userHeader,userHeader.getWidth(),userHeader.getHeight());
-        nicknameTv.setText(trackBean.getNickname());
+        StaticMethod.setCircularHeaderImg(trackBean.getUserHeadImg(),userHeader,userHeader.getWidth(),userHeader.getHeight());
+        nicknameTv.setText(trackBean.getUserNickname());
         timeTv.setText(trackBean.getDateCreated()+"");
-        contentTv.setText(trackBean.getContent());
-        addressTv.setText(trackBean.getAddress());
+        contentTv.setText(trackBean.getFootprintContent());
+        addressTv.setText(trackBean.getFootprintAddress());
         Banner banner = (Banner) findViewById(R.id.banner);
         //设置banner样式
         banner.setBannerStyle(BannerConfig.NUM_INDICATOR);
