@@ -145,7 +145,7 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
                     /**
                      * 加载图片bind方法
                      */
-                    x.image().bind(headerIVTemp,trackBean.getUserHeaderUrl(), options ,new Callback.CommonCallback<Drawable>() {
+                    x.image().bind(headerIVTemp,trackBean.getUserHeadImg(), options ,new Callback.CommonCallback<Drawable>() {
                         @Override
                         public void onSuccess(Drawable result) {
                         }
@@ -159,7 +159,7 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
                         public void onFinished() {
                             LatLng latLng = new LatLng(p.location.latitude,p.location.longitude);
                             headerIVTemp.setDrawingCacheEnabled(true);
-                            BitmapDescriptor markerIcon = BitmapDescriptorFactory.fromBitmap(getViewBitmap(view));
+                            BitmapDescriptor markerIcon = BitmapDescriptorFactory.fromBitmap(StaticMethod.getViewBitmap(view));
                             Bundle bundle = new Bundle();
                             bundle.putSerializable(StaticVar.EXTRA_TRACK_BEAN,trackBean);
                             OverlayOptions oo = new MarkerOptions().anchor(0.0f,0.5f).position(latLng).icon(markerIcon).zIndex(9).draggable(true).extraInfo(bundle);
@@ -309,15 +309,6 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
             mMapView.onPause();
         }
     }
-    private Bitmap getViewBitmap(View addViewContent) {
-        addViewContent.setDrawingCacheEnabled(true);
-        addViewContent.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-        addViewContent.layout(0, 0, addViewContent.getMeasuredWidth(), addViewContent.getMeasuredHeight());
-        addViewContent.buildDrawingCache();
-        Bitmap cacheBitmap = addViewContent.getDrawingCache();
-        Bitmap bitmap = Bitmap.createBitmap(cacheBitmap);
-        return bitmap;
-    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -339,7 +330,7 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
             public void run() {
                 Bundle bundle = marker.getExtraInfo();
                 currentClickedTrack = (TrackBean) bundle.getSerializable(StaticVar.EXTRA_TRACK_BEAN);
-                Log.i(logTag,"user header--->"+currentClickedTrack.getUserHeaderUrl());
+                Log.i(logTag,"user header--->"+currentClickedTrack.getUserHeadImg());
                 if (headerClickedView == null) {
                     bottomDialog = new BottomDialog(self);
                     headerClickedView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.track_map_header_click, null);
@@ -371,11 +362,11 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
                     headerClickedViewHolder = (HeaderClickedViewHolder) headerClickedView.getTag();
                 }
                 headerClickedViewHolder.headerIv.setDrawingCacheEnabled(false);
-                StaticMethod.setCircularHeaderImg(currentClickedTrack.getUserHeaderUrl(),headerClickedViewHolder.headerIv,headerClickedViewHolder.headerIv.getWidth(),headerClickedViewHolder.headerIv.getHeight());
-                headerClickedViewHolder.nicknameTv.setText(currentClickedTrack.getNickname());
-                headerClickedViewHolder.addressTv.setText(currentClickedTrack.getAddress());
+                StaticMethod.setCircularHeaderImg(currentClickedTrack.getUserHeadImg(),headerClickedViewHolder.headerIv,headerClickedViewHolder.headerIv.getWidth(),headerClickedViewHolder.headerIv.getHeight());
+                headerClickedViewHolder.nicknameTv.setText(currentClickedTrack.getUserNickname());
+                headerClickedViewHolder.addressTv.setText(currentClickedTrack.getFootprintAddress());
                 headerClickedViewHolder.timeTv.setText(currentClickedTrack.getDateCreated()+"");
-                headerClickedViewHolder.contentTv.setText(StaticMethod.genLesStr(currentClickedTrack.getContent(),30));
+                headerClickedViewHolder.contentTv.setText(StaticMethod.genLesStr(currentClickedTrack.getFootprintContent(),30));
                 headerClickedViewHolder.imageOne.setVisibility(View.GONE);
                 headerClickedViewHolder.imageOne.setDrawingCacheEnabled(false);
                 headerClickedViewHolder.imageTwo.setVisibility(View.GONE);

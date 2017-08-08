@@ -28,12 +28,12 @@ public class TrackListData {
 
     public static TrackBean genData(int month, int day, long id, int photoCount){
         TrackBean trackBean = new TrackBean();
-        trackBean.setUserHeaderUrl(GenTestData.genRandomUserHeader());
-        trackBean.setContent(GenTestData.genContent());
+        trackBean.setUserHeadImg(GenTestData.genRandomUserHeader());
+        trackBean.setFootprintContent(GenTestData.genContent());
         trackBean.setDateCreated(System.currentTimeMillis());
-        trackBean.setAddress("成都市菁蓉国际广场A1栋");
-        trackBean.setNickname(GenTestData.genNickname());
-        trackBean.setId(id);
+        trackBean.setFootprintAddress("成都市菁蓉国际广场A1栋");
+        trackBean.setUserNickname(GenTestData.genNickname());
+        trackBean.setFootprintId(id);
         trackBean.setMonth(month);
         trackBean.setDay(day);
         List<String> photoList = new ArrayList<>();

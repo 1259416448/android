@@ -278,6 +278,14 @@
 {
     NSMutableDictionary *condition = tapGesture.opId;
     self.footprintSearchParams.searchDistance = [condition objectForKey:@"searchParamValue"];
+    
+    if([self.footprintSearchParams.searchDistance isEqualToString:@"one"]){
+        self.radar.maxDistance = 100;
+    }else if([self.footprintSearchParams.searchDistance isEqualToString:@"two"]){
+        self.radar.maxDistance = 500;
+    }else if([self.footprintSearchParams.searchDistance isEqualToString:@"three"]){
+        self.radar.maxDistance = 1000;
+    }
     DLog(@"OTWUITapGestureRecognizer手势----%@",self.footprintSearchParams.mj_keyValues);
     [self getFootprints];
 }
@@ -299,6 +307,10 @@
 
 - (void)showARViewController
 {
+    //雷达默认范围 1km
+    
+    self.radar.maxDistance = 1000;
+    
     // Present ARViewController
     self.dataSource = self;
     // Vertical offset by distance
