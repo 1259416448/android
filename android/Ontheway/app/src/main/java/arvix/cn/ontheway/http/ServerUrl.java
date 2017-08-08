@@ -24,5 +24,7 @@ public interface ServerUrl {
 
     String UPDATE_GENDER = BASE_URL + "/app/user/update/gender";
 
+    String TRACK_AR_LIST =  BASE_URL + "/app/footprint/search";
+
 
 }

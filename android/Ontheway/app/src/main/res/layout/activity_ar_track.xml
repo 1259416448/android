@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="arvix.cn.ontheway.ui.ar.ArTrackActivity">
-
     <FrameLayout
         android:id="@+id/camera_container_layout"
         android:layout_width="match_parent"
@@ -15,7 +14,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </FrameLayout>
-
     <TextView
         android:id="@+id/tv_current_location"
         android:layout_width="wrap_content"
