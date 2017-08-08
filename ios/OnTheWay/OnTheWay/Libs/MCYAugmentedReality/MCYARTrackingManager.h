@@ -124,7 +124,7 @@
  * rename to heading
  * bool 默认值为false
  */
-- (double)azimuthFromUserToLocation:(CLLocation*)userLocation location:(CLLocation*)location approximate:(BOOL)approximate;
+- (double)azimuthFromUserToLocation:(CLLocation*)userLocation baiduCoor:(CLLocationCoordinate2D)baiduCoor location:(CLLocation*)location approximate:(BOOL)approximate;
 
 @end
 

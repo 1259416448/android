@@ -13,16 +13,22 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.util.HashMap;
+import java.util.concurrent.Callable;
 
 import arvix.cn.ontheway.BaiduActivity;
 import arvix.cn.ontheway.R;
+import arvix.cn.ontheway.async.AsyncUtil;
+import arvix.cn.ontheway.async.Callback;
+import arvix.cn.ontheway.async.Result;
 import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.ui.ar.ArTrackActivity;
 import arvix.cn.ontheway.ui.msg.MsgIndexFrag;
 import arvix.cn.ontheway.ui.usercenter.MyProfileFragment;
+import arvix.cn.ontheway.utils.MyProgressDialog;
 import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticMethod;
 import arvix.cn.ontheway.utils.StaticVar;
+import arvix.cn.ontheway.utils.Windows;
 
 /**
  * Created by yd on 2017/7/19.
@@ -53,6 +59,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         cache = OnthewayApplication.getInstahce(CacheService.class);
         Log.i(logTag,"onCreate----->");
         initView();
+
+        final MyProgressDialog wait=Windows.waiting(self);
+        AsyncUtil.goAsync(new Callable<Result<Void>>() {
+            @Override
+            public Result<Void> call() throws Exception {
+                Thread.sleep(2000);
+                return null;
+            }
+        }, new Callback<Result<Void>>() {
+            @Override
+            public void onHandle(Result<Void> result) {
+                wait.dismiss();
+            }
+        });
     }
 
     private int lastCheckedTab;

@@ -10,6 +10,9 @@
 #import "MCYARConfiguration.h"
 
 @interface MCYARTrackingManager ()<CLLocationManagerDelegate>
+{
+    double _otwHeadingFilterFactor;
+}
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, assign) BOOL tracking;      // Tracking state.
@@ -35,8 +38,8 @@
     if (self) {
         
         // init public property
-        
-        _headingFilterFactor = 0.05;
+        self.headingFilterFactor = 0.05;
+        _otwHeadingFilterFactor = 0.05;
         _pitchFilterFactor = 0.05;
         _reloadDistanceFilter = 50;
         _userDistanceFilter = 15;
@@ -317,7 +320,7 @@
 
 - (void)filterHeading
 {
-    double headingFilterFactor = _headingFilterFactor;
+    double headingFilterFactor = _otwHeadingFilterFactor;
     double previousFilteredHeading = self.filteredHeading;
     double newHeading = self.debugHeading;
     if (self.debugHeading == 0) {
@@ -361,24 +364,23 @@
  * rename to heading 
  * bool 默认值为false
  */
-- (double)azimuthFromUserToLocation:(CLLocation*)userLocation location:(CLLocation*)location approximate:(BOOL)approximate
+- (double)azimuthFromUserToLocation:(CLLocation*)userLocation baiduCoor:(CLLocationCoordinate2D)baiduCoor location:(CLLocation*)location approximate:(BOOL)approximate
 {
     double azimuth = 0;
     if (approximate) {
-        azimuth = [self approximateBearingBetween:userLocation endLocation:location];
+        azimuth = [self approximateBearingBetween:baiduCoor endLocation:location];
     } else {
-        azimuth = [self bearingBetween:userLocation endLocation:location];
+        azimuth = [self bearingBetween:baiduCoor endLocation:location];
     }
     
     return azimuth;
 }
 
-- (double)bearingBetween:(CLLocation*)startLocation endLocation:(CLLocation*)endLocation
+- (double)bearingBetween:(CLLocationCoordinate2D) baiduCoor endLocation:(CLLocation*)endLocation
 {
     double azimuth = 0;
-    
-    double lat1 = degreesToRadians(startLocation.coordinate.latitude);
-    double lon1 = degreesToRadians(startLocation.coordinate.longitude);
+    double lat1 = degreesToRadians(baiduCoor.latitude);
+    double lon1 = degreesToRadians(baiduCoor.longitude);
     
     double lat2 = degreesToRadians(endLocation.coordinate.latitude);
     double lon2 = degreesToRadians(endLocation.coordinate.longitude);
@@ -404,15 +406,15 @@
  
  It uses formula for flat surface and multiplies it with LAT_LON_FACTOR which "simulates" earth curvature.
  */
-- (double)approximateBearingBetween:(CLLocation*)startLocation endLocation:(CLLocation*)endLocation
+- (double)approximateBearingBetween:(CLLocationCoordinate2D)baiduCoor endLocation:(CLLocation*)endLocation
 {
     double azimuth = 0;
     
-    CLLocationCoordinate2D startCoordinate = startLocation.coordinate;
+    //CLLocationCoordinate2D startCoordinate = startLocation.coordinate;
     CLLocationCoordinate2D endCoordinate = endLocation.coordinate;
     
-    double latitudeDistance = startCoordinate.latitude - endCoordinate.latitude;
-    double longitudeDistance = startCoordinate.longitude - endCoordinate.longitude;
+    double latitudeDistance = baiduCoor.latitude - endCoordinate.latitude;
+    double longitudeDistance = baiduCoor.longitude - endCoordinate.longitude;
     
     azimuth = radiansToDegrees(atan2(longitudeDistance, (latitudeDistance * (double)LAT_LON_FACTOR)));
     azimuth += 180.0;
@@ -491,7 +493,7 @@
     /**
      Handling unprecise readings, this whole section should prevent annotations from spinning because of
      unprecise readings & filtering. e.g. if first reading is 10° and second is 80°, due to filtering, annotations
-     would move slowly from 10°-80°. So when we detect such situtation, we set _headingFilterFactor to 1, meaning that
+     would move slowly from 10°-80°. So when we detect such situtation, we set _otwHeadingFilterFactor to 1, meaning that
      filtering is temporarily disabled and annotatoions will immediately jump to new heading.
      
      This is done only first 5 seconds after first heading.
@@ -515,8 +517,7 @@
                 recommendedHeadingFilterFactor = 1; // We could also just set self.filteredHeading = self.heading
             }
         }
-        
-        _headingFilterFactor = recommendedHeadingFilterFactor;
+        _otwHeadingFilterFactor = recommendedHeadingFilterFactor;
     }
 }
 
@@ -527,6 +528,7 @@
     
     //===== Disregarding old and low quality location detections
     CLLocation *location = [locations firstObject];
+    
     NSTimeInterval age = location.timestamp.timeIntervalSinceNow;
     
     NSLog(@"Disregarding location: age:%f, self.minimumLocationAge:%f , self.minimumLocationHorizontalAccuracy:%f, location.horizontalAccuracy:%f", age, self.minimumLocationAge, self.minimumLocationHorizontalAccuracy, location.horizontalAccuracy);
