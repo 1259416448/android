@@ -2,17 +2,23 @@ package arvix.cn.ontheway.ui.track;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.PixelFormat;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -49,15 +55,15 @@ import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.bean.TrackBean;
 import arvix.cn.ontheway.data.TrackListData;
 import arvix.cn.ontheway.service.BaiduLocationListenerService;
-import arvix.cn.ontheway.service.inter.BaiduPoiServiceInterface;
-import arvix.cn.ontheway.service.inter.CacheInterface;
+import arvix.cn.ontheway.service.inter.BaiduPoiService;
+import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.ar.ArTrackActivity;
-import arvix.cn.ontheway.ui.usercenter.MyTrackDetailActivity;
 import arvix.cn.ontheway.ui.view.BottomDialog;
 import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticMethod;
 import arvix.cn.ontheway.utils.StaticVar;
+import arvix.cn.ontheway.utils.UIUtils;
 
 /**
  * Created by asdtiang on 2017/7/28 0028.
@@ -109,7 +115,7 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
         mBaiduMap.setMapStatus(mMapStatusUpdate);
         Log.i(logTag,"init location from cache");
 
-        BaiduPoiServiceInterface poiService = OnthewayApplication.getInstahce(BaiduPoiServiceInterface.class);
+        BaiduPoiService poiService = OnthewayApplication.getInstahce(BaiduPoiService.class);
         if(TextUtils.isEmpty(searchKeyWord)){
             searchKeyWord = "美食";
         }
@@ -156,7 +162,7 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
                             BitmapDescriptor markerIcon = BitmapDescriptorFactory.fromBitmap(getViewBitmap(view));
                             Bundle bundle = new Bundle();
                             bundle.putSerializable(StaticVar.EXTRA_TRACK_BEAN,trackBean);
-                            OverlayOptions oo = new MarkerOptions().position(latLng).icon(markerIcon).zIndex(9).draggable(true).extraInfo(bundle);
+                            OverlayOptions oo = new MarkerOptions().anchor(0.0f,0.5f).position(latLng).icon(markerIcon).zIndex(9).draggable(true).extraInfo(bundle);
                             mBaiduMap.addOverlay(oo);
                             headerIVTemp.setDrawingCacheEnabled(false);
                             view.setDrawingCacheEnabled(false);
@@ -181,7 +187,7 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
 
 
     public  void updateLocation(){
-        CacheInterface cache = OnthewayApplication.getInstahce(CacheInterface.class);
+        CacheService cache = OnthewayApplication.getInstahce(CacheService.class);
         Double latCache = cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LAT);
         Double lonCache = 0.0;
         if(latCache!=null){
@@ -220,12 +226,12 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
         };
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(App.self);
         mLocalBroadcastManager.registerReceiver(mReceiver, filter);
-        mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
-            public boolean onMarkerClick(final Marker marker) {
-                // TODO
-                return true;
-            }
-        });
+//        mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
+//            public boolean onMarkerClick(final Marker marker) {
+//                // TODO
+//                return true;
+//            }
+//        });
 
         rangeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -319,74 +325,114 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
 
         return value;
     }
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        Bundle bundle = marker.getExtraInfo();
-        currentClickedTrack = (TrackBean) bundle.getSerializable(StaticVar.EXTRA_TRACK_BEAN);
-        Log.i(logTag,"user header--->"+currentClickedTrack.getUserHeaderUrl());
-        if (headerClickedView == null) {
-            bottomDialog = new BottomDialog(self);
-            headerClickedView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.track_map_header_click, null);
-            headerClickedViewHolder = new HeaderClickedViewHolder();
-            x.view().inject(headerClickedViewHolder, headerClickedView);
-            headerClickedView.setTag(headerClickedViewHolder);
-            headerClickedView.findViewById(R.id.track_map_show_line).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.i(logTag,"view clicked");
-                }
-            });
-            headerClickedView.findViewById(R.id.to_track_detail).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(self,TrackDetailActivity.class);
-                    intent.putExtra(StaticVar.EXTRA_TRACK_BEAN,currentClickedTrack);
-                    startActivity(intent);
-                }
-            });
-            bottomDialog.getView().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    bottomDialog.dismiss();
-                }
-            });
 
-        } else {
-            headerClickedViewHolder = (HeaderClickedViewHolder) headerClickedView.getTag();
-        }
-        headerClickedViewHolder.headerIv.setDrawingCacheEnabled(false);
-        StaticMethod.setCircularHeaderImg(currentClickedTrack.getUserHeaderUrl(),headerClickedViewHolder.headerIv,headerClickedViewHolder.headerIv.getWidth(),headerClickedViewHolder.headerIv.getHeight());
-        headerClickedViewHolder.nicknameTv.setText(currentClickedTrack.getNickname());
-        headerClickedViewHolder.addressTv.setText(currentClickedTrack.getAddress());
-        headerClickedViewHolder.timeTv.setText(currentClickedTrack.getDateCreated()+"");
-        headerClickedViewHolder.contentTv.setText(StaticMethod.genLesStr(currentClickedTrack.getContent(),30));
-        headerClickedViewHolder.imageOne.setVisibility(View.GONE);
-        headerClickedViewHolder.imageOne.setDrawingCacheEnabled(false);
-        headerClickedViewHolder.imageTwo.setVisibility(View.GONE);
-        headerClickedViewHolder.imageThree.setVisibility(View.GONE);
-        if(!currentClickedTrack.getPhotoList().isEmpty()){
-            for(int i=0;i<3||i<currentClickedTrack.getPhotoList().size();i++){
-                if(i==0){
-                    StaticMethod.setImg(currentClickedTrack.getPhotoList().get(i),headerClickedViewHolder.imageOne,headerClickedViewHolder.imageOne.getWidth(),headerClickedViewHolder.imageOne.getHeight());
-                    headerClickedViewHolder.imageOne.setVisibility(View.VISIBLE);
-                    Log.i(logTag,"photoOne--->"+currentClickedTrack.getPhotoList().get(i));
+    private ImageView highLightView;
+    private final int clickAnimDuration=100;
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+        Point markerPoint=mBaiduMap.getProjection().toScreenLocation(marker.getPosition());
+        Point toTarget=new Point(markerPoint.x+marker.getIcon().getBitmap().getWidth()/2,markerPoint.y+UIUtils.dip2px(self,130));
+        LatLng toLoc=mBaiduMap.getProjection().fromScreenLocation(toTarget);
+        mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newLatLng(toLoc),clickAnimDuration);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Bundle bundle = marker.getExtraInfo();
+                currentClickedTrack = (TrackBean) bundle.getSerializable(StaticVar.EXTRA_TRACK_BEAN);
+                Log.i(logTag,"user header--->"+currentClickedTrack.getUserHeaderUrl());
+                if (headerClickedView == null) {
+                    bottomDialog = new BottomDialog(self);
+                    headerClickedView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.track_map_header_click, null);
+                    headerClickedViewHolder = new HeaderClickedViewHolder();
+                    x.view().inject(headerClickedViewHolder, headerClickedView);
+                    headerClickedView.setTag(headerClickedViewHolder);
+                    headerClickedView.findViewById(R.id.track_map_show_line).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Log.i(logTag,"view clicked");
+                        }
+                    });
+                    headerClickedView.findViewById(R.id.to_track_detail).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(self,TrackDetailActivity.class);
+                            intent.putExtra(StaticVar.EXTRA_TRACK_BEAN,currentClickedTrack);
+                            startActivity(intent);
+                        }
+                    });
+                    bottomDialog.getView().setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            bottomDialog.dismiss();
+                        }
+                    });
+
+                } else {
+                    headerClickedViewHolder = (HeaderClickedViewHolder) headerClickedView.getTag();
                 }
-                if(i==1){
-                    StaticMethod.setImg(currentClickedTrack.getPhotoList().get(i),headerClickedViewHolder.imageTwo,headerClickedViewHolder.imageTwo.getWidth(),headerClickedViewHolder.imageTwo.getHeight());
-                    headerClickedViewHolder.imageTwo.setVisibility(View.VISIBLE);
-                    Log.i(logTag,"photoTwo--->"+currentClickedTrack.getPhotoList().get(i));
+                headerClickedViewHolder.headerIv.setDrawingCacheEnabled(false);
+                StaticMethod.setCircularHeaderImg(currentClickedTrack.getUserHeaderUrl(),headerClickedViewHolder.headerIv,headerClickedViewHolder.headerIv.getWidth(),headerClickedViewHolder.headerIv.getHeight());
+                headerClickedViewHolder.nicknameTv.setText(currentClickedTrack.getNickname());
+                headerClickedViewHolder.addressTv.setText(currentClickedTrack.getAddress());
+                headerClickedViewHolder.timeTv.setText(currentClickedTrack.getDateCreated()+"");
+                headerClickedViewHolder.contentTv.setText(StaticMethod.genLesStr(currentClickedTrack.getContent(),30));
+                headerClickedViewHolder.imageOne.setVisibility(View.GONE);
+                headerClickedViewHolder.imageOne.setDrawingCacheEnabled(false);
+                headerClickedViewHolder.imageTwo.setVisibility(View.GONE);
+                headerClickedViewHolder.imageThree.setVisibility(View.GONE);
+                if(!currentClickedTrack.getPhotoList().isEmpty()){
+                    for(int i=0;i<3||i<currentClickedTrack.getPhotoList().size();i++){
+                        if(i==0){
+                            StaticMethod.setImg(currentClickedTrack.getPhotoList().get(i),headerClickedViewHolder.imageOne,headerClickedViewHolder.imageOne.getWidth(),headerClickedViewHolder.imageOne.getHeight());
+                            headerClickedViewHolder.imageOne.setVisibility(View.VISIBLE);
+                            Log.i(logTag,"photoOne--->"+currentClickedTrack.getPhotoList().get(i));
+                        }
+                        if(i==1){
+                            StaticMethod.setImg(currentClickedTrack.getPhotoList().get(i),headerClickedViewHolder.imageTwo,headerClickedViewHolder.imageTwo.getWidth(),headerClickedViewHolder.imageTwo.getHeight());
+                            headerClickedViewHolder.imageTwo.setVisibility(View.VISIBLE);
+                            Log.i(logTag,"photoTwo--->"+currentClickedTrack.getPhotoList().get(i));
+                        }
+                        if(i==2){
+                            StaticMethod.setImg(currentClickedTrack.getPhotoList().get(i),headerClickedViewHolder.imageThree,headerClickedViewHolder.imageThree.getWidth(),headerClickedViewHolder.imageThree.getHeight());
+                            headerClickedViewHolder.imageThree.setVisibility(View.VISIBLE);
+                            Log.i(logTag,"photoThree--->"+currentClickedTrack.getPhotoList().get(i));
+                        }
+                    }
                 }
-                if(i==2){
-                    StaticMethod.setImg(currentClickedTrack.getPhotoList().get(i),headerClickedViewHolder.imageThree,headerClickedViewHolder.imageThree.getWidth(),headerClickedViewHolder.imageThree.getHeight());
-                    headerClickedViewHolder.imageThree.setVisibility(View.VISIBLE);
-                    Log.i(logTag,"photoThree--->"+currentClickedTrack.getPhotoList().get(i));
-                }
+                //从这添加通过LayoutInflater加载的xml布局
+                bottomDialog.setCustom(headerClickedView);
+                bottomDialog.setCancelable(true);
+                bottomDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        if(highLightView !=null){
+                            WindowManager wm= (WindowManager) getSystemService(WINDOW_SERVICE);
+                            wm.removeView(highLightView);
+                            highLightView =null;
+                        }
+                    }
+                });
+                bottomDialog.show();
+
+                final Point point=mBaiduMap.getProjection().toScreenLocation(marker.getPosition());
+                highLightView =new ImageView(self);
+                highLightView.setImageBitmap(marker.getIcon().getBitmap());
+                WindowManager wm= (WindowManager) getSystemService(WINDOW_SERVICE);
+                WindowManager.LayoutParams ps=new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT,WindowManager.LayoutParams.WRAP_CONTENT);
+                ps.x=point.x;
+                ps.y=point.y-marker.getIcon().getBitmap().getHeight()/2;
+                ps.width=marker.getIcon().getBitmap().getWidth();
+                ps.height=marker.getIcon().getBitmap().getHeight();
+                ps.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+                ps.flags= WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                        | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+                ps.format = PixelFormat.TRANSLUCENT;
+                ps.gravity = Gravity.LEFT | Gravity.TOP;
+                wm.addView(highLightView,ps);
+
             }
-        }
-        //从这添加通过LayoutInflater加载的xml布局
-        bottomDialog.setCustom(headerClickedView);
-        bottomDialog.setCancelable(true);
-        bottomDialog.show();
+        },clickAnimDuration+20);
+
         return true;
     }
 

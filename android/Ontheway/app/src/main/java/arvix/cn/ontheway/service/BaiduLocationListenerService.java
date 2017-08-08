@@ -11,8 +11,7 @@ import com.baidu.location.Poi;
 
 import java.util.List;
 
-import arvix.cn.ontheway.BaiduActivity;
-import arvix.cn.ontheway.service.inter.CacheInterface;
+import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticVar;
 
@@ -38,7 +37,7 @@ public class BaiduLocationListenerService implements BDLocationListener {
         String latAndLong = df.format(location.getLatitude()) + df.format(location.getLongitude());
         Log.i(BaiduLocationListenerService.class.getName(), "lastLatAndLong:" + lastLatAndLong + " latAndLong:" + latAndLong);
         if (!latAndLong.equals(lastLatAndLong)) {
-            CacheInterface cache = OnthewayApplication.getInstahce(CacheInterface.class);
+            CacheService cache = OnthewayApplication.getInstahce(CacheService.class);
             cache.put(StaticVar.BAIDU_LOC_CACHE_LAT, location.getLatitude() + "");
             cache.put(StaticVar.BAIDU_LOC_CACHE_LON, location.getLongitude() + "");
             if(location.hasAltitude()){

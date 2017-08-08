@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.util.TypeUtils;
 import com.pizidea.imagepicker.AndroidImagePicker;
 import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.UpCompletionHandler;
@@ -33,8 +34,11 @@ import arvix.cn.ontheway.bean.BaseResponse;
 import arvix.cn.ontheway.bean.QiniuBean;
 import arvix.cn.ontheway.bean.UserInfo;
 import arvix.cn.ontheway.http.ServerUrl;
+import arvix.cn.ontheway.service.inter.FileUploadCallBack;
+import arvix.cn.ontheway.service.inter.FileUploadService;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.head.HeaderHolder;
+import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticMethod;
 import arvix.cn.ontheway.utils.StaticVar;
 
@@ -55,10 +59,13 @@ public class PersonInfoActivity extends BaseActivity {
     @ViewInject(R.id.header_img)
     private ImageView headerIV;
 
+    FileUploadService fileUploadService;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_info);
+        fileUploadService = OnthewayApplication.getInstahce(FileUploadService.class);
         initView();
     }
 
@@ -86,106 +93,20 @@ public class PersonInfoActivity extends BaseActivity {
                 AndroidImagePicker.getInstance().pickAndCrop(PersonInfoActivity.this, true, 160, new AndroidImagePicker.OnImageCropCompleteListener() {
                     @Override
                     public void onImageCropComplete(final Bitmap bmp, float ratio) {
+                        byte[] data = StaticMethod.bitmap2Bytes(bmp);
                         Log.i(logTag, "=====onImageCropComplete (get bitmap=" + bmp.toString());
-                        RequestParams requestParams = new RequestParams(ServerUrl.QINIU_UPTOKEN);
-                        try {
-                            x.http().get(requestParams, new Callback.CommonCallback<String>() {
-                                @Override
-                                public void onSuccess(String result) {
-                                    BaseResponse response = StaticMethod.genResponse(result);
-                                    if (response.getCode() == StaticVar.SUCCESS) {
-                                        byte[] data = StaticMethod.bitmap2Bytes(bmp);
-                                        String key = UUID.randomUUID().toString().replace("-", "");
-                                        String token = response.getBody().getString("uptoken");
-                                        App.qiniuUploadManager.put(data, key, token,
-                                                new UpCompletionHandler() {
-                                                    @Override
-                                                    public void complete(String key, ResponseInfo info, JSONObject res) {
-                                                        //res包含hash、key等信息，具体字段取决于上传策略的设置
-                                                        if (info.isOK()) {
-                                                            Log.i("qiniu", "Upload Success");
-                                                            QiniuBean qiniuBean = new QiniuBean();
-                                                            qiniuBean.setName(key);
-                                                            qiniuBean.setFileSize(info.totalSize);
-                                                            qiniuBean.setFileUrl(key);
-                                                            try {
-                                                                qiniuBean.setFileType(res.getString("type"));
-                                                                qiniuBean.setW(res.getInt("w"));
-                                                                qiniuBean.setH(res.getInt("h"));
-                                                                RequestParams requestParams = new RequestParams();
-                                                                requestParams.setUri(ServerUrl.UPDATE_HEADER);
-                                                                requestParams.setBodyContent(JSON.toJSONString(qiniuBean));
-                                                                x.http().post(requestParams, new Callback.CommonCallback<String>() {
-                                                                    @Override
-                                                                    public void onSuccess(String result) {
-                                                                        try {
-                                                                            BaseResponse<UserInfo> response = StaticMethod.genResponse(result,UserInfo.class);
-                                                                            Log.i(logTag, "imageInfo -->" + result);
-                                                                            if (response.getCode() == StaticVar.SUCCESS) {
-                                                                                UserInfo userInfo = response.getBodyBean();
-                                                                                StaticMethod.updateUserInfo(self,userInfo);
-                                                                                StaticMethod.setCircularHeaderImg(headerIV,110,110);
-                                                                            } else {
-                                                                                StaticMethod.showToast("上传失败" + response.getCode(), self);
-                                                                            }
-                                                                        } catch (Exception e) {
-                                                                            e.printStackTrace();
-                                                                        }
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onError(Throwable throwable, boolean b) {
-
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onCancelled(CancelledException e) {
-
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onFinished() {
-
-                                                                    }
-                                                                });
-
-
-                                                            } catch (JSONException e) {
-                                                                e.printStackTrace();
-                                                            }
-                                                            //qiniuBean.setFileType();
-
-                                                        } else {
-                                                            Log.i("qiniu", "Upload Fail");
-                                                            //如果失败，这里可以把info信息上报自己的服务器，便于后面分析上传错误原因
-                                                        }
-                                                        Log.i("qiniu", key + ",\r\n " + info + ",\r\n " + res);
-                                                    }
-                                                }, null);
-                                    } else {
-                                        StaticMethod.showToast("request uptoken 失败" + response.getCode(), self);
-                                    }
+                        fileUploadService.upload(self,data,ServerUrl.UPDATE_HEADER,new FileUploadCallBack(){
+                            @Override
+                            public void uploadBack(BaseResponse baseResponse) {
+                                if (baseResponse.getCode() == StaticVar.SUCCESS) {
+                                    UserInfo userInfo = TypeUtils.castToJavaBean(baseResponse.getBody(), UserInfo.class);
+                                    StaticMethod.updateUserInfo(self,userInfo);
+                                    StaticMethod.setCircularHeaderImg(headerIV,110,110);
+                                } else {
+                                    StaticMethod.showToast("上传失败" + baseResponse.getCode(), self);
                                 }
-
-                                @Override
-                                public void onError(Throwable ex, boolean isOnCallback) {
-
-                                }
-
-                                @Override
-                                public void onCancelled(CancelledException cex) {
-
-                                }
-
-                                @Override
-                                public void onFinished() {
-
-                                }
-                            });
-
-                        } catch (Throwable throwable) {
-                            throwable.printStackTrace();
-                        }
+                            }
+                        });
                     }
                 });
             }

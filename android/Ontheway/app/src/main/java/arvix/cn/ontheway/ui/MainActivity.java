@@ -4,32 +4,31 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.util.HashMap;
+import java.util.concurrent.Callable;
 
-import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.BaiduActivity;
 import arvix.cn.ontheway.R;
-import arvix.cn.ontheway.service.inter.CacheInterface;
+import arvix.cn.ontheway.async.AsyncUtil;
+import arvix.cn.ontheway.async.Callback;
+import arvix.cn.ontheway.async.Result;
+import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.ui.ar.ArTrackActivity;
 import arvix.cn.ontheway.ui.msg.MsgIndexFrag;
-import arvix.cn.ontheway.ui.usercenter.EditNicknameActivity;
 import arvix.cn.ontheway.ui.usercenter.MyProfileFragment;
-import arvix.cn.ontheway.ui.usercenter.MyTrackListActivity;
+import arvix.cn.ontheway.utils.MyProgressDialog;
 import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticMethod;
 import arvix.cn.ontheway.utils.StaticVar;
-import arvix.cn.ontheway.utils.UIUtils;
+import arvix.cn.ontheway.utils.Windows;
 
 /**
  * Created by yd on 2017/7/19.
@@ -40,7 +39,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private RadioGroup tabRG;
     @ViewInject(R.id.tab_zuji)
     private TextView zuJiTextView;
-    CacheInterface cache;
+    CacheService cache;
 
 
     @Override
@@ -57,9 +56,23 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 startActivity(intent);
             }
         });
-        cache = OnthewayApplication.getInstahce(CacheInterface.class);
+        cache = OnthewayApplication.getInstahce(CacheService.class);
         Log.i(logTag,"onCreate----->");
         initView();
+
+        final MyProgressDialog wait=Windows.waiting(self);
+        AsyncUtil.goAsync(new Callable<Result<Void>>() {
+            @Override
+            public Result<Void> call() throws Exception {
+                Thread.sleep(2000);
+                return null;
+            }
+        }, new Callback<Result<Void>>() {
+            @Override
+            public void onHandle(Result<Void> result) {
+                wait.dismiss();
+            }
+        });
     }
 
     private int lastCheckedTab;

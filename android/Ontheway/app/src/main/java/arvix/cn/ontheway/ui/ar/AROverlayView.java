@@ -28,8 +28,8 @@ import java.util.List;
 
 import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.bean.ARPoint;
-import arvix.cn.ontheway.service.inter.BaiduPoiServiceInterface;
-import arvix.cn.ontheway.service.inter.CacheInterface;
+import arvix.cn.ontheway.service.inter.BaiduPoiService;
+import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.utils.LocationHelper;
 import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticVar;
@@ -46,13 +46,13 @@ public class AROverlayView extends View {
     private Location currentLocation;
     private List<ARPoint> arPoints;
     private double latAndLonAndAltLast = 0.0;
-    CacheInterface cache;
+    CacheService cache;
 
 
     public AROverlayView(Context context) {
         super(context);
         this.context = context;
-        cache = OnthewayApplication.getInstahce(CacheInterface.class);
+        cache = OnthewayApplication.getInstahce(CacheService.class);
         updateLocationData();
         arPoints = new ArrayList();
     }
@@ -86,7 +86,7 @@ public class AROverlayView extends View {
         MapStatusUpdate mMapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
         // 改变地图状态
         Log.i("updateLocationData","init location from cache");
-        BaiduPoiServiceInterface poiService = OnthewayApplication.getInstahce(BaiduPoiServiceInterface.class);
+        BaiduPoiService poiService = OnthewayApplication.getInstahce(BaiduPoiService.class);
         if(TextUtils.isEmpty(ArTrackActivity.searchKeyWord)){
             ArTrackActivity.searchKeyWord = "美食";
         }

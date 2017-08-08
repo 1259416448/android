@@ -2,7 +2,7 @@ package arvix.cn.ontheway.test;
 
 import junit.framework.Assert;
 
-import arvix.cn.ontheway.service.inter.CacheInterface;
+import arvix.cn.ontheway.service.inter.CacheService;
 
 
 /**
@@ -11,9 +11,9 @@ import arvix.cn.ontheway.service.inter.CacheInterface;
  */
 
 public class CacheDefauleTest  {
-    CacheInterface cache = null;
+    CacheService cache = null;
 
-    public CacheDefauleTest(CacheInterface cache ){
+    public CacheDefauleTest(CacheService cache ){
         this.cache = cache;
     }
 

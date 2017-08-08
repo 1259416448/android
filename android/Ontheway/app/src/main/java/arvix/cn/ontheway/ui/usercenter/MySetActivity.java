@@ -17,16 +17,13 @@ import org.xutils.x;
 import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.bean.BaseResponse;
-import arvix.cn.ontheway.bean.UserInfo;
 import arvix.cn.ontheway.http.ServerUrl;
-import arvix.cn.ontheway.service.inter.CacheInterface;
+import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.ui.BaseActivity;
-import arvix.cn.ontheway.ui.LoginActivity;
 import arvix.cn.ontheway.ui.MainActivity;
 import arvix.cn.ontheway.ui.head.HeaderHolder;
 import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticMethod;
-import arvix.cn.ontheway.utils.StaticVar;
 
 /**
  * Created by asdtiang on 2017/7/27 0027.
@@ -37,7 +34,7 @@ public class MySetActivity   extends BaseActivity {
 
     @ViewInject(R.id.sign_out_btn)
     private Button signOutBtn;
-    CacheInterface cache =  OnthewayApplication.getInstahce(CacheInterface.class);
+    CacheService cache =  OnthewayApplication.getInstahce(CacheService.class);
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

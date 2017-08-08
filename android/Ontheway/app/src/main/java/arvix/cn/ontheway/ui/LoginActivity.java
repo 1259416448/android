@@ -2,7 +2,6 @@ package arvix.cn.ontheway.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -20,13 +19,12 @@ import org.xutils.x;
 import java.util.HashMap;
 import java.util.Map;
 
-import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.bean.BaseResponse;
 import arvix.cn.ontheway.bean.UserInfo;
 import arvix.cn.ontheway.check.CheckUtils;
 import arvix.cn.ontheway.http.ServerUrl;
-import arvix.cn.ontheway.service.inter.CacheInterface;
+import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.ui.head.HeaderHolder;
 import arvix.cn.ontheway.ui.view.BottomDialog;
 import arvix.cn.ontheway.utils.HmacSHA256Utils;
@@ -49,14 +47,14 @@ public class LoginActivity  extends BaseActivity  {
     private Button sendSmsBtn;
     @ViewInject(R.id.login_btn)
     private Button loginBtn;
-    CacheInterface cache;
+    CacheService cache;
     private BottomDialog bottomDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         x.view().inject(self);
-        cache = OnthewayApplication.getInstahce(CacheInterface.class);
+        cache = OnthewayApplication.getInstahce(CacheService.class);
         HeaderHolder head=new HeaderHolder();
         head.init(self,"登录");
         head.setUpLeftBtn(getResources().getDrawable(R.drawable.ar_guanbi,null), new View.OnClickListener() {

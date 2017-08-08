@@ -9,7 +9,7 @@ import org.xutils.http.request.UriRequest;
 import java.util.List;
 import java.util.Map;
 
-import arvix.cn.ontheway.service.inter.CacheInterface;
+import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticVar;
 
@@ -20,10 +20,10 @@ import arvix.cn.ontheway.utils.StaticVar;
 
 public class HttpFilterDefaultImpl implements   HttpFilterInterface{
 
-    CacheInterface cache;
+    CacheService cache;
 
     public HttpFilterDefaultImpl(){
-        cache = OnthewayApplication.getInstahce(CacheInterface.class);
+        cache = OnthewayApplication.getInstahce(CacheService.class);
     }
 
     @Override

@@ -7,7 +7,7 @@ import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
  * asdtiangxia@163.com
  */
 
-public interface BaiduPoiServiceInterface {
+public interface BaiduPoiService {
 
 
     void search(double lat,double lon,String keyword, int radius, OnGetPoiSearchResultListener poiListener);

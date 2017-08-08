@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -14,7 +13,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.mapapi.map.BaiduMap;
@@ -36,8 +34,8 @@ import com.baidu.mapapi.search.poi.PoiIndoorResult;
 import com.baidu.mapapi.search.poi.PoiResult;
 import java.util.List;
 import arvix.cn.ontheway.service.BaiduLocationListenerService;
-import arvix.cn.ontheway.service.inter.BaiduPoiServiceInterface;
-import arvix.cn.ontheway.service.inter.CacheInterface;
+import arvix.cn.ontheway.service.inter.BaiduPoiService;
+import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.MainActivity;
 import arvix.cn.ontheway.ui.view.BottomDialog;
@@ -96,7 +94,7 @@ public class BaiduActivity extends BaseActivity implements BaiduMap.OnMarkerClic
         mBaiduMap.setMapStatus(mMapStatusUpdate);
         Log.i(logTag,"init location from cache");
 
-        BaiduPoiServiceInterface poiService = OnthewayApplication.getInstahce(BaiduPoiServiceInterface.class);
+        BaiduPoiService poiService = OnthewayApplication.getInstahce(BaiduPoiService.class);
         if(TextUtils.isEmpty(searchKeyWord)){
             searchKeyWord = "美食";
         }
@@ -142,7 +140,7 @@ public class BaiduActivity extends BaseActivity implements BaiduMap.OnMarkerClic
 
 
     public  void updateLocation(){
-        CacheInterface cache = OnthewayApplication.getInstahce(CacheInterface.class);
+        CacheService cache = OnthewayApplication.getInstahce(CacheService.class);
         Double latCache = cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LAT);
         Double lonCache = 0.0;
         if(latCache!=null){
