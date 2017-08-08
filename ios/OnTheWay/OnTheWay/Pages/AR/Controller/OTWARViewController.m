@@ -331,7 +331,7 @@
         //默认当前页为 0
         _footprintSearchParams.number = 0;
         //默认每页大小为 15
-        _footprintSearchParams.size = 15;
+        _footprintSearchParams.size = 30;
         //默认不是最后一页
         _footprintSearchParams.isLastPage = NO;
         //默认是第一页
