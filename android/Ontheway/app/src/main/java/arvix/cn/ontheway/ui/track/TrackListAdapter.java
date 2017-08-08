@@ -45,7 +45,7 @@ public class TrackListAdapter  extends ArrayAdapter<TrackBean> {
     public long getItemId(int position) {
         long id = -1;
         if(dataList.get(position)!=null){
-            id  = dataList.get(position).getId();
+            id  = dataList.get(position).getFootprintId();
         }
         return id;
     }
@@ -62,15 +62,15 @@ public class TrackListAdapter  extends ArrayAdapter<TrackBean> {
         }
         TrackBean bean = getItem(position);
 
-        h.contentTv.setText(StaticMethod.genLesStr(bean.getContent(),30));
-        h.addressTv.setText(StaticMethod.genLesStr(bean.getAddress(),20));
-        StaticMethod.setCircularHeaderImg(bean.getUserHeaderUrl(),h.userHeader,h.userHeader.getWidth(),h.userHeader.getHeight());
+        h.contentTv.setText(StaticMethod.genLesStr(bean.getFootprintContent(),30));
+        h.addressTv.setText(StaticMethod.genLesStr(bean.getFootprintAddress(),20));
+        StaticMethod.setCircularHeaderImg(bean.getUserHeadImg(),h.userHeader,h.userHeader.getWidth(),h.userHeader.getHeight());
         h.trackPhotoIv.setVisibility(View.GONE);
         if(!bean.getPhotoList().isEmpty()){
             h.trackPhotoIv.setVisibility(View.VISIBLE);
             StaticMethod.setImg(bean.getPhotoList().get(0),h.trackPhotoIv,h.trackPhotoIv.getWidth(),h.trackPhotoIv.getHeight());
         }
-        h.nicknameTv.setText(bean.getNickname());
+        h.nicknameTv.setText(bean.getUserNickname());
         h.timeTv.setText(bean.getDateCreated()+"");
         return convertView;
     }

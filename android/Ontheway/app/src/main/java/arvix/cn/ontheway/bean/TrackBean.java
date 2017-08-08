@@ -11,14 +11,21 @@ import java.util.List;
 public class TrackBean  implements Serializable{
 
     private long dateCreated;
-    private long id;
+    private String dateCreatedStr;
+    private float distance;
+    private long footprintId;
     private int month;
     private int day;
     private List<String> photoList;
-    private String address;
-    private String content;
-    private String userHeaderUrl;
-    private String nickname;
+    private String footprintAddress;
+    private String footprintContent;
+    private String userHeadImg;
+    private String footprintPhoto;
+    private String userNickname;
+    private double latitude;
+    private double longitude;
+    private long userId;
+
 
 
     public long getDateCreated() {
@@ -29,12 +36,12 @@ public class TrackBean  implements Serializable{
         this.dateCreated = dateCreated;
     }
 
-    public long getId() {
-        return id;
+    public long getFootprintId() {
+        return footprintId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setFootprintId(long footprintId) {
+        this.footprintId = footprintId;
     }
 
     public List<String> getPhotoList() {
@@ -45,20 +52,20 @@ public class TrackBean  implements Serializable{
         this.photoList = photoList;
     }
 
-    public String getAddress() {
-        return address;
+    public String getFootprintAddress() {
+        return footprintAddress;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setFootprintAddress(String footprintAddress) {
+        this.footprintAddress = footprintAddress;
     }
 
-    public String getContent() {
-        return content;
+    public String getFootprintContent() {
+        return footprintContent;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setFootprintContent(String footprintContent) {
+        this.footprintContent = footprintContent;
     }
 
     public int getMonth() {
@@ -77,19 +84,67 @@ public class TrackBean  implements Serializable{
         this.day = day;
     }
 
-    public String getUserHeaderUrl() {
-        return userHeaderUrl;
+    public String getUserHeadImg() {
+        return userHeadImg;
     }
 
-    public void setUserHeaderUrl(String userHeaderUrl) {
-        this.userHeaderUrl = userHeaderUrl;
+    public void setUserHeadImg(String userHeadImg) {
+        this.userHeadImg = userHeadImg;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getUserNickname() {
+        return userNickname;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setUserNickname(String userNickname) {
+        this.userNickname = userNickname;
+    }
+
+    public String getDateCreatedStr() {
+        return dateCreatedStr;
+    }
+
+    public void setDateCreatedStr(String dateCreatedStr) {
+        this.dateCreatedStr = dateCreatedStr;
+    }
+
+    public float getDistance() {
+        return distance;
+    }
+
+    public void setDistance(float distance) {
+        this.distance = distance;
+    }
+
+    public String getFootprintPhoto() {
+        return footprintPhoto;
+    }
+
+    public void setFootprintPhoto(String footprintPhoto) {
+        this.footprintPhoto = footprintPhoto;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 }
