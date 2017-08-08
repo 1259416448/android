@@ -103,7 +103,7 @@ public class FaXianFrag extends BaseFragment {
                     Intent intent = new Intent(act, BaiduActivity.class);
                     intent.putExtra(BaiduActivity.EXTRA_KEYWORD, card.getTitle());
                     startActivity(intent);
-                   
+
                 }
             });
             TextView titleTv = (TextView) item.findViewById(R.id.card_title);
