@@ -212,7 +212,7 @@
     }
     
     if (self.radar.superview == nil) {
-        [self.view insertSubview:self.radar atIndex:0];
+        [self.view addSubview:self.radar];
     }
     
     // Camera

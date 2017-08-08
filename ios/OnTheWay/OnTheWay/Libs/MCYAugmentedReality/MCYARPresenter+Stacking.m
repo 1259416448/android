@@ -12,8 +12,6 @@
 
 - (void)stackAnnotationViews
 {
-    DLog(@">>>>>>>>>>>>stackAnnotationViews");
-    
     if (self.annotationViews.count == 0) return;
     
     if (self.arViewController && self.arViewController.arStatus) {
