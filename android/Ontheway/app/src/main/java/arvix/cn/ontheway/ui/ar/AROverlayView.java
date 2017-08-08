@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -80,14 +81,26 @@ public class AROverlayView extends View {
     private Pagination<JSONObject> pagination = new Pagination<JSONObject>();
     private Paint mBitPaint;
     private boolean isDrawing;
-    public AROverlayView(Context context) {
+    private long lastOnDraw = 0;
+    private String viewBitmapCachePrefix = "trackItem";
+    private Bitmap bitmapTemp = null;
+    private String rePointKeyTemp = "";
+    private int drawXOffset = 0;
+    private int drawYOffset = 0;
+    private ViewGroup rootView;
+
+
+    public AROverlayView(Context context,ViewGroup rootView) {
         super(context);
         this.context = context;
+        this.rootView = rootView;
         cache = OnthewayApplication.getInstahce(CacheService.class);
         updateLocationData();
         mBitPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mBitPaint.setFilterBitmap(true);
         mBitPaint.setDither(true);
+        drawXOffset = StaticMethod.dip2px(context,0);
+        drawYOffset = StaticMethod.dip2px(context,50);
     }
 
     public  void updateLocationData(){
@@ -116,7 +129,6 @@ public class AROverlayView extends View {
         requestParams.addParameter("size",pagination.getSize());
         requestParams.addParameter("latitude",lat);
         requestParams.addParameter("longitude",lon);
-
         x.http().get(requestParams, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
@@ -134,26 +146,26 @@ public class AROverlayView extends View {
                                     int width = StaticMethod.dip2px(context,30);
                                     final TrackBean trackBean = TypeUtils.castToJavaBean(jsonObject, TrackBean.class);
                                     try{
-                                    if(cache.getTMem(trackBean.getUserHeadImg(),Bitmap.class)==null){
-                                        Bitmap bitmap = Glide.with(context)
-                                                .load(trackBean.getUserHeadImg())
-                                                .asBitmap()
-                                                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                                .into(width, width)
-                                                .get();
-                                        cache.putObjectMem(trackBean.getUserHeadImg(),bitmap);
-                                        Log.i(logTag,"put cache:"+trackBean.getUserHeadImg());
-                                    }
-                                    if(cache.getTMem(trackBean.getFootprintPhoto(),Bitmap.class)==null){
-                                        Bitmap bitmap = Glide.with(context)
-                                                .load(trackBean.getFootprintPhoto())
-                                                .asBitmap()
-                                                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                                .into(width, width)
-                                                .get();
-                                        Log.i(logTag,"put cache:"+trackBean.getFootprintPhoto());
-                                        cache.putObjectMem(trackBean.getFootprintPhoto(),bitmap);
-                                    }
+                                        if(cache.getTMem(trackBean.getUserHeadImg(),Bitmap.class)==null){
+                                            Bitmap bitmap = Glide.with(context)
+                                                    .load(trackBean.getUserHeadImg())
+                                                    .asBitmap()
+                                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                                    .into(width, width)
+                                                    .get();
+                                            cache.putObjectMem(trackBean.getUserHeadImg(),bitmap);
+                                            Log.i(logTag,"put cache:"+trackBean.getUserHeadImg());
+                                        }
+                                        if(cache.getTMem(trackBean.getFootprintPhoto(),Bitmap.class)==null){
+                                            Bitmap bitmap = Glide.with(context)
+                                                    .load(trackBean.getFootprintPhoto())
+                                                    .asBitmap()
+                                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                                    .into(width, width)
+                                                    .get();
+                                            Log.i(logTag,"put cache:"+trackBean.getFootprintPhoto());
+                                            cache.putObjectMem(trackBean.getFootprintPhoto(),bitmap);
+                                        }
                                     }catch (Exception e){
                                         e.printStackTrace();
                                         Log.e(logTag,"cache image error",e);
@@ -207,9 +219,7 @@ public class AROverlayView extends View {
         }
         this.invalidate();
     }
-    private long lastOnDraw = 0;
-    private String viewBitmapCachePrefix = "trackItem";
-    private Bitmap bitmapTemp = null;
+
 
     @Override
     protected void onDraw(final  Canvas canvas) {
@@ -228,6 +238,7 @@ public class AROverlayView extends View {
                 isDrawing = true;
                 Log.i(logTag, "do onDraw------------------------------------>");
                 int i=0;
+                Map<String,Integer> drawPointRePointMap = new HashMap<String,Integer>();
                 for (final JSONObject jsonObject : this.pagination.getContent()) {
                     final TrackBean trackBean = TypeUtils.castToJavaBean(jsonObject, TrackBean.class);
                     location = new Location(trackBean.getFootprintContent());
@@ -246,13 +257,23 @@ public class AROverlayView extends View {
                         float drawX = (0.5f + cameraCoordinateVector[0] / cameraCoordinateVector[3]) * canvas.getWidth();
                         float drawY = (0.5f - cameraCoordinateVector[1] / cameraCoordinateVector[3]) * canvas.getHeight();
 
-
+                        drawX = (int)drawX;
+                        drawY = (int)drawY;
+                        rePointKeyTemp = drawX+"-"+drawY;
+                        Integer rePointTimes = drawPointRePointMap.get(rePointKeyTemp);
+                        if(rePointTimes==null){
+                            drawPointRePointMap.put(rePointKeyTemp,1);
+                        }else{
+                            drawX = drawX -  drawXOffset*rePointTimes;
+                            drawY = drawY -  drawYOffset*rePointTimes;
+                            drawPointRePointMap.put(rePointKeyTemp,rePointTimes+1);
+                        }
                         bitmapTemp = cache.getTMem(viewBitmapCachePrefix+trackBean.getFootprintId(),Bitmap.class);
                         if(bitmapTemp!=null){
                             Log.i(logTag,"load form cache bitmap drawX:"+drawX+",drawY:"+drawY+"  ");
                             canvas.drawBitmap(bitmapTemp, drawX, drawY, mBitPaint);
                         }else{
-                            View convertView = LayoutInflater.from(context).inflate(R.layout.track_ar_item, null);
+                            View convertView = LayoutInflater.from(context).inflate(R.layout.track_ar_item, rootView ,false);
                             ViewHolder h = new ViewHolder();
                             x.view().inject(h, convertView);
                             h.addressTv.setText(StaticMethod.genLesStr(trackBean.getFootprintAddress(), 4));

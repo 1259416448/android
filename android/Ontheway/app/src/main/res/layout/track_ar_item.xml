@@ -1,82 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="164dp"
-    android:background="#FFFFFF"
-    android:layout_height="41dp">
-<LinearLayout
-    android:id="@+id/line_main"
-    android:orientation="horizontal"
-    android:paddingLeft="6dp"
-    android:paddingTop="6dp"
-    android:paddingBottom="6dp"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <ImageView
-        android:id="@+id/main_photo_iv"
-        android:layout_width="30dp"
-        android:src="@drawable/header_default"
-        android:layout_height="30dp" />
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_marginLeft="6dp"
-        android:layout_weight="1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/content_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#242424"
-            android:layout_marginRight="37dp"
-            android:textSize="13sp"
-            android:text="看我七十二变.."
-            />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="184dp"
+    android:layout_height="51dp"
+    android:background="#0000"
+    android:orientation="horizontal">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="164dp"
+        android:layout_gravity="bottom"
+        android:layout_height="41dp"
+        android:background="#FFFFFF"
+        android:orientation="vertical">
         <LinearLayout
+            android:id="@+id/line_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:paddingBottom="6dp"
+            android:paddingLeft="6dp"
+            android:paddingTop="6dp">
             <ImageView
-                android:layout_gravity="center"
+                android:id="@+id/main_photo_iv"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/header_default" />
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/dingwei"/>
-            <TextView
-                android:id="@id/address_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="3dp"
-                android:layout_gravity="center"
-                android:text="星巴克"
+                android:layout_marginLeft="6dp"
                 android:layout_weight="1"
-                android:textColor="#FF979797"
-                android:textSize="11sp"
-                />
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content"
-                android:src="@drawable/shijian_2"/>
-            <TextView
-                android:id="@+id/time_tv"
-                android:layout_width="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="3dp"
-                android:layout_height="wrap_content"
-                android:text="2小时前"
-                android:textColor="#FF979797"
-                android:textSize="11sp"
-                />
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/content_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="37dp"
+                    android:text="看我七十二变.."
+                    android:textColor="#242424"
+                    android:textSize="13sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/dingwei" />
+
+                    <TextView
+                        android:id="@id/address_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="3dp"
+                        android:layout_weight="1"
+                        android:text="星巴克"
+                        android:textColor="#FF979797"
+                        android:textSize="11sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        android:src="@drawable/shijian_2" />
+
+                    <TextView
+                        android:id="@+id/time_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="3dp"
+                        android:text="2小时前"
+                        android:textColor="#FF979797"
+                        android:textSize="11sp" />
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
+
     </LinearLayout>
+    <ImageView
+        android:id="@+id/header_iv"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="-10dp"
+        android:src="@drawable/header_default" />
 </LinearLayout>
-<ImageView
-    android:id="@+id/header_iv"
-    android:layout_width="30dp"
-    android:layout_height="30dp"
-    android:layout_alignParentRight="true"
-    android:layout_alignParentTop="true"
-    android:layout_marginTop="-15dp"
-    android:layout_marginRight="-15dp"
-    android:src="@drawable/header_default"/>
-</RelativeLayout>

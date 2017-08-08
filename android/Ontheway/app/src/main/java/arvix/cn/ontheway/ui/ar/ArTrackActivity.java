@@ -37,7 +37,7 @@ import arvix.cn.ontheway.ui.track.TrackMapActivity;
 public class ArTrackActivity extends BaseActivity implements SensorEventListener, LocationListener {
 
     final static String TAG = "ARActivity";
-    private SurfaceView surfaceView;
+    private  SurfaceView surfaceView;
     private FrameLayout cameraContainerLayout;
     private AROverlayView arOverlayView;
     private Camera camera;
@@ -83,7 +83,7 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
         cameraContainerLayout = (FrameLayout) findViewById(R.id.camera_container_layout);
         surfaceView = (SurfaceView) findViewById(R.id.surface_view);
         tvCurrentLocation = (TextView) findViewById(R.id.tv_current_location);
-        arOverlayView = new AROverlayView(this);
+        arOverlayView = new AROverlayView(this,(ViewGroup)getWindow().getDecorView());
 
         rangeButton.setOnClickListener(new View.OnClickListener() {
             @Override
