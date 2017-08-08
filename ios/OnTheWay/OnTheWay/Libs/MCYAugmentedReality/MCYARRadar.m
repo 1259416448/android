@@ -199,7 +199,7 @@
 {
     if (!_radarImageView) {
         _radarImageView = [[UIImageView alloc] init];
-        _radarImageView.frame = CGRectMake(0, 0, 100, 100);
+        _radarImageView.frame = CGRectMake(0, 0, 80, 80);
         _radarImageView.image = [UIImage imageNamed:@"ar_leida"];
     }
     

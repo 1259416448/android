@@ -9,6 +9,7 @@
 #import "MCYARViewController.h"
 #import "MCYARTrackingManager.h"
 #import "MCYARRadar.h"
+#import <BaiduMapAPI_Utils/BMKUtilsComponent.h>
 
 @interface MCYARViewController ()<MCYARTrackingManagerDelegate>
 {
@@ -28,6 +29,8 @@
 @property (nonatomic, strong) UISlider *debugPitchSlider;
 
 @property (nonatomic, strong) MCYARRadar *radar; // 雷达
+
+
 
 @end
 
@@ -275,18 +278,21 @@
 {
     CLLocationCoordinate2D coordinates = annotation.location.coordinate;
     
-    double latitudeDistance     = max(coordinates.latitude, arStatus.userLocation.coordinate.latitude) - min(coordinates.latitude, arStatus.userLocation.coordinate.latitude);
-    double longitudeDistance    = max(coordinates.longitude, arStatus.userLocation.coordinate.longitude) - min(coordinates.longitude, arStatus.userLocation.coordinate.longitude);
+//    double latitudeDistance     = max(coordinates.latitude, arStatus.userLocation.coordinate.latitude) - min(coordinates.latitude, arStatus.userLocation.coordinate.latitude);
+//    double longitudeDistance    = max(coordinates.longitude, arStatus.userLocation.coordinate.longitude) - min(coordinates.longitude, arStatus.userLocation.coordinate.longitude);
+    
+    double latitudeDistance     = max(coordinates.latitude, arStatus.baiduCoor.latitude) - min(coordinates.latitude, arStatus.baiduCoor.latitude);
+    double longitudeDistance    = max(coordinates.longitude, arStatus.baiduCoor.longitude) - min(coordinates.longitude, arStatus.baiduCoor.longitude);
     
     int x_position = radiansToDegrees(atanf(longitudeDistance/(latitudeDistance*LAT_LON_FACTOR)));
     
-    if ((coordinates.latitude < arStatus.userLocation.coordinate.latitude) && (coordinates.longitude > arStatus.userLocation.coordinate.longitude))
+    if ((coordinates.latitude < arStatus.baiduCoor.latitude) && (coordinates.longitude > arStatus.baiduCoor.longitude))
         x_position = 180-x_position;
     
-    else if ((coordinates.latitude < arStatus.userLocation.coordinate.latitude) && (coordinates.longitude < arStatus.userLocation.coordinate.longitude))
+    else if ((coordinates.latitude < arStatus.baiduCoor.latitude) && (coordinates.longitude < arStatus.baiduCoor.longitude))
         x_position += 180;
     
-    else if ((coordinates.latitude > arStatus.userLocation.coordinate.latitude) && (coordinates.longitude < arStatus.userLocation.coordinate.longitude))
+    else if ((coordinates.latitude > arStatus.baiduCoor.latitude) && (coordinates.longitude < arStatus.baiduCoor.longitude))
         x_position += 270;
     
     return x_position * HORIZ_SENS - self.radar.frame.size.width;
@@ -302,6 +308,7 @@
     // If simulatorDebugging is true, getting center location from all annotations and setting it as current user location
     CLLocation *location = [self centerLocationFromAnnotations:annotations];
     if (self.uiOptions.setUserLocationToCenterOfAnnotations && location != nil) {
+        //已经是百度坐标系
         self.arStatus.userLocation = location;
         [self.trackingManager startDebugMode:location heading:0 pitch:0];
     }
@@ -351,7 +358,8 @@
 {
     if (!self.arStatus.userLocation) return;
     
-    CLLocation *userLocation = self.arStatus.userLocation;
+    //使用百度坐标系
+    CLLocation *userLocation = [[CLLocation alloc] initWithLatitude:self.arStatus.baiduCoor.latitude longitude:self.arStatus.baiduCoor.longitude];
 
     for (MCYARAnnotation *annotation in self.annotations) {
         annotation.distanceFromUser = [annotation.location distanceFromLocation:userLocation];
@@ -384,7 +392,7 @@
     
     CLLocation *userLocation = self.arStatus.userLocation;
     for (MCYARAnnotation *annotation in self.annotations) {
-        double azimuth = [self.trackingManager azimuthFromUserToLocation:userLocation location:annotation.location approximate:false];
+        double azimuth = [self.trackingManager azimuthFromUserToLocation:userLocation baiduCoor:self.arStatus.baiduCoor location:annotation.location approximate:false];
         annotation.azimuth = azimuth;
     }
 }
@@ -428,6 +436,11 @@
 {
     self.arStatus.userLocation = location;
     self.lastLocation = location;
+    
+    //构建百度坐标系
+    NSDictionary* dic = BMKConvertBaiduCoorFrom(self.arStatus.userLocation.coordinate,BMK_COORDTYPE_GPS);
+    self.arStatus.baiduCoor = BMKCoorDictionaryDecode(dic);//转换后的百度坐标
+    
     [self reload:ReloadTypeUserLocationChanged];
     
     // Debug view, indicating that update was done
@@ -440,6 +453,11 @@
 {
     self.arStatus.userLocation = location;
     self.lastLocation = location;
+    
+    //构建百度坐标系
+    NSDictionary* dic = BMKConvertBaiduCoorFrom(self.arStatus.userLocation.coordinate,BMK_COORDTYPE_GPS);
+    
+    self.arStatus.baiduCoor = BMKCoorDictionaryDecode(dic);//转换后的百度坐标
     
     // Manual reload?
     if (self.dataSource && [self.dataSource respondsToSelector:@selector(ar:shouldReloadWithLocation:)]) {
@@ -740,7 +758,7 @@
 - (MCYARRadar*)radar
 {
     if (!_radar) {
-        _radar = [[MCYARRadar alloc] initWithFrame:CGRectMake(20, self.view.frame.size.height-120, 80, 80)];
+        _radar = [[MCYARRadar alloc] initWithFrame:CGRectMake(15, self.view.frame.size.height-95, 80, 80)];
     }
     
     return _radar;

@@ -361,24 +361,23 @@
  * rename to heading 
  * bool 默认值为false
  */
-- (double)azimuthFromUserToLocation:(CLLocation*)userLocation location:(CLLocation*)location approximate:(BOOL)approximate
+- (double)azimuthFromUserToLocation:(CLLocation*)userLocation baiduCoor:(CLLocationCoordinate2D)baiduCoor location:(CLLocation*)location approximate:(BOOL)approximate
 {
     double azimuth = 0;
     if (approximate) {
-        azimuth = [self approximateBearingBetween:userLocation endLocation:location];
+        azimuth = [self approximateBearingBetween:baiduCoor endLocation:location];
     } else {
-        azimuth = [self bearingBetween:userLocation endLocation:location];
+        azimuth = [self bearingBetween:baiduCoor endLocation:location];
     }
     
     return azimuth;
 }
 
-- (double)bearingBetween:(CLLocation*)startLocation endLocation:(CLLocation*)endLocation
+- (double)bearingBetween:(CLLocationCoordinate2D) baiduCoor endLocation:(CLLocation*)endLocation
 {
     double azimuth = 0;
-    
-    double lat1 = degreesToRadians(startLocation.coordinate.latitude);
-    double lon1 = degreesToRadians(startLocation.coordinate.longitude);
+    double lat1 = degreesToRadians(baiduCoor.latitude);
+    double lon1 = degreesToRadians(baiduCoor.longitude);
     
     double lat2 = degreesToRadians(endLocation.coordinate.latitude);
     double lon2 = degreesToRadians(endLocation.coordinate.longitude);
@@ -404,15 +403,15 @@
  
  It uses formula for flat surface and multiplies it with LAT_LON_FACTOR which "simulates" earth curvature.
  */
-- (double)approximateBearingBetween:(CLLocation*)startLocation endLocation:(CLLocation*)endLocation
+- (double)approximateBearingBetween:(CLLocationCoordinate2D)baiduCoor endLocation:(CLLocation*)endLocation
 {
     double azimuth = 0;
     
-    CLLocationCoordinate2D startCoordinate = startLocation.coordinate;
+    //CLLocationCoordinate2D startCoordinate = startLocation.coordinate;
     CLLocationCoordinate2D endCoordinate = endLocation.coordinate;
     
-    double latitudeDistance = startCoordinate.latitude - endCoordinate.latitude;
-    double longitudeDistance = startCoordinate.longitude - endCoordinate.longitude;
+    double latitudeDistance = baiduCoor.latitude - endCoordinate.latitude;
+    double longitudeDistance = baiduCoor.longitude - endCoordinate.longitude;
     
     azimuth = radiansToDegrees(atan2(longitudeDistance, (latitudeDistance * (double)LAT_LON_FACTOR)));
     azimuth += 180.0;
@@ -527,6 +526,7 @@
     
     //===== Disregarding old and low quality location detections
     CLLocation *location = [locations firstObject];
+    
     NSTimeInterval age = location.timestamp.timeIntervalSinceNow;
     
     NSLog(@"Disregarding location: age:%f, self.minimumLocationAge:%f , self.minimumLocationHorizontalAccuracy:%f, location.horizontalAccuracy:%f", age, self.minimumLocationAge, self.minimumLocationHorizontalAccuracy, location.horizontalAccuracy);

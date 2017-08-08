@@ -63,6 +63,9 @@ double deltaAngle(double angle1, double angle2);
 /// Last known location of the user.
 @property (nonatomic, assign) CLLocation *userLocation;
 
+/// 百度坐标系
+@property (nonatomic ,assign) CLLocationCoordinate2D baiduCoor;
+
 /// True if all properties have been set.
 @property (nonatomic, assign) BOOL ready;
 
