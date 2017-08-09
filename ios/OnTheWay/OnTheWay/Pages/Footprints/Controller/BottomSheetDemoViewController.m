@@ -101,7 +101,7 @@
     }
     CGFloat footPrintContentW = SCREEN_WIDTH - OTWPrintArSpacing_15*2;
     CGSize footPrintContentSize = [_footprint.footprintContent boundingRectWithSize:CGSizeMake(footPrintContentW, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:16]} context:nil].size;
-    CGRect footPrintContentRect = CGRectMake(footPrintContentX, footPrintContentY, footPrintContentW, footPrintContentSize.height);
+    CGRect footPrintContentRect = CGRectMake(footPrintContentX, footPrintContentY, footPrintContentW, 42);
     self.footPrintContent.frame = footPrintContentRect;
     self.footPrintContent.text = _footprint.footprintContent;
     
@@ -140,10 +140,11 @@
 -(void)jumpToFootprintDetail
 {
     [self.popupController dismissWithCompletion:^{
-        OTWFootprintDetailController *VC =  [[OTWFootprintDetailController alloc] init];
-        [VC setFid:_footprint.footprintId.description];
-        [self.mapController.navigationController pushViewController:VC animated:YES];
+
     }];
+    OTWFootprintDetailController *VC =  [[OTWFootprintDetailController alloc] init];
+    [VC setFid:_footprint.footprintId.description];
+    [self.mapController.navigationController pushViewController:VC animated:YES];
 
 }
 
@@ -268,6 +269,9 @@
     CGFloat imageH = imageW*80/111;
     CGFloat imageY = CGRectGetMaxY(_underLineOneView.frame) + OTWPrintArSpacing_15;
     for (int index = 0; index < footprint.footprintPhotoArray.count; index++) {
+        if (index > 2) {
+            break;
+        }
         CGFloat imageX = OTWPrintArSpacing_15 + index * (imageW + OTWPrintArSpacing_6);
         UIImageView *imageView = [[UIImageView alloc] init];
         imageView.frame = CGRectMake(imageX, imageY, imageW, imageH);
