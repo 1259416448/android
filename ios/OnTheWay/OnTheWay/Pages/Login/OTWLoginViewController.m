@@ -231,7 +231,7 @@
                 [[OTWUserModel shared] dump];
                 //登陆成功
                 if(self.requiredLogin){
-                    [[OTWLaunchManager sharedManager].mainTabController didSelectedItemByIndex:4];
+                    [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexPersonal];
                 }
                 [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
                 //[[NSNotificationCenter defaultCenter] postNotificationName:@"loginSuccess" object:self];

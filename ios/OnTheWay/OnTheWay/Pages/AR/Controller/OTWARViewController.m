@@ -12,6 +12,7 @@
 #import "OTWARCustomAnnotation.h"
 #import "MCYARAnnotationView.h"
 #import "MCYARViewController.h"
+#import "OTWPlaneMapViewController.h"
 
 #import "OTWCustomAnnotationView.h"
 #import "OTWFootprintSearchParams.h"
@@ -228,7 +229,7 @@
 #pragma mark 返回事件
 - (void)backButtonClick
 {
-    [[OTWLaunchManager sharedManager].mainTabController didSelectedItemByIndex:0]; // 显示首页
+    [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexFind]; // 显示首页
 }
 
 #pragma mark 控制时间筛选按钮显示／隐藏
@@ -247,6 +248,12 @@
     self.locationBtton_100m.hidden = !self.locationBtton_100m.hidden;
     self.locationBtton_500m.hidden = !self.locationBtton_500m.hidden;
     self.locationBtton_1000m.hidden = !self.locationBtton_1000m.hidden;
+}
+
+- (void)planeMapButtonClick
+{
+    OTWPlaneMapViewController *planeMapVC = [[OTWPlaneMapViewController alloc] init];
+    [self.navigationController pushViewController:planeMapVC animated:NO];
 }
 
 #pragma mark 刷新-换一批足迹
@@ -288,8 +295,7 @@
 #pragma mark 跳转至足迹列表页面
 - (void)toFootprintListView
 {
-    OTWFootprintsViewController *footprintListVC = [[OTWFootprintsViewController alloc] init];
-    [self.navigationController pushViewController:footprintListVC animated:YES];
+    [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexFootprints];
 }
 
 #pragma mark 跳转至足迹发布页面
@@ -598,6 +604,7 @@
         _planeMapButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _planeMapButton.backgroundColor = [UIColor clearColor];
         [_planeMapButton setImage:[UIImage imageNamed:@"ar_pingmian"] forState:UIControlStateNormal];
+        [_planeMapButton addTarget:self action:@selector(planeMapButtonClick) forControlEvents:UIControlEventTouchUpInside];
     }
     return _planeMapButton;
 }

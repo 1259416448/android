@@ -8,31 +8,18 @@
 
 #import "OTWLaunchManager.h"
 #import "OTWLoginViewController.h"
-#import "OTWRootViewController.h"
-#import "OTWPersonalInfoController.h"
-#import "OTWPersonalEditNicknameController.h"
-#import "OTWPersonalSiteController.h"
-#import "OTWFootprintsViewController.h"
 
 #import "OTWFindViewController.h"
 #import "OTWFootprintsViewController.h"
 #import "OTWARViewController.h"
 #import "OTWNewsViewController.h"
-#import "OTWPrintARViewController.h"
 #import "OTWPersonalViewController.h"
+
 #import "OTWUserModel.h"
 
 @interface OTWLaunchManager ()
 
 @property (nonatomic, strong) OTWLoginViewController *loginViewController;
-@property (nonatomic, strong) OTWFootprintDetailController *footprintDetailController;
-@property (nonatomic, strong) UINavigationController *personalEditNicknameController;
-@property (nonatomic, strong) OTWRootViewController *mainTabViewController;
-@property (nonatomic,strong) UINavigationController *personalInfoController;
-@property (nonatomic,strong) UINavigationController *personalSiteController;
-@property (nonatomic,strong) UINavigationController *personalMyController;
-@property (nonatomic,strong) UINavigationController *footprintsViewController;
-
 
 @end
 
@@ -48,7 +35,7 @@
     return manager;
 }
 
-#pragma mark - Private methods
+#pragma mark - Public methods
 
 - (BOOL)showLoginViewWithController:(UIViewController*)viewController completion:(void (^ __nullable)(void))completion NS_AVAILABLE_IOS(5_0)
 {
@@ -72,32 +59,6 @@
     });
 }
 
-- (void)showPersonalEditNicknameView
-{
-    GCDMain(^{
-        [[UIApplication sharedApplication].keyWindow setRootViewController:self.personalEditNicknameController];
-        self.mainTabController = nil;
-    });
-}
-- (void)showPersonalInfoView{
-    GCDMain(^{
-        [[UIApplication sharedApplication].keyWindow setRootViewController:self.personalInfoController];
-        self.mainTabController = nil;
-    })
-}
-- (void)showPersonalSiteView{
-    GCDMain(^{
-        [[UIApplication sharedApplication].keyWindow setRootViewController:self.personalSiteController];
-        self.mainTabController = nil;
-    })
-}
-
-- (void)showPersonalMyView{
-    GCDMain(^{
-        [[UIApplication sharedApplication].keyWindow setRootViewController:self.personalMyController];
-        self.mainTabController = nil;
-    })
-}
 - (void)showMainTabView
 {
     GCDMain(^{
@@ -106,17 +67,9 @@
     });
 }
 
-- (void)showFootprintView
+- (void)showSelectedControllerByIndex:(OTWTabBarSelectedIndex)selectIndex
 {
-    GCDMain(^{
-        [[UIApplication sharedApplication].keyWindow setRootViewController:self.footprintsViewController];
-        self.loginViewController = nil;
-    });
-}
-
--(void) deallocLoginViewController
-{
-    _loginViewController = nil;
+    [self.mainTabController didSelectedItemByIndex:selectIndex];
 }
 
 #pragma mark - Getter & Setter
@@ -129,50 +82,6 @@
     }
     
     return _loginViewController;
-}
-
-- (UINavigationController*)personalEditNicknameController
-{
-    if(!_personalEditNicknameController){
-        OTWPersonalEditNicknameController *personalEditNicknameVC = [[OTWPersonalEditNicknameController alloc] init];
-        _personalEditNicknameController = [[UINavigationController alloc] initWithRootViewController:personalEditNicknameVC];
-    }
-    return _personalEditNicknameController;
-}
-
-
-- (UINavigationController*)personalInfoController{
-    if(!_personalInfoController){
-        OTWPersonalInfoController *personalInfoVC = [[OTWPersonalInfoController alloc] init];
-        _personalInfoController = [[UINavigationController alloc] initWithRootViewController:personalInfoVC];
-    }
-    return _personalInfoController;
-}
-
-- (UINavigationController*)personalSiteController{
-    if(!_personalSiteController){
-        OTWPersonalSiteController *personaSiteVC = [[OTWPersonalSiteController alloc] init];
-        _personalSiteController = [[UINavigationController alloc] initWithRootViewController:personaSiteVC];
-    }
-    return _personalSiteController;
-}
-
--(UINavigationController*)footprintsViewController{
-    if(!_footprintsViewController){
-        OTWFootprintsViewController *footprintsVC = [[OTWFootprintsViewController alloc] init];
-        _footprintsViewController = [[UINavigationController alloc] initWithRootViewController:footprintsVC];
-    }
-    return _footprintsViewController;
-}
-
-
-- (OTWRootViewController*)mainTabViewController
-{
-    if (!_mainTabViewController) {
-        _mainTabViewController = [[OTWRootViewController alloc] init];
-    }
-    
-    return _mainTabViewController;
 }
 
 - (OTWTabBarController*)mainTabController

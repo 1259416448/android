@@ -137,7 +137,7 @@
 //    [GCTokenManager cleanToken];
     // 退出到登录页
 //    [[OTWLaunchManager sharedManager] deallocLoginViewController];
-//    [[OTWLaunchManager sharedManager].mainTabController didSelectedItemByIndex:0];
+//    [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexFind];
 //    [self.navigationController popToRootViewControllerAnimated: NO];
 }
 
@@ -148,7 +148,7 @@
         [_alertController addAction:[UIAlertAction actionWithTitle:@"退出登录" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
             [[OTWUserModel shared] logout];
             [GCTokenManager cleanToken];
-            [[OTWLaunchManager sharedManager].mainTabController didSelectedItemByIndex:0];
+            [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexFind];
             [self.navigationController popToRootViewControllerAnimated: NO];
             
         }]];
