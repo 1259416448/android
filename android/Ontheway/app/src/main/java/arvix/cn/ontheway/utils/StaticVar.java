@@ -27,5 +27,7 @@ public interface StaticVar {
     int SUCCESS = 0;
     int ERROR = -1;
 
+    int IMAGE_COMPRESS_SIZE_DEFAULT = 300*1024;
+
     int MAX_PHOTO_SELECT = 9;
 }

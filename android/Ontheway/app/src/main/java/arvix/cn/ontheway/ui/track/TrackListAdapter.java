@@ -66,9 +66,9 @@ public class TrackListAdapter  extends ArrayAdapter<TrackBean> {
         h.addressTv.setText(StaticMethod.genLesStr(bean.getFootprintAddress(),20));
         StaticMethod.setCircularHeaderImg(bean.getUserHeadImg(),h.userHeader,h.userHeader.getWidth(),h.userHeader.getHeight());
         h.trackPhotoIv.setVisibility(View.GONE);
-        if(!bean.getPhotoList().isEmpty()){
+        if(!bean.getFootprintPhotoArray().isEmpty()){
             h.trackPhotoIv.setVisibility(View.VISIBLE);
-            StaticMethod.setImg(bean.getPhotoList().get(0),h.trackPhotoIv,h.trackPhotoIv.getWidth(),h.trackPhotoIv.getHeight());
+            StaticMethod.setImg(bean.getFootprintPhotoArray().get(0),h.trackPhotoIv,h.trackPhotoIv.getWidth(),h.trackPhotoIv.getHeight());
         }
         h.nicknameTv.setText(bean.getUserNickname());
         h.timeTv.setText(bean.getDateCreated()+"");

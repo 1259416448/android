@@ -398,22 +398,22 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
                 headerClickedViewHolder.imageOne.setDrawingCacheEnabled(false);
                 headerClickedViewHolder.imageTwo.setVisibility(View.GONE);
                 headerClickedViewHolder.imageThree.setVisibility(View.GONE);
-                if(!currentClickedTrack.getPhotoList().isEmpty()){
-                    for(int i=0;i<3||i<currentClickedTrack.getPhotoList().size();i++){
+                if(!currentClickedTrack.getFootprintPhotoArray().isEmpty()){
+                    for(int i = 0; i<3||i<currentClickedTrack.getFootprintPhotoArray().size(); i++){
                         if(i==0){
-                            StaticMethod.setImg(currentClickedTrack.getPhotoList().get(i),headerClickedViewHolder.imageOne,headerClickedViewHolder.imageOne.getWidth(),headerClickedViewHolder.imageOne.getHeight());
+                            StaticMethod.setImg(currentClickedTrack.getFootprintPhotoArray().get(i),headerClickedViewHolder.imageOne,headerClickedViewHolder.imageOne.getWidth(),headerClickedViewHolder.imageOne.getHeight());
                             headerClickedViewHolder.imageOne.setVisibility(View.VISIBLE);
-                            Log.i(logTag,"photoOne--->"+currentClickedTrack.getPhotoList().get(i));
+                            Log.i(logTag,"photoOne--->"+currentClickedTrack.getFootprintPhotoArray().get(i));
                         }
                         if(i==1){
-                            StaticMethod.setImg(currentClickedTrack.getPhotoList().get(i),headerClickedViewHolder.imageTwo,headerClickedViewHolder.imageTwo.getWidth(),headerClickedViewHolder.imageTwo.getHeight());
+                            StaticMethod.setImg(currentClickedTrack.getFootprintPhotoArray().get(i),headerClickedViewHolder.imageTwo,headerClickedViewHolder.imageTwo.getWidth(),headerClickedViewHolder.imageTwo.getHeight());
                             headerClickedViewHolder.imageTwo.setVisibility(View.VISIBLE);
-                            Log.i(logTag,"photoTwo--->"+currentClickedTrack.getPhotoList().get(i));
+                            Log.i(logTag,"photoTwo--->"+currentClickedTrack.getFootprintPhotoArray().get(i));
                         }
                         if(i==2){
-                            StaticMethod.setImg(currentClickedTrack.getPhotoList().get(i),headerClickedViewHolder.imageThree,headerClickedViewHolder.imageThree.getWidth(),headerClickedViewHolder.imageThree.getHeight());
+                            StaticMethod.setImg(currentClickedTrack.getFootprintPhotoArray().get(i),headerClickedViewHolder.imageThree,headerClickedViewHolder.imageThree.getWidth(),headerClickedViewHolder.imageThree.getHeight());
                             headerClickedViewHolder.imageThree.setVisibility(View.VISIBLE);
-                            Log.i(logTag,"photoThree--->"+currentClickedTrack.getPhotoList().get(i));
+                            Log.i(logTag,"photoThree--->"+currentClickedTrack.getFootprintPhotoArray().get(i));
                         }
                     }
                 }

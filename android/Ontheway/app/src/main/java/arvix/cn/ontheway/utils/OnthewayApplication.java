@@ -10,11 +10,13 @@ import arvix.cn.ontheway.bean.UserInfo;
 import arvix.cn.ontheway.service.impl.BaiduPoiServiceImpl;
 import arvix.cn.ontheway.service.impl.BaiduServiceImpl;
 import arvix.cn.ontheway.service.impl.CacheDefault;
-import arvix.cn.ontheway.service.impl.FileUploadServiceImpl;
+import arvix.cn.ontheway.service.impl.ImageFileUploadServiceImpl;
+import arvix.cn.ontheway.service.impl.TrackSearchServiceImpl;
 import arvix.cn.ontheway.service.inter.BaiduPoiService;
 import arvix.cn.ontheway.service.inter.BaiduService;
 import arvix.cn.ontheway.service.inter.CacheService;
-import arvix.cn.ontheway.service.inter.FileUploadService;
+import arvix.cn.ontheway.service.inter.ImageFileUploadService;
+import arvix.cn.ontheway.service.inter.TrackSearchService;
 
 /**
  * Created by asdtiang on 2017/7/18 0018.
@@ -45,8 +47,12 @@ public class OnthewayApplication {
             baiduService.initLocation();
             iocMap.put(BaiduService.class,baiduService);
 
-            FileUploadService fileUploadService = new FileUploadServiceImpl();
-            iocMap.put(FileUploadService.class,fileUploadService);
+            ImageFileUploadService fileUploadService = new ImageFileUploadServiceImpl();
+            iocMap.put(ImageFileUploadService.class,fileUploadService);
+
+            TrackSearchService trackSearchService = new TrackSearchServiceImpl();
+            iocMap.put(TrackSearchService.class,trackSearchService);
+
             Log.i("App","app init finish--------------------------------->");
         }
         initBefore = true;

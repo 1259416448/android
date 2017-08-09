@@ -16,7 +16,7 @@ public class TrackBean  implements Serializable{
     private long footprintId;
     private int month;
     private int day;
-    private List<String> photoList;
+    private List<String> footprintPhotoArray;
     private String footprintAddress;
     private String footprintContent;
     private String userHeadImg;
@@ -44,12 +44,12 @@ public class TrackBean  implements Serializable{
         this.footprintId = footprintId;
     }
 
-    public List<String> getPhotoList() {
-        return photoList;
+    public List<String> getFootprintPhotoArray() {
+        return footprintPhotoArray;
     }
 
-    public void setPhotoList(List<String> photoList) {
-        this.photoList = photoList;
+    public void setFootprintPhotoArray(List<String> footprintPhotoArray) {
+        this.footprintPhotoArray = footprintPhotoArray;
     }
 
     public String getFootprintAddress() {

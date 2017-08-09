@@ -21,7 +21,8 @@ import arvix.cn.ontheway.bean.BaseResponse;
 import arvix.cn.ontheway.bean.QiniuBean;
 import arvix.cn.ontheway.http.ServerUrl;
 import arvix.cn.ontheway.service.inter.FileUploadCallBack;
-import arvix.cn.ontheway.service.inter.FileUploadService;
+import arvix.cn.ontheway.service.inter.ImageFileUploadService;
+import arvix.cn.ontheway.utils.ImageUtil;
 import arvix.cn.ontheway.utils.StaticMethod;
 import arvix.cn.ontheway.utils.StaticVar;
 
@@ -30,7 +31,7 @@ import arvix.cn.ontheway.utils.StaticVar;
  * asdtiangxia@163.com
  */
 
-public class FileUploadServiceImpl implements FileUploadService {
+public class ImageFileUploadServiceImpl implements ImageFileUploadService {
     public String logTag = this.getClass().getName();
 
 
@@ -40,33 +41,19 @@ public class FileUploadServiceImpl implements FileUploadService {
         FILEPATH,
     }
 
-    public void upload(final Activity act, final String filePath, final String uploadUrl, final FileUploadCallBack fileUploadCallBack) {
-        this.upload(act, DataType.FILEPATH, filePath, uploadUrl, fileUploadCallBack);
+    public void upload(final Activity act, final String filePath,int sizeLimit, final String uploadUrl, final FileUploadCallBack fileUploadCallBack) {
+        this.upload(act, DataType.FILEPATH, filePath, uploadUrl, sizeLimit,fileUploadCallBack);
     }
-    public void upload(final Activity act, final File File, final String uploadUrl, final FileUploadCallBack fileUploadCallBack) {
-        this.upload(act, DataType.FILE, File, uploadUrl, fileUploadCallBack);
+    public void upload(final Activity act, final File File,int sizeLimit, final String uploadUrl, final FileUploadCallBack fileUploadCallBack) {
+        this.upload(act, DataType.FILE, File, uploadUrl,sizeLimit, fileUploadCallBack);
     }
 
     public void upload(final Activity act, final byte[] data, final String uploadUrl, final FileUploadCallBack fileUploadCallBack) {
-        this.upload(act, DataType.BYTE, data, uploadUrl, fileUploadCallBack);
+        this.upload(act, DataType.BYTE, data, uploadUrl, 0,fileUploadCallBack);
     }
 
-    @Override
-    public void upload(Activity act, String filePath, FileUploadCallBack fileUploadCallBack) {
-        this.upload(act, DataType.FILEPATH, filePath, null, fileUploadCallBack);
-    }
 
-    @Override
-    public void upload(Activity act, File File, FileUploadCallBack fileUploadCallBack) {
-        this.upload(act, DataType.FILE, File, null, fileUploadCallBack);
-    }
-
-    @Override
-    public void upload(Activity act, byte[] data, FileUploadCallBack fileUploadCallBack) {
-        this.upload(act, DataType.BYTE, data, null, fileUploadCallBack);
-    }
-
-    private void upload(final Activity act, final DataType dataType, final Object data, final String uploadUrl, final FileUploadCallBack fileUploadCallBack) {
+    private void upload(final Activity act, final DataType dataType, final Object data, final String uploadUrl,final int sizeLimit,final FileUploadCallBack fileUploadCallBack) {
         RequestParams requestParams = new RequestParams(ServerUrl.QINIU_UPTOKEN);
         try {
             x.http().get(requestParams, new Callback.CommonCallback<String>() {
@@ -99,6 +86,7 @@ public class FileUploadServiceImpl implements FileUploadService {
                                                 @Override
                                                 public void onSuccess(String result) {
                                                     try {
+                                                        Log.i(logTag,"upload res-------------->:"+result);
                                                         BaseResponse response = StaticMethod.genResponse(result);
                                                         fileUploadCallBack.uploadBack(response);
                                                     } catch (Exception e) {
@@ -142,10 +130,21 @@ public class FileUploadServiceImpl implements FileUploadService {
                             App.qiniuUploadManager.put(updateData, key, token, upCompletionHandler, null);
                         } else if (dataType == DataType.FILE) {
                             File updateData = (File) data;
-                            App.qiniuUploadManager.put(updateData, key, token, upCompletionHandler, null);
+                            if(sizeLimit>1000){
+                                byte[] bytes= ImageUtil.getResizedImageData(1024,1920,sizeLimit,80,updateData, act);
+                                App.qiniuUploadManager.put(bytes, key, token, upCompletionHandler, null);
+                            }else{
+                                App.qiniuUploadManager.put(updateData, key, token, upCompletionHandler, null);
+                            }
                         } else if (dataType == DataType.FILEPATH) {
                             String updateData = (String) data;
-                            App.qiniuUploadManager.put(updateData, key, token, upCompletionHandler, null);
+                            File file = new File(updateData);
+                            if(sizeLimit>1000){
+                                byte[] bytes= ImageUtil.getResizedImageData(1024,1920,sizeLimit,80,file, act);
+                                App.qiniuUploadManager.put(bytes, key, token, upCompletionHandler, null);
+                            }else{
+                                App.qiniuUploadManager.put(updateData, key, token, upCompletionHandler, null);
+                            }
                         }else{
                             Log.e(logTag,"------------>unsupport dataType:"+dataType);
                         }
