@@ -91,12 +91,14 @@ public class CacheDefault implements CacheService {
     @Override
     public <T> T getTMem(String key, Class<T> t) {
         T result = null;
-        Object entity = cacheMap.get(key);
-        if(entity!=null){
-            Log.w(logTag,"entity.getTextContent():");
-            result = (T)entity;
-        }else{
-            result  = getT(key,t);
+        if(key!=null){
+            Object entity = cacheMap.get(key);
+            if(entity!=null){
+                Log.w(logTag,"entity.getTextContent():");
+                result = (T)entity;
+            }else{
+                result  = getT(key,t);
+            }
         }
         return result;
     }

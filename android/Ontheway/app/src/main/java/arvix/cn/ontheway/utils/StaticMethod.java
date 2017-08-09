@@ -9,6 +9,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -221,6 +222,16 @@ public class StaticMethod {
         cache.putObjectMem(StaticVar.USER_INFO,userInfo);
         App.userInfo = userInfo;
         LocalBroadcastManager.getInstance(activity).sendBroadcast(new Intent(StaticVar.BROADCAST_ACTION_USER_CHANGE));
+    }
+
+    public static Bitmap getViewBitmap(View addViewContent) {
+        addViewContent.setDrawingCacheEnabled(true);
+        addViewContent.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        addViewContent.layout(0, 0, addViewContent.getMeasuredWidth(), addViewContent.getMeasuredHeight());
+        addViewContent.buildDrawingCache();
+        Bitmap cacheBitmap = addViewContent.getDrawingCache();
+        Bitmap bitmap = Bitmap.createBitmap(cacheBitmap);
+        return bitmap;
     }
 
 

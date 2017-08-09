@@ -36,7 +36,7 @@
     _verticalStackingEnabled = false;
     _distanceOffsetMinThreshold = 0;
     _distanceOffsetMode = DistanceOffsetModeAutomatic;
-    _bottomBorder = 0.55;
+    _bottomBorder = 0.7;
     _maxVisibleAnnotations = 100;
     _maxDistance = 0;
 }

@@ -24,6 +24,7 @@
 #import <MJExtension.h>
 
 #import <STPopup.h>
+#import "OTWFootprintReleaseViewController.h"
 
 @interface OTWPlaneMapViewController ()<BMKLocationServiceDelegate,BMKMapViewDelegate>
 
@@ -92,6 +93,8 @@
     [_mapView setZoomLevel:16];
     self.view = _mapView;
     [self setUpBase];
+    
+    [self test];
 }
 
 - (void)viewDidAppear:(BOOL)animated

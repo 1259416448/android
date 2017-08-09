@@ -5,13 +5,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -145,7 +148,7 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
                     /**
                      * 加载图片bind方法
                      */
-                    x.image().bind(headerIVTemp,trackBean.getUserHeaderUrl(), options ,new Callback.CommonCallback<Drawable>() {
+                    x.image().bind(headerIVTemp,trackBean.getUserHeadImg(), options ,new Callback.CommonCallback<Drawable>() {
                         @Override
                         public void onSuccess(Drawable result) {
                         }
@@ -159,7 +162,7 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
                         public void onFinished() {
                             LatLng latLng = new LatLng(p.location.latitude,p.location.longitude);
                             headerIVTemp.setDrawingCacheEnabled(true);
-                            BitmapDescriptor markerIcon = BitmapDescriptorFactory.fromBitmap(getViewBitmap(view));
+                            BitmapDescriptor markerIcon = BitmapDescriptorFactory.fromBitmap(StaticMethod.getViewBitmap(view));
                             Bundle bundle = new Bundle();
                             bundle.putSerializable(StaticVar.EXTRA_TRACK_BEAN,trackBean);
                             OverlayOptions oo = new MarkerOptions().anchor(0.0f,0.5f).position(latLng).icon(markerIcon).zIndex(9).draggable(true).extraInfo(bundle);
@@ -218,8 +221,8 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
             public void onReceive(Context context, Intent intent) {
                 Log.i(logTag,"receive broadcast-->"+intent.getAction());
                 if (intent.getAction().equals(BaiduLocationListenerService.BROADCAST_LOCATION)) {
-                    double lat = intent.getDoubleExtra(BaiduLocationListenerService.EXTRA_LAT,0.0);
-                    double lon = intent.getDoubleExtra(BaiduLocationListenerService.EXTRA_LON,0.0);
+                    double lat = intent.getDoubleExtra(StaticVar.BAIDU_LOC_CACHE_LAT,0.0);
+                    double lon = intent.getDoubleExtra(StaticVar.BAIDU_LOC_CACHE_LON,0.0);
                     updateLocation(lat,lon);
                 }
             }
@@ -280,8 +283,26 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
             }
         });
 
+        checkOverlayPermission();
+
         //test cache
 //        new CacheDefauleTest(OnthewayApplication.cache).startTest();
+    }
+
+    private void checkOverlayPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(this)) {
+                new AlertDialog.Builder(self).setMessage("请打开悬浮窗权限").setPositiveButton("设置", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                Uri.parse("package:" + getPackageName()));
+                        UIUtils.safeOpenLink(self,intent);
+                    }
+                }).setNegativeButton("取消",null).show();
+
+            }
+        }
     }
 
     @Override
@@ -300,6 +321,9 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
         if(mMapView!=null) {
             mMapView.onResume();
         }
+        if(highLightView!=null){
+            highLightView.setVisibility(View.VISIBLE);
+        }
     }
     @Override
     protected void onPause() {
@@ -308,15 +332,9 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
         if(mMapView!=null) {
             mMapView.onPause();
         }
-    }
-    private Bitmap getViewBitmap(View addViewContent) {
-        addViewContent.setDrawingCacheEnabled(true);
-        addViewContent.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-        addViewContent.layout(0, 0, addViewContent.getMeasuredWidth(), addViewContent.getMeasuredHeight());
-        addViewContent.buildDrawingCache();
-        Bitmap cacheBitmap = addViewContent.getDrawingCache();
-        Bitmap bitmap = Bitmap.createBitmap(cacheBitmap);
-        return bitmap;
+        if(highLightView!=null){
+            highLightView.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -339,7 +357,7 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
             public void run() {
                 Bundle bundle = marker.getExtraInfo();
                 currentClickedTrack = (TrackBean) bundle.getSerializable(StaticVar.EXTRA_TRACK_BEAN);
-                Log.i(logTag,"user header--->"+currentClickedTrack.getUserHeaderUrl());
+                Log.i(logTag,"user header--->"+currentClickedTrack.getUserHeadImg());
                 if (headerClickedView == null) {
                     bottomDialog = new BottomDialog(self);
                     headerClickedView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.track_map_header_click, null);
@@ -371,11 +389,11 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
                     headerClickedViewHolder = (HeaderClickedViewHolder) headerClickedView.getTag();
                 }
                 headerClickedViewHolder.headerIv.setDrawingCacheEnabled(false);
-                StaticMethod.setCircularHeaderImg(currentClickedTrack.getUserHeaderUrl(),headerClickedViewHolder.headerIv,headerClickedViewHolder.headerIv.getWidth(),headerClickedViewHolder.headerIv.getHeight());
-                headerClickedViewHolder.nicknameTv.setText(currentClickedTrack.getNickname());
-                headerClickedViewHolder.addressTv.setText(currentClickedTrack.getAddress());
+                StaticMethod.setCircularHeaderImg(currentClickedTrack.getUserHeadImg(),headerClickedViewHolder.headerIv,headerClickedViewHolder.headerIv.getWidth(),headerClickedViewHolder.headerIv.getHeight());
+                headerClickedViewHolder.nicknameTv.setText(currentClickedTrack.getUserNickname());
+                headerClickedViewHolder.addressTv.setText(currentClickedTrack.getFootprintAddress());
                 headerClickedViewHolder.timeTv.setText(currentClickedTrack.getDateCreated()+"");
-                headerClickedViewHolder.contentTv.setText(StaticMethod.genLesStr(currentClickedTrack.getContent(),30));
+                headerClickedViewHolder.contentTv.setText(StaticMethod.genLesStr(currentClickedTrack.getFootprintContent(),30));
                 headerClickedViewHolder.imageOne.setVisibility(View.GONE);
                 headerClickedViewHolder.imageOne.setDrawingCacheEnabled(false);
                 headerClickedViewHolder.imageTwo.setVisibility(View.GONE);
@@ -415,20 +433,25 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
                 bottomDialog.show();
 
                 final Point point=mBaiduMap.getProjection().toScreenLocation(marker.getPosition());
-                highLightView =new ImageView(self);
-                highLightView.setImageBitmap(marker.getIcon().getBitmap());
-                WindowManager wm= (WindowManager) getSystemService(WINDOW_SERVICE);
-                WindowManager.LayoutParams ps=new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT,WindowManager.LayoutParams.WRAP_CONTENT);
-                ps.x=point.x;
-                ps.y=point.y-marker.getIcon().getBitmap().getHeight()/2;
-                ps.width=marker.getIcon().getBitmap().getWidth();
-                ps.height=marker.getIcon().getBitmap().getHeight();
-                ps.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
-                ps.flags= WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                        | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-                ps.format = PixelFormat.TRANSLUCENT;
-                ps.gravity = Gravity.LEFT | Gravity.TOP;
-                wm.addView(highLightView,ps);
+
+                try{
+                    highLightView =new ImageView(self);
+                    highLightView.setImageBitmap(marker.getIcon().getBitmap());
+                    WindowManager wm= (WindowManager) getSystemService(WINDOW_SERVICE);
+                    WindowManager.LayoutParams ps=new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT,WindowManager.LayoutParams.WRAP_CONTENT);
+                    ps.x=point.x;
+                    ps.y=point.y-marker.getIcon().getBitmap().getHeight()/2;
+                    ps.width=marker.getIcon().getBitmap().getWidth();
+                    ps.height=marker.getIcon().getBitmap().getHeight();
+                    ps.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+                    ps.flags= WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                            | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+                    ps.format = PixelFormat.TRANSLUCENT;
+                    ps.gravity = Gravity.LEFT | Gravity.TOP;
+                    wm.addView(highLightView,ps);
+                }catch (Exception e){
+                    highLightView=null;
+                }
 
             }
         },clickAnimDuration+20);

@@ -134,7 +134,7 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
             detailDTO.setFootprintPhotoArray(footprintPhotoArray);
         }
         detailDTO.setDay(TimeMaker.getDayStr(detailDTO.getDateCreated()));
-        return JsonUtil.getSuccess(CommonContact.SAVE_SUCCESS, CommonContact.SAVE_SUCCESS,detailDTO);
+        return JsonUtil.getSuccess(CommonContact.SAVE_SUCCESS, CommonContact.SAVE_SUCCESS, detailDTO);
     }
 
 
@@ -230,7 +230,25 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
                 new Sort(Sort.Direction.DESC, "dateCreated"));
         Page<Footprint> page = super.findAll(searchable);
         if (page.getContent() != null && page.getContent().size() > 0) {
+
+            //图片数据
+            List<Long> parentIds = Lists.newArrayListWithCapacity(page.getContent().size());
+            page.getContent().forEach(x -> parentIds.add(x.getId()));
+            //获取所有footprint的照片数据
+            Map<String, Object> params1 = Maps.newHashMap();
+            params1.put("parentId_in", parentIds);
+            params1.put("systemModule_eq", SystemModule.footprint);
+            List<Document> documents = documentService.findAllWithNoPageNoSort(Searchable.newSearchable(params1));
+            Map<Long, List<String>> photoListMap = Maps.newHashMap();
+            if (documents != null && documents.size() > 0) {
+                for (Document document : documents) {
+                    List<String> list = photoListMap.computeIfAbsent(document.getParentId(), k -> Lists.newArrayList());
+                    list.add(urlFix + document.getFileUrl());
+                }
+            }
+
             List<FootprintSearchListDTO> content = Lists.newArrayList();
+
             page.getContent().forEach(x -> {
                 FootprintSearchListDTO dto = new FootprintSearchListDTO();
                 dto.setUserId(x.getUser().getId());
@@ -238,8 +256,13 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
                 dto.setUserHeadImg(urlFix + x.getUser().getHeadImg() + "?" + CommonContact.USER_HEAD_IMG_FIX);
                 dto.setUserNickname(x.getUser().getName());
                 dto.setFootprintId(x.getId());
+                dto.setFootprintContent(x.getContent());
+                dto.setFootprintAddress(x.getAddress());
+                dto.setDateCreated(TimeMaker.toTimeMillis(x.getDateCreated()));
+                dto.setDateCreatedStr(TimeMaker.dateCreatedStr(dto.getDateCreated()));
                 dto.setLatitude(x.getLatitude());
                 dto.setLongitude(x.getLongitude());
+                dto.setFootprintPhotoArray(photoListMap.get(x.getId()));
                 content.add(dto);
             });
             page = new PageResult<>(
@@ -263,11 +286,11 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
         if (size == null) size = 30;
         if (size > 50) size = 50;
         if (SearchDistance.one.equals(searchDistance)) {
-            params.put("distance", 0.5);
+            params.put("distance", 0.1);
         } else if (SearchDistance.two.equals(searchDistance)) {
-            params.put("distance", 1.0);
+            params.put("distance", 0.5);
         } else {
-            params.put("distance", 1.5);
+            params.put("distance", 1.0);
         }
         Long minTime = null;
         if (SearchTime.oneDay.equals(time)) {

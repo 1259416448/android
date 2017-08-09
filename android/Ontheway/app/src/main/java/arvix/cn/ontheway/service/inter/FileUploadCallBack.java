@@ -8,5 +8,10 @@ import arvix.cn.ontheway.bean.BaseResponse;
  */
 
 public interface FileUploadCallBack {
+    /**
+     * 如果上传图片指定uploadUrl，则返回服务器response。
+     * uploadUrl为空时，返回 new BaseResponse();bodyBean设置为 QiniuBean
+     * @param baseResponse
+     */
     void uploadBack(BaseResponse baseResponse);
 }

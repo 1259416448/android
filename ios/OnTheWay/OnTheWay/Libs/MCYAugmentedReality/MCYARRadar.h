@@ -13,6 +13,9 @@
  */
 @interface MCYARRadar : UIView
 
+//加载的数据最大半径 单位 m
+@property (nonatomic,assign) double maxDistance;
+
 - (instancetype)initWithFrame:(CGRect)frame;
 
 - (void)setupAnnotations:(NSArray*)annotations;

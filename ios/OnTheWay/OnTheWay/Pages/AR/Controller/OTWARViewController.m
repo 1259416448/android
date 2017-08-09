@@ -12,6 +12,7 @@
 #import "OTWARCustomAnnotation.h"
 #import "MCYARAnnotationView.h"
 #import "MCYARViewController.h"
+#import "OTWPlaneMapViewController.h"
 
 #import "OTWCustomAnnotationView.h"
 #import "OTWFootprintSearchParams.h"
@@ -228,7 +229,7 @@
 #pragma mark 返回事件
 - (void)backButtonClick
 {
-    [[OTWLaunchManager sharedManager].mainTabController didSelectedItemByIndex:0]; // 显示首页
+    [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexFind]; // 显示首页
 }
 
 #pragma mark 控制时间筛选按钮显示／隐藏
@@ -247,6 +248,12 @@
     self.locationBtton_100m.hidden = !self.locationBtton_100m.hidden;
     self.locationBtton_500m.hidden = !self.locationBtton_500m.hidden;
     self.locationBtton_1000m.hidden = !self.locationBtton_1000m.hidden;
+}
+
+- (void)planeMapButtonClick
+{
+    OTWPlaneMapViewController *planeMapVC = [[OTWPlaneMapViewController alloc] init];
+    [self.navigationController pushViewController:planeMapVC animated:NO];
 }
 
 #pragma mark 刷新-换一批足迹
@@ -271,6 +278,14 @@
 {
     NSMutableDictionary *condition = tapGesture.opId;
     self.footprintSearchParams.searchDistance = [condition objectForKey:@"searchParamValue"];
+    
+    if([self.footprintSearchParams.searchDistance isEqualToString:@"one"]){
+        self.radar.maxDistance = 100;
+    }else if([self.footprintSearchParams.searchDistance isEqualToString:@"two"]){
+        self.radar.maxDistance = 500;
+    }else if([self.footprintSearchParams.searchDistance isEqualToString:@"three"]){
+        self.radar.maxDistance = 1000;
+    }
     DLog(@"OTWUITapGestureRecognizer手势----%@",self.footprintSearchParams.mj_keyValues);
     [self getFootprints];
 }
@@ -280,8 +295,7 @@
 #pragma mark 跳转至足迹列表页面
 - (void)toFootprintListView
 {
-    OTWFootprintsViewController *footprintListVC = [[OTWFootprintsViewController alloc] init];
-    [self.navigationController pushViewController:footprintListVC animated:YES];
+    [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexFootprints];
 }
 
 #pragma mark 跳转至足迹发布页面
@@ -293,6 +307,10 @@
 
 - (void)showARViewController
 {
+    //雷达默认范围 1km
+    
+    self.radar.maxDistance = 1000;
+    
     // Present ARViewController
     self.dataSource = self;
     // Vertical offset by distance
@@ -515,7 +533,7 @@
 {
     if (!_backButton) {
         _backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        _backButton.frame = CGRectMake(0, 20, 80, 44);
+        _backButton.frame = CGRectMake(0, 20, 65, 44);
         _backButton.backgroundColor = [UIColor clearColor];
         [_backButton setImage:[UIImage imageNamed:@"back_1"] forState:UIControlStateNormal];
         [_backButton addTarget:self action:@selector(backButtonClick) forControlEvents:UIControlEventTouchUpInside];
@@ -586,6 +604,7 @@
         _planeMapButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _planeMapButton.backgroundColor = [UIColor clearColor];
         [_planeMapButton setImage:[UIImage imageNamed:@"ar_pingmian"] forState:UIControlStateNormal];
+        [_planeMapButton addTarget:self action:@selector(planeMapButtonClick) forControlEvents:UIControlEventTouchUpInside];
     }
     return _planeMapButton;
 }

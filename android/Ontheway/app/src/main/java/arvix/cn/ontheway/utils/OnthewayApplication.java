@@ -1,5 +1,7 @@
 package arvix.cn.ontheway.utils;
 
+import android.util.Log;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,11 +41,13 @@ public class OnthewayApplication {
             BaiduPoiService poiService = new BaiduPoiServiceImpl();
             iocMap.put(BaiduPoiService.class,poiService);
             BaiduService baiduService = new BaiduServiceImpl();
+            //开始定位
             baiduService.initLocation();
             iocMap.put(BaiduService.class,baiduService);
 
             FileUploadService fileUploadService = new FileUploadServiceImpl();
             iocMap.put(FileUploadService.class,fileUploadService);
+            Log.i("App","app init finish--------------------------------->");
         }
         initBefore = true;
     }

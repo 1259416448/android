@@ -75,7 +75,7 @@ public class MyTrackListAdapter extends ArrayAdapter<TrackBean> {
     public long getItemId(int position) {
         long id = -1;
         if(dataList.get(position)!=null){
-            id  = dataList.get(position).getId();
+            id  = dataList.get(position).getFootprintId();
         }
         return id;
     }
@@ -162,8 +162,8 @@ public class MyTrackListAdapter extends ArrayAdapter<TrackBean> {
         h.gridLayout.setRowCount(row);
         h.monthTimeTv.setText(bean.getMonth()+"月");
         h.dayTimeTv.setText(bean.getDay()+"日");
-        h.contentTv.setText(StaticMethod.genLesStr(bean.getContent(),30));
-        h.addressTv.setText(StaticMethod.genLesStr(bean.getAddress(),15));
+        h.contentTv.setText(StaticMethod.genLesStr(bean.getFootprintContent(),30));
+        h.addressTv.setText(StaticMethod.genLesStr(bean.getFootprintAddress(),15));
         return convertView;
     }
 

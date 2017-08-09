@@ -21,8 +21,6 @@ import arvix.cn.ontheway.utils.StaticVar;
 
 public class BaiduLocationListenerService implements BDLocationListener {
     public static String BROADCAST_LOCATION = "broadcastLocation";
-    public static String EXTRA_LAT="extraLat";
-    public static String EXTRA_LON="extraLon";
     private static java.text.DecimalFormat df = new java.text.DecimalFormat("#.000");
     private static String lastLatAndLong = "";
     private Context context;
@@ -40,6 +38,7 @@ public class BaiduLocationListenerService implements BDLocationListener {
             CacheService cache = OnthewayApplication.getInstahce(CacheService.class);
             cache.put(StaticVar.BAIDU_LOC_CACHE_LAT, location.getLatitude() + "");
             cache.put(StaticVar.BAIDU_LOC_CACHE_LON, location.getLongitude() + "");
+            cache.put(StaticVar.BAIDU_LOC_CACHE_ADDRESS, location.getAddrStr() + "");
             if(location.hasAltitude()){
                 cache.put(StaticVar.BAIDU_LOC_CACHE_ALT, location.getAltitude() + "");
             }
@@ -68,12 +67,12 @@ public class BaiduLocationListenerService implements BDLocationListener {
         sb.append("\nradius : ");
         sb.append(location.getRadius());    //获取定位精准度
         Intent intent = new Intent();
-        intent.putExtra(EXTRA_LAT,location.getLatitude());
-        intent.putExtra(EXTRA_LON,location.getLongitude());
+        intent.setAction(BROADCAST_LOCATION);
+        intent.putExtra(StaticVar.BAIDU_LOC_CACHE_LAT,location.getLatitude());
+        intent.putExtra(StaticVar.BAIDU_LOC_CACHE_LON,location.getLongitude());
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
         cacheLoc(location);
         if (location.getLocType() == BDLocation.TypeGpsLocation) {
-
             // GPS定位结果
             sb.append("\nspeed : ");
             sb.append(location.getSpeed());    // 单位：公里每小时

@@ -10,6 +10,9 @@
 #import "MCYARConfiguration.h"
 
 @interface MCYARTrackingManager ()<CLLocationManagerDelegate>
+{
+    double _otwHeadingFilterFactor;
+}
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, assign) BOOL tracking;      // Tracking state.
@@ -35,8 +38,8 @@
     if (self) {
         
         // init public property
-        
-        _headingFilterFactor = 0.05;
+        self.headingFilterFactor = 0.05;
+        _otwHeadingFilterFactor = 0.05;
         _pitchFilterFactor = 0.05;
         _reloadDistanceFilter = 50;
         _userDistanceFilter = 15;
@@ -317,7 +320,7 @@
 
 - (void)filterHeading
 {
-    double headingFilterFactor = _headingFilterFactor;
+    double headingFilterFactor = _otwHeadingFilterFactor;
     double previousFilteredHeading = self.filteredHeading;
     double newHeading = self.debugHeading;
     if (self.debugHeading == 0) {
@@ -490,7 +493,7 @@
     /**
      Handling unprecise readings, this whole section should prevent annotations from spinning because of
      unprecise readings & filtering. e.g. if first reading is 10° and second is 80°, due to filtering, annotations
-     would move slowly from 10°-80°. So when we detect such situtation, we set _headingFilterFactor to 1, meaning that
+     would move slowly from 10°-80°. So when we detect such situtation, we set _otwHeadingFilterFactor to 1, meaning that
      filtering is temporarily disabled and annotatoions will immediately jump to new heading.
      
      This is done only first 5 seconds after first heading.
@@ -514,8 +517,7 @@
                 recommendedHeadingFilterFactor = 1; // We could also just set self.filteredHeading = self.heading
             }
         }
-        
-        _headingFilterFactor = recommendedHeadingFilterFactor;
+        _otwHeadingFilterFactor = recommendedHeadingFilterFactor;
     }
 }
 
