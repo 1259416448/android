@@ -24,6 +24,7 @@
 @property (nonatomic, strong) UIButton *infoButton;
 @property (nonatomic, strong) UIView *titleBGV;
 
+@property (nonatomic,strong) UIView *printBGView;
 @property (nonatomic,strong) UIView *printARV;
 @property (nonatomic,strong) UIImageView *printImageV;
 @property (nonatomic,strong) UILabel *printTitleV;
@@ -31,6 +32,9 @@
 @property (nonatomic,strong) UILabel *printLocationNameV;
 @property (nonatomic,strong) UIImageView *printDateImageV;
 @property (nonatomic,strong) UILabel *printDateContentV;
+
+@property (nonatomic,strong) UIView *printUserImageBGView;
+
 @property (nonatomic,strong) UIImageView *printUserImageV;
 @property (nonatomic) CGRect arFrame; // Just for test stacking
 
@@ -68,19 +72,20 @@
 
 - (void)loadUi
 {
-    [self addSubview:self.printImageV];
-    [self addSubview:self.printTitleV];
-    [self addSubview:self.printLocationImageV];
-    [self addSubview:self.printLocationNameV];
-    [self addSubview:self.printDateImageV];
-    [self addSubview:self.printDateContentV];
-    [self addSubview:self.printUserImageV];
+    [self addSubview:self.printBGView];
+    [self.printBGView addSubview:self.printImageV];
+    [self.printBGView addSubview:self.printTitleV];
+    [self.printBGView addSubview:self.printLocationImageV];
+    [self.printBGView addSubview:self.printLocationNameV];
+    [self.printBGView addSubview:self.printDateImageV];
+    [self.printBGView addSubview:self.printDateContentV];
+    [self addSubview:self.printUserImageBGView];
+    [self.printUserImageBGView addSubview:self.printUserImageV];
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGesture)];
     [self addGestureRecognizer:tapGesture];
     
-    self.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.9];
-    self.layer.cornerRadius = 5;
+    self.backgroundColor = [UIColor clearColor];
     
     if (self.annotaion != nil) {
         [self bindUi];
@@ -212,9 +217,35 @@
     return _printUserImageV;
 }
 
+-(UIView *)printUserImageBGView
+{
+    if(!_printUserImageBGView){
+        _printUserImageBGView = [[UIView alloc] init];
+    }
+    return _printUserImageBGView;
+}
+
+-(UIView *)printBGView
+{
+    if(!_printBGView){
+        _printBGView = [[UIView alloc] init];
+    }
+    return _printBGView;
+}
+
 -(void)setFrameByData:(OTWFootprintListModel*)footprint
 {
     BOOL bIsFootprintPhoto = footprint.footprintPhoto && ![footprint.footprintPhoto isEqualToString:@""];
+    
+    self.layer.shadowColor = [UIColor color_545454].CGColor;
+    self.layer.shadowOffset = CGSizeMake(0, 1);
+    self.layer.shadowOpacity = 0.2;
+    self.layer.shadowPath = [UIBezierPath bezierPathWithRect:self.printBGView.bounds].CGPath;
+    
+    self.printBGView.frame = CGRectMake(0, 0, self.Witdh, self.Height);
+    self.printBGView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.9];
+    self.printBGView.layer.cornerRadius = 3;
+    self.printBGView.layer.masksToBounds = YES;
     
         //足迹显示图片
     if (bIsFootprintPhoto) {
@@ -223,6 +254,8 @@
         CGFloat printImageY = OTWPrintArSpacing_6;
         CGRect printImageRect = CGRectMake(printImageX, printImageY, 30, 30);
         self.printImageV.frame = printImageRect;
+        self.printImageV.layer.cornerRadius = 2;
+        self.printImageV.layer.masksToBounds = YES;
         [self.printImageV setImageWithURL:[NSURL URLWithString:[footprint.footprintPhoto stringByAppendingString:@"?imageView2/1/w/60/h/60"]]];
     } else{
         self.printImageV.hidden = YES;
@@ -281,14 +314,24 @@
     
     //用户头像
     CGFloat printUserImageX = 145;
-    CGFloat printUserImageY = -10;
-    self.printUserImageV.frame = CGRectMake(printUserImageX, printUserImageY, 30, 30);
+    CGFloat printUserImageY = -12;
+    
+    self.printUserImageBGView.frame = CGRectMake(printUserImageX, printUserImageY, 33, 33);
+    self.printUserImageBGView.backgroundColor = [UIColor whiteColor];
+    self.printUserImageBGView.layer.cornerRadius = self.printUserImageBGView.Witdh/2.0;
+    //增加阴影
+    struct CGPath *path = CGPathCreateMutable();
+    CGPathAddArc(path, nil, 16.5 , 16.5, 16.5, 0, M_PI*2, true);
+    self.printUserImageBGView.layer.shadowPath = path;
+    self.printUserImageBGView.layer.shadowColor = [UIColor color_545454].CGColor;
+    self.printUserImageBGView.layer.shadowOffset = CGSizeMake(0, 1);
+    self.printUserImageBGView.layer.shadowOpacity = 0.3;
+    
+    
+    self.printUserImageV.frame = CGRectMake(1.5, 1.5, 30, 30);
     [self.printUserImageV setImageWithURL:[NSURL URLWithString:footprint.userHeadImg]];
     self.printUserImageV.layer.cornerRadius = self.printUserImageV.width/2.0;
     self.printUserImageV.layer.masksToBounds = YES;
-    struct CGPath *path = CGPathCreateMutable();
-    CGPathAddArc(path, nil, 17 , 17, 17, 0, M_PI*2, true);
-    self.printUserImageV.layer.shadowPath = path;
     
 }
 

@@ -533,7 +533,7 @@
 {
     if (!_backButton) {
         _backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        _backButton.frame = CGRectMake(0, 20, 80, 44);
+        _backButton.frame = CGRectMake(0, 20, 65, 44);
         _backButton.backgroundColor = [UIColor clearColor];
         [_backButton setImage:[UIImage imageNamed:@"back_1"] forState:UIControlStateNormal];
         [_backButton addTarget:self action:@selector(backButtonClick) forControlEvents:UIControlEventTouchUpInside];

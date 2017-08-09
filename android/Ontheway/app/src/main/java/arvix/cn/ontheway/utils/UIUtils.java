@@ -1,5 +1,6 @@
 package arvix.cn.ontheway.utils;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.content.ComponentName;
@@ -18,6 +19,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
 import android.widget.AbsListView;
@@ -431,5 +433,19 @@ public class UIUtils {
             e.printStackTrace();
         }
         return statusBarHeight;
+    }
+
+    /**
+     * 设置透明状态栏，设置此属性的Activity的最顶部布局需设置 android:fitsSystemWindows="true" 属性
+     * 以确保状态栏颜色和界面第一个控件背景色一样，否则状态栏背景颜色为界面背景色
+     * 如果想以图片为背景时，不要设置此属性
+     * android:fitsSystemWindows="true" 属性 控件不占用系统控件位置（例如状态栏，导航栏）
+     * 特别注意：根控件为 DrawerLayout时，应为内容布局的适当位置（例如Title布局中，根布局）设置此属性，抽屉布局设置此属性无效（文章后面有举例），自己注意设置paddingTop或marginTop
+     */
+    public static void setBarStyle(Activity act) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            // 设置状态栏透明
+            act.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
     }
 }

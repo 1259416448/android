@@ -26,5 +26,7 @@ public interface ServerUrl {
 
     String TRACK_AR_LIST =  BASE_URL + "/app/footprint/search";
 
+    String TRACK_CREATE =  BASE_URL + "/app/footprint/create";
+
 
 }
