@@ -3,6 +3,7 @@ package cn.arvix.ontheway.footprint.dto;
 import cn.arvix.ontheway.footprint.entity.Footprint;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author Created by yangyang on 2017/7/28.
@@ -35,6 +36,8 @@ public class FootprintSearchListDTO implements Serializable {
     private Double latitude;
 
     private Double longitude;
+
+    private List<String> footprintPhotoArray;
 
     public Long getUserId() {
         return userId;
@@ -138,5 +141,13 @@ public class FootprintSearchListDTO implements Serializable {
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
+    }
+
+    public List<String> getFootprintPhotoArray() {
+        return footprintPhotoArray;
+    }
+
+    public void setFootprintPhotoArray(List<String> footprintPhotoArray) {
+        this.footprintPhotoArray = footprintPhotoArray;
     }
 }
