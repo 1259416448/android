@@ -133,7 +133,7 @@ public class AROverlayView extends View {
                                                     .get();
                                            // bitmap = ImageDecoder.cut2ScaleSize(bitmap,width-20, width-20,false);
                                             bitmap = ImageDecoder.cut2Circular(bitmap,false);
-                                         //   cache.putObjectMem(trackBean.getUserHeadImg(), bitmap);
+                                            cache.putObjectMem(trackBean.getUserHeadImg(), bitmap);
                                             Log.i(logTag, "put cache:" + trackBean.getUserHeadImg());
                                         }
                                         if (cache.getTMem(trackBean.getFootprintPhoto(), Bitmap.class) == null) {
@@ -163,15 +163,12 @@ public class AROverlayView extends View {
                 }
 
             }
-
             @Override
             public void onError(Throwable throwable, boolean b) {
             }
-
             @Override
             public void onCancelled(CancelledException e) {
             }
-
             @Override
             public void onFinished() {
             }

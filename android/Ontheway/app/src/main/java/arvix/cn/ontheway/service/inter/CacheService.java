@@ -15,6 +15,9 @@ public interface CacheService {
 
     void remove(String key);
 
+    /**
+     * 经纬度，地址信息没有删除
+     */
     void clear();
 
     /**
