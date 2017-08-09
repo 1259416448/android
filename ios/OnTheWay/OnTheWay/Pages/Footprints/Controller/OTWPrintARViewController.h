@@ -6,8 +6,13 @@
 //  Copyright © 2017年 WeiHuan. All rights reserved.
 //
 
-#import "OTWBaseViewController.h"
+#import <UIKit/UIKit.h>
+#import "MCYARViewController.h"
 
-@interface OTWPrintARViewController : OTWBaseViewController
+typedef void(^requestBackBlock) (id result);
+
+@interface OTWPrintARViewController : MCYARViewController
+
+-(void) fetchARFootprints:(NSDictionary *) params completion:(requestBackBlock) block;
 
 @end

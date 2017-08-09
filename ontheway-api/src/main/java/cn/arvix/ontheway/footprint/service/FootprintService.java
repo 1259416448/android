@@ -168,7 +168,14 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
             Page page = listSearch(number, size, currentTime, params, urlFix);
             return JsonUtil.getSuccess(CommonContact.FETCH_SUCCESS, CommonContact.FETCH_SUCCESS, page);
         } else if (SearchType.map.equals(type)) { //地图抓取数据，每次默认获取30条数据，默认按时间先后排序
-            Page page = mapSearch(number, size, distance, currentTime, params, urlFix);
+            if (SearchDistance.one.equals(searchDistance)) {
+                distance = 0.1;
+            } else if (SearchDistance.two.equals(searchDistance)) {
+                distance = 0.5;
+            } else if (SearchDistance.three.equals(searchDistance)) {
+                distance = 1.0;
+            }
+            Page page = mapSearch(number, size, distance, currentTime, time, params, urlFix);
             return JsonUtil.getSuccess(CommonContact.FETCH_SUCCESS, CommonContact.FETCH_SUCCESS, page);
         } else if (SearchType.ar.equals(type)) { //默认按时间先后顺序排序
             Page page = arSearch(number, size, searchDistance, time, currentTime, params, urlFix);
@@ -220,12 +227,23 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
      * 加载map中可以展示的数据
      */
     private Page mapSearch(Integer number, Integer size,
-                           Double distance, Long currentTime,
+                           Double distance, Long currentTime, FootprintService.SearchTime time,
                            Map<String, Object> params, String urlFix) {
         if (size == null) size = 30;
         if (distance == null) distance = 1.5;
         if (distance > 10.0) distance = 10.0;
         params.put("distance", distance);//检索半径
+        Long minTime = null;
+        if (SearchTime.oneDay.equals(time)) {
+            minTime = currentTime - TimeMaker.ONE_DAY;
+        } else if (SearchTime.sevenDay.equals(time)) {
+            minTime = currentTime - 7 * TimeMaker.ONE_DAY;
+        } else if (SearchTime.oneMonth.equals(time)) {
+            minTime = currentTime - TimeMaker.ONE_MONTH;
+        }
+        if (minTime != null) {
+            params.put("dateCreated_gte", new Date(minTime));
+        }
         Searchable searchable = Searchable.newSearchable(params, new PageRequest(number, size),
                 new Sort(Sort.Direction.DESC, "dateCreated"));
         Page<Footprint> page = super.findAll(searchable);
