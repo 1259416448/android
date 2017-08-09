@@ -93,8 +93,6 @@
     [_mapView setZoomLevel:16];
     self.view = _mapView;
     [self setUpBase];
-    
-    [self test];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -293,6 +291,13 @@
 
 #pragma mark 跳转至足迹列表页面
 - (void)toFootprintListView
+{
+    OTWFootprintsViewController *footprintListVC = [[OTWFootprintsViewController alloc] init];
+    [self.navigationController pushViewController:footprintListVC animated:YES];
+}
+
+#pragma mark 跳转至AR足迹页面
+- (void)toARFootprintListView
 {
     OTWFootprintsViewController *footprintListVC = [[OTWFootprintsViewController alloc] init];
     [self.navigationController pushViewController:footprintListVC animated:YES];
@@ -557,7 +562,8 @@
     if (!_planeMapButton) {
         _planeMapButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _planeMapButton.backgroundColor = [UIColor clearColor];
-        [_planeMapButton setImage:[UIImage imageNamed:@"ar_pingmian"] forState:UIControlStateNormal];
+        [_planeMapButton setImage:[UIImage imageNamed:@"ar_ARditu"] forState:UIControlStateNormal];
+        [_arListButton addTarget:self action:@selector(toARFootprintListView) forControlEvents:UIControlEventTouchUpInside];
     }
     return _planeMapButton;
 }
