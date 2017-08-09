@@ -62,7 +62,7 @@ public class TrackListData {
                 photoList.add("http://osx4pwgde.bkt.clouddn.com/c47c40d45342467e3f62acb873f296c0.jpg");
             }
         }
-        trackBean.setPhotoList(photoList);
+        trackBean.setFootprintPhotoArray(photoList);
         return trackBean;
     }
 

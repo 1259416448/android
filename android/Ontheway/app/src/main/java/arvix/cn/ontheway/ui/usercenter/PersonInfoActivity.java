@@ -85,8 +85,7 @@ public class PersonInfoActivity extends BaseActivity {
                     public void onImageCropComplete(final Bitmap bmp, float ratio) {
                         ByteArrayOutputStream output = new ByteArrayOutputStream();
                         byte[] sourceData = StaticMethod.bitmap2Bytes(bmp);
-
-                        bmp.compress(Bitmap.CompressFormat.WEBP , 80, output);
+                        bmp.compress(Bitmap.CompressFormat.JPEG , 80, output);
                         byte[] data = output.toByteArray();
                         Log.i(logTag,"sourceDataSize-->"+sourceData.length+" commpress data size:"+data.length);
                         Log.i(logTag, "=====onImageCropComplete (get bitmap=" + bmp.toString());

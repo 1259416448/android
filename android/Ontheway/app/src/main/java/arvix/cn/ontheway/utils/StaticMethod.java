@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.util.TypeUtils;
 
 import org.xutils.image.ImageOptions;
@@ -29,6 +30,8 @@ import java.util.Random;
 import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.bean.BaseResponse;
+import arvix.cn.ontheway.bean.Pagination;
+import arvix.cn.ontheway.bean.TrackBean;
 import arvix.cn.ontheway.bean.UserInfo;
 import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.ui.LoginActivity;
@@ -168,10 +171,14 @@ public class StaticMethod {
     }
 
     public static <T> BaseResponse<T> genResponse(String jsonStr,Class<T> bodyType){
-        BaseResponse baseResponse = JSON.parseObject(jsonStr,BaseResponse.class);
+        BaseResponse baseResponse = JSON.parseObject(jsonStr,new TypeReference<BaseResponse<Pagination<TrackBean>>>(){});
         baseResponse.setBodyBean(TypeUtils.castToJavaBean(baseResponse.getBody(), bodyType));
         return baseResponse;
     }
+
+
+
+
 
     public static String genSexShow(){
         String sex = "保密";

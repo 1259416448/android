@@ -86,6 +86,7 @@ public class ImageFileUploadServiceImpl implements ImageFileUploadService {
                                                 @Override
                                                 public void onSuccess(String result) {
                                                     try {
+                                                        Log.i(logTag,"upload res-------------->:"+result);
                                                         BaseResponse response = StaticMethod.genResponse(result);
                                                         fileUploadCallBack.uploadBack(response);
                                                     } catch (Exception e) {

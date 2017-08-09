@@ -82,7 +82,7 @@ public class CacheDefault implements CacheService {
         DiskCacheEntity entity = this.getLruDiskCache().get(key);
         if(entity!=null){
             if(entity.getTextContent()!=null){
-                Log.w(logTag,"entity.getTextContent():"+entity.getTextContent());
+               // Log.w(logTag,"entity.getTextContent():"+entity.getTextContent());
                 result = JSON.parseObject(entity.getTextContent(),t);
             }
         }
@@ -112,6 +112,9 @@ public class CacheDefault implements CacheService {
             } catch (DbException e) {
                 e.printStackTrace();
             }
+        }
+        if(key!=null){
+            cacheMap.remove(key);
         }
     }
 

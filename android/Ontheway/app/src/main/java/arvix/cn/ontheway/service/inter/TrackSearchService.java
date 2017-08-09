@@ -1,5 +1,7 @@
 package arvix.cn.ontheway.service.inter;
 
+import android.content.Context;
+
 import arvix.cn.ontheway.bean.Pagination;
 import arvix.cn.ontheway.bean.TrackBean;
 import arvix.cn.ontheway.bean.TrackSearchVo;
@@ -9,12 +11,13 @@ import arvix.cn.ontheway.bean.TrackSearchVo;
  * asdtiangxia@163.com
  */
 
-public interface TrackArService {
+public interface TrackSearchService {
     /**
      *
+     * @param context
      * @param trackSearchVo
-     * @param lastSearchResult
      * @return
      */
-    Pagination<TrackBean> search(TrackSearchVo trackSearchVo,Pagination<TrackBean> lastSearchResult);
+    Pagination<TrackBean> search(Context context,TrackSearchVo trackSearchVo,TrackSearchNotify<TrackBean> trackSearchNotify);
+
 }

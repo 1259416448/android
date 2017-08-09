@@ -7,12 +7,16 @@ package arvix.cn.ontheway.bean;
 
 public class TrackSearchVo {
 
-    private Integer number;
-    private Integer size;
+    private int size = 15;
+    private int number = 0;
     private Double latitude;
     private Double longitude;
     private Long currentTime;
     private Double distance;
+    private SearchType searchType;
+    private SearchTime searchTime;
+    private SearchDistance searchDistance;
+
 
 
     //检索的几种类型
@@ -30,21 +34,6 @@ public class TrackSearchVo {
         one, two, three
     }
 
-    public Integer getNumber() {
-        return number;
-    }
-
-    public void setNumber(Integer number) {
-        this.number = number;
-    }
-
-    public Integer getSize() {
-        return size;
-    }
-
-    public void setSize(Integer size) {
-        this.size = size;
-    }
 
     public Double getLatitude() {
         return latitude;
@@ -74,7 +63,49 @@ public class TrackSearchVo {
         return distance;
     }
 
+    public SearchType getSearchType() {
+        return searchType;
+    }
+
+    public void setSearchType(SearchType searchType) {
+        this.searchType = searchType;
+    }
+
+    public SearchTime getSearchTime() {
+        return searchTime;
+    }
+
+    public void setSearchTime(SearchTime searchTime) {
+        this.searchTime = searchTime;
+    }
+
+    public SearchDistance getSearchDistance() {
+        return searchDistance;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public void setSearchDistance(SearchDistance searchDistance) {
+        this.searchDistance = searchDistance;
+    }
+
     public void setDistance(Double distance) {
+
         this.distance = distance;
     }
+
 }
