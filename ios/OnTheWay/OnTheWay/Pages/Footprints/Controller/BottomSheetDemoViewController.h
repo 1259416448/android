@@ -8,6 +8,13 @@
 
 #import "OTWBaseViewController.h"
 
+
+@class OTWFootprintListModel;
 @interface BottomSheetDemoViewController : UIViewController
+
+@property (nonatomic,strong) OTWBaseViewController *mapController;
+
+@property (nonatomic,strong) OTWFootprintListModel *footprint;
+
 
 @end
