@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1812CA881F39AEAB00510905 /* OTWPointAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1812CA871F39AEAB00510905 /* OTWPointAnnotation.m */; };
 		1822EE631F20845A00E07665 /* OTWFootprintsChangeAddressModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1822EE621F20845A00E07665 /* OTWFootprintsChangeAddressModel.m */; };
 		1822EE661F20846F00E07665 /* OTWFootprintsChangeAddressCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1822EE651F20846F00E07665 /* OTWFootprintsChangeAddressCellTableViewCell.m */; };
 		1822EE681F20903100E07665 /* OTWFindprintChangeAddress.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1822EE671F20903100E07665 /* OTWFindprintChangeAddress.plist */; };
@@ -169,6 +170,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1812CA861F39AEAB00510905 /* OTWPointAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPointAnnotation.h; sourceTree = "<group>"; };
+		1812CA871F39AEAB00510905 /* OTWPointAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPointAnnotation.m; sourceTree = "<group>"; };
 		1822EE611F20845A00E07665 /* OTWFootprintsChangeAddressModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWFootprintsChangeAddressModel.h; sourceTree = "<group>"; };
 		1822EE621F20845A00E07665 /* OTWFootprintsChangeAddressModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWFootprintsChangeAddressModel.m; sourceTree = "<group>"; };
 		1822EE641F20846F00E07665 /* OTWFootprintsChangeAddressCellTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWFootprintsChangeAddressCellTableViewCell.h; sourceTree = "<group>"; };
@@ -899,6 +902,8 @@
 				1822EE6A1F209E4900E07665 /* OTWFootprintChangeAddressArrayModel.m */,
 				1895A84F1F2F4D2F00AB8C7D /* OTWFootprintSearchParams.h */,
 				1895A8501F2F4D2F00AB8C7D /* OTWFootprintSearchParams.m */,
+				1812CA861F39AEAB00510905 /* OTWPointAnnotation.h */,
+				1812CA871F39AEAB00510905 /* OTWPointAnnotation.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1556,6 +1561,7 @@
 				DDE0B7421F3323490016E59C /* OTWCommentService.m in Sources */,
 				D7F6B0CB1F1627000013090A /* OTWNewsCell.m in Sources */,
 				B183D9981F221D9900CF3E1F /* OTWPrintARViewController.m in Sources */,
+				1812CA881F39AEAB00510905 /* OTWPointAnnotation.m in Sources */,
 				DD3520941F18670800E8D725 /* OTWFootprintDetailController.m in Sources */,
 				D72091A91F2747AA00153542 /* OTWCustomAnnotationView.m in Sources */,
 				D7F6B05B1F0DD0280013090A /* OTWBaseViewController.m in Sources */,

@@ -51,9 +51,12 @@ public class FootprintSearchCallback extends DefaultSearchCallback {
                     StringBuilder select = new StringBuilder();
                     select.append("select new cn.arvix.ontheway.footprint.entity.Footprint( "
                             + " x.id as id ,"
+                            + " x.content as content ,"
                             + " x.user.id as userId ,"
+                            + " x.address as address ,"
                             + " x.latitude as latitude ,"
-                            + " x.longitude as longitude )");
+                            + " x.longitude as longitude ,")
+                            .append(" x.dateCreated as dateCreated ) ");
                     ql.insert(0, select);
                 }
                 Double distance = search.getValue("distance");
