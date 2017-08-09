@@ -8,6 +8,9 @@
 
 #import "OTWBaseViewController.h"
 
+typedef void(^requestBackBlock) (id result);
 @interface OTWPlaneMapViewController : OTWBaseViewController
+
+-(void) fetchARFootprints:(NSDictionary *) params completion:(requestBackBlock) block;
 
 @end
