@@ -97,6 +97,8 @@
     userlocationStyle.isRotateAngleValid = NO;
     //精度圈是否显示
     userlocationStyle.isAccuracyCircleShow = NO;
+    //定位图标
+    userlocationStyle.locationViewImgName = @"zj_position";
     //更新参样式信息
     [_mapView updateLocationViewWithParam:userlocationStyle];
     //设置缩放级别为16级，3~19
