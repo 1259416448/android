@@ -90,6 +90,7 @@
         android:id="@+id/header_iv"
         android:background="@drawable/header_bg_white"
         android:layout_width="31dp"
+        android:padding="2dp"
         android:layout_gravity="right"
         android:layout_height="31dp"
          />
