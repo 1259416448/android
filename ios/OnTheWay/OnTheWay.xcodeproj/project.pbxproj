@@ -900,6 +900,8 @@
 				1895A8501F2F4D2F00AB8C7D /* OTWFootprintSearchParams.m */,
 				182FDFCF1F332274003AF0F4 /* OTWARCustomAnnotation.h */,
 				182FDFD01F332274003AF0F4 /* OTWARCustomAnnotation.m */,
+				1812CA861F39AEAB00510905 /* OTWPointAnnotation.h */,
+				1812CA871F39AEAB00510905 /* OTWPointAnnotation.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
