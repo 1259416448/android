@@ -5,13 +5,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -280,8 +283,26 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
             }
         });
 
+        checkOverlayPermission();
+
         //test cache
 //        new CacheDefauleTest(OnthewayApplication.cache).startTest();
+    }
+
+    private void checkOverlayPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(this)) {
+                new AlertDialog.Builder(self).setMessage("请打开悬浮窗权限").setPositiveButton("设置", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                Uri.parse("package:" + getPackageName()));
+                        UIUtils.safeOpenLink(self,intent);
+                    }
+                }).setNegativeButton("取消",null).show();
+
+            }
+        }
     }
 
     @Override
@@ -412,20 +433,25 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
                 bottomDialog.show();
 
                 final Point point=mBaiduMap.getProjection().toScreenLocation(marker.getPosition());
-                highLightView =new ImageView(self);
-                highLightView.setImageBitmap(marker.getIcon().getBitmap());
-                WindowManager wm= (WindowManager) getSystemService(WINDOW_SERVICE);
-                WindowManager.LayoutParams ps=new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT,WindowManager.LayoutParams.WRAP_CONTENT);
-                ps.x=point.x;
-                ps.y=point.y-marker.getIcon().getBitmap().getHeight()/2;
-                ps.width=marker.getIcon().getBitmap().getWidth();
-                ps.height=marker.getIcon().getBitmap().getHeight();
-                ps.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
-                ps.flags= WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                        | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-                ps.format = PixelFormat.TRANSLUCENT;
-                ps.gravity = Gravity.LEFT | Gravity.TOP;
-                wm.addView(highLightView,ps);
+
+                try{
+                    highLightView =new ImageView(self);
+                    highLightView.setImageBitmap(marker.getIcon().getBitmap());
+                    WindowManager wm= (WindowManager) getSystemService(WINDOW_SERVICE);
+                    WindowManager.LayoutParams ps=new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT,WindowManager.LayoutParams.WRAP_CONTENT);
+                    ps.x=point.x;
+                    ps.y=point.y-marker.getIcon().getBitmap().getHeight()/2;
+                    ps.width=marker.getIcon().getBitmap().getWidth();
+                    ps.height=marker.getIcon().getBitmap().getHeight();
+                    ps.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+                    ps.flags= WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                            | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+                    ps.format = PixelFormat.TRANSLUCENT;
+                    ps.gravity = Gravity.LEFT | Gravity.TOP;
+                    wm.addView(highLightView,ps);
+                }catch (Exception e){
+                    highLightView=null;
+                }
 
             }
         },clickAnimDuration+20);
