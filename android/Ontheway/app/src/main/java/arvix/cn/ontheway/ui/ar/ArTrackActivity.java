@@ -1,7 +1,6 @@
 package arvix.cn.ontheway.ui.ar;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
@@ -47,9 +46,7 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
     public static TextView tvCurrentLocation;
     public static String searchKeyWord;
     private SensorManager sensorManager;
-    //需要两个Sensor get orientation
-    private Sensor aSensor;
-    private Sensor mSensor;
+
     float[] accelerometerValues = new float[3];
     float[] magneticFieldValues = new float[3];
 
@@ -92,16 +89,6 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
         surfaceView = (SurfaceView) findViewById(R.id.surface_view);
         tvCurrentLocation = (TextView) findViewById(R.id.tv_current_location);
         arOverlayView = new AROverlayView(this,(ViewGroup)getWindow().getDecorView(),trackSearchVo);
-
-        sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
-        aSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        mSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        sensorManager.registerListener(myListener, aSensor, SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(myListener, mSensor,SensorManager.SENSOR_DELAY_NORMAL);
-        //更新显示数据的方法
-        calculateOrientation();
-
-
 
         rangeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,12 +151,14 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
     @Override
     public void onPause() {
         releaseCamera();
+        sensorManager.unregisterListener(this);
         super.onPause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        sensorManager.unregisterListener(this);
         if(null!=arOverlayView){
             arOverlayView.clearData();
         }
@@ -248,7 +237,9 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
     private void registerSensors() {
         sensorManager.registerListener(this,
                 sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR),
-                SensorManager.SENSOR_DELAY_FASTEST);
+                SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)  , SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) ,SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
@@ -267,6 +258,11 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
             Matrix.multiplyMM(rotatedProjectionMatrix, 0, projectionMatrix, 0, rotationMatrixFromVector, 0);
             this.arOverlayView.updateRotatedProjectionMatrix(rotatedProjectionMatrix);
         }
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
+            magneticFieldValues = sensorEvent.values;
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
+            accelerometerValues = sensorEvent.values;
+        calculateOrientation();
     }
 
     @Override
@@ -348,17 +344,6 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
     public void onProviderDisabled(String s) {
 
     }
-
-    final SensorEventListener myListener = new SensorEventListener() {
-        public void onSensorChanged(SensorEvent sensorEvent) {
-            if (sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
-                magneticFieldValues = sensorEvent.values;
-            if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
-                accelerometerValues = sensorEvent.values;
-            calculateOrientation();
-        }
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {}
-    };
     private void calculateOrientation() {
         float[] values = new float[3];
         float[] R = new float[9];
