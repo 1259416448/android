@@ -9,6 +9,7 @@
 #import "MCYARRadar.h"
 #import <CoreGraphics/CoreGraphics.h>
 #import "MCYARAnnotation.h"
+#import "MCYARConfiguration.h"
 
 @interface SpotView : UIView
 
@@ -68,9 +69,8 @@
 #define Wx  10
 #define Wy  48
 
-#define Radius 40         // 雷达半径
-#define pointWidth 3      // 小圆点的宽度
-//#define distanceScale 100 // 两点间的实际距离缩放比例尺
+#define Radius self.bounds.size.width/2         // 雷达半径
+#define pointWidth 3                            // 小圆点的宽度
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -94,10 +94,16 @@
 - (void)setupRadarImages
 {
     [self addSubview:self.radarImageView];
+    
 }
 
 - (void)setupAnnotations:(NSArray *)annotations
 {
+    // note1 计算出的pointX和pointY是对应的屏幕坐标系。 即X轴向右伸展，Y轴向下伸展
+    // note2 所有的点都必须包含在雷达圆内， 则需要计算出point点到中心原点(40,40)的距离. screenDistanceFromOrigin = distanceFromUser*Radius/maxDistance
+    // note3 如果point点到原点的距离大于半径(即超出maxDistance)，则不予显示。
+    // note4 根据三角函数计算出每个点对应的pointX和pointY sin(a)=对边/斜边 注意: 在iOS系统中，a代表的是弧度，不是角度。  因此需要先把角度转换为弧度。
+    
     // 对annotation排序
     NSArray *sortedAnnotationViews = [annotations sortedArrayUsingComparator:^(id obj1, id obj2){
         
@@ -122,48 +128,52 @@
     [self.spots removeAllObjects];
     
     // 比较两点是否相交， 相交的话，x，y分别+1
-    //CGRect rect2 = CGRectZero;
+    CGRect rect2 = CGRectZero;
+    
     for (MCYARAnnotation *annotation in sortedAnnotationViews) {
-        // 获取x，y
-        double pointX = sin(annotation.azimuth)*annotation.distanceFromUser;
-        double pointY =  cos(annotation.azimuth)*annotation.distanceFromUser;
+
+        double pointDistance = Radius * annotation.distanceFromUser/self.maxDistance;
         
-        double azimuth = annotation.azimuth / 180.0 * M_PI;
-      //  double screenDistance = annotation.distanceFromUser / 100;
+        // 计算 x, y的坐标。 sin(a) a在iOS中代表的是弧度， 不是角度。
+        double pointX = sin(degreesToRadians(annotation.azimuth))*pointDistance + Radius;
+        double pointY = Radius - cos(degreesToRadians(annotation.azimuth))*pointDistance;
         
-        double screenDistance = Radius * annotation.distanceFromUser/self.maxDistance;
-        
-        if (azimuth <= 90 && azimuth > 0) {
-            pointX = (cos(azimuth)*screenDistance + Radius);
-            pointY = (Radius - sin(azimuth)*screenDistance);
+        /*
+         1. 如下代码等同以上两行代码。 可以通过以下代码获取思路。
+         2. sin(a) = 对边 / 斜边   cos(a) = 邻边 / 斜边  a代表的弧度(这点很重要)
+         3. 以中心原点划分x和y坐标。 得到四个区域。  角度的取值范围是0-90. 超过90度的区域，需要减去对应的角度(90/180/270)。
+         
+        double azimuth = annotation.azimuth;
+        if (azimuth > 0 && azimuth <= 90) {
+            
+            pointX = sin(degreesToRadians(azimuth))*pointDistance + Radius;
+            pointY = Radius - cos(degreesToRadians(azimuth))*pointDistance;
         } else if (azimuth > 90 && azimuth <= 180) {
-            //azimuth -= 90;
-            pointX = cos(azimuth)*screenDistance + Radius;
-            pointY = Radius - sin(azimuth)*screenDistance;
+            
+            pointX = cos(degreesToRadians(azimuth-90))*pointDistance + Radius;
+            pointY = sin(degreesToRadians(azimuth-90))*pointDistance + Radius;
         } else if (azimuth > 180 && azimuth <= 270){
-            //azimuth -= 180;
-            pointX = Radius + cos(azimuth)*screenDistance;
-            pointY = Radius - sin(azimuth)*screenDistance;
+            
+            pointX = Radius - sin(degreesToRadians(azimuth-180))*pointDistance;
+            pointY = Radius + cos(degreesToRadians(azimuth-180))*pointDistance;
         } else if (azimuth > 270 && azimuth <= 360) {
-            //azimuth -= 270;
-            pointX = Radius + cos(azimuth)*screenDistance;
-            pointY = Radius - sin(azimuth)*screenDistance;
-        }
+            
+            pointX = Radius - cos(degreesToRadians(azimuth-270))*pointDistance;
+            pointY = Radius - sin(degreesToRadians(azimuth-270))*pointDistance;
+        }*/
         
         CGRect rect1 = CGRectMake(pointX, pointY, pointWidth, pointWidth);
         
         //暂时不考虑点重合问题
-//        BOOL hasCollision =  CGRectIntersectsRect(rect1, rect2);
-//        if (hasCollision) {
-//            rect1 = CGRectMake(pointX + 1, pointY + 1, pointWidth, pointWidth);
-//        }
-//        rect2 = CGRectMake(pointX, pointY, pointWidth, pointWidth);
+        BOOL hasCollision =  CGRectIntersectsRect(rect1, rect2);
+        if (hasCollision) {
+            rect1 = CGRectMake(pointX + 1, pointY + 1, pointWidth, pointWidth);
+        }
+        rect2 = rect1;
         
         SpotView *spotview = [[SpotView alloc] initWithFrame:rect1];
         spotview.backgroundColor = [UIColor redColor];
         spotview.layer.cornerRadius = 3;
-        
-        NSLog(@"实际距离：%f  屏幕宽度:%f  (实际x:%f, y:%f) 方位角 %f 雷达距离 %f 地址:", annotation.distanceFromUser, self.frame.size.width, pointX, pointY,azimuth,screenDistance);
         
         [self addSubview:spotview];
         [self.spots addObject:spotview];
