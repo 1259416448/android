@@ -10,32 +10,22 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.util.TypeUtils;
 import com.pizidea.imagepicker.AndroidImagePicker;
-import com.qiniu.android.http.ResponseInfo;
-import com.qiniu.android.storage.UpCompletionHandler;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.ByteArrayOutputStream;
 import java.util.Random;
-import java.util.UUID;
 
 import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.bean.BaseResponse;
-import arvix.cn.ontheway.bean.QiniuBean;
 import arvix.cn.ontheway.bean.UserInfo;
 import arvix.cn.ontheway.http.ServerUrl;
 import arvix.cn.ontheway.service.inter.FileUploadCallBack;
-import arvix.cn.ontheway.service.inter.FileUploadService;
+import arvix.cn.ontheway.service.inter.ImageFileUploadService;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.head.HeaderHolder;
 import arvix.cn.ontheway.utils.OnthewayApplication;
@@ -59,13 +49,13 @@ public class PersonInfoActivity extends BaseActivity {
     @ViewInject(R.id.header_img)
     private ImageView headerIV;
 
-    FileUploadService fileUploadService;
+    ImageFileUploadService imageFileUploadService;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_info);
-        fileUploadService = OnthewayApplication.getInstahce(FileUploadService.class);
+        imageFileUploadService = OnthewayApplication.getInstahce(ImageFileUploadService.class);
         initView();
     }
 
@@ -93,9 +83,13 @@ public class PersonInfoActivity extends BaseActivity {
                 AndroidImagePicker.getInstance().pickAndCrop(PersonInfoActivity.this, true, 160, new AndroidImagePicker.OnImageCropCompleteListener() {
                     @Override
                     public void onImageCropComplete(final Bitmap bmp, float ratio) {
-                        byte[] data = StaticMethod.bitmap2Bytes(bmp);
+                        ByteArrayOutputStream output = new ByteArrayOutputStream();
+                        byte[] sourceData = StaticMethod.bitmap2Bytes(bmp);
+                        bmp.compress(Bitmap.CompressFormat.JPEG , 80, output);
+                        byte[] data = output.toByteArray();
+                        Log.i(logTag,"sourceDataSize-->"+sourceData.length+" commpress data size:"+data.length);
                         Log.i(logTag, "=====onImageCropComplete (get bitmap=" + bmp.toString());
-                        fileUploadService.upload(self,data,ServerUrl.UPDATE_HEADER,new FileUploadCallBack(){
+                        imageFileUploadService.upload(self,data,ServerUrl.UPDATE_HEADER,new FileUploadCallBack(){
                             @Override
                             public void uploadBack(BaseResponse baseResponse) {
                                 if (baseResponse.getCode() == StaticVar.SUCCESS) {

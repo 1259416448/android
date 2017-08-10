@@ -132,7 +132,7 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
             }
         });
         //设置图片集合
-        banner.setImages(trackBean.getPhotoList());
+        banner.setImages(trackBean.getFootprintPhotoArray());
         //设置banner动画效果
         banner.setBannerAnimation(Transformer.DepthPage);
         //设置标题集合（当banner样式有显示title时）

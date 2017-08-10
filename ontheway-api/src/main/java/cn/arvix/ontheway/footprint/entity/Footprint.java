@@ -102,11 +102,14 @@ public class Footprint extends BaseEntity<Long> {
         setDateCreated(dateCreated);
     }
 
-    public Footprint(Long id, Long userId, Double latitude, Double longitude) {
+    public Footprint(Long id, String content, Long userId, String address, Double latitude, Double longitude, Date dateCreated) {
+        this.content = content;
         this.latitude = latitude;
         this.longitude = longitude;
         this.user = new User();
         this.user.setId(userId);
+        this.address = address;
+        setDateCreated(dateCreated);
         setId(id);
     }
 

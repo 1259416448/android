@@ -29,6 +29,7 @@ import org.xutils.x;
 
 import arvix.cn.ontheway.BaiduActivity;
 import arvix.cn.ontheway.R;
+import arvix.cn.ontheway.bean.TrackSearchVo;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.track.TrackCreateActivity;
 import arvix.cn.ontheway.ui.track.TrackListActivity;
@@ -50,7 +51,7 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
 
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 0; // 10 meters
     private static final long MIN_TIME_BW_UPDATES = 0;//1000 * 60 * 1; // 1 minute
-
+    private TrackSearchVo trackSearchVo = new TrackSearchVo();
     private LocationManager locationManager;
     public Location location;
     boolean isGPSEnabled;
@@ -83,7 +84,7 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
         cameraContainerLayout = (FrameLayout) findViewById(R.id.camera_container_layout);
         surfaceView = (SurfaceView) findViewById(R.id.surface_view);
         tvCurrentLocation = (TextView) findViewById(R.id.tv_current_location);
-        arOverlayView = new AROverlayView(this,(ViewGroup)getWindow().getDecorView());
+        arOverlayView = new AROverlayView(this,(ViewGroup)getWindow().getDecorView(),trackSearchVo);
 
         rangeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,6 +148,14 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
     public void onPause() {
         releaseCamera();
         super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(null!=arOverlayView){
+            arOverlayView.clearData();
+        }
     }
 
     public void requestCameraPermission() {

@@ -35,7 +35,7 @@ public class HttpFilterDefaultImpl implements   HttpFilterInterface{
             }
             String rememberMe = cache.get(StaticVar.AUTH_REMEMBER_ME);
             if(rememberMe!=null){
-                entity.addHeader(StaticVar.AUTH_REMEMBER_ME,token);
+                entity.addHeader(StaticVar.AUTH_REMEMBER_ME,rememberMe);
             }
             // Content-Type: application/json
             if(entity.getMethod()== HttpMethod.POST){
