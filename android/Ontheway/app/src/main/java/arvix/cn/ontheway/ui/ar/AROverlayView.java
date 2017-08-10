@@ -3,6 +3,7 @@ package arvix.cn.ontheway.ui.ar;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.location.Location;
 import android.opengl.Matrix;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.util.TypeUtils;
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.utils.DistanceUtil;
 import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -75,6 +78,11 @@ public class AROverlayView extends View implements TrackSearchNotify<TrackBean>{
     private int drawYOffset = 0;
     private ViewGroup rootView;
     private TrackSearchVo trackSearchVo;
+    Paint circlePaint ;
+    Paint centerPaint ;
+    Paint pointPaint;
+    public static float xDegrees;
+    public static float yDegrees;
 
 
     public AROverlayView(Context context, ViewGroup rootView,TrackSearchVo trackSearchVo) {
@@ -89,6 +97,22 @@ public class AROverlayView extends View implements TrackSearchNotify<TrackBean>{
         mBitPaint.setDither(true);
         drawXOffset = StaticMethod.dip2px(context, 0);
         drawYOffset = StaticMethod.dip2px(context, 50);
+
+        circlePaint = new Paint();
+        circlePaint.setAntiAlias(true); //設置畫筆為無鋸齒
+        circlePaint.setColor(Color.WHITE); //設置畫筆顏色
+        circlePaint.setStrokeWidth((float) 3.0); //線寬
+        circlePaint.setStyle(Paint.Style.STROKE); //空心效果
+
+        centerPaint = new Paint();
+        centerPaint.setAntiAlias(true); //設置畫筆為無鋸齒
+        centerPaint.setColor(Color.WHITE); //設置畫筆顏色
+
+
+        pointPaint= new Paint();
+        pointPaint.setAntiAlias(true); //設置畫筆為無鋸齒
+        pointPaint.setColor(Color.RED); //設置畫筆顏色
+
     }
 
     private void updateLocationData(double lat, double lon) {
@@ -161,11 +185,18 @@ public class AROverlayView extends View implements TrackSearchNotify<TrackBean>{
             try {
                 Log.i(logTag, "do onDraw------------------------------------>");
                 Map<String, Integer> drawPointRePointMap = new HashMap<String, Integer>();
+                LatLng center = new LatLng(cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LAT),cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LON));
+                LatLng target = null;
+                float radius = StaticMethod.dip2px(context,20*1.414213562f);
+                float cx = StaticMethod.dip2px(context,55);
+                float cy = canvas.getHeight() - StaticMethod.dip2px(context,55);
                 for ( final TrackBean trackBean : this.pagination.getContent()) {
                     location = new Location(trackBean.getFootprintContent());
                     location.setLatitude(trackBean.getLatitude());
                     location.setLongitude(trackBean.getLongitude());
                     location.setAltitude(this.alt);
+                    target = new LatLng(trackBean.getLatitude(),trackBean.getLongitude());
+                    Log.i(logTag,"distance---->" + DistanceUtil.getDistance(center,target));
                     float[] currentLocationInECEF = LocationHelper.WSG84toECEF(currentLocation);
                     float[] pointInECEF = LocationHelper.WSG84toECEF(location);
                     float[] pointInENU = LocationHelper.ECEFtoENU(currentLocation, currentLocationInECEF, pointInECEF);
@@ -173,21 +204,28 @@ public class AROverlayView extends View implements TrackSearchNotify<TrackBean>{
                     Matrix.multiplyMV(cameraCoordinateVector, 0, rotatedProjectionMatrix, 0, pointInENU, 0);
                     // cameraCoordinateVector[2] is z, that always less than 0 to display on right position
                     // if z > 0, the point will display on the opposite
+                    float drawX = (0.5f + cameraCoordinateVector[0] / cameraCoordinateVector[3]) * canvas.getWidth();
+                    float drawY = (0.5f - cameraCoordinateVector[1] / cameraCoordinateVector[3]) * canvas.getHeight();
+
+
+                    drawX = (int) drawX;
+                    drawY = (int) drawY;
+
+                    rePointKeyTemp = drawX + "-" + drawY;
+                    Integer rePointTimes = drawPointRePointMap.get(rePointKeyTemp);
+                    if (rePointTimes == null) {
+                        drawPointRePointMap.put(rePointKeyTemp, 1);
+                    } else {
+                        drawX = drawX + drawXOffset * rePointTimes;
+                        drawY = drawY + drawYOffset * rePointTimes;
+                        drawPointRePointMap.put(rePointKeyTemp, rePointTimes + 1);
+                    }
+                    float radarX = (float) (drawX%radius*Math.cos(xDegrees));
+                    float radarY = (float) (drawY%radius*Math.cos(yDegrees));
                     if (cameraCoordinateVector[2] < 0) {
+                        Log.i(logTag, "drawRadar point radarX:" + radarX + ",radarY:" + radarY + "  radius:"+radius);
+                        canvas.drawCircle(cx - radarX,cy - radarY,StaticMethod.dip2px(context,2),pointPaint);
                         ArTrackActivity.tvCurrentLocation.setText(System.currentTimeMillis() + " show:" + cameraCoordinateVector[2]);
-                        float drawX = (0.5f + cameraCoordinateVector[0] / cameraCoordinateVector[3]) * canvas.getWidth();
-                        float drawY = (0.5f - cameraCoordinateVector[1] / cameraCoordinateVector[3]) * canvas.getHeight();
-                        drawX = (int) drawX;
-                        drawY = (int) drawY;
-                        rePointKeyTemp = drawX + "-" + drawY;
-                        Integer rePointTimes = drawPointRePointMap.get(rePointKeyTemp);
-                        if (rePointTimes == null) {
-                            drawPointRePointMap.put(rePointKeyTemp, 1);
-                        } else {
-                            drawX = drawX + drawXOffset * rePointTimes;
-                            drawY = drawY + drawYOffset * rePointTimes;
-                            drawPointRePointMap.put(rePointKeyTemp, rePointTimes + 1);
-                        }
                         bitmapTemp = cache.getTMem(viewBitmapCachePrefix + trackBean.getFootprintId(), Bitmap.class);
                         if (bitmapTemp != null) {
                             Log.i(logTag, "load form cache bitmap drawX:" + drawX + ",drawY:" + drawY + "  ");
@@ -220,11 +258,14 @@ public class AROverlayView extends View implements TrackSearchNotify<TrackBean>{
                           //  Log.i(logTag, "loadImage------->,drawX:" + drawX + ",drawY:" + drawY + "  " + trackBean.getUserHeadImg());
                             bitmapTemp = StaticMethod.getViewBitmap(convertView);
                             canvas.drawBitmap(bitmapTemp, drawX, drawY, mBitPaint);
+
                             if (trackPhotoLoaded && headerLoaded) {
                                 cache.putObjectMem(viewBitmapCachePrefix + trackBean.getFootprintId(), bitmapTemp);
                             }
                             convertView.setDrawingCacheEnabled(false);
                         }
+                    }else{
+                        canvas.drawCircle(cx - radarX,cy - radarY,StaticMethod.dip2px(context,2),pointPaint);
                     }
                 }
             } catch (Exception e) {
