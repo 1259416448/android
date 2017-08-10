@@ -10,25 +10,17 @@ import android.opengl.Matrix;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.util.TypeUtils;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
-import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.FutureTarget;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
 import org.xutils.image.ImageDecoder;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
@@ -37,16 +29,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import arvix.cn.ontheway.R;
-import arvix.cn.ontheway.bean.BaseResponse;
 import arvix.cn.ontheway.bean.Pagination;
 import arvix.cn.ontheway.bean.TrackBean;
 import arvix.cn.ontheway.bean.TrackSearchVo;
-import arvix.cn.ontheway.http.ServerUrl;
 import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.service.inter.TrackSearchNotify;
 import arvix.cn.ontheway.service.inter.TrackSearchService;
@@ -59,7 +47,7 @@ import arvix.cn.ontheway.utils.StaticVar;
  * Created by ntdat on 1/13/17.
  */
 
-public class AROverlayView extends View implements TrackSearchNotify<TrackBean>{
+public class AROverlayView extends View implements TrackSearchNotify<TrackBean>, View.OnTouchListener {
     private String logTag = this.getClass().getName();
     Context context;
     private float[] rotatedProjectionMatrix = new float[16];
@@ -83,12 +71,15 @@ public class AROverlayView extends View implements TrackSearchNotify<TrackBean>{
     Paint pointPaint;
     public static float xDegrees;
     public static float yDegrees;
-
-
+    private List<DrawTrackPointInfo> drawTrackPointInfoList = new ArrayList<>();
+    private float trackViewItemRectW = 0.0f;
+    private float trackViewItemRectH = 0.0f;
+    private float computeTouchDiffY = 0.0f;
     public AROverlayView(Context context, ViewGroup rootView,TrackSearchVo trackSearchVo) {
         super(context);
         this.context = context;
         this.rootView = rootView;
+
         this.trackSearchVo = trackSearchVo;
         cache = OnthewayApplication.getInstahce(CacheService.class);
         trackSearchService = OnthewayApplication.getInstahce(TrackSearchService.class);
@@ -97,7 +88,8 @@ public class AROverlayView extends View implements TrackSearchNotify<TrackBean>{
         mBitPaint.setDither(true);
         drawXOffset = StaticMethod.dip2px(context, 0);
         drawYOffset = StaticMethod.dip2px(context, 50);
-
+        trackViewItemRectW = StaticMethod.dip2px(context, 164);
+        trackViewItemRectH = StaticMethod.dip2px(context, 41);
         circlePaint = new Paint();
         circlePaint.setAntiAlias(true); //設置畫筆為無鋸齒
         circlePaint.setColor(Color.WHITE); //設置畫筆顏色
@@ -112,6 +104,9 @@ public class AROverlayView extends View implements TrackSearchNotify<TrackBean>{
         pointPaint= new Paint();
         pointPaint.setAntiAlias(true); //設置畫筆為無鋸齒
         pointPaint.setColor(Color.RED); //設置畫筆顏色
+
+        rootView.setOnTouchListener(this);
+        computeTouchDiffY = ArTrackActivity.SCREEN_HEIGHT-this.getHeight();
 
     }
 
@@ -170,12 +165,75 @@ public class AROverlayView extends View implements TrackSearchNotify<TrackBean>{
         }
     }
 
-    private Map<Long,DrawPoint> drawPointMap = new HashMap<>();
 
-    private class DrawPoint {
-        int drawX;
-        int drawY;
+    /**
+     * Called when a touch event is dispatched to a view. This allows listeners to
+     * get a chance to respond before the target view.
+     *
+     * @param v     The view the touch event has been dispatched to.
+     * @param event The MotionEvent object containing full information about
+     *              the event.
+     * @return True if the listener has consumed the event, false otherwise.
+     */
+    //定义全局变量用于存放按下时的时间点
+    long downTime=0;
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch(event.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                //触摸时记录当前时间
+                downTime=System.currentTimeMillis();
+                break;
+            case MotionEvent.ACTION_UP:
+                //抬起时计算与按下时时间的差
+                long tillTime=System.currentTimeMillis()-downTime;
+                //时间差在允许范围内时,视为一次单击事件成立
+                if(tillTime<150){
+                    float touchY = event.getY();
+                    float touchX = event.getX();
+                    Log.i(logTag,"touch--->touchX:"+touchX+",touchY:"+touchY +"  --->");
+                    TrackBean trackBean = computeTouchTrack(touchX,touchY);
+                    if(trackBean!=null){
+                        StaticMethod.showToast(trackBean.getFootprintContent(),context);
+                    }
+                }
+                //否则不视为一次单击事件
+                break;
+        }
+        return false;
     }
+
+
+
+    private TrackBean computeTouchTrack(float touchX,float touchY){
+        TrackBean trackBean = null;
+        touchY = touchY - computeTouchDiffY;
+        if(drawTrackPointInfoList.size()>0){
+            for(DrawTrackPointInfo drawTrackPointInfo : drawTrackPointInfoList){
+                Log.i(logTag,"touch--->touchX:"+touchX+",touchY:"+touchY +",drawX:"+drawTrackPointInfo.drawX+",drawY:"+drawTrackPointInfo.drawY
+                        +",rectHeight:"+drawTrackPointInfo.rectHeight +",rectWidth:"+drawTrackPointInfo.rectWidth +"    " + drawTrackPointInfo.trackBean.getFootprintContent());
+                if( drawTrackPointInfo.drawX < touchX &&  touchX < (drawTrackPointInfo.drawX + drawTrackPointInfo.rectWidth)
+                && drawTrackPointInfo.drawY < touchY && touchY <  (drawTrackPointInfo.drawY + drawTrackPointInfo.rectHeight)   ){
+                    trackBean = drawTrackPointInfo.trackBean;
+                    break;
+                }
+            }
+        }
+        return trackBean;
+    }
+
+    private class DrawTrackPointInfo {
+        public DrawTrackPointInfo(){
+            rectWidth = trackViewItemRectW;
+            rectHeight = trackViewItemRectH;
+        }
+        float drawX;
+        float drawY;
+        TrackBean trackBean;
+        float rectWidth;
+        float rectHeight;
+    }
+
 
     @Override
     protected void onDraw(final Canvas canvas) {
@@ -190,6 +248,9 @@ public class AROverlayView extends View implements TrackSearchNotify<TrackBean>{
                 float radius = StaticMethod.dip2px(context,20*1.414213562f);
                 float cx = StaticMethod.dip2px(context,55);
                 float cy = canvas.getHeight() - StaticMethod.dip2px(context,55);
+                List<DrawTrackPointInfo> drawTrackPointInfoListTemp = new ArrayList<>();
+                DrawTrackPointInfo pointInfo = null;
+                //for start
                 for ( final TrackBean trackBean : this.pagination.getContent()) {
                     location = new Location(trackBean.getFootprintContent());
                     location.setLatitude(trackBean.getLatitude());
@@ -206,11 +267,8 @@ public class AROverlayView extends View implements TrackSearchNotify<TrackBean>{
                     // if z > 0, the point will display on the opposite
                     float drawX = (0.5f + cameraCoordinateVector[0] / cameraCoordinateVector[3]) * canvas.getWidth();
                     float drawY = (0.5f - cameraCoordinateVector[1] / cameraCoordinateVector[3]) * canvas.getHeight();
-
-
                     drawX = (int) drawX;
                     drawY = (int) drawY;
-
                     rePointKeyTemp = drawX + "-" + drawY;
                     Integer rePointTimes = drawPointRePointMap.get(rePointKeyTemp);
                     if (rePointTimes == null) {
@@ -222,7 +280,12 @@ public class AROverlayView extends View implements TrackSearchNotify<TrackBean>{
                     }
                     float radarX = (float) (drawX%radius*Math.cos(xDegrees));
                     float radarY = (float) (drawY%radius*Math.cos(yDegrees));
+                    pointInfo = new DrawTrackPointInfo();
+                    pointInfo.trackBean = trackBean;
+                    pointInfo.drawY = drawY;
+                    pointInfo.drawX = drawX;
                     if (cameraCoordinateVector[2] < 0) {
+                        drawTrackPointInfoListTemp.add(pointInfo);
                         Log.i(logTag, "drawRadar point radarX:" + radarX + ",radarY:" + radarY + "  radius:"+radius);
                         canvas.drawCircle(cx - radarX,cy - radarY,StaticMethod.dip2px(context,2),pointPaint);
                         ArTrackActivity.tvCurrentLocation.setText(System.currentTimeMillis() + " show:" + cameraCoordinateVector[2]);
@@ -268,6 +331,8 @@ public class AROverlayView extends View implements TrackSearchNotify<TrackBean>{
                         canvas.drawCircle(cx - radarX,cy - radarY,StaticMethod.dip2px(context,2),pointPaint);
                     }
                 }
+                // for end
+                this.drawTrackPointInfoList = drawTrackPointInfoListTemp;
             } catch (Exception e) {
                 Log.e(logTag, "load image error", e);
                 e.printStackTrace();

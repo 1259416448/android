@@ -15,6 +15,7 @@ import android.opengl.Matrix;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
@@ -78,11 +79,22 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
     @ViewInject(R.id.to_ar_btn)
     private Button toArBtn;
 
+    public static int SCREEN_WIDTH  = 0;
+
+    public static int SCREEN_HEIGHT  = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ar_track);
         x.view().inject(self);
+        DisplayMetrics metrics = new DisplayMetrics();
+        this.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        // 屏幕的分辨率
+        SCREEN_WIDTH = metrics.widthPixels;
+        SCREEN_HEIGHT = metrics.heightPixels;
+
+
         searchKeyWord = getIntent().getStringExtra(BaiduActivity.EXTRA_KEYWORD);
         sensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);
         cameraContainerLayout = (FrameLayout) findViewById(R.id.camera_container_layout);
@@ -265,6 +277,10 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
         calculateOrientation();
     }
 
+
+
+
+
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
         //do nothing
@@ -351,12 +367,13 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
         SensorManager.getOrientation(R, values);
         // 要经过一次数据格式的转换，转换为度
         values[0] = (float) Math.toDegrees(values[0]);
-        Log.i(TAG, values[0]+"");
+      //  Log.i(TAG, values[0]+"");
         values[1] = (float) Math.toDegrees(values[1]);
         values[2] = (float) Math.toDegrees(values[2]);
-        Log.i(TAG, "xDegrees:"+values[1]+" yDegrees:"+values[2]);
+      //  Log.i(TAG, "xDegrees:"+values[1]+" yDegrees:"+values[2]);
         AROverlayView.xDegrees = values[1];
         AROverlayView.yDegrees = values[2];
+        /*
         if(values[0] >= -5 && values[0] < 5){
             Log.i(TAG, "正北");
         }
@@ -381,7 +398,6 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
         else if(values[0] >= -85 && values[0] <-5){
             Log.i(TAG, "西北");
         }
+        */
     }
-
-
 }
