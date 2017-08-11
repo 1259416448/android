@@ -35,6 +35,7 @@ public class OnthewayApplication {
     public static synchronized void init(){
         if(!initBefore){
             cache = new CacheDefault();
+            cache.get(StaticVar.AUTH_TOKEN);
             UserInfo userInfo = cache.getT(StaticVar.USER_INFO,UserInfo.class);
             if(userInfo!=null){
                 App.userInfo = userInfo;

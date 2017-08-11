@@ -36,6 +36,7 @@ import arvix.cn.ontheway.ui.track.TrackCreateActivity;
 import arvix.cn.ontheway.ui.track.TrackListActivity;
 import arvix.cn.ontheway.ui.track.TrackMapActivity;
 import arvix.cn.ontheway.utils.StaticMethod;
+import arvix.cn.ontheway.utils.UIUtils;
 
 public class ArFootPrintActivity extends BaseActivity implements SensorEventListener, LocationListener {
 
@@ -103,6 +104,7 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
         super.onCreate(savedInstanceState);
        // currentArTrackActivity = this;
         setContentView(R.layout.activity_ar_track);
+        UIUtils.setBarStyle(self);
         x.view().inject(self);
         handler = new Handler(){
             public void handleMessage(Message msg){

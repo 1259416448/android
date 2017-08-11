@@ -32,6 +32,8 @@ public interface ServerUrl {
 
     String COMMENT_SEARCH =BASE_URL +  "/app/footprint/comment/search";
 
+    String COMMENT_CREATE = BASE_URL + "/app/footprint/comment/create";
+
 
 
 }

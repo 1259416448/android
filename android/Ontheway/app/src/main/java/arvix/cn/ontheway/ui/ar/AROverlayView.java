@@ -216,7 +216,7 @@ public class AROverlayView extends View implements FootPrintSearchNotify<FootPri
                     Log.i(logTag,"touch--->touchX:"+touchX+",touchY:"+touchY +"  --->");
                     FootPrintBean footPrintBean = computeTouchTrack(touchX,touchY);
                     if(footPrintBean !=null){
-                        StaticMethod.showToast(footPrintBean.getFootprintContent(),context);
+                       // StaticMethod.showToast(footPrintBean.getFootprintContent(),context);
                         Intent intent = new Intent(context,TrackDetailActivity.class);
                         intent.putExtra(StaticVar.EXTRA_TRACK_BEAN, footPrintBean);
                         context.startActivity(intent);

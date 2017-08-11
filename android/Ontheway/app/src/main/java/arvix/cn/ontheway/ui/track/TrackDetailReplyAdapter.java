@@ -58,7 +58,7 @@ public class TrackDetailReplyAdapter   extends ArrayAdapter<CommentBean> {
         CommentBean commentBean = getItem(position);
         StaticMethod.setCircularHeaderImg(commentBean.getUserHeadImg(),h.replayHeaderIv,h.replayHeaderIv.getWidth(),h.replayHeaderIv.getHeight());
         h.replayNameTv.setText(commentBean.getUserNickname());
-        h.replayTimeTv.setText(commentBean.getDateCreateStr());
+        h.replayTimeTv.setText(commentBean.getDateCreatedStr());
         h.replayContentTv.setText(StaticMethod.genLesStr(commentBean.getCommentContent(),35));
         return convertView;
     }

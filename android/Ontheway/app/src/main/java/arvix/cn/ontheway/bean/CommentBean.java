@@ -13,19 +13,19 @@ public class CommentBean {
     private long userId;
     private String commentContent;
     private long dateCreate;
-    private String dateCreateStr;
+    private String dateCreatedStr;
     private String sourceMsgUserName;
     private String sourceMsgUserHeader;
     private long sourceMsgUserId;
     private String sourceContent;
     private String mainPhoto;
 
-    public String getDateCreateStr() {
-        return dateCreateStr;
+    public String getDateCreatedStr() {
+        return dateCreatedStr;
     }
 
-    public void setDateCreateStr(String dateCreateStr) {
-        this.dateCreateStr = dateCreateStr;
+    public void setDateCreatedStr(String dateCreatedStr) {
+        this.dateCreatedStr = dateCreatedStr;
     }
 
     public long getCommentId() {

@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -36,6 +37,7 @@ import arvix.cn.ontheway.bean.Pagination;
 import arvix.cn.ontheway.bean.UserInfo;
 import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.ui.LoginActivity;
+import arvix.cn.ontheway.ui.usercenter.MyProfileFragment;
 
 /**
  * Created by asdtiang on 2017/7/24 0024.
@@ -250,10 +252,16 @@ public class StaticMethod {
     }
 
     public static int  goToLogin(Activity activity){
-        int randomInt = new Random().nextInt(Integer.MAX_VALUE);
-        Intent intent = new Intent(activity, LoginActivity.class);
-        activity.startActivityForResult(intent, randomInt);
-        return randomInt;
+        CacheService cache = OnthewayApplication.getInstahce(CacheService.class);
+        Log.i("goToLogin:","cache.get(StaticVar.AUTH_TOKEN)------------->:"+cache.get(StaticVar.AUTH_TOKEN));
+        if(cache.get(StaticVar.AUTH_TOKEN)!=null){
+            return 0;
+        }else{
+            int randomInt = new Random().nextInt(Integer.MAX_VALUE);
+            Intent intent = new Intent(activity, LoginActivity.class);
+            activity.startActivityForResult(intent, randomInt);
+            return randomInt;
+        }
     }
 
     public static void showToast(String text,Context context){
