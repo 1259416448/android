@@ -15,7 +15,7 @@ import org.xutils.x;
 import java.util.List;
 
 import arvix.cn.ontheway.R;
-import arvix.cn.ontheway.bean.ReplyBean;
+import arvix.cn.ontheway.bean.CommentBean;
 import arvix.cn.ontheway.utils.StaticMethod;
 
 /**
@@ -23,13 +23,13 @@ import arvix.cn.ontheway.utils.StaticMethod;
  * asdtiangxia@163.com
  */
 
-public class NewLikeAdapter extends ArrayAdapter<ReplyBean> {
+public class NewLikeAdapter extends ArrayAdapter<CommentBean> {
         Context ctx;
-        List<ReplyBean> datas;
+        List<CommentBean> datas;
         LayoutInflater mInflater;
         int layout;
 
-public NewLikeAdapter(Context ctx, List<ReplyBean> datas) {
+public NewLikeAdapter(Context ctx, List<CommentBean> datas) {
         super(ctx, R.layout.msg_new_like_item);
         this.layout = R.layout.msg_new_like_item;
         this.ctx = ctx;
@@ -41,7 +41,7 @@ public int getCount() {
         return datas.size();
         }
 
-public ReplyBean getItem(int position) {
+public CommentBean getItem(int position) {
         return datas.get(position);
         }
 
@@ -59,14 +59,14 @@ public View getView(final int position, View convertView, ViewGroup parent) {
         } else {
         h = (ViewHolder) convertView.getTag();
         }
-        ReplyBean replyBean = getItem(position);
-        StaticMethod.setImg(replyBean.getMainPhoto(),h.mainPhotoIv,h.mainPhotoIv.getWidth(),h.mainPhotoIv.getHeight());
-        StaticMethod.setCircularHeaderImg(replyBean.getReplyUserHeader(),h.replayHeaderIv,h.replayHeaderIv.getWidth(),h.replayHeaderIv.getHeight());
+        CommentBean commentBean = getItem(position);
+        StaticMethod.setImg(commentBean.getMainPhoto(),h.mainPhotoIv,h.mainPhotoIv.getWidth(),h.mainPhotoIv.getHeight());
+        StaticMethod.setCircularHeaderImg(commentBean.getUserHeadImg(),h.replayHeaderIv,h.replayHeaderIv.getWidth(),h.replayHeaderIv.getHeight());
 
-        h.replayNameTv.setText(replyBean.getReplayUserName());
-        h.replayTimeTv.setText(StaticMethod.formatDate(replyBean.getDateCreated(),"MM-dd HH:ss"));
-        h.sourceContentTv.setText(StaticMethod.genLesStr(replyBean.getSourceContent(),30));
-        h.sourceNameTv.setText(replyBean.getSourceMsgUserName());
+        h.replayNameTv.setText(commentBean.getUserNickname());
+        h.replayTimeTv.setText(StaticMethod.formatDate(commentBean.getDateCreate(),"MM-dd HH:ss"));
+        h.sourceContentTv.setText(StaticMethod.genLesStr(commentBean.getSourceContent(),30));
+        h.sourceNameTv.setText(commentBean.getSourceMsgUserName());
         return convertView;
         }
 

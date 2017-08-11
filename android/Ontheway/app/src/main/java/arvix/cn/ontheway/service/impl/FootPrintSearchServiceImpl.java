@@ -1,11 +1,9 @@
 package arvix.cn.ontheway.service.impl;
 
 import android.content.Context;
-import android.support.v4.content.res.TypedArrayUtils;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.util.TypeUtils;
@@ -17,12 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import arvix.cn.ontheway.bean.BaseResponse;
+import arvix.cn.ontheway.bean.FootPrintBean;
 import arvix.cn.ontheway.bean.Pagination;
-import arvix.cn.ontheway.bean.TrackBean;
-import arvix.cn.ontheway.bean.TrackSearchVo;
+import arvix.cn.ontheway.bean.FootPrintSearchVo;
 import arvix.cn.ontheway.http.ServerUrl;
-import arvix.cn.ontheway.service.inter.TrackSearchService;
-import arvix.cn.ontheway.service.inter.TrackSearchNotify;
+import arvix.cn.ontheway.service.inter.FootPrintSearchService;
+import arvix.cn.ontheway.service.inter.FootPrintSearchNotify;
+import arvix.cn.ontheway.ui.msg.SystemMsgActivity;
 import arvix.cn.ontheway.utils.StaticMethod;
 import arvix.cn.ontheway.utils.StaticVar;
 
@@ -31,7 +30,10 @@ import arvix.cn.ontheway.utils.StaticVar;
  * asdtiangxia@163.com
  */
 
-public class TrackSearchServiceImpl implements TrackSearchService {
+public class FootPrintSearchServiceImpl implements FootPrintSearchService {
+
+    private static long lastRequest = 0;
+
     /**
      *
      * @param context
@@ -39,12 +41,16 @@ public class TrackSearchServiceImpl implements TrackSearchService {
      * @return
      */
     @Override
-    public Pagination<TrackBean> search(final Context context, final TrackSearchVo trackSearchVo,final TrackSearchNotify<TrackBean> trackSearchNotify) {
+    public void search(final Context context, final FootPrintSearchVo trackSearchVo, final FootPrintSearchNotify<FootPrintBean> trackSearchNotify) {
+        if((System.currentTimeMillis()-lastRequest)<200){
+            return;
+        }
+        lastRequest = System.currentTimeMillis();
         RequestParams requestParams = new RequestParams();
-        String url = ServerUrl.TRACK_AR_LIST;
-        if(TrackSearchVo.SearchType.ar == trackSearchVo.getSearchType()){
+        String url = ServerUrl.FOOTPRINT_SEARCH;
+        if(FootPrintSearchVo.SearchType.ar == trackSearchVo.getSearchType()){
             url = url + "/ar";
-        }else if(TrackSearchVo.SearchType.map == trackSearchVo.getSearchType()){
+        }else if(FootPrintSearchVo.SearchType.map == trackSearchVo.getSearchType()){
             url = url + "/map";
         }else{
             url = url + "/list";
@@ -66,17 +72,17 @@ public class TrackSearchServiceImpl implements TrackSearchService {
             public void onSuccess(String result) {
                 try {
                     Log.i("onSuccess-->", "result->" + result.toString());
-                    BaseResponse<Pagination<TrackBean>> response =  JSON.parseObject(result,new TypeReference<BaseResponse<Pagination<TrackBean>>>(){});
+                    BaseResponse<Pagination<FootPrintBean>> response =  JSON.parseObject(result,new TypeReference<BaseResponse<Pagination<FootPrintBean>>>(){});
                     if (response.getCode() == StaticVar.SUCCESS) {
                         JSONObject jsonObject = response.getBody();
                         Pagination paginationReturn = TypeUtils.castToJavaBean(jsonObject,Pagination.class);
                         if(paginationReturn!=null&&paginationReturn.getContent()!=null){
                             List<JSONObject> jsonArray =  (List<JSONObject>) paginationReturn.getContent();
-                            List<TrackBean> trackBeanList = new ArrayList<TrackBean>();
+                            List<FootPrintBean> footPrintBeanList = new ArrayList<FootPrintBean>();
                             for(JSONObject object :jsonArray){
-                                trackBeanList.add(TypeUtils.castToJavaBean(object,TrackBean.class));
+                                footPrintBeanList.add(TypeUtils.castToJavaBean(object,FootPrintBean.class));
                             }
-                            paginationReturn.setContent(trackBeanList);
+                            paginationReturn.setContent(footPrintBeanList);
                         }
                         Log.i("trackSearchNotify-->", "trackSearchNotify------------------------->" );
                         trackSearchNotify.trackSearchDataFetchSuccess(trackSearchVo , paginationReturn);
@@ -100,6 +106,5 @@ public class TrackSearchServiceImpl implements TrackSearchService {
             public void onFinished() {
             }
         });
-        return null;
     }
 }

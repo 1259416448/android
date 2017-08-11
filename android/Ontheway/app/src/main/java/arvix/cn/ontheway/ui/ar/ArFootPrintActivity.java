@@ -14,8 +14,9 @@ import android.location.LocationManager;
 import android.opengl.Matrix;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.content.ContextCompat;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
@@ -24,19 +25,19 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import arvix.cn.ontheway.BaiduActivity;
 import arvix.cn.ontheway.R;
-import arvix.cn.ontheway.bean.TrackSearchVo;
+import arvix.cn.ontheway.bean.FootPrintSearchVo;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.track.TrackCreateActivity;
 import arvix.cn.ontheway.ui.track.TrackListActivity;
 import arvix.cn.ontheway.ui.track.TrackMapActivity;
+import arvix.cn.ontheway.utils.StaticMethod;
 
-public class ArTrackActivity extends BaseActivity implements SensorEventListener, LocationListener {
+public class ArFootPrintActivity extends BaseActivity implements SensorEventListener, LocationListener {
 
     final static String TAG = "ARActivity";
     private  SurfaceView surfaceView;
@@ -56,7 +57,7 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
 
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 0; // 10 meters
     private static final long MIN_TIME_BW_UPDATES = 0;//1000 * 60 * 1; // 1 minute
-    private TrackSearchVo trackSearchVo = new TrackSearchVo();
+    private FootPrintSearchVo trackSearchVo = new FootPrintSearchVo();
     private LocationManager locationManager;
     public Location location;
     boolean isGPSEnabled;
@@ -72,28 +73,44 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
     private Button rangeButton;
     @ViewInject(R.id.to_track_list_btn)
     private Button toTrackListBtn;
+    @ViewInject(R.id.total_count_tv)
+    private TextView totalCountTv;
 
+    @ViewInject(R.id.address_tv)
+    private TextView addressTv;
     @ViewInject(R.id.to_map_btn)
     private Button toMapBtn;
 
     @ViewInject(R.id.to_ar_btn)
     private Button toArBtn;
-
-    public static int SCREEN_WIDTH  = 0;
-
-    public static int SCREEN_HEIGHT  = 0;
+    @ViewInject(R.id.r_100m)
+    private Button r100mBtn;
+    @ViewInject(R.id.r_500m)
+    private Button r500mBtn;
+    @ViewInject(R.id.r_1km)
+    private Button r1kmBtn;
+    @ViewInject(R.id.time_one_day)
+    private Button timeOneBtn;
+    @ViewInject(R.id.time_7_day)
+    private Button timeTwoBtn;
+    @ViewInject(R.id.time_one_month)
+    private Button timeThreeBtn;
+    @ViewInject(R.id.refresh_btn)
+    private Button refreshBtn;
+    public static Handler handler = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+       // currentArTrackActivity = this;
         setContentView(R.layout.activity_ar_track);
         x.view().inject(self);
-        DisplayMetrics metrics = new DisplayMetrics();
-        this.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-        // 屏幕的分辨率
-        SCREEN_WIDTH = metrics.widthPixels;
-        SCREEN_HEIGHT = metrics.heightPixels;
-
+        handler = new Handler(){
+            public void handleMessage(Message msg){
+                String totalCount = msg.getData().getString("totalCount");
+                String address = msg.getData().getString("address");
+                updateUi(totalCount,address);
+            }
+        };
 
         searchKeyWord = getIntent().getStringExtra(BaiduActivity.EXTRA_KEYWORD);
         sensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);
@@ -112,7 +129,6 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
                 }
             }
         });
-
         timeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -123,8 +139,6 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
                 }
             }
         });
-
-
         toTrackListBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -148,8 +162,89 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
                 startActivity(intent);
             }
         });
-
+        initSearchEvent();
     }
+
+
+
+
+    private void initSearchEvent(){
+        r100mBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateSearchDistance(FootPrintSearchVo.SearchDistance.one);
+                rangeLine.setVisibility(View.INVISIBLE);
+            }
+        });
+        r500mBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateSearchDistance(FootPrintSearchVo.SearchDistance.two);
+                rangeLine.setVisibility(View.INVISIBLE);
+            }
+        });
+        r1kmBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateSearchDistance(FootPrintSearchVo.SearchDistance.three);
+                rangeLine.setVisibility(View.INVISIBLE);
+            }
+        });
+
+
+        timeOneBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateSearchTime(FootPrintSearchVo.SearchTime.oneDay);
+                timeLine.setVisibility(View.INVISIBLE);
+            }
+        });
+        timeTwoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateSearchTime(FootPrintSearchVo.SearchTime.sevenDay);
+                timeLine.setVisibility(View.INVISIBLE);
+            }
+        });
+        timeThreeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateSearchTime(FootPrintSearchVo.SearchTime.oneMonth);
+                timeLine.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        refreshBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if((trackSearchVo.getNumber()+1)<trackSearchVo.getTotalPages()){
+                    trackSearchVo.setNumber(trackSearchVo.getNumber()+1);
+                }else{
+                    StaticMethod.showToast("已经没有数据了",self);
+                    trackSearchVo.setNumber(0);
+                }
+                arOverlayView.updateSearchParams();
+            }
+        });
+    }
+
+    private void updateSearchDistance(FootPrintSearchVo.SearchDistance distance){
+        trackSearchVo.setSearchDistance(distance);
+        arOverlayView.updateSearchParams();
+    }
+
+    private void updateSearchTime(FootPrintSearchVo.SearchTime time){
+        trackSearchVo.setSearchTime(time);
+        arOverlayView.updateSearchParams();
+    }
+
+
+    public void updateUi(String totalCount,String address){
+        totalCountTv.setText(totalCount);
+        addressTv.setText(StaticMethod.genLesAddressStr(address,5));
+    }
+
+
 
     @Override
     public void onResume() {
@@ -172,7 +267,7 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
         super.onDestroy();
         sensorManager.unregisterListener(this);
         if(null!=arOverlayView){
-            arOverlayView.clearData();
+            arOverlayView.onDestroy();
         }
     }
 
