@@ -8,7 +8,7 @@ import java.util.List;
  * asdtiangxia@163.com
  */
 
-public class TrackBean  implements Serializable{
+public class FootPrintBean implements Serializable{
 
     private long dateCreated;
     private String dateCreatedStr;
@@ -17,6 +17,7 @@ public class TrackBean  implements Serializable{
     private int month;
     private int day;
     private List<String> footprintPhotoArray;
+    private List<CommentBean> comments;
     private String footprintAddress;
     private String footprintContent;
     private String userHeadImg;
@@ -25,8 +26,15 @@ public class TrackBean  implements Serializable{
     private double latitude;
     private double longitude;
     private long userId;
+    private boolean ifLike;
 
+    public boolean isIfLike() {
+        return ifLike;
+    }
 
+    public void setIfLike(boolean ifLike) {
+        this.ifLike = ifLike;
+    }
 
     public long getDateCreated() {
         return dateCreated;
@@ -146,5 +154,13 @@ public class TrackBean  implements Serializable{
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    public List<CommentBean> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<CommentBean> comments) {
+        this.comments = comments;
     }
 }

@@ -5,10 +5,11 @@ package arvix.cn.ontheway.bean;
  * asdtiangxia@163.com
  */
 
-public class TrackSearchVo {
+public class FootPrintSearchVo {
 
     private int size = 15;
     private int number = 0;
+    private int totalPages = 0;
     private Double latitude;
     private Double longitude;
     private Long currentTime;
@@ -34,6 +35,13 @@ public class TrackSearchVo {
         one, two, three
     }
 
+    public int getTotalPages() {
+        return totalPages;
+    }
+
+    public void setTotalPages(int totalPages) {
+        this.totalPages = totalPages;
+    }
 
     public Double getLatitude() {
         return latitude;

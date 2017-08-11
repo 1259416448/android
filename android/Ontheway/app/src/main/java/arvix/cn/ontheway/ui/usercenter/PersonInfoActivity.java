@@ -89,7 +89,7 @@ public class PersonInfoActivity extends BaseActivity {
                         byte[] data = output.toByteArray();
                         Log.i(logTag,"sourceDataSize-->"+sourceData.length+" commpress data size:"+data.length);
                         Log.i(logTag, "=====onImageCropComplete (get bitmap=" + bmp.toString());
-                        imageFileUploadService.upload(self,data,ServerUrl.UPDATE_HEADER,new FileUploadCallBack(){
+                        imageFileUploadService.upload(self,data,ServerUrl.USER_UPDATE_HEADER,new FileUploadCallBack(){
                             @Override
                             public void uploadBack(BaseResponse baseResponse) {
                                 if (baseResponse.getCode() == StaticVar.SUCCESS) {

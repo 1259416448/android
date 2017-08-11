@@ -149,7 +149,7 @@
             android:label="LoginActivity"
             />
 
-        <activity android:name=".ui.ar.ArTrackActivity">
+        <activity android:name=".ui.ar.ArFootPrintActivity">
 
         </activity>
     </application>

@@ -18,15 +18,20 @@ public interface ServerUrl {
 
     String QINIU_UPTOKEN = BASE_URL + "/api/v1/qiniu/upToken";
 
-    String UPDATE_HEADER = BASE_URL + "/app/user/update/image";
+    String USER_UPDATE_HEADER = BASE_URL + "/app/user/update/image";
 
-    String UPDATE_NAME = BASE_URL + "/app/user/update/name";
+    String USER_UPDATE_NAME = BASE_URL + "/app/user/update/name";
 
-    String UPDATE_GENDER = BASE_URL + "/app/user/update/gender";
+    String USER_UPDATE_GENDER = BASE_URL + "/app/user/update/gender";
 
-    String TRACK_AR_LIST =  BASE_URL + "/app/footprint/search";
+    String FOOTPRINT_SEARCH =  BASE_URL + "/app/footprint/search";
 
-    String TRACK_CREATE =  BASE_URL + "/app/footprint/create";
+    String FOOTPRINT_CREATE =  BASE_URL + "/app/footprint/create";
+
+    String FOOTPRINT_SHOW = BASE_URL +"/app/footprint/view";
+
+    String COMMENT_SEARCH =BASE_URL +  "/app/footprint/comment/search";
+
 
 
 }

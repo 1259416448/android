@@ -4,7 +4,7 @@
     android:id="@+id/activity_ar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="arvix.cn.ontheway.ui.ar.ArTrackActivity">
+    tools:context="arvix.cn.ontheway.ui.ar.ArFootPrintActivity">
     <FrameLayout
         android:id="@+id/camera_container_layout"
         android:layout_width="match_parent"
@@ -50,12 +50,14 @@
                 android:layout_marginTop="4dp"
                 android:textColor="#FFFFFF"
                 android:layout_height="1dp" />
+
             <TextView
+                android:id="@+id/total_count_tv"
                 android:layout_width="wrap_content"
-                android:textColor="@color/white"
+                android:layout_height="wrap_content"
                 android:text="3456"
-                android:textSize="25sp"
-                android:layout_height="wrap_content" />
+                android:textColor="@color/white"
+                android:textSize="25sp" />
            <LinearLayout
                android:layout_width="wrap_content"
                android:layout_height="wrap_content">
@@ -65,14 +67,16 @@
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
                    android:src="@drawable/dingwei"/>
+
                <TextView
-                   android:layout_marginLeft="2dp"
-                   android:layout_gravity="center"
+                   android:id="@+id/address_tv"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:textSize="12sp"
+                   android:layout_gravity="center"
+                   android:layout_marginLeft="2dp"
+                   android:text="三里屯白家坊"
                    android:textColor="#FFC4C4C4"
-                   android:text="三里屯白家坊"/>
+                   android:textSize="12sp" />
            </LinearLayout>
         </LinearLayout>
 
@@ -107,11 +111,13 @@
         android:layout_marginBottom="25dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" android:orientation="vertical">
+
         <Button
+            android:id="@+id/refresh_btn"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_gravity="right"
-        android:background="@drawable/ar_huanyipi"
-        android:layout_width="35dp"
-        android:layout_height="35dp" />
+            android:background="@drawable/ar_huanyipi" />
 
         <LinearLayout
             android:orientation="horizontal"

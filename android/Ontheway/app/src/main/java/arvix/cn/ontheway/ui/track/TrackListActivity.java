@@ -21,7 +21,7 @@ import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.async.AsyncUtil;
 import arvix.cn.ontheway.async.Callback;
 import arvix.cn.ontheway.async.Result;
-import arvix.cn.ontheway.bean.TrackBean;
+import arvix.cn.ontheway.bean.FootPrintBean;
 import arvix.cn.ontheway.data.TrackListData;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.head.HeaderHolder;
@@ -37,7 +37,7 @@ import arvix.cn.ontheway.utils.StaticMethod;
 public class TrackListActivity   extends BaseActivity implements AdapterView.OnItemClickListener, PullToRefreshBase.OnRefreshListener2<ListView>{
 
     private TrackListAdapter adapter;
-    private List<TrackBean> datas;
+    private List<FootPrintBean> datas;
     private ListViewHolder listHolder;
     private int pageNum = 0;
 
@@ -66,18 +66,18 @@ public class TrackListActivity   extends BaseActivity implements AdapterView.OnI
 
     private void initData(final boolean refresh) {
         final int reqPage = refresh ? 0 : pageNum;
-        AsyncUtil.goAsync(new Callable<Result<List<TrackBean>>>() {
+        AsyncUtil.goAsync(new Callable<Result<List<FootPrintBean>>>() {
 
             @Override
-            public Result<List<TrackBean>> call() throws Exception {
-                Result<List<TrackBean> > ret = new Result<>();
+            public Result<List<FootPrintBean>> call() throws Exception {
+                Result<List<FootPrintBean> > ret = new Result<>();
                 ret.setData(TrackListData.genData());
                 return ret;
             }
-        }, new Callback<Result<List<TrackBean>>>() {
+        }, new Callback<Result<List<FootPrintBean>>>() {
 
             @Override
-            public void onHandle(Result<List<TrackBean>> result) {
+            public void onHandle(Result<List<FootPrintBean>> result) {
                 if (result.ok()) {
                     //成功才更新page状态
                     if (refresh) {

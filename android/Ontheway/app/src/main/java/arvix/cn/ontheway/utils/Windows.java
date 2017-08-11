@@ -19,7 +19,7 @@ public class Windows {
 	}
 
 	public static MyProgressDialog waiting(final Context context, final String text) {
-		MyProgressDialog commonDialog = new MyProgressDialog(context, R.layout.common_waiting, R.style.clean_dialog) {
+		final MyProgressDialog commonDialog = new MyProgressDialog(context, R.layout.common_waiting, R.style.clean_dialog) {
 			private ImageView imageView;
 
 			public void initListener() {
@@ -38,6 +38,22 @@ public class Windows {
 				imageView.clearAnimation();
 			}
 		};
+		/**
+		 * 防止超时未关闭
+		 */
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				if(commonDialog!=null && commonDialog.isShowing()){
+					commonDialog.dismiss();
+				}
+			}
+		}).start();
 		commonDialog.show();
 		return commonDialog;
 	}

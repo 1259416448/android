@@ -10,7 +10,7 @@ public class UserInfo {
     private String mobilePhoneNumber;
     private String headImg;
     private String gender;
-    private Long id;
+    private Long id = 0l ;
     private String headImgYun;
     private String username;
 
