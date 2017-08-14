@@ -14,7 +14,7 @@
 #import "OTWLaunchManager.h"
 #import "OTWTabBarController.h"
 #import <STPopup/STPopup.h>
-
+#import "OTWPersonalUserFeedbackViewController.h"
 @interface OTWPersonalSiteController() <UITableViewDataSource,UITableViewDelegate>
 
 @property (nonatomic,strong) UIImage *arrowImge;
@@ -97,6 +97,10 @@
 #pragma mark 点击行
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     DLog(@"我点击了：%ld",indexPath.row);
+    if(indexPath.row==0){
+        OTWPersonalUserFeedbackViewController *userFeedbackVC = [[OTWPersonalUserFeedbackViewController alloc] init];
+        [self.navigationController pushViewController:userFeedbackVC animated:YES];
+    }
 }
 
 #pragma mark 返回第indexPath这行对应的内容
