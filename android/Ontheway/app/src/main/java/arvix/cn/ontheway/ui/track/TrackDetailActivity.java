@@ -50,6 +50,7 @@ import java.util.Map;
 import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.bean.BaseResponse;
+import arvix.cn.ontheway.bean.BaseResponseBodyNumber;
 import arvix.cn.ontheway.bean.Pagination;
 import arvix.cn.ontheway.bean.CommentBean;
 import arvix.cn.ontheway.bean.FootPrintBean;
@@ -118,11 +119,8 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
         listHolder.list.getRefreshableView().setOnItemLongClickListener(this);
         listHolder.list.setMode(PullToRefreshBase.Mode.BOTH);
         listHolder.list.setOnRefreshListener(this);
-        View emptyView = LayoutInflater.from(self).inflate(R.layout.comment_empty, (ViewGroup)getWindow().getDecorView(), false);
-        listHolder.empty_ll.removeAllViews();
-        listHolder.empty_ll.addView(emptyView);
-        listHolder.mayShowEmpty(adapter.getCount());
         emptyView = LayoutInflater.from(self).inflate(R.layout.comment_empty, (ViewGroup)getWindow().getDecorView(), false);
+
         x.view().inject(this);
         HeaderHolder head=new HeaderHolder();
         head.init(self,"足迹详情");
@@ -230,12 +228,7 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
                 return false;
             }
         });
-
-
         attachKeyboardListeners(R.id.detail_root);
-
-
-
     }
 
     private void initPhotoList(){
@@ -369,7 +362,6 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
                 fetch = false;
                 StaticMethod.showToast("没有更多的数据了，评论一条吧",this);
                 Log.i(logTag,"fetch---------------->is false");
-                listHolder.mayShowEmpty(adapter.getCount());
                 listHolder.list.onRefreshComplete();
             }
             if(fetch){
@@ -477,7 +469,9 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         //长按删除
+        Log.i(logTag,"position-------------->"+position);
         CommentBean commentBean = adapter.getItem(position);
+
         if(commentBean.getUserId()==App.userInfo.getId()){
             deleteComment(commentBean);
         }
