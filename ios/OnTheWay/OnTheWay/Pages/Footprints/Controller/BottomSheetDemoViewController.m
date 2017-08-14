@@ -100,7 +100,6 @@
         footPrintContentY = CGRectGetMaxY(self.underLineOneView.frame) + OTWPrintArSpacing_10;
     }
     CGFloat footPrintContentW = SCREEN_WIDTH - OTWPrintArSpacing_15*2;
-    CGSize footPrintContentSize = [_footprint.footprintContent boundingRectWithSize:CGSizeMake(footPrintContentW, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:16]} context:nil].size;
     CGRect footPrintContentRect = CGRectMake(footPrintContentX, footPrintContentY, footPrintContentW, 42);
     self.footPrintContent.frame = footPrintContentRect;
     self.footPrintContent.text = _footprint.footprintContent;
@@ -139,9 +138,7 @@
 #pragma mark 跳转到足迹详情
 -(void)jumpToFootprintDetail
 {
-    [self.popupController dismissWithCompletion:^{
-
-    }];
+    [self.popupController dismiss];
     OTWFootprintDetailController *VC =  [[OTWFootprintDetailController alloc] init];
     [VC setFid:_footprint.footprintId.description];
     [self.mapController.navigationController pushViewController:VC animated:YES];

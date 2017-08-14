@@ -3,7 +3,7 @@ package arvix.cn.ontheway.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import arvix.cn.ontheway.bean.TrackBean;
+import arvix.cn.ontheway.bean.FootPrintBean;
 
 /**
  * Created by asdtiang on 2017/7/25 0025.
@@ -12,9 +12,9 @@ import arvix.cn.ontheway.bean.TrackBean;
 
 public class TrackListData {
 
-    public static List<TrackBean> genData(){
+    public static List<FootPrintBean> genData(){
 
-        List<TrackBean> resultList = new ArrayList<>();
+        List<FootPrintBean> resultList = new ArrayList<>();
         long id = 1;
         resultList.add(genData(7,13,id++,1));
         resultList.add(genData(7,9,id++,2));
@@ -26,16 +26,16 @@ public class TrackListData {
         return resultList;
     }
 
-    public static TrackBean genData(int month, int day, long id, int photoCount){
-        TrackBean trackBean = new TrackBean();
-        trackBean.setUserHeadImg(GenTestData.genRandomUserHeader());
-        trackBean.setFootprintContent(GenTestData.genContent());
-        trackBean.setDateCreated(System.currentTimeMillis());
-        trackBean.setFootprintAddress("成都市菁蓉国际广场A1栋");
-        trackBean.setUserNickname(GenTestData.genNickname());
-        trackBean.setFootprintId(id);
-        trackBean.setMonth(month);
-        trackBean.setDay(day);
+    public static FootPrintBean genData(int month, int day, long id, int photoCount){
+        FootPrintBean footPrintBean = new FootPrintBean();
+        footPrintBean.setUserHeadImg(GenTestData.genRandomUserHeader());
+        footPrintBean.setFootprintContent(GenTestData.genContent());
+        footPrintBean.setDateCreated(System.currentTimeMillis());
+        footPrintBean.setFootprintAddress("成都市菁蓉国际广场A1栋");
+        footPrintBean.setUserNickname(GenTestData.genNickname());
+        footPrintBean.setFootprintId(id);
+        footPrintBean.setMonth(month);
+        footPrintBean.setDay(day);
         List<String> photoList = new ArrayList<>();
         if(photoCount==1){
             photoList.add("http://osx4pwgde.bkt.clouddn.com/c47c40d45342467e3f62acb873f296c0.jpg");
@@ -62,8 +62,8 @@ public class TrackListData {
                 photoList.add("http://osx4pwgde.bkt.clouddn.com/c47c40d45342467e3f62acb873f296c0.jpg");
             }
         }
-        trackBean.setPhotoList(photoList);
-        return trackBean;
+        footPrintBean.setFootprintPhotoArray(photoList);
+        return footPrintBean;
     }
 
 }

@@ -20,7 +20,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import arvix.cn.ontheway.R;
-import arvix.cn.ontheway.bean.TrackBean;
+import arvix.cn.ontheway.bean.FootPrintBean;
 import arvix.cn.ontheway.utils.StaticMethod;
 
 /**
@@ -28,9 +28,9 @@ import arvix.cn.ontheway.utils.StaticMethod;
  * asdtiangxia@163.com
  */
 
-public class MyTrackListAdapter extends ArrayAdapter<TrackBean> {
+public class MyTrackListAdapter extends ArrayAdapter<FootPrintBean> {
     Context ctx;
-    List<TrackBean> dataList;
+    List<FootPrintBean> dataList;
     LayoutInflater mInflater;
     int layout;
     int currentDay;
@@ -42,7 +42,7 @@ public class MyTrackListAdapter extends ArrayAdapter<TrackBean> {
     LinearLayout.LayoutParams marginLeft ;
     LinearLayout.LayoutParams marginTop;
     LinearLayout.LayoutParams marginLeftAndTop;
-    public MyTrackListAdapter(@NonNull Context context, @LayoutRes int resource,List<TrackBean> dataList) {
+    public MyTrackListAdapter(@NonNull Context context, @LayoutRes int resource,List<FootPrintBean> dataList) {
         super(context, resource);
         this.layout = resource;
         this.ctx = context;
@@ -68,7 +68,7 @@ public class MyTrackListAdapter extends ArrayAdapter<TrackBean> {
         return dataList.size();
     }
 
-    public TrackBean getItem(int position) {
+    public FootPrintBean getItem(int position) {
         return dataList.get(position);
     }
 
@@ -90,14 +90,14 @@ public class MyTrackListAdapter extends ArrayAdapter<TrackBean> {
         } else {
             h = (MyTrackListAdapter.ViewHolder) convertView.getTag();
         }
-        TrackBean bean = getItem(position);
+        FootPrintBean bean = getItem(position);
         h.monthTimeLine.setVisibility(View.VISIBLE);
         h.dayTimeTv.setVisibility(View.VISIBLE);
         if( position==0 && currentDay==bean.getDay()){
             h.monthTimeLine.setVisibility(View.GONE);
             h.dayTimeTv.setVisibility(View.INVISIBLE);
         }if(position>0){
-            TrackBean lastBean = getItem(position-1);
+            FootPrintBean lastBean = getItem(position-1);
             if (bean.getMonth()==lastBean.getMonth()) {
                 h.monthTimeLine.setVisibility(View.GONE);
             }
@@ -108,53 +108,53 @@ public class MyTrackListAdapter extends ArrayAdapter<TrackBean> {
       //  ImageView imageView = (ImageView)convertView.findViewById(R.id.photo4_grid_img_item);
         int row = 1;//行
         int column = 1;//列
-        int photoCount = bean.getPhotoList().size();
+        int photoCount = bean.getFootprintPhotoArray().size();
         h.gridLayout.removeAllViews();
 
         if(photoCount==1){
             ImageView imageView = new ImageView(ctx);
-            appendImage(h.gridLayout,imageView,bean.getPhotoList().get(0),oneImW,oneImH);
+            appendImage(h.gridLayout,imageView,bean.getFootprintPhotoArray().get(0),oneImW,oneImH);
         }
         if (photoCount == 2) {
             column = 2;
             ImageView imageView = new ImageView(ctx);
-            appendImage(h.gridLayout,imageView,bean.getPhotoList().get(0),halfW,oneImH);
+            appendImage(h.gridLayout,imageView,bean.getFootprintPhotoArray().get(0),halfW,oneImH);
             imageView = new ImageView(ctx);
             imageView.setLayoutParams(marginLeft);
-            appendImage(h.gridLayout,imageView,bean.getPhotoList().get(1),halfW,oneImH);
+            appendImage(h.gridLayout,imageView,bean.getFootprintPhotoArray().get(1),halfW,oneImH);
         }
         if (photoCount == 3) {
             column = 2;
             ImageView imageView = new ImageView(ctx);
-            appendImage(h.gridLayout,imageView,bean.getPhotoList().get(0),halfW,oneImH);
+            appendImage(h.gridLayout,imageView,bean.getFootprintPhotoArray().get(0),halfW,oneImH);
 
             LinearLayout linearLayout = new LinearLayout(ctx);
             linearLayout.setLayoutParams(marginLeft);
             linearLayout.setOrientation(LinearLayout.VERTICAL);
             imageView = new ImageView(ctx);
-            appendImage(linearLayout,imageView,bean.getPhotoList().get(1),halfW,halfH);
+            appendImage(linearLayout,imageView,bean.getFootprintPhotoArray().get(1),halfW,halfH);
             imageView = new ImageView(ctx);
             imageView.setLayoutParams(marginTop);
-            appendImage(linearLayout,imageView,bean.getPhotoList().get(2),halfW,halfH);
+            appendImage(linearLayout,imageView,bean.getFootprintPhotoArray().get(2),halfW,halfH);
             h.gridLayout.addView(linearLayout);
         }
         if (photoCount >= 4) {
             column = 2;
             row = 2;
             ImageView imageView = new ImageView(ctx);
-            appendImage(h.gridLayout,imageView,bean.getPhotoList().get(0),halfW,halfH);
+            appendImage(h.gridLayout,imageView,bean.getFootprintPhotoArray().get(0),halfW,halfH);
 
             imageView = new ImageView(ctx);
             imageView.setLayoutParams(marginLeft);
-            appendImage(h.gridLayout,imageView,bean.getPhotoList().get(1),halfW,halfH);
+            appendImage(h.gridLayout,imageView,bean.getFootprintPhotoArray().get(1),halfW,halfH);
 
             imageView = new ImageView(ctx);
             imageView.setLayoutParams(marginTop);
-            appendImage(h.gridLayout,imageView,bean.getPhotoList().get(2),halfW,halfH);
+            appendImage(h.gridLayout,imageView,bean.getFootprintPhotoArray().get(2),halfW,halfH);
 
             imageView = new ImageView(ctx);
             imageView.setLayoutParams(marginLeftAndTop);
-            appendImage(h.gridLayout,imageView,bean.getPhotoList().get(2),halfW,halfH);
+            appendImage(h.gridLayout,imageView,bean.getFootprintPhotoArray().get(2),halfW,halfH);
         }
         h.photoCountTv.setText(String.valueOf(photoCount));
         h.photoCountTv.setAlpha(0.6f);

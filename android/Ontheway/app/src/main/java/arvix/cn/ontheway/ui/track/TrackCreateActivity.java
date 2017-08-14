@@ -2,21 +2,14 @@ package arvix.cn.ontheway.ui.track;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,15 +17,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.util.TypeUtils;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.pizidea.imagepicker.AndroidImagePicker;
-import com.pizidea.imagepicker.ImgLoader;
-import com.pizidea.imagepicker.UilImgLoader;
 import com.pizidea.imagepicker.Util;
 import com.pizidea.imagepicker.bean.ImageItem;
 
-import org.w3c.dom.Text;
 import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
@@ -50,17 +38,13 @@ import arvix.cn.ontheway.async.Callback;
 import arvix.cn.ontheway.async.Result;
 import arvix.cn.ontheway.bean.BaseResponse;
 import arvix.cn.ontheway.bean.QiniuBean;
-import arvix.cn.ontheway.bean.TrackBean;
-import arvix.cn.ontheway.bean.UserInfo;
 import arvix.cn.ontheway.http.ServerUrl;
 import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.service.inter.FileUploadCallBack;
-import arvix.cn.ontheway.service.inter.FileUploadService;
+import arvix.cn.ontheway.service.inter.ImageFileUploadService;
 import arvix.cn.ontheway.ui.AddressSelectActivity;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.head.HeaderHolder;
-import arvix.cn.ontheway.ui.usercenter.MyTrackDetailActivity;
-import arvix.cn.ontheway.ui.view.ListViewHolder;
 import arvix.cn.ontheway.utils.MyProgressDialog;
 import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticMethod;
@@ -89,11 +73,11 @@ public class TrackCreateActivity extends BaseActivity {
     private ImageItem addBtnItem = new ImageItem(null,null,System.currentTimeMillis());
     private ViewGroup.LayoutParams gridItemParams ;
     private RelativeLayout.LayoutParams paramsImg ;
-    FileUploadService fileUploadService;
+    ImageFileUploadService fileUploadService;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fileUploadService = OnthewayApplication.getInstahce(FileUploadService.class);
+        fileUploadService = OnthewayApplication.getInstahce(ImageFileUploadService.class);
         setContentView(R.layout.activity_track_create);
         cache = OnthewayApplication.getInstahce(CacheService.class);
         HeaderHolder head=new HeaderHolder();
@@ -114,7 +98,7 @@ public class TrackCreateActivity extends BaseActivity {
                         int countNew = countAtom.get();
                         for(int i=0;i<countNew;i++){
                             try {
-                                fileUploadService.upload(self, mAdapter.getItem(i).path, null, new FileUploadCallBack() {
+                                fileUploadService.upload(self, mAdapter.getItem(i).path,StaticVar.IMAGE_COMPRESS_SIZE_DEFAULT, null, new FileUploadCallBack() {
                                     @Override
                                     public void uploadBack(BaseResponse baseResponse) {
                                         if (baseResponse.getCode() == StaticVar.SUCCESS) {
@@ -172,7 +156,7 @@ public class TrackCreateActivity extends BaseActivity {
   }
 }*/
                         RequestParams requestParams = new RequestParams();
-                        requestParams.setUri( ServerUrl.TRACK_CREATE);
+                        requestParams.setUri( ServerUrl.FOOTPRINT_CREATE);
                         Map<String,Object> parMap = new HashMap<>();
                         parMap.put("documents",qiniuBeanList);
                         Map<String,Object> footprintMap = new HashMap<>();
@@ -196,8 +180,9 @@ public class TrackCreateActivity extends BaseActivity {
                             public void onSuccess(String result) {
                                 try {
                                     Log.i("onSuccess-->","result->"+result.toString());
-                                    StaticMethod.showToast("发布成功",self);
                                     wait.dismiss();
+                                    StaticMethod.showToast("发布成功",self);
+                                    finish();
                                 }catch (Exception e){
                                     e.printStackTrace();
                                 }

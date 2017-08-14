@@ -11,7 +11,7 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 import java.util.List;
 import arvix.cn.ontheway.R;
-import arvix.cn.ontheway.bean.ReplyBean;
+import arvix.cn.ontheway.bean.CommentBean;
 import arvix.cn.ontheway.utils.StaticMethod;
 
 /**
@@ -19,13 +19,13 @@ import arvix.cn.ontheway.utils.StaticMethod;
  * asdtiangxia@163.com
  */
 
-public class TrackDetailReplyAdapter   extends ArrayAdapter<ReplyBean> {
+public class TrackDetailReplyAdapter   extends ArrayAdapter<CommentBean> {
     Context ctx;
-    List<ReplyBean> datas;
+    List<CommentBean> datas;
     LayoutInflater mInflater;
     int layout;
 
-    public TrackDetailReplyAdapter(Context ctx, List<ReplyBean> datas) {
+    public TrackDetailReplyAdapter(Context ctx, List<CommentBean> datas) {
         super(ctx, R.layout.track_detail_reply_item);
         this.layout = R.layout.track_detail_reply_item;
         this.ctx = ctx;
@@ -37,7 +37,7 @@ public class TrackDetailReplyAdapter   extends ArrayAdapter<ReplyBean> {
         return datas.size();
     }
 
-    public ReplyBean getItem(int position) {
+    public CommentBean getItem(int position) {
         return datas.get(position);
     }
 
@@ -55,11 +55,11 @@ public class TrackDetailReplyAdapter   extends ArrayAdapter<ReplyBean> {
         } else {
             h = (ViewHolder) convertView.getTag();
         }
-        ReplyBean replyBean = getItem(position);
-        StaticMethod.setCircularHeaderImg(replyBean.getReplyUserHeader(),h.replayHeaderIv,h.replayHeaderIv.getWidth(),h.replayHeaderIv.getHeight());
-        h.replayNameTv.setText(replyBean.getReplayUserName());
-        h.replayTimeTv.setText(StaticMethod.formatDate(replyBean.getDateCreated(),"MM-dd HH:ss"));
-        h.replayContentTv.setText(StaticMethod.genLesStr(replyBean.getContent(),35));
+        CommentBean commentBean = getItem(position);
+        StaticMethod.setCircularHeaderImg(commentBean.getUserHeadImg(),h.replayHeaderIv,h.replayHeaderIv.getWidth(),h.replayHeaderIv.getHeight());
+        h.replayNameTv.setText(commentBean.getUserNickname());
+        h.replayTimeTv.setText(commentBean.getDateCreatedStr());
+        h.replayContentTv.setText(StaticMethod.genLesStr(commentBean.getCommentContent(),35));
         return convertView;
     }
 

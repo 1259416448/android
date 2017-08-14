@@ -63,6 +63,7 @@ public class ImageUtil {
             options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
             InputStream in = new FileInputStream(file);
+
             BitmapFactory.decodeStream(in, null, options);
             in.close();
         } catch (Exception e) {
@@ -159,6 +160,7 @@ public class ImageUtil {
                         b.compress(Bitmap.CompressFormat.JPEG, quality, os);
                     }
                 } catch (java.lang.OutOfMemoryError e) {
+                    e.printStackTrace();
                 }
                 scaleFactor *= .99F;
                 attempts++;
@@ -168,8 +170,10 @@ public class ImageUtil {
 
             return resultTooBig ? null : os.toByteArray();
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
             return null;
         } catch (java.lang.OutOfMemoryError e) {
+            e.printStackTrace();
             return null;
         }
     }

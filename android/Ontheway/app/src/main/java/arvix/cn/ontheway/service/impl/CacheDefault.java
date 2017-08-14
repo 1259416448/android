@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import arvix.cn.ontheway.service.inter.CacheService;
+import arvix.cn.ontheway.utils.StaticVar;
 
 /**
  * Created by asdtiang on 2017/7/18 0018.
@@ -81,7 +82,7 @@ public class CacheDefault implements CacheService {
         DiskCacheEntity entity = this.getLruDiskCache().get(key);
         if(entity!=null){
             if(entity.getTextContent()!=null){
-                Log.w(logTag,"entity.getTextContent():"+entity.getTextContent());
+               // Log.w(logTag,"entity.getTextContent():"+entity.getTextContent());
                 result = JSON.parseObject(entity.getTextContent(),t);
             }
         }
@@ -112,13 +113,31 @@ public class CacheDefault implements CacheService {
                 e.printStackTrace();
             }
         }
+        if(key!=null){
+            cacheMap.remove(key);
+        }
     }
 
     @Override
     public void clear() {
+        String address =  get(StaticVar.BAIDU_LOC_CACHE_ADDRESS);
+        Double latCache = getDouble(StaticVar.BAIDU_LOC_CACHE_LAT);
+        Double lonCache = 0.0;
+        if(latCache!=null){
+            lonCache = getDouble(StaticVar.BAIDU_LOC_CACHE_LON);
+        }
         this.getLruDiskCache().clearCacheFiles();
         try {
             x.getDb(DbConfigs.HTTP.getConfig()).dropDb();
+            if(address!=null){
+                put(StaticVar.BAIDU_LOC_CACHE_ADDRESS,address);
+            }
+            if(latCache!=null){
+                put(StaticVar.BAIDU_LOC_CACHE_LAT,latCache+"");
+            }
+            if(lonCache!=0.0){
+                put(StaticVar.BAIDU_LOC_CACHE_LON,lonCache+"");
+            }
         } catch (DbException e) {
             e.printStackTrace();
         }

@@ -35,7 +35,7 @@ public class HttpFilterDefaultImpl implements   HttpFilterInterface{
             }
             String rememberMe = cache.get(StaticVar.AUTH_REMEMBER_ME);
             if(rememberMe!=null){
-                entity.addHeader(StaticVar.AUTH_REMEMBER_ME,token);
+                entity.addHeader(StaticVar.AUTH_REMEMBER_ME,rememberMe);
             }
             // Content-Type: application/json
             if(entity.getMethod()== HttpMethod.POST){
@@ -60,12 +60,12 @@ public class HttpFilterDefaultImpl implements   HttpFilterInterface{
 
             String xAuthToken = request.getResponseHeader(StaticVar.AUTH_TOKEN);
             if(xAuthToken != null){
-                Log.i("put cache",StaticVar.AUTH_TOKEN +":" + xAuthToken);
+                Log.i("put-->AUTH_TOKEN ",StaticVar.AUTH_TOKEN +":" + xAuthToken);
                 cache.put(StaticVar.AUTH_TOKEN,xAuthToken);
             }
             String rememberMe = request.getResponseHeader(StaticVar.AUTH_REMEMBER_ME);
             if(rememberMe != null){
-                Log.i("put cache",StaticVar.AUTH_REMEMBER_ME +":" + rememberMe);
+                Log.i("put->AUTH_REMEMBER_ME ",StaticVar.AUTH_REMEMBER_ME +":" + rememberMe);
                 cache.put(StaticVar.AUTH_REMEMBER_ME,rememberMe);
             }
         }

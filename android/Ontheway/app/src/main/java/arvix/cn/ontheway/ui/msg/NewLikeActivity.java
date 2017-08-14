@@ -20,7 +20,7 @@ import arvix.cn.ontheway.async.AsyncUtil;
 import arvix.cn.ontheway.async.Callback;
 import arvix.cn.ontheway.async.Result;
 import arvix.cn.ontheway.bean.MsgBean;
-import arvix.cn.ontheway.bean.ReplyBean;
+import arvix.cn.ontheway.bean.CommentBean;
 import arvix.cn.ontheway.data.NewReplyData;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.head.HeaderHolder;
@@ -36,7 +36,7 @@ import arvix.cn.ontheway.utils.UIUtils;
 public class NewLikeActivity extends BaseActivity implements AdapterView.OnItemClickListener, PullToRefreshBase.OnRefreshListener2<ListView>  {
 
     private NewLikeAdapter adapter;
-    private List<ReplyBean> dataList;
+    private List<CommentBean> dataList;
     private ListViewHolder listHolder;
 
     @Override
@@ -60,18 +60,18 @@ public class NewLikeActivity extends BaseActivity implements AdapterView.OnItemC
 
 
     private void initData(final boolean refresh) {
-        AsyncUtil.goAsync(new Callable<Result<List<ReplyBean>>>() {
+        AsyncUtil.goAsync(new Callable<Result<List<CommentBean>>>() {
 
             @Override
-            public Result<List<ReplyBean>> call() throws Exception {
-                Result<List<ReplyBean>> ret = new Result<>();
+            public Result<List<CommentBean>> call() throws Exception {
+                Result<List<CommentBean>> ret = new Result<>();
                 ret.setData(NewReplyData.genData());
                 return ret;
             }
-        }, new Callback<Result<List<ReplyBean>>>() {
+        }, new Callback<Result<List<CommentBean>>>() {
 
             @Override
-            public void onHandle(Result<List<ReplyBean>> result) {
+            public void onHandle(Result<List<CommentBean>> result) {
                 if (result.ok()) {
                     if (refresh) {
                         dataList.clear();

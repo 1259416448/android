@@ -13,7 +13,7 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 import java.util.List;
 import arvix.cn.ontheway.R;
-import arvix.cn.ontheway.bean.TrackBean;
+import arvix.cn.ontheway.bean.FootPrintBean;
 import arvix.cn.ontheway.utils.StaticMethod;
 
 /**
@@ -21,13 +21,13 @@ import arvix.cn.ontheway.utils.StaticMethod;
  * asdtiangxia@163.com
  */
 
-public class TrackListAdapter  extends ArrayAdapter<TrackBean> {
+public class TrackListAdapter  extends ArrayAdapter<FootPrintBean> {
     Context ctx;
-    List<TrackBean> dataList;
+    List<FootPrintBean> dataList;
     LayoutInflater mInflater;
     int layout;
 
-    public TrackListAdapter(@NonNull Context context, @LayoutRes int resource, List<TrackBean> dataList) {
+    public TrackListAdapter(@NonNull Context context, @LayoutRes int resource, List<FootPrintBean> dataList) {
         super(context, resource);
         this.layout = resource;
         this.ctx = context;
@@ -38,7 +38,7 @@ public class TrackListAdapter  extends ArrayAdapter<TrackBean> {
         return dataList.size();
     }
 
-    public TrackBean getItem(int position) {
+    public FootPrintBean getItem(int position) {
         return dataList.get(position);
     }
 
@@ -60,15 +60,15 @@ public class TrackListAdapter  extends ArrayAdapter<TrackBean> {
         } else {
             h = (ViewHolder) convertView.getTag();
         }
-        TrackBean bean = getItem(position);
+        FootPrintBean bean = getItem(position);
 
         h.contentTv.setText(StaticMethod.genLesStr(bean.getFootprintContent(),30));
         h.addressTv.setText(StaticMethod.genLesStr(bean.getFootprintAddress(),20));
         StaticMethod.setCircularHeaderImg(bean.getUserHeadImg(),h.userHeader,h.userHeader.getWidth(),h.userHeader.getHeight());
         h.trackPhotoIv.setVisibility(View.GONE);
-        if(!bean.getPhotoList().isEmpty()){
+        if(!bean.getFootprintPhotoArray().isEmpty()){
             h.trackPhotoIv.setVisibility(View.VISIBLE);
-            StaticMethod.setImg(bean.getPhotoList().get(0),h.trackPhotoIv,h.trackPhotoIv.getWidth(),h.trackPhotoIv.getHeight());
+            StaticMethod.setImg(bean.getFootprintPhotoArray().get(0),h.trackPhotoIv,h.trackPhotoIv.getWidth(),h.trackPhotoIv.getHeight());
         }
         h.nicknameTv.setText(bean.getUserNickname());
         h.timeTv.setText(bean.getDateCreated()+"");

@@ -54,6 +54,7 @@
 @property (nonatomic,strong) OTWFootprintSearchParams *footprintSearchParams;
 @property (nonatomic,strong) NSDictionary *reponseCacheData;
 @property (nonatomic,strong) NSMutableArray *currentAnnotations;
+@property (nonatomic,strong) NSMutableArray *previousAnnotations;
 @end
 
 @implementation OTWPlaneMapViewController
@@ -89,6 +90,17 @@
     //是否支持地图旋转
     _mapView.rotateEnabled = NO;
     [_mapView setZoomEnabled:YES];
+    //设置定位的状态
+    _mapView.userTrackingMode = BMKUserTrackingModeFollow;
+    BMKLocationViewDisplayParam *userlocationStyle = [[BMKLocationViewDisplayParam alloc] init];
+    //跟随态旋转角度是否生效
+    userlocationStyle.isRotateAngleValid = NO;
+    //精度圈是否显示
+    userlocationStyle.isAccuracyCircleShow = NO;
+    //定位图标
+    userlocationStyle.locationViewImgName = @"zj_position";
+    //更新参样式信息
+    [_mapView updateLocationViewWithParam:userlocationStyle];
     //设置缩放级别为16级，3~19
     [_mapView setZoomLevel:16];
     self.view = _mapView;
@@ -260,9 +272,6 @@
         }
         
         NSMutableArray *footprintModels = [OTWFootprintListModel mj_objectArrayWithKeyValuesArray:result[@"body"][@"content"]];
-        if (footprintModels.count == 0) {
-            return;
-        }
         [self assembleAnnotation:footprintModels];
     }];
 }
@@ -331,14 +340,19 @@
 #pragma mark annotations操作
 - (void)assembleAnnotation:(NSMutableArray<OTWFootprintListModel*>*)footprints
 {
+    if (footprints.count == 0) {
+        return;
+    }
     if (!self.currentAnnotations) {
         self.currentAnnotations = [NSMutableArray array];
     }
-    if (self.currentAnnotations && self.currentAnnotations.count > 0) {
-        [self removeAllAnnotations];
-    }
+    self.previousAnnotations = [self.currentAnnotations copy];
+    
     for (OTWFootprintListModel *footprint in footprints) {
         [self setAnnotations:footprint];
+    }
+    if (self.previousAnnotations && self.previousAnnotations.count > 0) {
+        [self removeAllAnnotations];
     }
 }
 
@@ -361,7 +375,7 @@
 - (void)removeAllAnnotations
 {
     NSArray *annotations = [NSArray arrayWithArray:self.mapView.annotations];
-    [self.mapView removeAnnotations:annotations];
+    [self.mapView removeAnnotations:self.previousAnnotations];
 }
 
 #pragma mark delegate方法
@@ -393,6 +407,14 @@
     UIImage*image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
+}
+
+#pragma mark 获取地图中心点
+- (void)mapView:(BMKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
+{
+    BMKCoordinateRegion region;
+    CLLocationCoordinate2D centerCoordinate = mapView.region.center;
+    region.center = centerCoordinate;
 }
 
 #pragma mark 根据anntation生成对应的View
