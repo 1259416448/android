@@ -10,7 +10,9 @@
 #import "OTWLaunchViewController.h"
 #import "OTWUserModel.h"
 
-@interface AppDelegate ()
+#define UMAppKey @"598c217d8f4a9d55d80004f6"
+
+@interface AppDelegate ()<UNUserNotificationCenterDelegate>
 
 @end
 
@@ -30,8 +32,33 @@
     [IQKeyboardManager sharedManager].enableAutoToolbar = NO;
     [IQKeyboardManager sharedManager].shouldResignOnTouchOutside = YES;
     
+    //配置友盟推送
+    [self configureUMessageWithLaunchOptions:launchOptions];
+    
     [_window makeKeyAndVisible];
     return YES;
+}
+
+- (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+{
+    //关闭友盟自带弹出框
+    [UMessage setAutoAlert:NO];
+    
+    [UMessage didReceiveRemoteNotification:userInfo];
+    
+    self.userInfo = userInfo;
+    
+    //定制自定义弹出框
+    if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"测试" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil];
+        [alertView show];
+    }
+}
+
+- (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+    DLog(@"deviceToken%@",[[[[deviceToken description] stringByReplacingOccurrencesOfString:@"<" withString:@""]stringByReplacingOccurrencesOfString:@">" withString:@""]stringByReplacingOccurrencesOfString:@" " withString:@""]);
+    [UMessage registerDeviceToken:deviceToken];
 }
 
 //后台打开
@@ -78,6 +105,67 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
     DLog(@"applicationWillTerminate");
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+- (void)configureUMessageWithLaunchOptions:(NSDictionary*)launchOptions
+{
+    //设置AppKey & launchOptions
+    [UMessage startWithAppkey:UMAppKey launchOptions:launchOptions];
+    //初始化
+    [UMessage registerForRemoteNotifications];
+    //开启log
+    [UMessage setLogEnabled:YES];
+    //检查是否为ios 10.0以上版本
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 10.0) {
+        
+    } else {
+        UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+        center.delegate = self;
+        UNAuthorizationOptions types10 = UNAuthorizationOptionBadge | UNAuthorizationOptionAlert | UNAuthorizationOptionSound;
+        [center requestAuthorizationWithOptions:types10 completionHandler:^(BOOL granted, NSError * _Nullable error) {
+            if (granted) {
+                //点击允许
+            } else {
+                //点击不允许
+            }
+        }];
+        
+    }
+}
+
+#pragma mark iOS10新增：处理前台收到通知的代理方法
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler
+{
+    NSDictionary *userInfo = notification.request.content.userInfo;
+    if ([notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
+        //应用处于前台时的远程推送接受
+        //关闭友盟自带的弹出框
+        [UMessage setAutoAlert:NO];
+        //必须加这句代码
+        [UMessage didReceiveRemoteNotification:userInfo];
+    } else {
+        //应用处于前台时的本地推送接受
+    }
+    //当应用处于前台时提示设置，需要哪个可以设置哪一个
+    completionHandler(UNAuthorizationOptionSound | UNAuthorizationOptionBadge | UNAuthorizationOptionAlert);
+}
+
+#pragma mark iOS10新增：处理后台点击通知的代理方法
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler
+{
+    NSDictionary *userInfo = response.notification.request.content.userInfo;
+    if ([response.notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
+        //应用处于后台时的远程推送接受
+        //必须加这句代码
+        [UMessage didReceiveRemoteNotification:userInfo];
+    } else {
+        //应用处于后台时的本地推送接受
+    }
+}
+
+- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    [UMessage sendClickReportForRemoteNotification:self.userInfo];
 }
 
 

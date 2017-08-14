@@ -22,4 +22,8 @@ sys-config:
 agile-user-remind-cache:
   ttl: 15000
   maxIdleTime: 15000
+otw-new-message-count-cache:
+  ttl: 7200000
+  maxIdleTime: 3600000
+
 

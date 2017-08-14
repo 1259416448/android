@@ -17,13 +17,17 @@ import javax.validation.constraints.NotNull;
 @Table(name = "otw_like_records")
 public class LikeRecords extends BaseEntity<Long> {
 
-    //用户ID
+    //点赞用户ID
     @NotNull(message = "userId is not null")
     private Long userId;
 
     //足迹ID
     @NotNull(message = "footprintId is not null")
     private Long footprintId;
+
+    //足迹发布用户ID
+    @NotNull(message = "footprintUserId is not null")
+    private Long footprintUserId;
 
     /**
      * checkLack
@@ -47,5 +51,13 @@ public class LikeRecords extends BaseEntity<Long> {
 
     public void setFootprintId(Long footprintId) {
         this.footprintId = footprintId;
+    }
+
+    public Long getFootprintUserId() {
+        return footprintUserId;
+    }
+
+    public void setFootprintUserId(Long footprintUserId) {
+        this.footprintUserId = footprintUserId;
     }
 }

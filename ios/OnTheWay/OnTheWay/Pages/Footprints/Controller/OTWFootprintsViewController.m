@@ -32,9 +32,11 @@
 @interface OTWFootprintsViewController () <UITableViewDataSource,UITableViewDelegate,BMKLocationServiceDelegate,UIAlertViewDelegate>
 
 @property (nonatomic,strong) UITableView *footprintTableView;
-@property (nonatomic,strong) UIView * ARdituImageView;
-@property (nonatomic,strong) UIView * fabuImageView;
-@property (nonatomic,strong) UIView * pingmianImageView;
+
+@property(nonatomic,strong) UIButton *cameraButton;
+@property(nonatomic,strong) UIButton *arListButton;
+@property(nonatomic,strong) UIButton *planeMapButton;
+
 @property (nonatomic,strong) OTWFootprintSearchParams *footprintSearchParams;
 @property (nonatomic,strong) BMKLocationService *locService;  //定位
 @property (nonatomic,copy) BMKUserLocation *userLocation;
@@ -142,11 +144,11 @@
     self.footprintTableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreFootprints:)];
     [self.view addSubview:self.footprintTableView];
     
-    [self.view addSubview:self.ARdituImageView];
+    [self.view addSubview:self.cameraButton];
     
-    [self.view addSubview:self.fabuImageView];
+    [self.view addSubview:self.arListButton];
     
-    [self.view addSubview:self.pingmianImageView];
+    [self.view addSubview:self.planeMapButton];
     
     [self.view addSubview:self.firstLoadingView];
     
@@ -252,64 +254,62 @@
     return _footprintTableView;
 }
 
--(UIView*)ARdituImageView{
-    if(!_ARdituImageView){
-        _ARdituImageView = [[UIControl alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-15-50-50-4, SCREEN_HEIGHT-30-49, 50, 50)] ;
-        _ARdituImageView.backgroundColor = [UIColor clearColor];
-        [(UIControl *)_ARdituImageView addTarget:self action:@selector(ARdituClick) forControlEvents:UIControlEventTouchUpInside];
-        UIImageView *imgARditu=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
-        imgARditu.image=[UIImage imageNamed:@"ar_ARditu"];
-        [_ARdituImageView addSubview:imgARditu];
+- (UIButton*)cameraButton
+{
+    if (!_cameraButton) {
+        _cameraButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _cameraButton.backgroundColor = [UIColor clearColor];
+        CGFloat cameraButtonX = SCREEN_WIDTH - 50*3 - 15 - 7*2;
+        CGFloat cameraButtonY = SCREEN_HEIGHT - 15*2 - 50;
+        self.cameraButton.frame = CGRectMake(cameraButtonX, cameraButtonY, 50, 50);
+        [_cameraButton setImage:[UIImage imageNamed:@"ar_fabu"] forState:UIControlStateNormal];
+        [_cameraButton addTarget:self action:@selector(toReleaseFootprintView) forControlEvents:UIControlEventTouchUpInside];
     }
-    return _ARdituImageView;
+    return _cameraButton;
 }
-
--(UIView*)fabuImageView{
-    if(!_fabuImageView){
-        _fabuImageView = [[UIControl alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-15-50-50-50-8, SCREEN_HEIGHT-30-49, 50, 50)] ;
-        _fabuImageView.backgroundColor = [UIColor clearColor];
-        [(UIControl *)_fabuImageView addTarget:self action:@selector(fubuClick) forControlEvents:UIControlEventTouchUpInside];
-        UIImageView *imgfabu=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
-        imgfabu.image=[UIImage imageNamed:@"ar_fabu"];
-        [_fabuImageView addSubview:imgfabu];
+- (UIButton*)arListButton
+{
+    if (!_arListButton) {
+        _arListButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _arListButton.backgroundColor = [UIColor clearColor];
+        CGFloat arListButtonX = CGRectGetMaxX(self.cameraButton.frame) + 7;
+        self.arListButton.frame = CGRectMake(arListButtonX, self.cameraButton.MinY, 50, 50);
+        [_arListButton setImage:[UIImage imageNamed:@"ar_ARditu"] forState:UIControlStateNormal];
+        [_arListButton addTarget:self action:@selector(toFootprintListView) forControlEvents:UIControlEventTouchUpInside];
     }
-    return _fabuImageView;
+    return _arListButton;
 }
 
--(UIView*)pingmianImageView{
-    if(!_pingmianImageView){
-        _pingmianImageView = [[UIControl alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-15-50, SCREEN_HEIGHT-30-49, 50, 50)] ;
-        _pingmianImageView.backgroundColor = [UIColor clearColor];
-        [(UIControl *)_pingmianImageView addTarget:self action:@selector(pingmianClick) forControlEvents:UIControlEventTouchUpInside];
-        UIImageView *imgpingmian=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
-        imgpingmian.image=[UIImage imageNamed:@"ar_pingmian"];
-        [_pingmianImageView addSubview:imgpingmian];
-        
+- (UIButton*)planeMapButton
+{
+    if (!_planeMapButton) {
+        _planeMapButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _planeMapButton.backgroundColor = [UIColor clearColor];
+        CGFloat planeMapButtonX = CGRectGetMaxX(self.arListButton.frame) + 7;
+        self.planeMapButton.frame = CGRectMake(planeMapButtonX, self.cameraButton.MinY, 50, 50);
+        [_planeMapButton setImage:[UIImage imageNamed:@"ar_pingmian"] forState:UIControlStateNormal];
+        [_planeMapButton addTarget:self action:@selector(planeMapButtonClick) forControlEvents:UIControlEventTouchUpInside];
     }
-    return _pingmianImageView;
+    return _planeMapButton;
 }
 
--(void)ARdituClick{
-    DLog(@"我点击了ARditu");
-//    [self.navigationController pushViewController:[OTWLaunchManager sharedManager].arViewController animated:YES];
-    [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexAR];
+#pragma mark 跳转至足迹列表页面
+- (void)toFootprintListView
+{
+    [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexFootprints];
 }
 
--(void)fubuClick{
-    //验证登陆信息
-    
+#pragma mark 跳转至足迹发布页面
+- (void)toReleaseFootprintView
+{
     if(![[OTWLaunchManager sharedManager] showLoginViewWithController:self completion:nil]){
         OTWFootprintReleaseViewController *releaseVC = [[OTWFootprintReleaseViewController alloc] init];
         [self.navigationController pushViewController:releaseVC animated:YES];
     };
 }
 
--(void)toPlaneMap
+-(void)planeMapButtonClick
 {
-    OTWPlaneMapViewController *planeMapVC = [[OTWPlaneMapViewController alloc] init];
-    [self.navigationController pushViewController:planeMapVC animated:NO];
-}
--(void)pingmianClick{
     DLog(@"我点击了pingmianClick");
     OTWPlaneMapViewController *planeMapVC = [[OTWPlaneMapViewController alloc] init];
     [self.navigationController pushViewController:planeMapVC animated:NO];

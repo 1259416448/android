@@ -23,6 +23,9 @@ public class FootPrintBean implements Serializable{
     private String userHeadImg;
     private String footprintPhoto;
     private String userNickname;
+    private int footprintCommentNum;
+    private int footprintLikeNum;
+    private long currentTime;
     private double latitude;
     private double longitude;
     private long userId;
@@ -162,5 +165,29 @@ public class FootPrintBean implements Serializable{
 
     public void setComments(List<CommentBean> comments) {
         this.comments = comments;
+    }
+
+    public int getFootprintCommentNum() {
+        return footprintCommentNum;
+    }
+
+    public void setFootprintCommentNum(int footprintCommentNum) {
+        this.footprintCommentNum = footprintCommentNum;
+    }
+
+    public int getFootprintLikeNum() {
+        return footprintLikeNum;
+    }
+
+    public void setFootprintLikeNum(int footprintLikeNum) {
+        this.footprintLikeNum = footprintLikeNum;
+    }
+
+    public long getCurrentTime() {
+        return currentTime;
+    }
+
+    public void setCurrentTime(long currentTime) {
+        this.currentTime = currentTime;
     }
 }

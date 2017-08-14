@@ -16,6 +16,7 @@ typedef enum : NSUInteger {
     OTWTabBarSelectedIndexAR,         // AR
     OTWTabBarSelectedIndexNews,       // 消息
     OTWTabBarSelectedIndexPersonal,   // 我的
+    OTWTabBarSelectedIndexFootprintList, //足迹列表
 } OTWTabBarSelectedIndex;
 
 @interface OTWLaunchManager : NSObject

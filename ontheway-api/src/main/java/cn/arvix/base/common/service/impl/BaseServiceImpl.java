@@ -176,6 +176,17 @@ public abstract class BaseServiceImpl<M extends AbstractEntity, ID extends Seria
     }
 
     /**
+     * 按照主键查询
+     * 如果查询不存在，抛出 SearchException 异常
+     *
+     * @param id 主键
+     * @return 返回id对应的实体
+     */
+    public M findOneWithNoCheck(ID id) {
+        return baseRepository.findOne(id);
+    }
+
+    /**
      * 按照主键查询 返回JSONResult
      *
      * @param id ID
@@ -270,10 +281,11 @@ public abstract class BaseServiceImpl<M extends AbstractEntity, ID extends Seria
 
     /**
      * 按条件分页并排序查询实体 但 不统计总数
+     *
      * @param searchable
      * @return
      */
-    public Page<M> findAllWithNoCount(Searchable searchable){
+    public Page<M> findAllWithNoCount(Searchable searchable) {
         return baseRepository.findAllNoCount(searchable);
     }
 

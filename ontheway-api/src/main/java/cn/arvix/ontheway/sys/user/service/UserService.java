@@ -11,6 +11,7 @@ import cn.arvix.base.common.service.impl.BaseServiceImpl;
 import cn.arvix.base.common.utils.*;
 import cn.arvix.ontheway.ducuments.entity.Document;
 import cn.arvix.ontheway.ducuments.service.DocumentService;
+import cn.arvix.ontheway.message.service.NewMessageCountService;
 import cn.arvix.ontheway.sys.config.service.ConfigService;
 import cn.arvix.ontheway.sys.dto.*;
 import cn.arvix.ontheway.sys.organization.entity.Organization;
@@ -83,6 +84,13 @@ public class UserService extends BaseServiceImpl<User, Long> {
     @Autowired
     public void setDocumentService(DocumentService documentService) {
         this.documentService = documentService;
+    }
+
+    private NewMessageCountService newMessageCountService;
+
+    @Autowired
+    public void setNewMessageCountService(NewMessageCountService newMessageCountService) {
+        this.newMessageCountService = newMessageCountService;
     }
 
     private final Cache authCache;
@@ -412,10 +420,10 @@ public class UserService extends BaseServiceImpl<User, Long> {
     public JSONResult updateUserName(User user) {
         User user1 = webContextUtils.getCheckCurrentUser();
         if (StringUtils.isEmpty(user.getName())) return JsonUtil.getFailure("name is not null");
-        if(user.getName().length()>20) return JsonUtil.getFailure("name length between 1 and 20 ");
+        if (user.getName().length() > 20) return JsonUtil.getFailure("name length between 1 and 20 ");
         user1.setName(user.getName());
         super.update(user1);
-        return JsonUtil.getSuccess(CommonContact.UPDATE_SUCCESS,CommonContact.UPDATE_SUCCESS);
+        return JsonUtil.getSuccess(CommonContact.UPDATE_SUCCESS, CommonContact.UPDATE_SUCCESS);
     }
 
     /**
@@ -628,7 +636,7 @@ public class UserService extends BaseServiceImpl<User, Long> {
      * @return 注册结果
      */
     @Transactional(rollbackFor = Exception.class)
-    public JSONResult registerByMobile(String mobile) {
+    public synchronized JSONResult registerByMobile(String mobile) {
         // 检查手机号是否使用过
         User user = getUserRepository().findByMobilePhoneNumber(mobile);
         if (user != null) {
@@ -644,13 +652,15 @@ public class UserService extends BaseServiceImpl<User, Long> {
         user.setUserType(UserType.user);
         //设置默认头像
         Random random = new Random();
-        user.setHeadImg("b"+random.nextInt(14)+".jpg");
-        user.setHeadImgYuan("b"+random.nextInt(14)+".jpg");
+        user.setHeadImg("b" + random.nextInt(14) + ".jpg");
+        user.setHeadImgYuan("b" + random.nextInt(14) + ".jpg");
         this.save_(user);
         //获取平台的用户部门
         Organization organization = organizationService.getUserOrg();
         //建立用户与部门之间的关系
         removeOrAddOrganization(user.getId(), organization.getId());
+        //创建消息记录
+        newMessageCountService.create(user);
         return JsonUtil.getSuccess("注册成功", "register.success", user.toSimpleMap());
     }
 
@@ -685,25 +695,27 @@ public class UserService extends BaseServiceImpl<User, Long> {
 
     /**
      * 更新用不性别
+     *
      * @param user 用户数据
      * @return 更新结果
      */
-    public JSONResult updateGender(User user){
+    public JSONResult updateGender(User user) {
         if (user.getGender() == null) return JsonUtil.getFailure("gender is not null");
         User user1 = webContextUtils.getCheckCurrentUser();
         user1.setGender(user.getGender());
         super.update(user1);
-        return JsonUtil.getSuccess(CommonContact.UPDATE_SUCCESS,CommonContact.UPDATE_SUCCESS);
+        return JsonUtil.getSuccess(CommonContact.UPDATE_SUCCESS, CommonContact.UPDATE_SUCCESS);
     }
 
     /**
      * 更新用户头像
      * 1、保存头像数据到document中
      * 2、修改现有头像数据
+     *
      * @param document 头像数据
      * @return 操作结果
      */
-    public JSONResult updateHeaderImg(Document document){
+    public JSONResult updateHeaderImg(Document document) {
         User user1 = webContextUtils.getCheckCurrentUser();
         document.setParentId(user1.getId());
         document.setSystemModule(SystemModule.user);
@@ -711,7 +723,19 @@ public class UserService extends BaseServiceImpl<User, Long> {
         user1.setHeadImgYuan(document.getNewName());
         user1.setHeadImg(document.getNewName());
         super.update(user1);
-        return JsonUtil.getSuccess(CommonContact.UPDATE_SUCCESS,CommonContact.UPDATE_SUCCESS,user1.toSimpleMap());
+        return JsonUtil.getSuccess(CommonContact.UPDATE_SUCCESS, CommonContact.UPDATE_SUCCESS, user1.toSimpleMap());
+    }
+
+    /**
+     * 根据用户ID 获取 用户数据
+     *
+     * @param userIds 用户ID数据
+     * @return
+     */
+    public List<User> findUsersByIds(Set<Long> userIds) {
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("id_in", userIds);
+        return super.findAllWithNoPageNoSort(Searchable.newSearchable(params));
     }
 
 }

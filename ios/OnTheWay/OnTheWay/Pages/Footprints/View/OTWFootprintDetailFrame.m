@@ -33,7 +33,11 @@
     
     CGSize textSize = [self sizeWithString:_footprintDetailModel.footprintContent font:footprintContentFont maxSize:CGSizeMake(SCREEN_WIDTH-padding*2, 2000)];
     _contentH = textSize.height;
-    _cellHeight = textSize.height+paddingTop+paddingBottom + _photoViewH + 20;
+    if (_footprintDetailModel.footprintCommentNum > 0) {
+        _cellHeight = textSize.height+paddingTop+paddingBottom + _photoViewH + 20 + 208;
+    } else {
+        _cellHeight = textSize.height+paddingTop+paddingBottom + _photoViewH + 20 + 36;
+    }
     
     if(_photoViewH == 0){
         _cellHeight -= 10;
