@@ -81,7 +81,6 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
     private TextView addressTv;
     @ViewInject(R.id.to_map_btn)
     private Button toMapBtn;
-
     @ViewInject(R.id.to_ar_btn)
     private Button toArBtn;
     @ViewInject(R.id.r_100m)

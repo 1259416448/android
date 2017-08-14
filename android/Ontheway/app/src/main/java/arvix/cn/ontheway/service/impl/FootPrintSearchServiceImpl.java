@@ -85,6 +85,7 @@ public class FootPrintSearchServiceImpl implements FootPrintSearchService {
                             paginationReturn.setContent(footPrintBeanList);
                         }
                         Log.i("trackSearchNotify-->", "trackSearchNotify------------------------->" );
+                        trackSearchVo.setCurrentTime(paginationReturn.getCurrentTime());
                         trackSearchNotify.trackSearchDataFetchSuccess(trackSearchVo , paginationReturn);
                     } else if (response.getCode() == StaticVar.ERROR) {
                         StaticMethod.showToast("获取数据失败", context);
