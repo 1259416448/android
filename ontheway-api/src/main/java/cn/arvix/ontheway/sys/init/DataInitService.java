@@ -124,6 +124,17 @@ public class DataInitService implements ApplicationContextAware {
         scheduleJob.setTargetMethod("delete");
         quartzJobUtil.addJob(scheduleJob);
 
+        scheduleJob = new ScheduleJob();
+        scheduleJob.setJobName("newMessageCountPolling");
+        scheduleJob.setJobId("newMessageCountPolling");
+        scheduleJob.setJobGroup("messageCount");
+        scheduleJob.setJobStatus("1");
+        scheduleJob.setDesc("定时任务，每10秒执行一次，检查需要删除的足迹数据");
+        scheduleJob.setCronExpression("0/10 * * * * ? ");
+        scheduleJob.setTargetObject("newMessageCountService");
+        scheduleJob.setTargetMethod("consumer");
+        quartzJobUtil.addJob(scheduleJob);
+
     }
 
     private void initSysConfig() throws Exception {

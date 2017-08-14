@@ -85,4 +85,6 @@ public interface BaseRepository<M, ID extends Serializable> extends JpaRepositor
     Class<M> getEntityClass();
 
     String getEntityName();
+
+    void clear();
 }

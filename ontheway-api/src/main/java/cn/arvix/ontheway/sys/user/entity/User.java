@@ -91,7 +91,7 @@ public class User extends BaseEntity<Long> implements LogicDeleteable {
     /**
      * 用户 组织机构 工作职务关联表
      */
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)//集合缓存
     @ApiModelProperty(hidden = true)
     //@NotFound(action = NotFoundAction.IGNORE)

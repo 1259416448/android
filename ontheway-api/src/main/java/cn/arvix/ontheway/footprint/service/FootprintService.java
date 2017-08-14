@@ -31,10 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author Created by yangyang on 2017/7/26.
@@ -168,7 +165,14 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
             Page page = listSearch(number, size, currentTime, params, urlFix);
             return JsonUtil.getSuccess(CommonContact.FETCH_SUCCESS, CommonContact.FETCH_SUCCESS, page);
         } else if (SearchType.map.equals(type)) { //地图抓取数据，每次默认获取30条数据，默认按时间先后排序
-            Page page = mapSearch(number, size, distance, currentTime, params, urlFix);
+            if (SearchDistance.one.equals(searchDistance)) {
+                distance = 0.1;
+            } else if (SearchDistance.two.equals(searchDistance)) {
+                distance = 0.5;
+            } else if (SearchDistance.three.equals(searchDistance)) {
+                distance = 1.0;
+            }
+            Page page = mapSearch(number, size, distance, currentTime, time, params, urlFix);
             return JsonUtil.getSuccess(CommonContact.FETCH_SUCCESS, CommonContact.FETCH_SUCCESS, page);
         } else if (SearchType.ar.equals(type)) { //默认按时间先后顺序排序
             Page page = arSearch(number, size, searchDistance, time, currentTime, params, urlFix);
@@ -220,12 +224,23 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
      * 加载map中可以展示的数据
      */
     private Page mapSearch(Integer number, Integer size,
-                           Double distance, Long currentTime,
+                           Double distance, Long currentTime, FootprintService.SearchTime time,
                            Map<String, Object> params, String urlFix) {
         if (size == null) size = 30;
         if (distance == null) distance = 1.5;
         if (distance > 10.0) distance = 10.0;
         params.put("distance", distance);//检索半径
+        Long minTime = null;
+        if (SearchTime.oneDay.equals(time)) {
+            minTime = currentTime - TimeMaker.ONE_DAY;
+        } else if (SearchTime.sevenDay.equals(time)) {
+            minTime = currentTime - 7 * TimeMaker.ONE_DAY;
+        } else if (SearchTime.oneMonth.equals(time)) {
+            minTime = currentTime - TimeMaker.ONE_MONTH;
+        }
+        if (minTime != null) {
+            params.put("dateCreated_gte", new Date(minTime));
+        }
         Searchable searchable = Searchable.newSearchable(params, new PageRequest(number, size),
                 new Sort(Sort.Direction.DESC, "dateCreated"));
         Page<Footprint> page = super.findAll(searchable);
@@ -424,8 +439,8 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
         Map<String, Object> params = Maps.newHashMap();
         params.put("ifDelete_eq", Boolean.TRUE);
         //设置删除后的数据只能保存一天，一天后定时任务会自动清空
-        params.put("dateCreated_lt", new Date(System.currentTimeMillis() - TimeMaker.ONE_DAY));
-        List<Footprint> footprints = super.findAll(Searchable.newSearchable(params, new PageRequest(0, 10))).getContent();
+        params.put("lastUpdated_lt", new Date(System.currentTimeMillis() - TimeMaker.ONE_DAY));
+        List<Footprint> footprints = super.findAllWithNoCount(Searchable.newSearchable(params, new PageRequest(0, 10))).getContent();
         if (footprints != null && footprints.size() > 0) {
             List<Long> footprintIds = Lists.newArrayListWithCapacity(footprints.size());
             footprints.forEach(x -> footprintIds.add(x.getId()));
@@ -460,7 +475,7 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
         int value = 1;
         if (likeRecordsService.countByUserIdAndFootprintId(user.getId(), id) == 0) {
             //增加点赞
-            likeRecordsService.createByUserIdAndFootprintId(user.getId(), id);
+            likeRecordsService.createByUserIdAndFootprintId(user.getId(), id, footprint.getUser().getId());
         } else {
             //删除点赞
             likeRecordsService.deleteByUserIdAndFootprintId(user.getId(), id);
@@ -575,6 +590,18 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
             dayList.add(detailDTO);
         });
         return list;
+    }
+
+    /**
+     * 通过足迹ID获取足迹数据
+     *
+     * @param footprintIds 足迹ID数据
+     * @return footprint list
+     */
+    public List<Footprint> findFootprintByIds(Set<Long> footprintIds) {
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("id_in", footprintIds);
+        return super.findAllWithNoPageNoSort(Searchable.newSearchable(params));
     }
 
     //检索的几种类型

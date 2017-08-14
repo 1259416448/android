@@ -131,7 +131,9 @@ static CGFloat otwCustomTabBarHeight = 49.0;
         // 对中间按钮特殊处理
         if (i == 2) {
             item.type = OTWTabBarItemTypeImageFlow;
-        } else {
+        } else if (i > 4) {
+            item.type = OTWTabBarItemTypeHidden;
+        }else{
             item.type = type;
         }
         

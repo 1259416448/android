@@ -157,17 +157,20 @@
     self.locationBtton_1000m.frame = CGRectMake(locationBtton_1000mX, locationButtonY, 45, 35);
     [self.view insertSubview:self.locationBtton_1000m aboveSubview:self.presenter];
     
-    if ([ CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
-        [self initCLLocationManager];
-        if(_locService){
-            _locService.delegate = nil;
-            _locService = nil;
-        }
-        return;
-    }
+//    if ([ CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
+//        [self initCLLocationManager];
+//        if(_locService){
+//            _locService.delegate = nil;
+//            _locService = nil;
+//        }
+//        return;
+//    }
     
     //开始定位服务
-    [_locService startUserLocationService];
+    //定位信息
+    if (!([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied)) {
+        [_locService startUserLocationService];
+    }
     
 //    UIButton *nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
 //    nextButton.frame = CGRectMake(SCREEN_WIDTH-80, 200, 80, 80);

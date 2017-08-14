@@ -94,7 +94,7 @@
 - (void)setupRadarImages
 {
     [self addSubview:self.radarImageView];
-    
+
 }
 
 - (void)setupAnnotations:(NSArray *)annotations
@@ -103,7 +103,7 @@
     // note2 所有的点都必须包含在雷达圆内， 则需要计算出point点到中心原点(40,40)的距离. screenDistanceFromOrigin = distanceFromUser*Radius/maxDistance
     // note3 如果point点到原点的距离大于半径(即超出maxDistance)，则不予显示。
     // note4 根据三角函数计算出每个点对应的pointX和pointY sin(a)=对边/斜边 注意: 在iOS系统中，a代表的是弧度，不是角度。  因此需要先把角度转换为弧度。
-    
+
     // 对annotation排序
     NSArray *sortedAnnotationViews = [annotations sortedArrayUsingComparator:^(id obj1, id obj2){
         
@@ -129,7 +129,7 @@
     
     // 比较两点是否相交， 相交的话，x，y分别+1
     CGRect rect2 = CGRectZero;
-    
+
     for (MCYARAnnotation *annotation in sortedAnnotationViews) {
 
         double pointDistance = Radius * annotation.distanceFromUser/self.maxDistance;
@@ -142,22 +142,22 @@
          1. 如下代码等同以上两行代码。 可以通过以下代码获取思路。
          2. sin(a) = 对边 / 斜边   cos(a) = 邻边 / 斜边  a代表的弧度(这点很重要)
          3. 以中心原点划分x和y坐标。 得到四个区域。  角度的取值范围是0-90. 超过90度的区域，需要减去对应的角度(90/180/270)。
-         
+
         double azimuth = annotation.azimuth;
         if (azimuth > 0 && azimuth <= 90) {
-            
+
             pointX = sin(degreesToRadians(azimuth))*pointDistance + Radius;
             pointY = Radius - cos(degreesToRadians(azimuth))*pointDistance;
         } else if (azimuth > 90 && azimuth <= 180) {
-            
+
             pointX = cos(degreesToRadians(azimuth-90))*pointDistance + Radius;
             pointY = sin(degreesToRadians(azimuth-90))*pointDistance + Radius;
         } else if (azimuth > 180 && azimuth <= 270){
-            
+
             pointX = Radius - sin(degreesToRadians(azimuth-180))*pointDistance;
             pointY = Radius + cos(degreesToRadians(azimuth-180))*pointDistance;
         } else if (azimuth > 270 && azimuth <= 360) {
-            
+
             pointX = Radius - cos(degreesToRadians(azimuth-270))*pointDistance;
             pointY = Radius - sin(degreesToRadians(azimuth-270))*pointDistance;
         }*/
@@ -174,7 +174,7 @@
         SpotView *spotview = [[SpotView alloc] initWithFrame:rect1];
         spotview.backgroundColor = [UIColor redColor];
         spotview.layer.cornerRadius = 3;
-        
+
         [self addSubview:spotview];
         [self.spots addObject:spotview];
     }
