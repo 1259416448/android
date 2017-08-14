@@ -15,5 +15,6 @@ target 'OnTheWay' do
   pod 'BaiduMapKit' #百度地图SDK
   pod "Qiniu", "~> 7.1"
   pod 'UMessage_NOIDFA','~> 1.5.3'
+  
 end
 
