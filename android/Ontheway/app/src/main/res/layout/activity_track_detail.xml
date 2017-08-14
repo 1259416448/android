@@ -63,14 +63,15 @@
                     android:layout_height="20dp"
                     android:layout_gravity="center"
                     android:background="@drawable/zj_zan" />
+
                 <TextView
-                    android:id="@+id/like_number_tv"
+                    android:id="@+id/like_no_tv"
                     android:layout_width="28dp"
                     android:layout_height="12dp"
+                    android:layout_gravity="center"
                     android:layout_marginTop="-6dp"
                     android:background="@drawable/like_number_bg"
                     android:gravity="center"
-                    android:layout_gravity="center"
                     android:text="5432"
                     android:textColor="@color/white"
                     android:textSize="8sp" />
