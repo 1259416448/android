@@ -45,6 +45,14 @@
 //足迹详情 start
 @property (nonatomic,strong) UIView *tableHeaderView;
 @property (nonatomic,strong) UIView *footprintDetailBGView;
+@property (nonatomic,strong) UIView *footprintHeaderBGView;
+@property (nonatomic,strong) UIView *commentHeaderBGView;
+@property (nonatomic,strong) UIView *commentHeaderTopLine;
+@property (nonatomic,strong) UIImageView *commentHeaderImageView;
+@property (nonatomic,strong) UILabel *commentHeaderLabel;
+@property (nonatomic,strong) UIView *noCommentsV;
+@property (nonatomic,strong) UIImageView *noCommentsImageView;
+@property (nonatomic,strong) UILabel *noCommentsLabel;
 @property (nonatomic,strong) UIImageView *userHeadImgImageView;
 @property (nonatomic,strong) UIButton *userNicknameButton;
 @property (nonatomic,strong) UILabel *footprintDateCreateLabel;
@@ -200,6 +208,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     //设置标题
     self.title = @"足迹详情";
     [self setLeftNavigationImage:[UIImage imageNamed:@"back_2"]];
+    [self setCustomNavigationRightView:self.shareImageView];
     //大背景
     self.view.backgroundColor=[UIColor color_f4f4f4];
     //先通过上一界面传递的id数据   获取足迹详情和加载最近评论信息,在构建页面
@@ -217,7 +226,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     [self.commentBGView addSubview:self.writeCommentView];
     [self.commentBGView addSubview:self.commentSunLabel];
     [self.commentBGView addSubview:self.likeView];
-    [self.commentBGView addSubview:self.shareView];
+//    [self.commentBGView addSubview:self.shareView];
     [self.writeCommentView addSubview:self.writeCommentTextView];
     [self.writeCommentView addSubview:self.writeCommentImageView];
     [self.writeCommentView addSubview:self.commentLabel];
@@ -240,7 +249,12 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 #pragma mark - 构建足迹详情View
 - (UIView *) buildTableHeaderView
 {
-    [self.tableHeaderView addSubview:self.footprintDetailBGView];
+    [self.footprintHeaderBGView addSubview:self.footprintDetailBGView];
+    [self.footprintHeaderBGView addSubview:self.commentHeaderTopLine];
+    [self.footprintHeaderBGView addSubview:self.commentHeaderBGView];
+    [self.commentHeaderBGView addSubview:self.commentHeaderImageView];
+    [self.commentHeaderBGView addSubview:self.commentHeaderLabel];
+    [self.tableHeaderView addSubview:self.footprintHeaderBGView];
     [self.footprintDetailBGView addSubview:self.topLine];
     [self.footprintDetailBGView addSubview:self.userHeadImgImageView];
     [self.footprintDetailBGView addSubview:self.userNicknameButton];
@@ -521,7 +535,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 - (UIImageView *) shareImageView
 {
     if(!_shareImageView){
-        _shareImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 17, 15)];
+        _shareImageView = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-20-15, 15, 20, 20)];
         _shareImageView.image = [UIImage imageNamed:@"fenxiang"];
     }
     return _shareImageView;
@@ -547,9 +561,73 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     if(!_footprintDetailBGView){
         _footprintDetailBGView = [[UIView alloc] init];
         _footprintDetailBGView.backgroundColor = [UIColor whiteColor];
-        _footprintDetailBGView.frame = CGRectMake(0, 10, SCREEN_WIDTH, self.detailFrame.cellHeight - 10);
+        _footprintDetailBGView.frame = CGRectMake(0, 0, SCREEN_WIDTH, self.detailFrame.cellHeight - 36 - 10);
     }
     return _footprintDetailBGView;
+}
+
+- (UIView*) footprintHeaderBGView
+{
+    if (!_footprintHeaderBGView) {
+        _footprintHeaderBGView = [[UIView alloc] init];
+        _footprintHeaderBGView.backgroundColor = [UIColor color_f4f4f4];
+        _footprintHeaderBGView.frame = CGRectMake(0, 10, SCREEN_WIDTH, self.detailFrame.cellHeight);
+    }
+    return _footprintHeaderBGView;
+}
+
+- (UIView*)commentHeaderTopLine
+{
+    if (!_commentHeaderTopLine) {
+        _commentHeaderTopLine = [[UIView alloc] initWithFrame:CGRectMake(0, self.detailFrame.cellHeight - 35, SCREEN_WIDTH, 0.5)];
+        _commentHeaderTopLine.backgroundColor = [UIColor color_d5d5d5];
+    }
+    return _commentHeaderTopLine;
+}
+
+- (UIView*)commentHeaderBGView
+{
+    if (!_commentHeaderBGView) {
+        _commentHeaderBGView = [[UIView alloc] init];
+        _commentHeaderBGView.backgroundColor = [UIColor whiteColor];
+        CGFloat Y = CGRectGetMaxY(self.commentHeaderTopLine.frame);
+        _commentHeaderBGView.frame = CGRectMake(0, Y, SCREEN_WIDTH,35);
+    }
+    return _commentHeaderBGView;
+}
+
+- (UIImageView*)commentHeaderImageView
+{
+    if (!_commentHeaderImageView) {
+        _commentHeaderImageView = [[UIImageView alloc] init];
+        _commentHeaderImageView.frame = CGRectMake(15,12.5,10,10);
+        [_commentHeaderImageView setImage:[UIImage imageNamed:@"ar_dajiashuo"]];
+    }
+    return _commentHeaderImageView;
+}
+
+- (UILabel*)commentHeaderLabel
+{
+    if (!_commentHeaderLabel) {
+        _commentHeaderLabel = [[UILabel alloc] init];
+        CGFloat X = CGRectGetMaxX(self.commentHeaderImageView.frame) + 5;
+        _commentHeaderLabel.frame = CGRectMake(X, 10 , 26, 15);
+        _commentHeaderLabel.textColor = [UIColor color_979797];
+        _commentHeaderLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:13];
+        _commentHeaderLabel.text = @"评论";
+    }
+    return _commentHeaderLabel;
+}
+
+- (UIView*)noCommentsV
+{
+    if (!_noCommentsV) {
+        _noCommentsV = [[UIView alloc] init];
+        CGFloat Y = CGRectGetMaxY(self.commentHeaderBGView.frame);
+        _noCommentsV.frame = CGRectMake(0, Y, SCREEN_WIDTH, 170.5);
+        _noCommentsV.backgroundColor = [UIColor whiteColor];
+    }
+    return _noCommentsV;
 }
 
 - (UIImageView *) userHeadImgImageView{
@@ -719,7 +797,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 - (UIView *) tableHeaderView
 {
     if(!_tableHeaderView){
-        _tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, self.detailFrame.cellHeight)];
+        _tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, self.detailFrame.cellHeight+10)];
         _tableHeaderView.backgroundColor = [UIColor clearColor];
         //        _tableHeaderView.layer.shadowColor = [UIColor blackColor].CGColor;
         //        _tableHeaderView.layer.shadowOpacity = 0.1;

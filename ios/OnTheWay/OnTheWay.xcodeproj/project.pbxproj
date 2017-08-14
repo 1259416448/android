@@ -170,6 +170,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		180249491F4151A9004B0CDE /* OnTheWay.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OnTheWay.entitlements; sourceTree = "<group>"; };
 		1812CA861F39AEAB00510905 /* OTWPointAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPointAnnotation.h; sourceTree = "<group>"; };
 		1812CA871F39AEAB00510905 /* OTWPointAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPointAnnotation.m; sourceTree = "<group>"; };
 		1822EE611F20845A00E07665 /* OTWFootprintsChangeAddressModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWFootprintsChangeAddressModel.h; sourceTree = "<group>"; };
@@ -613,6 +614,7 @@
 		D7F6AFF31F0D32FB0013090A /* OnTheWay */ = {
 			isa = PBXGroup;
 			children = (
+				180249491F4151A9004B0CDE /* OnTheWay.entitlements */,
 				D7F6B0471F0D39390013090A /* Utils */,
 				D7F6B0941F0DDE950013090A /* Network */,
 				D7F6B03E1F0D390D0013090A /* Libs */,
@@ -1352,6 +1354,11 @@
 						CreatedOnToolsVersion = 8.3.3;
 						DevelopmentTeam = SEMAPEJ292;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 					D7F6B0091F0D32FB0013090A = {
 						CreatedOnToolsVersion = 8.3.3;
@@ -1754,6 +1761,8 @@
 			baseConfigurationReference = 4B8637730B7A7E4B6ADD9FEE /* Pods-OnTheWay.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = OnTheWay/OnTheWay.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Yi Guo (5PAA5A6DUM)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = SEMAPEJ292;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/OnTheWay/PrefixHeader.pch";
@@ -1772,6 +1781,8 @@
 			baseConfigurationReference = 68C4FF114BC411D8C8AADB56 /* Pods-OnTheWay.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = OnTheWay/OnTheWay.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Yi Guo (5PAA5A6DUM)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = SEMAPEJ292;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/OnTheWay/PrefixHeader.pch";
