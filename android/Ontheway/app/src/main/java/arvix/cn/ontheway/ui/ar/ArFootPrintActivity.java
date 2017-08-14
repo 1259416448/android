@@ -14,6 +14,8 @@ import android.location.LocationManager;
 import android.opengl.Matrix;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.SurfaceView;
@@ -23,19 +25,20 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import arvix.cn.ontheway.BaiduActivity;
 import arvix.cn.ontheway.R;
-import arvix.cn.ontheway.bean.TrackSearchVo;
+import arvix.cn.ontheway.bean.FootPrintSearchVo;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.track.TrackCreateActivity;
 import arvix.cn.ontheway.ui.track.TrackListActivity;
 import arvix.cn.ontheway.ui.track.TrackMapActivity;
+import arvix.cn.ontheway.utils.StaticMethod;
+import arvix.cn.ontheway.utils.UIUtils;
 
-public class ArTrackActivity extends BaseActivity implements SensorEventListener, LocationListener {
+public class ArFootPrintActivity extends BaseActivity implements SensorEventListener, LocationListener {
 
     final static String TAG = "ARActivity";
     private  SurfaceView surfaceView;
@@ -46,12 +49,16 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
     public static TextView tvCurrentLocation;
     public static String searchKeyWord;
     private SensorManager sensorManager;
+
+    float[] accelerometerValues = new float[3];
+    float[] magneticFieldValues = new float[3];
+
     private final static int REQUEST_CAMERA_PERMISSIONS_CODE = 11;
     public static final int REQUEST_LOCATION_PERMISSIONS_CODE = 0;
 
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 0; // 10 meters
     private static final long MIN_TIME_BW_UPDATES = 0;//1000 * 60 * 1; // 1 minute
-    private TrackSearchVo trackSearchVo = new TrackSearchVo();
+    private FootPrintSearchVo trackSearchVo = new FootPrintSearchVo();
     private LocationManager locationManager;
     public Location location;
     boolean isGPSEnabled;
@@ -67,18 +74,46 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
     private Button rangeButton;
     @ViewInject(R.id.to_track_list_btn)
     private Button toTrackListBtn;
+    @ViewInject(R.id.total_count_tv)
+    private TextView totalCountTv;
 
+    @ViewInject(R.id.address_tv)
+    private TextView addressTv;
     @ViewInject(R.id.to_map_btn)
     private Button toMapBtn;
 
     @ViewInject(R.id.to_ar_btn)
     private Button toArBtn;
-
+    @ViewInject(R.id.r_100m)
+    private Button r100mBtn;
+    @ViewInject(R.id.r_500m)
+    private Button r500mBtn;
+    @ViewInject(R.id.r_1km)
+    private Button r1kmBtn;
+    @ViewInject(R.id.time_one_day)
+    private Button timeOneBtn;
+    @ViewInject(R.id.time_7_day)
+    private Button timeTwoBtn;
+    @ViewInject(R.id.time_one_month)
+    private Button timeThreeBtn;
+    @ViewInject(R.id.refresh_btn)
+    private Button refreshBtn;
+    public static Handler handler = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+       // currentArTrackActivity = this;
         setContentView(R.layout.activity_ar_track);
+        UIUtils.setBarStyle(self);
         x.view().inject(self);
+        handler = new Handler(){
+            public void handleMessage(Message msg){
+                String totalCount = msg.getData().getString("totalCount");
+                String address = msg.getData().getString("address");
+                updateUi(totalCount,address);
+            }
+        };
+
         searchKeyWord = getIntent().getStringExtra(BaiduActivity.EXTRA_KEYWORD);
         sensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);
         cameraContainerLayout = (FrameLayout) findViewById(R.id.camera_container_layout);
@@ -96,7 +131,6 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
                 }
             }
         });
-
         timeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -107,8 +141,6 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
                 }
             }
         });
-
-
         toTrackListBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -132,8 +164,89 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
                 startActivity(intent);
             }
         });
-
+        initSearchEvent();
     }
+
+
+
+
+    private void initSearchEvent(){
+        r100mBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateSearchDistance(FootPrintSearchVo.SearchDistance.one);
+                rangeLine.setVisibility(View.INVISIBLE);
+            }
+        });
+        r500mBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateSearchDistance(FootPrintSearchVo.SearchDistance.two);
+                rangeLine.setVisibility(View.INVISIBLE);
+            }
+        });
+        r1kmBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateSearchDistance(FootPrintSearchVo.SearchDistance.three);
+                rangeLine.setVisibility(View.INVISIBLE);
+            }
+        });
+
+
+        timeOneBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateSearchTime(FootPrintSearchVo.SearchTime.oneDay);
+                timeLine.setVisibility(View.INVISIBLE);
+            }
+        });
+        timeTwoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateSearchTime(FootPrintSearchVo.SearchTime.sevenDay);
+                timeLine.setVisibility(View.INVISIBLE);
+            }
+        });
+        timeThreeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateSearchTime(FootPrintSearchVo.SearchTime.oneMonth);
+                timeLine.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        refreshBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if((trackSearchVo.getNumber()+1)<trackSearchVo.getTotalPages()){
+                    trackSearchVo.setNumber(trackSearchVo.getNumber()+1);
+                }else{
+                    StaticMethod.showToast("已经没有数据了",self);
+                    trackSearchVo.setNumber(0);
+                }
+                arOverlayView.updateSearchParams();
+            }
+        });
+    }
+
+    private void updateSearchDistance(FootPrintSearchVo.SearchDistance distance){
+        trackSearchVo.setSearchDistance(distance);
+        arOverlayView.updateSearchParams();
+    }
+
+    private void updateSearchTime(FootPrintSearchVo.SearchTime time){
+        trackSearchVo.setSearchTime(time);
+        arOverlayView.updateSearchParams();
+    }
+
+
+    public void updateUi(String totalCount,String address){
+        totalCountTv.setText(totalCount);
+        addressTv.setText(StaticMethod.genLesAddressStr(address,5));
+    }
+
+
 
     @Override
     public void onResume() {
@@ -147,14 +260,16 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
     @Override
     public void onPause() {
         releaseCamera();
+        sensorManager.unregisterListener(this);
         super.onPause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        sensorManager.unregisterListener(this);
         if(null!=arOverlayView){
-            arOverlayView.clearData();
+            arOverlayView.onDestroy();
         }
     }
 
@@ -231,7 +346,9 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
     private void registerSensors() {
         sensorManager.registerListener(this,
                 sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR),
-                SensorManager.SENSOR_DELAY_FASTEST);
+                SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)  , SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) ,SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
@@ -250,7 +367,16 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
             Matrix.multiplyMM(rotatedProjectionMatrix, 0, projectionMatrix, 0, rotationMatrixFromVector, 0);
             this.arOverlayView.updateRotatedProjectionMatrix(rotatedProjectionMatrix);
         }
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
+            magneticFieldValues = sensorEvent.values;
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
+            accelerometerValues = sensorEvent.values;
+        calculateOrientation();
     }
+
+
+
+
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
@@ -330,5 +456,45 @@ public class ArTrackActivity extends BaseActivity implements SensorEventListener
     @Override
     public void onProviderDisabled(String s) {
 
+    }
+    private void calculateOrientation() {
+        float[] values = new float[3];
+        float[] R = new float[9];
+        SensorManager.getRotationMatrix(R, null, accelerometerValues, magneticFieldValues);
+        SensorManager.getOrientation(R, values);
+        // 要经过一次数据格式的转换，转换为度
+        values[0] = (float) Math.toDegrees(values[0]);
+      //  Log.i(TAG, values[0]+"");
+        values[1] = (float) Math.toDegrees(values[1]);
+        values[2] = (float) Math.toDegrees(values[2]);
+      //  Log.i(TAG, "xDegrees:"+values[1]+" yDegrees:"+values[2]);
+        AROverlayView.xDegrees = values[1];
+        AROverlayView.yDegrees = values[2];
+        /*
+        if(values[0] >= -5 && values[0] < 5){
+            Log.i(TAG, "正北");
+        }
+        else if(values[0] >= 5 && values[0] < 85){
+            Log.i(TAG, "东北");
+        }
+        else if(values[0] >= 85 && values[0] <=95){
+            Log.i(TAG, "正东");
+        }
+        else if(values[0] >= 95 && values[0] <175){
+            Log.i(TAG, "东南");
+        }
+        else if((values[0] >= 175 && values[0] <= 180) || (values[0]) >= -180 && values[0] < -175){
+            Log.i(TAG, "正南");
+        }
+        else if(values[0] >= -175 && values[0] <-95){
+            Log.i(TAG, "西南");
+        }
+        else if(values[0] >= -95 && values[0] < -85){
+            Log.i(TAG, "正西");
+        }
+        else if(values[0] >= -85 && values[0] <-5){
+            Log.i(TAG, "西北");
+        }
+        */
     }
 }

@@ -1,7 +1,7 @@
 package arvix.cn.ontheway.ui.track;
 
-import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -12,35 +12,48 @@ import android.text.SpannableStringBuilder;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson.util.TypeUtils;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
 import com.youth.banner.loader.ImageLoader;
 
+import org.w3c.dom.Text;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 import org.xutils.image.ImageOptions;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.Callable;
+import java.util.Map;
 
+import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.R;
-import arvix.cn.ontheway.async.AsyncUtil;
-import arvix.cn.ontheway.async.Callback;
-import arvix.cn.ontheway.async.Result;
-import arvix.cn.ontheway.bean.ReplyBean;
-import arvix.cn.ontheway.bean.TrackBean;
-import arvix.cn.ontheway.data.NewReplyData;
+import arvix.cn.ontheway.bean.BaseResponse;
+import arvix.cn.ontheway.bean.Pagination;
+import arvix.cn.ontheway.bean.CommentBean;
+import arvix.cn.ontheway.bean.FootPrintBean;
+import arvix.cn.ontheway.bean.UserInfo;
+import arvix.cn.ontheway.http.ServerUrl;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.head.HeaderHolder;
 import arvix.cn.ontheway.ui.view.ListViewHolder;
@@ -57,10 +70,8 @@ import static android.text.style.DynamicDrawableSpan.ALIGN_BASELINE;
 public class TrackDetailActivity  extends BaseActivity implements AdapterView.OnItemClickListener, PullToRefreshBase.OnRefreshListener2<ListView> {
 
     private TrackDetailReplyAdapter adapter;
-    private List<ReplyBean> datas;
+    private List<CommentBean> commentBeanList;
     private ListViewHolder listHolder;
-    private int pageNum = 0;
-
     @ViewInject(R.id.header_iv)
     ImageView userHeader;
     @ViewInject(R.id.nickname_tv)
@@ -71,81 +82,58 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
     TextView contentTv;
     @ViewInject(R.id.address_tv)
     TextView addressTv;
-
+    @ViewInject(R.id.del_tv)
+    TextView delTv;
     @ViewInject(R.id.write_reply_et)
     private EditText writeReplyEt;
-
     @ViewInject(R.id.right_info_line)
     private View rightInfoLine;
-    private TrackBean trackBean;
-
+    @ViewInject(R.id.comment_number_tv)
+    private TextView commentNoTv;
+    private FootPrintBean footPrintBean;
+    Pagination pagination;
+    private boolean commentCanFetch = false;
+    private static int waitForResultValue = -1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_detail);
-        trackBean = (TrackBean) this.getIntent().getSerializableExtra(StaticVar.EXTRA_TRACK_BEAN);
-        datas = new ArrayList();
-        initData(true);
-        adapter = new TrackDetailReplyAdapter(this, datas);
+        footPrintBean = (FootPrintBean) this.getIntent().getSerializableExtra(StaticVar.EXTRA_TRACK_BEAN);
+        commentCanFetch = false;
+        commentBeanList = new ArrayList();
+        pagination = new Pagination();
+        pagination.setSize(10);
+        initData();
+        adapter = new TrackDetailReplyAdapter(this, commentBeanList);
         listHolder = ListViewHolder.initList(this);
         listHolder.list.setAdapter(adapter);
         listHolder.list.getRefreshableView().setDividerHeight(StaticMethod.dip2px(self,1));
         listHolder.list.getRefreshableView().addHeaderView(LayoutInflater.from (self).inflate(R.layout.track_detail_header,listHolder.list,false));
-        x.view().inject(this);
         listHolder.list.setOnItemClickListener(this);
         listHolder.list.setMode(PullToRefreshBase.Mode.BOTH);
         listHolder.list.setOnRefreshListener(this);
-        listHolder.list.setRefreshing();
+        View emptyView = LayoutInflater.from(self).inflate(R.layout.comment_empty, (ViewGroup)getWindow().getDecorView(), false);
+        listHolder.empty_ll.removeAllViews();
+        listHolder.empty_ll.addView(emptyView);
+        listHolder.mayShowEmpty(adapter.getCount());
+        x.view().inject(this);
         HeaderHolder head=new HeaderHolder();
         head.init(self,"足迹详情");
         initView();
-
     }
 
     private void initView() {
         //init field;
-        StaticMethod.setCircularHeaderImg(trackBean.getUserHeadImg(),userHeader,userHeader.getWidth(),userHeader.getHeight());
-        nicknameTv.setText(trackBean.getUserNickname());
-        timeTv.setText(trackBean.getDateCreated()+"");
-        contentTv.setText(trackBean.getFootprintContent());
-        addressTv.setText(trackBean.getFootprintAddress());
-        Banner banner = (Banner) findViewById(R.id.banner);
-        //设置banner样式
-        banner.setBannerStyle(BannerConfig.NUM_INDICATOR);
-        //设置图片加载器
-        banner.setImageLoader(new ImageLoader() {
-            @Override
-            public void displayImage(Context context, Object o, ImageView imageView) {
-                //设置图片属性的options
-                ImageOptions options = new ImageOptions.Builder()
-                        // 如果ImageView的大小不是定义为wrap_content, 不要crop.
-                        .setCrop(true)
-                        .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
-                        //设置使用缓存
-                        .setUseMemCache(true)
-                        //设置支持gif
-                        .setIgnoreGif(false)
-                        //设置显示圆形图片
-                        .build();
-                x.image().bind(imageView,(String)o, options);
-            }
-        });
-        //设置图片集合
-        banner.setImages(trackBean.getFootprintPhotoArray());
-        //设置banner动画效果
-        banner.setBannerAnimation(Transformer.DepthPage);
-        //设置标题集合（当banner样式有显示title时）
-        // banner.setBannerTitles(titles);
-        //设置自动轮播，默认为true
-        banner.isAutoPlay(true);
-        //设置轮播时间
-        banner.setDelayTime(2000);
-        //设置指示器位置（当banner模式中有指示器时）
-        banner.setIndicatorGravity(BannerConfig.CENTER);
-        //banner设置方法全部调用完毕时最后调用
-        banner.start();
-
+        StaticMethod.setCircularHeaderImg(footPrintBean.getUserHeadImg(),userHeader,userHeader.getWidth(),userHeader.getHeight());
+        nicknameTv.setText(footPrintBean.getUserNickname());
+        timeTv.setText(footPrintBean.getDateCreatedStr());
+        contentTv.setText(footPrintBean.getFootprintContent());
+        addressTv.setText(footPrintBean.getFootprintAddress());
+        if(footPrintBean.getUserId() == App.userInfo.getId()){
+            delTv.setVisibility(View.VISIBLE);
+        }
+        initPhotoList();
         //android:hint="icon 写评论"
         SpannableStringBuilder ssb = new SpannableStringBuilder("  icon 写评论");
         int length = ssb.length();
@@ -155,12 +143,128 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
         ssb.setSpan(absoluteSizeSpan, 6, length, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
         Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.zj_pinglun);
         ImageSpan imgSpan = new ImageSpan(self, b,ALIGN_BASELINE);
-
         ssb.setSpan(imgSpan, 2, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         writeReplyEt.setHint(ssb);
+        writeReplyEt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                waitForResultValue = StaticMethod.goToLogin(self);
+            }
+        });
+        writeReplyEt.setOnKeyListener(new View.OnKeyListener() {
+
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // 修改回车键功能
+                if (keyCode == KeyEvent.KEYCODE_ENTER  && event.getAction() == KeyEvent.ACTION_DOWN ) {
+                    // 先隐藏键盘
+                    ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
+                            .hideSoftInputFromWindow(self
+                                            .getCurrentFocus().getWindowToken(),
+                                    InputMethodManager.HIDE_NOT_ALWAYS);
+                    //接下来在这里做你自己想要做的事，实现自己的业务。
+                    RequestParams requestParams = new RequestParams();
+                    requestParams.setUri( ServerUrl.COMMENT_CREATE);
+                    Map<String,Object> parMap = new HashMap<>();
+                    /*{
+                      "commentUserId": 0,
+                      "content": "string",
+                      "footprintId": 0,
+                      "replyCommentId": 0
+                    }*/
+                    parMap.put("commentUserId",App.userInfo.getId());
+                    parMap.put("content",writeReplyEt.getText().toString());
+                    parMap.put("footprintId",footPrintBean.getFootprintId());
+                    requestParams.setBodyContent(JSON.toJSONString(parMap));
+                    x.http().post(requestParams, new Callback.CommonCallback<String>() {
+                        @Override
+                        public void onSuccess(String result) {
+                            try {
+                                Log.i("onSuccess-->","result->"+result.toString());
+                                BaseResponse<CommentBean> response = StaticMethod.genResponse(result,CommentBean.class);
+                                if(response.getCode()==StaticVar.SUCCESS) {
+                                    StaticMethod.showToast("评论成功",self);
+                                    CommentBean commentBean = response.getBodyBean();
+                                    commentBeanList.add(0,commentBean);
+                                    adapter.notifyDataSetChanged();
+                                    listHolder.list.onRefreshComplete();
+                                }else if(response.getCode() == StaticVar.ERROR){
+                                    StaticMethod.showToast("评论失败",self);
+                                }else{
+                                    StaticMethod.showToast("评论失败" + response.getCode(),self);
+                                }
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onError(Throwable throwable, boolean b) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(CancelledException e) {
+
+                        }
+
+                        @Override
+                        public void onFinished() {
+
+                        }
+                    });
+                }
+
+                return false;
+            }
+        });
+
+
         attachKeyboardListeners(R.id.detail_root);
 
     }
+
+    private void initPhotoList(){
+        if(footPrintBean.getFootprintPhotoArray()!=null && footPrintBean.getFootprintPhotoArray().size()>0){
+            Banner banner = (Banner) findViewById(R.id.banner);
+            //设置banner样式
+            banner.setBannerStyle(BannerConfig.NUM_INDICATOR);
+            //设置图片加载器
+            banner.setImageLoader(new ImageLoader() {
+                @Override
+                public void displayImage(Context context, Object o, ImageView imageView) {
+                    //设置图片属性的options
+                    ImageOptions options = new ImageOptions.Builder()
+                            // 如果ImageView的大小不是定义为wrap_content, 不要crop.
+                            .setCrop(true)
+                            .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
+                            //设置使用缓存
+                            .setUseMemCache(true)
+                            //设置支持gif
+                            .setIgnoreGif(false)
+                            //设置显示圆形图片
+                            .build();
+                    x.image().bind(imageView,(String)o, options);
+                }
+            });
+            //设置图片集合
+            banner.setImages(footPrintBean.getFootprintPhotoArray());
+            //设置banner动画效果
+            banner.setBannerAnimation(Transformer.DepthPage);
+            //设置标题集合（当banner样式有显示title时）
+            // banner.setBannerTitles(titles);
+            //设置自动轮播，默认为true
+            banner.isAutoPlay(true);
+            //设置轮播时间
+            banner.setDelayTime(2000);
+            //设置指示器位置（当banner模式中有指示器时）
+            banner.setIndicatorGravity(BannerConfig.CENTER);
+            //banner设置方法全部调用完毕时最后调用
+            banner.start();
+        }
+    }
+
+
 
     @Override
     protected void onShowKeyboard(int keyboardHeight) {
@@ -175,44 +279,124 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
         rightInfoLine.setVisibility(View.VISIBLE);
       //  bottomContainer.setVisibility(View.VISIBLE);
     }
-    private void initData(final boolean refresh) {
-        final int reqPage = refresh ? 0 : pageNum;
-        AsyncUtil.goAsync(new Callable<Result<List<ReplyBean>>>() {
-
-            @Override
-            public Result<List<ReplyBean>> call() throws Exception {
-                Result<List<ReplyBean> > ret = new Result<>();
-                ret.setData(NewReplyData.genData());
-                return ret;
+    private void initData() {
+        //获取详情数据
+        x.http().get(new RequestParams(ServerUrl.FOOTPRINT_SHOW+"/"+footPrintBean.getFootprintId()),new org.xutils.common.Callback.CommonCallback<String>(){
+           @Override
+           public void onSuccess(String result) {
+               Log.i(logTag,"onSuccess------------------------>");
+               BaseResponse<FootPrintBean> response = StaticMethod.genResponse(result,FootPrintBean.class);
+               if(response.getCode() == StaticVar.SUCCESS){
+                   Log.i(logTag,"onSuccess-----   SUCCESS  ------------------->");
+                   FootPrintBean fetchBean = response.getBodyBean();
+                   footPrintBean = fetchBean;
+                   if(fetchBean.getFootprintPhotoArray()==null || fetchBean.getFootprintPhotoArray().size()==0){
+                       findViewById(R.id.banner_ll).setVisibility(View.GONE);
+                   }else{
+                       initPhotoList();
+                   }
+                   if(footPrintBean.getComments()!=null && footPrintBean.getComments().size()>0){
+                     //  commentBeanList.clear();
+                       commentBeanList.addAll(footPrintBean.getComments());
+                       adapter.notifyDataSetChanged();
+                       listHolder.mayShowEmpty(adapter.getCount());
+                       listHolder.list.onRefreshComplete();
+                       commentNoTv.setText(commentBeanList.size()+"条评论");
+                       if(commentBeanList.size()>=10){
+                           commentCanFetch = true;
+                       }
+                   }
+               }
             }
-        }, new Callback<Result<List<ReplyBean>>>() {
 
-            @Override
-            public void onHandle(Result<List<ReplyBean>> result) {
-                if (result.ok()) {
-                    //成功才更新page状态
-                    if (refresh) {
-                        pageNum = 0;
-                    }
-                    pageNum++;
+           @Override
+           public void onError(Throwable ex, boolean isOnCallback) {
 
-                    if (refresh) {
-                        datas.clear();
-                    }
-                    datas.addAll(result.getData());
-                    adapter.notifyDataSetChanged();
-                } else {
-                    new AlertDialog.Builder(TrackDetailActivity.this).setMessage(result.getErrorMsg()).show();
-                }
-                listHolder.mayShowEmpty(adapter.getCount());
-                listHolder.list.onRefreshComplete();
-            }
+           }
+
+           @Override
+           public void onCancelled(CancelledException cex) {
+
+           }
+
+           @Override
+           public void onFinished() {
+               Log.i(logTag,"onFinished------------------------>");
+
+           }
         });
 
     }
 
+    private void fetchCommentPagination(){
+        if(commentCanFetch){
+            boolean fetch = true;
+            if(pagination.getTotalPages()==0){
+                pagination.setNumber(1);
+            }else{
+                if(pagination.getNumber() == pagination.getTotalPages()){
+                    fetch = false;
+                    StaticMethod.showToast("没有更多的数据了，评论一条吧",this);
+                }else{
+                    pagination.setNumber(pagination.getNumber()+1);
+                }
+            }
+            if(fetch){
+                RequestParams requestParams = new RequestParams(ServerUrl.COMMENT_SEARCH);
+                requestParams.addQueryStringParameter("size", pagination.getSize()+"");
+                requestParams.addQueryStringParameter("footprintId", footPrintBean.getFootprintId()+"");
+                requestParams.addQueryStringParameter("number", pagination.getNumber()+"");
+                x.http().get(requestParams,new org.xutils.common.Callback.CommonCallback<String>(){
+                    @Override
+                    public void onSuccess(String result) {
+                        BaseResponse<Pagination<CommentBean>> response =  JSON.parseObject(result,new TypeReference<BaseResponse<Pagination<CommentBean>>>(){});
+                        if (response.getCode() == StaticVar.SUCCESS) {
+                            JSONObject jsonObject = response.getBody();
+                            Pagination paginationReturn = TypeUtils.castToJavaBean(jsonObject,Pagination.class);
+                            if(paginationReturn!=null && paginationReturn.getContent()!=null){
+                                List<JSONObject> jsonArray =  (List<JSONObject>) paginationReturn.getContent();
+                                List<CommentBean> footPrintBeanList = new ArrayList<>();
+                                for(JSONObject object :jsonArray){
+                                    footPrintBeanList.add(TypeUtils.castToJavaBean(object,CommentBean.class));
+                                }
+                                paginationReturn.setContent(footPrintBeanList);
+                            }
+                            pagination = paginationReturn;
+                            commentNoTv.setText(pagination.getTotalElements()+"条评论");
+                            commentBeanList.addAll(footPrintBean.getComments());
+                            adapter.notifyDataSetChanged();
+                            listHolder.list.onRefreshComplete();
+                        } else if (response.getCode() == StaticVar.ERROR) {
+                            StaticMethod.showToast("获取数据失败", self);
+                        } else {
+                            StaticMethod.showToast("获取数据失败" + response.getCode(), self);
+                        }
+                    }
 
+                    @Override
+                    public void onError(Throwable ex, boolean isOnCallback) {
 
+                    }
+
+                    @Override
+                    public void onCancelled(CancelledException cex) {
+
+                    }
+
+                    @Override
+                    public void onFinished() {
+                    }
+                });
+            }else{
+                Log.i(logTag,"fetch---------------->is false");
+                listHolder.mayShowEmpty(adapter.getCount());
+                listHolder.list.onRefreshComplete();
+            }
+        }else{
+            listHolder.mayShowEmpty(adapter.getCount());
+            listHolder.list.onRefreshComplete();
+        }
+    }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -227,7 +411,7 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
      */
     @Override
     public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-        initData(true);
+        fetchCommentPagination();
     }
 
     /**
@@ -238,6 +422,6 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
      */
     @Override
     public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-        initData(false);
+        fetchCommentPagination();
     }
 }

@@ -7,303 +7,65 @@
 //
 
 #import "OTWPrintARViewController.h"
-#import <AFNetworking/UIImageView+AFNetworking.h>
+#import "MCYARConfiguration.h"
+#import "MCYARAnnotation.h"
+#import "OTWARCustomAnnotation.h"
+#import "MCYARAnnotationView.h"
+#import "MCYARViewController.h"
+#import "OTWPlaneMapViewController.h"
 
-#define OTWPrintArSpacing_15 15
-#define OTWPrintArSpacing_10 10
-#define OTWPrintArSpacing_7 7
-#define OTWPrintArSpacing_6 6
-#define OTWPrintArSpacing_3 3
+#import "OTWCustomAnnotationView.h"
+#import "OTWFootprintSearchParams.h"
+#import "OTWFootprintsChangeAddressController.h"
+#import "OTWFootprintReleaseViewController.h"
+#import "OTWFootprintsViewController.h"
+#import "OTWFootprintService.h"
+#import "OTWUITapGestureRecognizer.h"
 
-#define OTWPrintArImageWidth_10 10
-#define OTWPrintArImageWidth_30 30
-#define OTWPrintArImageWidth_35 35
-#define OTWPrintArImageWidth_50 50
+#import <BaiduMapAPI_Location/BMKLocationService.h>
+#import <BaiduMapAPI_Map/BMKMapComponent.h>
+#import <BaiduMapAPI_Search/BMKGeoCodeSearch.h>
+#import <BaiduMapAPI_Search/BMKPoiSearchType.h>
+#import <MJExtension.h>
+#import "MBProgressHUD+PYExtension.h"
 
-@interface OTWPrintARViewController ()
-@property (nonatomic,strong) UIView *arBGV;
-@property (nonatomic,strong) UIImageView *backImageV;
-@property (nonatomic,strong) UIImageView *refreshImageV;
-@property (nonatomic,strong) UIImageView *dateImageV;
-@property (nonatomic,strong) UIImageView *locationImageV;
-@property (nonatomic,strong) UIImageView *cameraImageV;
-@property (nonatomic,strong) UIImageView *arListImageV;
-@property (nonatomic,strong) UIImageView *planeMapImageV;
-@property (nonatomic,strong) UIView *printARV;
-@property (nonatomic,strong) UIImageView *printImageV;
-@property (nonatomic,strong) UILabel *printTitleV;
-@property (nonatomic,strong) UIImageView *printLocationImageV;
-@property (nonatomic,strong) UILabel *printLocationNameV;
-@property (nonatomic,strong) UIImageView *printDateImageV;
-@property (nonatomic,strong) UILabel *printDateContentV;
-@property (nonatomic,strong) UIImageView *printUserImageV;
+@interface OTWPrintARViewController ()<MCYARDataSource,BMKLocationServiceDelegate,UIAlertViewDelegate>
 
+@property(nonatomic,strong) UIButton *backButton;
+@property(nonatomic,strong) UIButton *refreshButton;
+@property(nonatomic,strong) UIButton *dateButton;
+@property(nonatomic,strong) UIButton *locationButton;
+@property(nonatomic,strong) UIButton *cameraButton;
+@property(nonatomic,strong) UIButton *arListButton;
+@property(nonatomic,strong) UIButton *planeMapButton;
+
+@property(nonatomic,strong) UIButton *dateButton_oneDay;
+@property(nonatomic,strong) UIButton *dateButton_sevenDay;
+@property(nonatomic,strong) UIButton *dateButton_oneMonth;
+@property(nonatomic,strong) UIButton *locationBtton_100m;
+@property(nonatomic,strong) UIButton *locationBtton_500m;
+@property(nonatomic,strong) UIButton *locationBtton_1000m;
+
+
+//查询对象
+@property (nonatomic,strong) OTWFootprintSearchParams *footprintSearchParams;
+//定位
+@property (nonatomic,strong) BMKLocationService *locService;
+@property (nonatomic,copy) BMKUserLocation *userLocation;
+@property (nonatomic,strong) NSDictionary *reponseCacheData;
+
+@property (nonatomic,assign) BOOL ifFirstLoadData;
 
 @end
 
 @implementation OTWPrintARViewController
 
-//隐藏底边栏
--(void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
-}
-
-
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self setupBase];
-    // Do any additional setup after loading the view.
-    
-}
-
--(void)setupBase
-{
-    self.view.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:self.arBGV];
-    [self.arBGV addSubview:self.backImageV];
-    [self.arBGV addSubview:self.refreshImageV];
-    [self.arBGV addSubview:self.dateImageV];
-    [self.arBGV addSubview:self.locationImageV];
-    [self.arBGV addSubview:self.cameraImageV];
-    [self.arBGV addSubview:self.arListImageV];
-    [self.arBGV addSubview:self.planeMapImageV];
-    [self.arBGV addSubview:self.printARV];
-    [self.printARV addSubview:self.printImageV];
-    [self.printARV addSubview:self.printTitleV];
-        [self.printARV addSubview:self.printLocationImageV];
-        [self.printARV addSubview:self.printLocationNameV];
-        [self.printARV addSubview:self.printDateImageV];
-        [self.printARV addSubview:self.printDateContentV];
-        [self.printARV addSubview:self.printUserImageV];
-    
-}
-
--(UIView *)arBGV
-{
-    if (!_arBGV) {
-        _arBGV = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
-        _arBGV.backgroundColor = [UIColor redColor];
-    }
-    return _arBGV;
-}
-
--(UIImageView *)backImageV
-{
-    if (!_backImageV) {
-        _backImageV = [[UIImageView alloc] initWithFrame:CGRectMake(15, 24.5, 35, 35)];
-        [_backImageV setImage:[UIImage imageNamed:@"back_1"]];
-        _backImageV.userInteractionEnabled = YES;
-        UITapGestureRecognizer *tapGesturRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backToUp)];
-        [_backImageV addGestureRecognizer:tapGesturRecognizer];
-        
-    }
-    return _backImageV;
-}
-
--(UIImageView *)refreshImageV
-{
-    if (!_refreshImageV) {
-        _refreshImageV = [[UIImageView alloc] init];
-        CGFloat refreshImageX = SCREEN_WIDTH - OTWPrintArImageWidth_35 - OTWPrintArSpacing_15;
-        CGFloat refreshImageY = SCREEN_HEIGHT - 195 - OTWPrintArImageWidth_35;
-        CGRect refreshImageRect = CGRectMake(refreshImageX, refreshImageY, OTWPrintArImageWidth_35, OTWPrintArImageWidth_35);
-        _refreshImageV.frame = refreshImageRect;
-        [_refreshImageV setImage:[UIImage imageNamed:@"ar_huanyipi"]];
-    }
-    return _refreshImageV;
-}
-
--(UIImageView *)dateImageV
-{
-    if (!_dateImageV) {
-        _dateImageV = [[UIImageView alloc] init];
-        CGFloat dateImageX = SCREEN_WIDTH - OTWPrintArImageWidth_35 - OTWPrintArSpacing_15;
-        CGFloat dateImageY = CGRectGetMaxY(_refreshImageV.frame) + OTWPrintArSpacing_10;
-        CGRect dateImageRect = CGRectMake(dateImageX, dateImageY, OTWPrintArImageWidth_35, OTWPrintArImageWidth_35);
-        _dateImageV.frame = dateImageRect;
-        [_dateImageV setImage:[UIImage imageNamed:@"zj_shijian"]];
-    }
-    return _dateImageV;
-}
-
--(UIImageView *)locationImageV
-{
-    if (!_locationImageV) {
-        _locationImageV = [[UIImageView alloc] init];
-        CGFloat locationImageX = SCREEN_WIDTH - OTWPrintArImageWidth_35 - OTWPrintArSpacing_15;
-        CGFloat locationImageY = CGRectGetMaxY(_dateImageV.frame) + OTWPrintArSpacing_10;
-        CGRect locationImageRect = CGRectMake(locationImageX, locationImageY, OTWPrintArImageWidth_35, OTWPrintArImageWidth_35);
-        _locationImageV.frame = locationImageRect;
-        [_locationImageV setImage:[UIImage imageNamed:@"juli"]];
-    }
-    return _locationImageV;
-}
-
-
--(UIImageView *)cameraImageV
-{
-    if (!_cameraImageV) {
-        _cameraImageV = [[UIImageView alloc] init];
-        CGFloat cameraImageX = SCREEN_WIDTH - OTWPrintArImageWidth_50*3 - OTWPrintArSpacing_15 - OTWPrintArSpacing_7*2;
-        CGFloat cameraImageY = SCREEN_HEIGHT - OTWPrintArSpacing_15*2 - OTWPrintArImageWidth_50;
-        CGRect cameraImageRect = CGRectMake(cameraImageX, cameraImageY, OTWPrintArImageWidth_50, OTWPrintArImageWidth_50);
-        _cameraImageV.frame = cameraImageRect;
-        [_cameraImageV setImage:[UIImage imageNamed:@"fabu"]];
-    }
-    return _cameraImageV;
-}
-
--(UIImageView *)arListImageV
-{
-    if (!_arListImageV) {
-        _arListImageV = [[UIImageView alloc] init];
-        CGFloat arListImageX = CGRectGetMaxX(_cameraImageV.frame) + OTWPrintArSpacing_7;
-        CGFloat arListImageY = CGRectGetMaxY(_cameraImageV.frame) - OTWPrintArImageWidth_50;
-        CGRect arListImageRect = CGRectMake(arListImageX, arListImageY, OTWPrintArImageWidth_50, OTWPrintArImageWidth_50);
-        _arListImageV.frame = arListImageRect;
-        [_arListImageV setImage:[UIImage imageNamed:@"ar_list"]];
-    }
-    return _arListImageV;
-}
-
--(UIImageView *)planeMapImageV
-{
-    if (!_planeMapImageV) {
-        _planeMapImageV = [[UIImageView alloc] init];
-        CGFloat planeMapImageX = CGRectGetMaxX(_arListImageV.frame) + OTWPrintArSpacing_7;
-        CGFloat planeMapImageY = CGRectGetMaxY(_arListImageV.frame) - OTWPrintArImageWidth_50;
-        CGRect planeMapImageRect = CGRectMake(planeMapImageX, planeMapImageY, OTWPrintArImageWidth_50, OTWPrintArImageWidth_50);
-        _planeMapImageV.frame = planeMapImageRect;
-        [_planeMapImageV setImage:[UIImage imageNamed:@"ar_pingmian"]];
-    }
-    return _planeMapImageV;
-}
-
--(UIView *)printARV
-{
-    if (!_printARV) {
-        _printARV = [[UIView alloc] init];
-        CGRect printARRect = CGRectMake(44.5, 117, 164, 42);
-        _printARV.frame = printARRect;
-        _printARV.backgroundColor = [UIColor whiteColor];
-    }
-    return _printARV;
-}
-
--(UIImageView *)printImageV
-{
-    if (!_printImageV) {
-        _printImageV = [[UIImageView alloc] init];
-        CGFloat printImageX = OTWPrintArSpacing_6;
-        CGFloat printImageY = OTWPrintArSpacing_6;
-        CGRect printImageRect = CGRectMake(printImageX, printImageY, OTWPrintArImageWidth_30, OTWPrintArImageWidth_30);
-        _printImageV.frame = printImageRect;
-        [_printImageV setImageWithURL:[NSURL URLWithString:@"http://osx4pwgde.bkt.clouddn.com/c0ab21ab26b4694769b6e904788b3590630777.jpg"]];
-    }
-    return _printImageV;
-}
-
--(UILabel *)printTitleV
-{
-    if (!_printTitleV) {
-        _printTitleV = [[UILabel alloc] init];
-        CGFloat printTitleX = CGRectGetMaxX(_printImageV.frame) + OTWPrintArSpacing_6;
-        CGFloat printTitleY = OTWPrintArSpacing_6;
-        CGRect printTitleRect = CGRectMake(printTitleX, printTitleY, 98, 15);
-        _printTitleV.frame = printTitleRect;
-        _printTitleV.text = @"看我搞笑的视频,保证不笑屎你";
-        _printTitleV.textColor = [UIColor color_242424];
-        _printTitleV.font = [UIFont systemFontOfSize:13];
-    }
-    return _printTitleV;
-}
-
--(UIImageView *)printLocationImageV
-{
-    if (!_printLocationImageV) {
-        _printLocationImageV = [[UIImageView alloc] init];
-        CGFloat locationImageX = CGRectGetMaxX(_printImageV.frame) + OTWPrintArSpacing_6;
-        CGFloat locationImageY = CGRectGetMaxY(_printTitleV.frame) + OTWPrintArSpacing_3;
-        CGRect locationImageRect = CGRectMake(locationImageX, locationImageY, OTWPrintArImageWidth_10, OTWPrintArImageWidth_10);
-        _printLocationImageV.frame = locationImageRect;
-        [_printLocationImageV setImage:[UIImage imageNamed:@"dinwgei_2"]];
-    }
-    return _printLocationImageV;
-}
-
--(UILabel *)printLocationNameV
-{
-    if (!_printLocationNameV) {
-        _printLocationNameV = [[UILabel alloc] init];
-        CGFloat printLocationImageX = CGRectGetMaxX(_printLocationImageV.frame) + OTWPrintArSpacing_3;
-        CGFloat printLocationImageY = CGRectGetMaxY(_printTitleV.frame) + OTWPrintArSpacing_3;
-        CGRect printLocationImageRect = CGRectMake(printLocationImageX, printLocationImageY, 34, 12);
-        _printLocationNameV.frame = printLocationImageRect;
-        _printLocationNameV.text = @"星巴克";
-        _printLocationNameV.textColor = [UIColor color_979797];
-        _printLocationNameV.font = [UIFont systemFontOfSize:11];
-    }
-    return _printLocationNameV;
-}
-
--(UIImageView *)printDateImageV
-{
-    if (!_printDateImageV) {
-        _printDateImageV = [[UIImageView alloc] init];
-        CGFloat printDateImageX = CGRectGetMaxX(_printLocationNameV.frame) + 8;
-        CGFloat printDateImageY = CGRectGetMaxY(_printTitleV.frame) + OTWPrintArSpacing_3;
-        CGRect printDateImageRect = CGRectMake(printDateImageX, printDateImageY, OTWPrintArImageWidth_10, OTWPrintArImageWidth_10);
-        _printDateImageV.frame = printDateImageRect;
-        [_printDateImageV setImage:[UIImage imageNamed:@"shijian"]];
-    }
-    return _printDateImageV;
-}
-
--(UILabel *)printDateContentV
-{
-    if (!_printDateContentV) {
-        _printDateContentV = [[UILabel alloc] init];
-        CGFloat printDateContentX = CGRectGetMaxX(_printDateImageV.frame) + OTWPrintArSpacing_3;
-        CGFloat printDateContentY = CGRectGetMaxY(_printTitleV.frame) + OTWPrintArSpacing_3;
-        CGRect printDateContentRect = CGRectMake(printDateContentX, printDateContentY, 44, 12);
-        _printDateContentV.frame = printDateContentRect;
-        _printDateContentV.text = @"2小时前";
-        _printDateContentV.textColor = [UIColor color_979797];
-        _printDateContentV.font = [UIFont systemFontOfSize:11];
-    }
-    return _printDateContentV;
-}
-
--(UIImageView *)printUserImageV
-{
-    if (!_printUserImageV) {
-        _printUserImageV = [[UIImageView alloc] init];
-        CGFloat printUserImageX = 145;
-        CGFloat printUserImageY = -10;
-        CGRect printUserImageRect = CGRectMake(printUserImageX, printUserImageY, OTWPrintArImageWidth_30, OTWPrintArImageWidth_30);
-        _printUserImageV.frame = printUserImageRect;
-        [_printUserImageV setImageWithURL:[NSURL URLWithString:@"http://osx4pwgde.bkt.clouddn.com/c0ab21ab26b4694769b6e904788b3590630777.jpg"]];
-        _printUserImageV.layer.cornerRadius = _printUserImageV.width/2.0;
-        _printUserImageV.layer.masksToBounds = YES;
-        struct CGPath *path = CGPathCreateMutable();
-        CGPathAddArc(path, nil, 17 , 17, 17, 0, M_PI*2, true);
-        _printUserImageV.layer.shadowPath = path;
-    }
-    return _printUserImageV;
-}
-
-- (void) backToUp
-
-{
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
--(void)addFootPrintV
-{
-    
+    [self initLocService];
+    [self showARViewController];
+    [self buildUI];
+    self.ifFirstLoadData = NO;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -311,14 +73,657 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    _locService.delegate = self;
+    
+    self.dateButton_oneDay.hidden = YES;
+    self.dateButton_sevenDay.hidden = YES;
+    self.dateButton_oneMonth.hidden = YES;
+    self.locationBtton_100m.hidden = YES;
+    self.locationBtton_500m.hidden = YES;
+    self.locationBtton_1000m.hidden = YES;
+    [self.navigationController setNavigationBarHidden:YES];
+    [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
+    //定位信息
+    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
+        [self initCLLocationManager];
+        return ;
+    }
+    //检查页面是否已经加载过数据，如果没有加载，开启定位信息，进行数据加载
+    if(!self.ifFirstLoadData){
+        //增加一个加载状态
+        [_locService startUserLocationService];
+    }
 }
-*/
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    _locService.delegate = nil;
+}
+
+- (void)buildUI
+{
+    //返回按钮
+    [self.view insertSubview:self.backButton aboveSubview:self.presenter];
+    
+    //刷新
+    OTWUITapGestureRecognizer *refreshTapGesture=[[OTWUITapGestureRecognizer alloc]initWithTarget:self action:@selector(refreshFootprints)];
+    [self.refreshButton addGestureRecognizer:refreshTapGesture];
+    [self.view insertSubview:self.refreshButton aboveSubview:self.presenter];
+    
+    //时间
+    CGFloat dateButtonX = SCREEN_WIDTH - 35 - 15;
+    CGFloat dateButtonY = CGRectGetMaxY(self.refreshButton.frame) + 10;
+    self.dateButton.frame = CGRectMake(dateButtonX, dateButtonY, 35, 35);
+    [self.view insertSubview:self.dateButton aboveSubview:self.presenter];
+    
+    //定位
+    CGFloat locationButtonY = CGRectGetMaxY(self.dateButton.frame) + 10;
+    self.locationButton.frame = CGRectMake(dateButtonX, locationButtonY, 35, 35);
+    [self.view insertSubview:self.locationButton aboveSubview:self.presenter];
+    
+    //相机
+    CGFloat cameraButtonX = SCREEN_WIDTH - 50*3 - 15 - 7*2;
+    CGFloat cameraButtonY = SCREEN_HEIGHT - 15*2 - 50;
+    self.cameraButton.frame = CGRectMake(cameraButtonX, cameraButtonY, 50, 50);
+    [self.view insertSubview:self.cameraButton aboveSubview:self.presenter];
+    
+    //列表
+    CGFloat arListButtonX = CGRectGetMaxX(self.cameraButton.frame) + 7;
+    self.arListButton.frame = CGRectMake(arListButtonX, cameraButtonY, 50, 50);
+    [self.view insertSubview:self.arListButton aboveSubview:self.presenter];
+    
+    //平面地图
+    CGFloat planeMapButtonX = CGRectGetMaxX(self.arListButton.frame) + 7;
+    self.planeMapButton.frame = CGRectMake(planeMapButtonX, cameraButtonY, 50, 50);
+    [self.view insertSubview:self.planeMapButton aboveSubview:self.presenter];
+    
+    //时间筛选-1天内
+    CGFloat dateButton_oneDayX = CGRectGetMaxX(self.dateButton.frame) - 65*3 - 5*3 - 35;
+    self.dateButton_oneDay.frame = CGRectMake(dateButton_oneDayX, dateButtonY, 65, 35);
+    [self.view insertSubview:self.dateButton_oneDay aboveSubview:self.presenter];
+    
+    //时间筛选-7天内
+    CGFloat dateButton_sevenDayX = CGRectGetMaxX(self.dateButton.frame) - 65*2 - 5*2- 35;
+    self.dateButton_sevenDay.frame = CGRectMake(dateButton_sevenDayX, dateButtonY, 65, 35);
+    [self.view insertSubview:self.dateButton_sevenDay aboveSubview:self.presenter];
+    
+    //时间筛选-一个月内
+    CGFloat dateButton_oneMonthX = CGRectGetMaxX(self.dateButton.frame) - 65 - 5- 35;
+    self.dateButton_oneMonth.frame = CGRectMake(dateButton_oneMonthX, dateButtonY, 65, 35);
+    [self.view insertSubview:self.dateButton_oneMonth aboveSubview:self.presenter];
+    
+    //距离筛选-100米内
+    CGFloat locationBtton_100mX = CGRectGetMaxX(self.dateButton.frame) - 45*3 - 5*3 - 35;
+    self.locationBtton_100m.frame = CGRectMake(locationBtton_100mX, locationButtonY, 45, 35);
+    [self.view insertSubview:self.locationBtton_100m aboveSubview:self.presenter];
+    
+    //距离筛选-500米内
+    CGFloat locationBtton_500mX = CGRectGetMaxX(self.dateButton.frame) - 45*2 - 5*2 - 35;
+    self.locationBtton_500m.frame = CGRectMake(locationBtton_500mX, locationButtonY, 45, 35);
+    [self.view insertSubview:self.locationBtton_500m aboveSubview:self.presenter];
+    
+    //距离筛选-1000米内
+    CGFloat locationBtton_1000mX = CGRectGetMaxX(self.dateButton.frame) - 45 - 5 - 35;
+    self.locationBtton_1000m.frame = CGRectMake(locationBtton_1000mX, locationButtonY, 45, 35);
+    [self.view insertSubview:self.locationBtton_1000m aboveSubview:self.presenter];
+    
+    //定位信息
+    if (!([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied)) {
+        [_locService startUserLocationService];
+    }
+}
+
+-(MBProgressHUD *) addLoadingHud
+{
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.bezelView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+    hud.activityIndicatorColor = [UIColor whiteColor];
+    hud.userInteractionEnabled = NO;
+    return hud;
+}
+- (void)initCLLocationManager
+{
+    BOOL enable=[CLLocationManager locationServicesEnabled];
+    NSInteger status=[CLLocationManager authorizationStatus];
+    if(!enable || status<3)
+    {
+        if ([[UIDevice currentDevice].systemVersion floatValue] >= 8)
+        {
+            CLLocationManager  *locationManager = [[CLLocationManager alloc] init];
+            [locationManager requestAlwaysAuthorization];
+            [locationManager requestWhenInUseAuthorization];
+        }
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"打开定位开关"
+                                                            message:@"定位服务未开启，请进入系统［设置］> [隐私] > [定位服务]中打开开关，并允许使用定位服务"
+                                                           delegate:self
+                                                  cancelButtonTitle:nil
+                                                  otherButtonTitles:@"立即开启",@"好", nil];
+        //alertView.tag = ALERTTAGNUMBER;
+        [alertView show];
+        
+    }
+}
+
+#pragma marks -- UIAlertViewDelegate
+//根据被点击按钮的索引处理点击事件
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(buttonIndex == 0){
+        NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+        if ([[UIApplication sharedApplication] canOpenURL:url]) {
+            [[UIApplication sharedApplication] openURL:url];
+        }
+    }
+}
+
+- (void) initLocService{
+    _locService = [[BMKLocationService alloc] init];
+    _locService.delegate = self;
+    _locService.desiredAccuracy = kCLLocationAccuracyBest;
+}
+
+#pragma mark 返回事件
+- (void)backButtonClick
+{
+    [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexFind]; // 显示首页
+}
+
+#pragma mark 控制时间筛选按钮显示／隐藏
+- (void)dateButtonClick
+{
+    
+    self.dateButton_oneDay.hidden = !self.dateButton_oneDay.hidden;
+    self.dateButton_sevenDay.hidden = !self.dateButton_sevenDay.hidden;
+    self.dateButton_oneMonth.hidden = !self.dateButton_oneMonth.hidden;
+}
+
+#pragma mark 控制距离筛选按钮显示／隐藏
+- (void)locationButtonClick
+{
+    
+    self.locationBtton_100m.hidden = !self.locationBtton_100m.hidden;
+    self.locationBtton_500m.hidden = !self.locationBtton_500m.hidden;
+    self.locationBtton_1000m.hidden = !self.locationBtton_1000m.hidden;
+}
+
+- (void)planeMapButtonClick
+{
+    OTWPlaneMapViewController *planeMapVC = [[OTWPlaneMapViewController alloc] init];
+    [self.navigationController pushViewController:planeMapVC animated:NO];
+}
+
+#pragma mark 刷新-换一批足迹
+- (void)refreshFootprints
+{
+    DLog(@"OTWUITapGestureRecognizer手势----%@",self.footprintSearchParams.mj_keyValues);
+    [self getFootprints];
+}
+
+
+#pragma mark 根据时间筛选
+- (void)searchBydate:(OTWUITapGestureRecognizer*)tapGesture
+{
+    NSMutableDictionary *condition = tapGesture.opId;
+    self.footprintSearchParams.time = [condition objectForKey:@"searchParamValue"];
+    DLog(@"OTWUITapGestureRecognizer手势----%@",self.footprintSearchParams.mj_keyValues);
+    [self getFootprints];
+}
+
+#pragma mark 根据距离筛选
+- (void)searchByDistance:(OTWUITapGestureRecognizer*)tapGesture
+{
+    NSMutableDictionary *condition = tapGesture.opId;
+    self.footprintSearchParams.searchDistance = [condition objectForKey:@"searchParamValue"];
+    
+    if([self.footprintSearchParams.searchDistance isEqualToString:@"one"]){
+        self.radar.maxDistance = 100;
+    }else if([self.footprintSearchParams.searchDistance isEqualToString:@"two"]){
+        self.radar.maxDistance = 500;
+    }else if([self.footprintSearchParams.searchDistance isEqualToString:@"three"]){
+        self.radar.maxDistance = 1000;
+    }
+    DLog(@"OTWUITapGestureRecognizer手势----%@",self.footprintSearchParams.mj_keyValues);
+    [self getFootprints];
+}
+
+
+
+#pragma mark 跳转至足迹列表页面
+- (void)toFootprintListView
+{
+    [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexFootprintList];
+}
+
+#pragma mark 跳转至足迹发布页面
+- (void)toReleaseFootprintView
+{
+    OTWFootprintReleaseViewController *footprintReleaseVC = [[OTWFootprintReleaseViewController alloc] init];
+    [self.navigationController pushViewController:footprintReleaseVC animated:YES];
+}
+
+- (void)showARViewController
+{
+    //雷达默认范围 1km
+    
+    self.radar.maxDistance = 1000;
+    
+    // Present ARViewController
+    self.dataSource = self;
+    // Vertical offset by distance
+    self.presenter.distanceOffsetMode = DistanceOffsetModeManual;
+    self.presenter.distanceOffsetMultiplier = 0.1; // Pixels per meter
+    self.presenter.distanceOffsetMinThreshold = 500;
+    self.presenter.maxDistance = 3000;
+    self.presenter.maxVisibleAnnotations = 100;
+    self.presenter.verticalStackingEnabled = true;
+    self.trackingManager.userDistanceFilter = 15;
+    self.trackingManager.reloadDistanceFilter = 50;
+    // debug
+    self.uiOptions.closeButtonEnabled = false;
+    self.uiOptions.debugLabel = false;
+    self.uiOptions.closeButtonEnabled = true;
+    self.uiOptions.debugMap = false;
+    self.uiOptions.simulatorDebugging = [Platform isSimulator];;
+    self.uiOptions.setUserLocationToCenterOfAnnotations = [Platform isSimulator];
+    // Interface orientation
+    self.interfaceOrientationMask = UIInterfaceOrientationMaskAll;
+    __weak typeof(self) weakSelf;
+    self.onDidFailToFindLocation = ^(NSTimeInterval timeElapsed, BOOL acquiredLocationBefore) {
+        [weakSelf handleLocationFailure:timeElapsed acquiredLocationBefore:acquiredLocationBefore arViewController:weakSelf];
+    };
+}
+
+#pragma mark 初始化足迹查询参数
+-(OTWFootprintSearchParams *)footprintSearchParams
+{
+    if (!_footprintSearchParams) {
+        _footprintSearchParams = [[OTWFootprintSearchParams alloc] init];
+        //列表查询
+        _footprintSearchParams.type = @"ar";
+        //默认搜索半径为1公里
+        _footprintSearchParams.searchDistance = @"three";
+        //默认当前页为 0
+        _footprintSearchParams.number = 0;
+        //默认每页大小为 15
+        _footprintSearchParams.size = 30;
+        //默认不是最后一页
+        _footprintSearchParams.isLastPage = NO;
+        //默认是第一页
+        _footprintSearchParams.isFirstPage = YES;
+        //默认足迹发布时间1个月内
+        _footprintSearchParams.time = @"oneMonth";
+    }
+    
+    return _footprintSearchParams;
+}
+
+-(void)fetchARFootprints:(NSDictionary *)params completion:(requestBackBlock)block
+{
+    MBProgressHUD *hud = [self addLoadingHud];
+    [OTWFootprintService getFootprintList:params completion:^(id result, NSError *error) {
+        
+        [hud hideAnimated:YES];
+        
+        if (result) {
+            if([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]){
+                if (block) {
+                    self.footprintSearchParams.currentTime = result[@"currentTime"];
+                    block(result);
+                }
+            }else{
+                if(self.reponseCacheData){
+                    if (block) {
+                        block(self.reponseCacheData);
+                    }
+                }
+            }
+        } else {
+            if(self.reponseCacheData){
+                if (block) {
+                    block(self.reponseCacheData);
+                }
+            }
+        }
+    } responseCache:^(id responseCache) {
+        self.reponseCacheData = responseCache;
+    }];
+}
+
+#pragma mark 根据查询参数加载足迹数据
+- (void)getFootprints
+{
+    [self fetchARFootprints:self.footprintSearchParams.mj_keyValues completion:^(id result) {
+        DLog(@"是否为最后一页%@",result[@"body"][@"last"]);
+        if (result[@"body"][@"last"]) {
+            self.footprintSearchParams.isLastPage = YES;
+            self.footprintSearchParams.number  = 0;
+        } else {
+            self.footprintSearchParams.number += 1;
+        }
+        if ([[NSString stringWithFormat:@"%@",result[@"body"][@"first"]] isEqualToString:@"true"]) {
+            self.footprintSearchParams.isFirstPage = YES;
+        }
+        
+        NSMutableArray *footprintModels = [OTWFootprintListModel mj_objectArrayWithKeyValuesArray:result[@"body"][@"content"]];
+        if (footprintModels.count == 0) {
+            return;
+        }
+        NSArray *dummyAnnotations = [self assembleAnnotation:footprintModels];
+        [self setAnnotations:dummyAnnotations];
+        self.ifFirstLoadData = YES;
+    }];
+}
+
+- (NSArray*)getDummyAnnotation:(double)centerLatitude centerLongitude:(double)centerLongitude altitudeDelta:(double)altitudeDelta count:(NSInteger)count
+{
+    NSMutableArray *annotations = [NSMutableArray array];
+    srand48(2);
+    
+    for (int i = 0; i < count; i++) {
+        CLLocation *location = [self getRandomLocation:centerLatitude centerLongitude:centerLongitude altitudeDelta:altitudeDelta];
+        
+        MCYARAnnotation *annotation = [[MCYARAnnotation alloc] initWithIdentifier:nil title:[NSString stringWithFormat:@"PppI(%d)", i] location:location];
+        [annotations addObject:annotation];
+    }
+    
+    return annotations;
+}
+
+#pragma mark 组装足迹annotation
+- (NSArray*)assembleAnnotation:(NSMutableArray<OTWFootprintListModel*>*)footprints
+{
+    double altitudeDelta = 0;
+    NSMutableArray *annotations = [NSMutableArray array];
+    for (OTWFootprintListModel *footprint in footprints) {
+        CLLocation *location = [self getRandomLocation:footprint.latitude centerLongitude:footprint.longitude altitudeDelta:altitudeDelta];
+        OTWARCustomAnnotation *annotation = [[OTWARCustomAnnotation alloc] init];
+        annotation.footprint = footprint;
+        annotation.location = location;
+        [annotations addObject:annotation];
+    }
+    return annotations;
+}
+
+- (NSArray*)addDummyAnnotationWithLat:(double)lat lon:(double)lon altitude:(double)altitude title:(NSString*)title
+{
+    NSMutableArray *annotations = [NSMutableArray array];
+    CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(lat, lon) altitude:altitude horizontalAccuracy:0 verticalAccuracy:0 timestamp:[NSDate date]];
+    MCYARAnnotation *annotation = [[MCYARAnnotation alloc] initWithIdentifier:nil title:title location:location];
+    [annotations addObject:annotation];
+    
+    return annotations;
+}
+
+- (CLLocation*)getRandomLocation:(double)centerLatitude centerLongitude:(double)centerLongitude altitudeDelta:(double)altitudeDelta
+{
+    double lat = centerLatitude;
+    double lon = centerLongitude;
+    double altitude = drand48() * altitudeDelta;
+    
+    return [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(lat, lon) altitude:altitude horizontalAccuracy:1 verticalAccuracy:1 timestamp:[NSDate date]];
+}
+
+- (void)handleLocationFailure:(NSTimeInterval)elapsedSeconds acquiredLocationBefore:(BOOL)acquiredLocationBefore
+             arViewController:(MCYARViewController*)arViewController
+{
+    MCYARViewController *arVC = arViewController;
+    if (arVC == nil) return;
+    if ([Platform isSimulator]) return;
+    
+    NSLog(@"Failed to find location after: (%f) seconds, acquiredLocationBefore: (%d)", elapsedSeconds, acquiredLocationBefore);
+    
+    // Example of handling location failure
+    if (elapsedSeconds >= 20 && !acquiredLocationBefore) {
+        
+        // Stopped bcs we don't want multiple alerts
+        [arVC.trackingManager stopTracking];
+        
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Problems" message:@"Cannot find location, use Wi-Fi if possible!" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Close" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }];
+        [alert addAction:okAction];
+        
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+}
+
+#pragma mark 跳转到足迹详情
+-(void)jumpToFootprintDetail:(OTWUITapGestureRecognizer*)gesture
+{
+    OTWARCustomAnnotation *annotation = gesture.opId;
+    OTWFootprintDetailController *VC =  [[OTWFootprintDetailController alloc] init];
+    [VC setFid:annotation.footprint.footprintId.description];
+    [self.navigationController pushViewController:VC animated:YES];
+}
+
+
+#pragma mark - MCYARDatasource
+- (MCYARAnnotationView*)ar:(MCYARViewController*)arViewController viewForAnnotation:(MCYARAnnotation*)annotation
+{
+    OTWCustomAnnotationView *annotationView = [[OTWCustomAnnotationView alloc] init];
+    annotationView.frame = CGRectMake(0, 0, 164, 42);
+    OTWUITapGestureRecognizer *tapGesture=[[OTWUITapGestureRecognizer alloc]initWithTarget:self action:@selector(jumpToFootprintDetail:)];
+    tapGesture.opId = annotation;
+    [annotationView addGestureRecognizer:tapGesture];
+    return annotationView;
+}
+
+#pragma mark - BMKLocationServiceDelegate
+- (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation
+{
+    _userLocation = userLocation;
+    //定位信息加载成功，一般刷新时会调用
+    self.footprintSearchParams.latitude = userLocation.location.coordinate.latitude;
+    self.footprintSearchParams.longitude = userLocation.location.coordinate.longitude;
+    self.footprintSearchParams.number = 0;
+    self.footprintSearchParams.currentTime = nil;
+    [self getFootprints];
+    [_locService stopUserLocationService];
+}
+
+- (void)didFailToLocateUserWithError:(NSError *)error
+{
+    [_locService stopUserLocationService];
+}
+
+#pragma mark 按钮初始化
+- (UIButton*)backButton
+{
+    if (!_backButton) {
+        _backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _backButton.frame = CGRectMake(0, 20, 65, 44);
+        _backButton.backgroundColor = [UIColor clearColor];
+        [_backButton setImage:[UIImage imageNamed:@"back_1"] forState:UIControlStateNormal];
+        [_backButton addTarget:self action:@selector(backButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _backButton;
+}
+
+- (UIButton*)refreshButton
+{
+    if (!_refreshButton) {
+        _refreshButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        CGFloat refreshButtonX = SCREEN_WIDTH - 35 - 15;
+        CGFloat refreshButtonY = SCREEN_HEIGHT - 195 - 35;
+        _refreshButton.frame = CGRectMake(refreshButtonX, refreshButtonY, 35, 35);
+        _refreshButton.backgroundColor = [UIColor clearColor];
+        [_refreshButton setImage:[UIImage imageNamed:@"ar_huanyipi"] forState:UIControlStateNormal];
+        [_refreshButton addTarget:self action:@selector(dateButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _refreshButton;
+}
+
+- (UIButton*)dateButton
+{
+    if (!_dateButton) {
+        _dateButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _dateButton.backgroundColor = [UIColor clearColor];
+        [_dateButton setImage:[UIImage imageNamed:@"zj_shijian"] forState:UIControlStateNormal];
+        [_dateButton addTarget:self action:@selector(dateButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _dateButton;
+}
+
+- (UIButton*)locationButton
+{
+    if (!_locationButton) {
+        _locationButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _locationButton.backgroundColor = [UIColor clearColor];
+        [_locationButton setImage:[UIImage imageNamed:@"juli"] forState:UIControlStateNormal];
+        [_locationButton addTarget:self action:@selector(locationButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _locationButton;
+}
+
+- (UIButton*)cameraButton
+{
+    if (!_cameraButton) {
+        _cameraButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _cameraButton.backgroundColor = [UIColor clearColor];
+        [_cameraButton setImage:[UIImage imageNamed:@"ar_fabu"] forState:UIControlStateNormal];
+        [_cameraButton addTarget:self action:@selector(toReleaseFootprintView) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _cameraButton;
+}
+- (UIButton*)arListButton
+{
+    if (!_arListButton) {
+        _arListButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _arListButton.backgroundColor = [UIColor clearColor];
+        [_arListButton setImage:[UIImage imageNamed:@"ar_list"] forState:UIControlStateNormal];
+        [_arListButton addTarget:self action:@selector(toFootprintListView) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _arListButton;
+}
+
+- (UIButton*)planeMapButton
+{
+    if (!_planeMapButton) {
+        _planeMapButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _planeMapButton.backgroundColor = [UIColor clearColor];
+        [_planeMapButton setImage:[UIImage imageNamed:@"ar_pingmian"] forState:UIControlStateNormal];
+        [_planeMapButton addTarget:self action:@selector(planeMapButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _planeMapButton;
+}
+
+- (UIButton*)dateButton_oneDay
+{
+    if (!_dateButton_oneDay) {
+        _dateButton_oneDay = [UIButton buttonWithType:UIButtonTypeCustom];
+        _dateButton_oneDay.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.7];
+        _dateButton_oneDay.layer.cornerRadius = 18;
+        [_dateButton_oneDay setTitle:@"一天内" forState:UIControlStateNormal];
+        [_dateButton_oneDay setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        _dateButton_oneDay.titleLabel.font = [UIFont systemFontOfSize:14];
+        _dateButton_oneDay.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        NSMutableDictionary *customCondition = [[NSMutableDictionary alloc] init];
+        OTWUITapGestureRecognizer *tapGesture_oneday = [[OTWUITapGestureRecognizer alloc] initWithTarget:self action:@selector(searchBydate:)];
+        customCondition = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"oneDay",@"searchParamValue",nil];
+        tapGesture_oneday.opId = customCondition;
+        [self.dateButton_oneDay addGestureRecognizer:tapGesture_oneday];
+    }
+    return _dateButton_oneDay;
+}
+
+- (UIButton*)dateButton_sevenDay
+{
+    if (!_dateButton_sevenDay) {
+        _dateButton_sevenDay = [UIButton buttonWithType:UIButtonTypeCustom];
+        _dateButton_sevenDay.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.7];
+        _dateButton_sevenDay.layer.cornerRadius = 18;
+        [_dateButton_sevenDay setTitle:@"7天内" forState:UIControlStateNormal];
+        [_dateButton_sevenDay setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        _dateButton_sevenDay.titleLabel.font = [UIFont systemFontOfSize:14];
+        _dateButton_sevenDay.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        NSMutableDictionary *customCondition = [[NSMutableDictionary alloc] init];
+        OTWUITapGestureRecognizer *tapGesture_sevenday=[[OTWUITapGestureRecognizer alloc]initWithTarget:self action:@selector(searchBydate:)];
+        customCondition = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"sevenDay",@"searchParamValue",nil];
+        tapGesture_sevenday.opId = customCondition;
+        [_dateButton_sevenDay addGestureRecognizer:tapGesture_sevenday];
+    }
+    return _dateButton_sevenDay;
+}
+
+- (UIButton*)dateButton_oneMonth
+{
+    if (!_dateButton_oneMonth) {
+        _dateButton_oneMonth = [UIButton buttonWithType:UIButtonTypeCustom];
+        _dateButton_oneMonth.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.7];
+        _dateButton_oneMonth.layer.cornerRadius = 18;
+        [_dateButton_oneMonth setTitle:@"1个月内" forState:UIControlStateNormal];
+        [_dateButton_oneMonth setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        _dateButton_oneMonth.titleLabel.font = [UIFont systemFontOfSize:14];
+        _dateButton_oneMonth.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        NSMutableDictionary *customCondition = [[NSMutableDictionary alloc] init];
+        OTWUITapGestureRecognizer *tapGesture_onemonth=[[OTWUITapGestureRecognizer alloc]initWithTarget:self action:@selector(searchBydate:)];
+        customCondition = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"oneMonth",@"searchParamValue",nil];
+        tapGesture_onemonth.opId = customCondition;
+        [_dateButton_oneMonth addGestureRecognizer:tapGesture_onemonth];
+    }
+    return _dateButton_oneMonth;
+}
+
+- (UIButton*)locationBtton_100m
+{
+    if (!_locationBtton_100m) {
+        _locationBtton_100m = [UIButton buttonWithType:UIButtonTypeCustom];
+        _locationBtton_100m.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.7];
+        _locationBtton_100m.layer.cornerRadius = 18;
+        [_locationBtton_100m setTitle:@"100m" forState:UIControlStateNormal];
+        [_locationBtton_100m setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        _locationBtton_100m.titleLabel.font = [UIFont systemFontOfSize:14];
+        _locationBtton_100m.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        NSMutableDictionary *customCondition = [[NSMutableDictionary alloc] init];
+        OTWUITapGestureRecognizer *tapGesture_100m=[[OTWUITapGestureRecognizer alloc]initWithTarget:self action:@selector(searchByDistance:)];
+        customCondition = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"one",@"searchParamValue",nil];
+        tapGesture_100m.opId = customCondition;
+        [_locationBtton_100m addGestureRecognizer:tapGesture_100m];
+    }
+    return _locationBtton_100m;
+}
+
+- (UIButton*)locationBtton_500m
+{
+    if (!_locationBtton_500m) {
+        _locationBtton_500m = [UIButton buttonWithType:UIButtonTypeCustom];
+        _locationBtton_500m.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.7];
+        _locationBtton_500m.layer.cornerRadius = 18;
+        [_locationBtton_500m setTitle:@"500m" forState:UIControlStateNormal];
+        [_locationBtton_500m setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        _locationBtton_500m.titleLabel.font = [UIFont systemFontOfSize:14];
+        _locationBtton_500m.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        NSMutableDictionary *customCondition = [[NSMutableDictionary alloc] init];
+        OTWUITapGestureRecognizer *tapGesture_500m=[[OTWUITapGestureRecognizer alloc]initWithTarget:self action:@selector(searchByDistance:)];
+        customCondition = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"two",@"searchParamValue",nil];
+        tapGesture_500m.opId = customCondition;
+        [_locationBtton_500m addGestureRecognizer:tapGesture_500m];
+    }
+    return _locationBtton_500m;
+}
+
+- (UIButton*)locationBtton_1000m
+{
+    if (!_locationBtton_1000m) {
+        _locationBtton_1000m = [UIButton buttonWithType:UIButtonTypeCustom];
+        _locationBtton_1000m.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.7];
+        _locationBtton_1000m.layer.cornerRadius = 18;
+        [_locationBtton_1000m setTitle:@"1km" forState:UIControlStateNormal];
+        [_locationBtton_1000m setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        _locationBtton_1000m.titleLabel.font = [UIFont systemFontOfSize:14];
+        _locationBtton_1000m.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        NSMutableDictionary *customCondition = [[NSMutableDictionary alloc] init];
+        OTWUITapGestureRecognizer *tapGesture_1000m=[[OTWUITapGestureRecognizer alloc]initWithTarget:self action:@selector(searchByDistance:)];
+        customCondition = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"three",@"searchParamValue",nil];
+        tapGesture_1000m.opId = customCondition;
+        [_locationBtton_1000m addGestureRecognizer:tapGesture_1000m];
+    }
+    return _locationBtton_1000m;
+}
 
 @end

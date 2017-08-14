@@ -156,7 +156,7 @@ public class TrackCreateActivity extends BaseActivity {
   }
 }*/
                         RequestParams requestParams = new RequestParams();
-                        requestParams.setUri( ServerUrl.TRACK_CREATE);
+                        requestParams.setUri( ServerUrl.FOOTPRINT_CREATE);
                         Map<String,Object> parMap = new HashMap<>();
                         parMap.put("documents",qiniuBeanList);
                         Map<String,Object> footprintMap = new HashMap<>();

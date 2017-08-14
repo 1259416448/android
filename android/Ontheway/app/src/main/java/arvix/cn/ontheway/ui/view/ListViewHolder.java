@@ -3,6 +3,7 @@ package arvix.cn.ontheway.ui.view;
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
@@ -13,7 +14,7 @@ import arvix.cn.ontheway.R;
  */
 public class ListViewHolder {
 	public PullToRefreshListView list;
-	public View empty;
+	public ViewGroup empty_ll;
 
 	public static ListViewHolder initList(Context ctx, View root) {
 		ListViewHolder holder = new ListViewHolder();
@@ -21,9 +22,10 @@ public class ListViewHolder {
 		holder.list.setShowIndicator(false);
 		// holder.list.setOnScrollListener(new PauseOnScrollListener(ImageLoader
 		// .getInstance(), false, true));
-		holder.empty = root.findViewById(R.id.empty);
+		holder.empty_ll = (ViewGroup) root.findViewById(R.id.empty_ll);
 		return holder;
 	}
+
 
 	public static ListViewHolder initList(Activity act) {
 		ListViewHolder holder = new ListViewHolder();
@@ -31,12 +33,12 @@ public class ListViewHolder {
 		holder.list.setShowIndicator(false);
 		// holder.list.setOnScrollListener(new PauseOnScrollListener(ImageLoader
 		// .getInstance(), false, true));
-		holder.empty = act.findViewById(R.id.empty);
+		holder.empty_ll = (ViewGroup)act.findViewById(R.id.empty_ll);
 		return holder;
 	}
 
 	public void mayShowEmpty(int count) {
-		empty.setVisibility(count > 0 ? View.GONE : View.VISIBLE);
+		empty_ll.setVisibility(count > 0 ? View.GONE : View.VISIBLE);
 	}
 
 }

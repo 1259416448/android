@@ -79,7 +79,9 @@
 
 - (void)setupItems {
     
-    CGFloat width = CGRectGetWidth(self.frame)/self.items.count;
+    //CGFloat width = CGRectGetWidth(self.frame)/self.items.count;
+    int defaultCount = 5;
+    CGFloat width = CGRectGetWidth(self.frame)/defaultCount;
     CGFloat height = CGRectGetHeight(self.frame);
     
     for (int i = 0; i < self.items.count; i++) {

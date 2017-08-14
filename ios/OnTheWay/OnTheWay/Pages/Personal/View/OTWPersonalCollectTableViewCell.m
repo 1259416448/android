@@ -13,6 +13,7 @@
     UIView *shopQuanView;
     UIImageView *shopAddressView;
     UILabel *shopAddress;
+    UILabel *collectTime;
 
 }
 @property (nonatomic,strong) NSMutableArray *tableViewLabelArray;//模拟一个券的数组
@@ -39,6 +40,16 @@
     //设置边框
     self.contentView.layer.borderWidth=0.25;
     self.contentView.layer.borderColor=[UIColor color_d5d5d5].CGColor;
+    
+    //收藏时间
+    collectTime=[[UILabel alloc]init];
+    collectTime.textAlignment = NSTextAlignmentRight;
+    collectTime.text=@"2017.02.09";
+    collectTime.font=[UIFont systemFontOfSize:11];
+    collectTime.textColor=[UIColor color_979797];
+    collectTime.frame= CGRectMake(SCREEN_WIDTH-15-60, 15, 60, 12);
+    [self.contentView addSubview:collectTime];
+    
     //商家名称
     shopName=[[UILabel alloc]init];
     shopName.textColor=[UIColor color_202020];
@@ -46,8 +57,8 @@
     shopName.text=@"眉州东坡酒楼";
     shopName.font=[UIFont systemFontOfSize:17];
     [shopName sizeToFit];
-    if((shopName .frame.size.width+_tableViewLabelArray.count*20+30)>SCREEN_WIDTH){
-        CGRect shopNameRect=CGRectMake(15, 15,SCREEN_WIDTH-_tableViewLabelArray.count*20-30,18);
+    if((shopName .frame.size.width+_tableViewLabelArray.count*20+30+60)>SCREEN_WIDTH){
+        CGRect shopNameRect=CGRectMake(15, 15,SCREEN_WIDTH-_tableViewLabelArray.count*20-30-60,18);
         shopName.frame=shopNameRect;
     }else{
         CGRect shopNameRect=CGRectMake(15, 15,shopName .frame.size.width,18);
@@ -79,6 +90,8 @@
         
     }
     [self.contentView addSubview:shopQuanView];
+    
+    
     
     //地址图标
     shopAddressView=[[UIImageView alloc]init];

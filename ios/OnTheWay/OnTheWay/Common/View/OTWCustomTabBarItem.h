@@ -15,6 +15,7 @@ typedef enum : NSUInteger {
     OTWTabBarItemTypeImage,    // 图片显示
     OTWTabBarItemTypeText,     // 文字显示
     OTWTabBarItemTypeImageFlow, // 图片悬浮在tabBar顶端
+    OTWTabBarItemTypeHidden, //隐藏的
 } OTWTabBarItemType;
 
 @interface OTWCustomTabBarItem : UIView

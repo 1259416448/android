@@ -85,4 +85,9 @@ typedef OTWTabBarConfig*(^tabBarBlock)(OTWTabBarConfig *config);
  */
 @property (nonatomic, strong) UIColor *normalColor;
 
+/**
+ * 隐藏的controller
+ */
+@property (nonatomic,strong) NSArray *hiddenViewControllers;
+
 @end

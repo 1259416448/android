@@ -11,12 +11,12 @@ import arvix.cn.ontheway.service.impl.BaiduPoiServiceImpl;
 import arvix.cn.ontheway.service.impl.BaiduServiceImpl;
 import arvix.cn.ontheway.service.impl.CacheDefault;
 import arvix.cn.ontheway.service.impl.ImageFileUploadServiceImpl;
-import arvix.cn.ontheway.service.impl.TrackSearchServiceImpl;
+import arvix.cn.ontheway.service.impl.FootPrintSearchServiceImpl;
 import arvix.cn.ontheway.service.inter.BaiduPoiService;
 import arvix.cn.ontheway.service.inter.BaiduService;
 import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.service.inter.ImageFileUploadService;
-import arvix.cn.ontheway.service.inter.TrackSearchService;
+import arvix.cn.ontheway.service.inter.FootPrintSearchService;
 
 /**
  * Created by asdtiang on 2017/7/18 0018.
@@ -35,6 +35,7 @@ public class OnthewayApplication {
     public static synchronized void init(){
         if(!initBefore){
             cache = new CacheDefault();
+            cache.get(StaticVar.AUTH_TOKEN);
             UserInfo userInfo = cache.getT(StaticVar.USER_INFO,UserInfo.class);
             if(userInfo!=null){
                 App.userInfo = userInfo;
@@ -50,8 +51,8 @@ public class OnthewayApplication {
             ImageFileUploadService fileUploadService = new ImageFileUploadServiceImpl();
             iocMap.put(ImageFileUploadService.class,fileUploadService);
 
-            TrackSearchService trackSearchService = new TrackSearchServiceImpl();
-            iocMap.put(TrackSearchService.class,trackSearchService);
+            FootPrintSearchService footPrintSearchService = new FootPrintSearchServiceImpl();
+            iocMap.put(FootPrintSearchService.class, footPrintSearchService);
 
             Log.i("App","app init finish--------------------------------->");
         }

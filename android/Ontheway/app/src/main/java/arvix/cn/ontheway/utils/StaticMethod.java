@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,6 +23,7 @@ import org.xutils.x;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
@@ -30,11 +32,12 @@ import java.util.Random;
 import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.bean.BaseResponse;
+import arvix.cn.ontheway.bean.FootPrintBean;
 import arvix.cn.ontheway.bean.Pagination;
-import arvix.cn.ontheway.bean.TrackBean;
 import arvix.cn.ontheway.bean.UserInfo;
 import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.ui.LoginActivity;
+import arvix.cn.ontheway.ui.usercenter.MyProfileFragment;
 
 /**
  * Created by asdtiang on 2017/7/24 0024.
@@ -66,6 +69,35 @@ public class StaticMethod {
 
         if(!TextUtils.isEmpty(source)){
             if(maxLength<source.length()){
+                source = source.substring(0,maxLength)+"...";
+            }
+        }
+        return source;
+    }
+
+    public static String genLesAddressStr(String source,int maxLength){
+
+        if(!TextUtils.isEmpty(source)){
+            if(maxLength<source.length()){
+                source.replace("中国","");
+                int shiIndex =  source.indexOf("市");
+                if(shiIndex > -1){
+                    source = source.substring(shiIndex);
+                }
+                int quIndex = source.indexOf("区");
+                if(quIndex>-1){
+                    source = source.substring(quIndex);
+                }else{
+                    int xianIndex = source.indexOf("县");
+                    if(xianIndex>-1){
+                        source = source.substring(xianIndex);
+                    }else{
+                        int zhengIndex = source.indexOf("镇");
+                        if(zhengIndex>-1){
+                            source = source.substring(zhengIndex);
+                        }
+                    }
+                }
                 source = source.substring(0,maxLength)+"...";
             }
         }
@@ -171,12 +203,33 @@ public class StaticMethod {
     }
 
     public static <T> BaseResponse<T> genResponse(String jsonStr,Class<T> bodyType){
-        BaseResponse baseResponse = JSON.parseObject(jsonStr,new TypeReference<BaseResponse<Pagination<TrackBean>>>(){});
+        BaseResponse baseResponse = JSON.parseObject(jsonStr,new TypeReference<BaseResponse<Pagination<FootPrintBean>>>(){});
         baseResponse.setBodyBean(TypeUtils.castToJavaBean(baseResponse.getBody(), bodyType));
         return baseResponse;
     }
 
+    public static int getStatusBarHeight(Context context) {
+        Class<?> c = null;
+        Object obj = null;
+        Field field = null;
+        int x = 0, sbar = 0;
+        try {
+            c = Class.forName("com.android.internal.R$dimen");
 
+            obj = c.newInstance();
+
+            field = c.getField("status_bar_height");
+
+            x = Integer.parseInt(field.get(obj).toString());
+
+            sbar = context.getResources().getDimensionPixelSize(x);
+        } catch (Exception e1) {
+
+            e1.printStackTrace();
+
+        }
+        return sbar;
+    }
 
 
 
@@ -199,10 +252,16 @@ public class StaticMethod {
     }
 
     public static int  goToLogin(Activity activity){
-        int randomInt = new Random().nextInt(Integer.MAX_VALUE);
-        Intent intent = new Intent(activity, LoginActivity.class);
-        activity.startActivityForResult(intent, randomInt);
-        return randomInt;
+        CacheService cache = OnthewayApplication.getInstahce(CacheService.class);
+        Log.i("goToLogin:","cache.get(StaticVar.AUTH_TOKEN)------------->:"+cache.get(StaticVar.AUTH_TOKEN));
+        if(cache.get(StaticVar.AUTH_TOKEN)!=null){
+            return 0;
+        }else{
+            int randomInt = new Random().nextInt(Integer.MAX_VALUE);
+            Intent intent = new Intent(activity, LoginActivity.class);
+            activity.startActivityForResult(intent, randomInt);
+            return randomInt;
+        }
     }
 
     public static void showToast(String text,Context context){
