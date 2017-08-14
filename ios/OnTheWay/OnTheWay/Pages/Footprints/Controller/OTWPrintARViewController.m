@@ -29,7 +29,7 @@
 #import <MJExtension.h>
 #import "MBProgressHUD+PYExtension.h"
 
-@interface OTWPrintARViewController ()<MCYARDataSource,BMKLocationServiceDelegate>
+@interface OTWPrintARViewController ()<MCYARDataSource,BMKLocationServiceDelegate,UIAlertViewDelegate>
 
 @property(nonatomic,strong) UIButton *backButton;
 @property(nonatomic,strong) UIButton *refreshButton;
@@ -54,6 +54,7 @@
 @property (nonatomic,copy) BMKUserLocation *userLocation;
 @property (nonatomic,strong) NSDictionary *reponseCacheData;
 
+@property (nonatomic,assign) BOOL ifFirstLoadData;
 
 @end
 
@@ -64,6 +65,7 @@
     [self initLocService];
     [self showARViewController];
     [self buildUI];
+    self.ifFirstLoadData = NO;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -75,6 +77,7 @@
 {
     [super viewWillAppear:animated];
     _locService.delegate = self;
+    
     self.dateButton_oneDay.hidden = YES;
     self.dateButton_sevenDay.hidden = YES;
     self.dateButton_oneMonth.hidden = YES;
@@ -83,6 +86,16 @@
     self.locationBtton_1000m.hidden = YES;
     [self.navigationController setNavigationBarHidden:YES];
     [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
+    //定位信息
+    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
+        [self initCLLocationManager];
+        return ;
+    }
+    //检查页面是否已经加载过数据，如果没有加载，开启定位信息，进行数据加载
+    if(!self.ifFirstLoadData){
+        //增加一个加载状态
+        [_locService startUserLocationService];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -158,34 +171,20 @@
     self.locationBtton_1000m.frame = CGRectMake(locationBtton_1000mX, locationButtonY, 45, 35);
     [self.view insertSubview:self.locationBtton_1000m aboveSubview:self.presenter];
     
-    if ([ CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
-        [self initCLLocationManager];
-        if(_locService){
-            _locService.delegate = nil;
-            _locService = nil;
-        }
-        return;
+    //定位信息
+    if (!([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied)) {
+        [_locService startUserLocationService];
     }
-    
-    //开始定位服务
-    [_locService startUserLocationService];
-    
-    //    UIButton *nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    //    nextButton.frame = CGRectMake(SCREEN_WIDTH-80, 200, 80, 80);
-    //    nextButton.backgroundColor = [UIColor whiteColor];
-    //    [nextButton setTitle:@"换一批" forState:UIControlStateNormal];
-    //    [nextButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
-    //    [nextButton addTarget:self action:@selector(nextButtonClick) forControlEvents:UIControlEventTouchUpInside];
-    //    [self.view insertSubview:nextButton aboveSubview:self.presenter];
-    
 }
 
-- (void) initLocService{
-    _locService = [[BMKLocationService alloc] init];
-    _locService.delegate = self;
-    _locService.desiredAccuracy = kCLLocationAccuracyBest;
+-(MBProgressHUD *) addLoadingHud
+{
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.bezelView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+    hud.activityIndicatorColor = [UIColor whiteColor];
+    hud.userInteractionEnabled = NO;
+    return hud;
 }
-
 - (void)initCLLocationManager
 {
     BOOL enable=[CLLocationManager locationServicesEnabled];
@@ -203,27 +202,29 @@
                                                            delegate:self
                                                   cancelButtonTitle:nil
                                                   otherButtonTitles:@"立即开启",@"好", nil];
+        //alertView.tag = ALERTTAGNUMBER;
         [alertView show];
         
     }
 }
 
-//- (void)nextButtonClick
-//{
-//    double lat = 30.740117;
-//    double lon = 104.063477;
-//    double deltaLat = 0.04;
-//    double deltaLon = 0.07;
-//    double altitudeDelta = 0;
-//    NSInteger count = 50;
-//
-//#warning 这是假数据，需要换为真实数据
-//    NSArray *dummyAnnotations = [self getDummyAnnotation:lat centerLongitude:lon deltaLat:deltaLat deltaLon:deltaLon altitudeDelta:altitudeDelta count:count];
-////    [self.presenter clear];
-////    /[self clearRadar];
-//    [self setAnnotations:dummyAnnotations];
-//}
+#pragma marks -- UIAlertViewDelegate
+//根据被点击按钮的索引处理点击事件
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(buttonIndex == 0){
+        NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+        if ([[UIApplication sharedApplication] canOpenURL:url]) {
+            [[UIApplication sharedApplication] openURL:url];
+        }
+    }
+}
 
+- (void) initLocService{
+    _locService = [[BMKLocationService alloc] init];
+    _locService.delegate = self;
+    _locService.desiredAccuracy = kCLLocationAccuracyBest;
+}
 
 #pragma mark 返回事件
 - (void)backButtonClick
@@ -362,8 +363,11 @@
 
 -(void)fetchARFootprints:(NSDictionary *)params completion:(requestBackBlock)block
 {
-    
+    MBProgressHUD *hud = [self addLoadingHud];
     [OTWFootprintService getFootprintList:params completion:^(id result, NSError *error) {
+        
+        [hud hideAnimated:YES];
+        
         if (result) {
             if([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]){
                 if (block) {
@@ -392,7 +396,6 @@
 #pragma mark 根据查询参数加载足迹数据
 - (void)getFootprints
 {
-    DLog(@"搜索结果：%@",self.footprintSearchParams.mj_keyValues);
     [self fetchARFootprints:self.footprintSearchParams.mj_keyValues completion:^(id result) {
         DLog(@"是否为最后一页%@",result[@"body"][@"last"]);
         if (result[@"body"][@"last"]) {
@@ -411,6 +414,7 @@
         }
         NSArray *dummyAnnotations = [self assembleAnnotation:footprintModels];
         [self setAnnotations:dummyAnnotations];
+        self.ifFirstLoadData = YES;
     }];
 }
 

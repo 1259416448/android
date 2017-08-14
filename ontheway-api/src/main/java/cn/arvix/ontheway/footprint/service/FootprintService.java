@@ -31,10 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author Created by yangyang on 2017/7/26.
@@ -442,8 +439,8 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
         Map<String, Object> params = Maps.newHashMap();
         params.put("ifDelete_eq", Boolean.TRUE);
         //设置删除后的数据只能保存一天，一天后定时任务会自动清空
-        params.put("dateCreated_lt", new Date(System.currentTimeMillis() - TimeMaker.ONE_DAY));
-        List<Footprint> footprints = super.findAll(Searchable.newSearchable(params, new PageRequest(0, 10))).getContent();
+        params.put("lastUpdated_lt", new Date(System.currentTimeMillis() - TimeMaker.ONE_DAY));
+        List<Footprint> footprints = super.findAllWithNoCount(Searchable.newSearchable(params, new PageRequest(0, 10))).getContent();
         if (footprints != null && footprints.size() > 0) {
             List<Long> footprintIds = Lists.newArrayListWithCapacity(footprints.size());
             footprints.forEach(x -> footprintIds.add(x.getId()));
@@ -478,7 +475,7 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
         int value = 1;
         if (likeRecordsService.countByUserIdAndFootprintId(user.getId(), id) == 0) {
             //增加点赞
-            likeRecordsService.createByUserIdAndFootprintId(user.getId(), id);
+            likeRecordsService.createByUserIdAndFootprintId(user.getId(), id, footprint.getUser().getId());
         } else {
             //删除点赞
             likeRecordsService.deleteByUserIdAndFootprintId(user.getId(), id);
@@ -593,6 +590,18 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
             dayList.add(detailDTO);
         });
         return list;
+    }
+
+    /**
+     * 通过足迹ID获取足迹数据
+     *
+     * @param footprintIds 足迹ID数据
+     * @return footprint list
+     */
+    public List<Footprint> findFootprintByIds(Set<Long> footprintIds) {
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("id_in", footprintIds);
+        return super.findAllWithNoPageNoSort(Searchable.newSearchable(params));
     }
 
     //检索的几种类型

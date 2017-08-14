@@ -226,7 +226,7 @@ public class TimeMaker {
                 return dateTimeFormat.format(theDate);
             }
         }
-        formater = new SimpleDateFormat(formatStr);
+        SimpleDateFormat formater = new SimpleDateFormat(formatStr);
         return formater.format(theDate);
     }
 
@@ -240,7 +240,7 @@ public class TimeMaker {
                 return dateTimeFormat.format(theDate);
             }
         }
-        formater = new SimpleDateFormat(formatStr, locale);
+        SimpleDateFormat formater = new SimpleDateFormat(formatStr, locale);
         return formater.format(theDate);
     }
 

@@ -163,7 +163,7 @@
         spotview.backgroundColor = [UIColor redColor];
         spotview.layer.cornerRadius = 3;
         
-        NSLog(@"实际距离：%f  屏幕宽度:%f  (实际x:%f, y:%f) 方位角 %f 雷达距离 %f 地址:", annotation.distanceFromUser, self.frame.size.width, pointX, pointY,azimuth,screenDistance);
+        //NSLog(@"实际距离：%f  屏幕宽度:%f  (实际x:%f, y:%f) 方位角 %f 雷达距离 %f 地址:", annotation.distanceFromUser, self.frame.size.width, pointX, pointY,azimuth,screenDistance);
         
         [self addSubview:spotview];
         [self.spots addObject:spotview];

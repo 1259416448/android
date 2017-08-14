@@ -56,6 +56,13 @@ public class CommentService extends BaseServiceImpl<Comment, Long> {
         this.footprintService = footprintService;
     }
 
+    private CommentMessageService commentMessageService;
+
+    @Autowired
+    public void setCommentMessageService(CommentMessageService commentMessageService) {
+        this.commentMessageService = commentMessageService;
+    }
+
     private CommentRepository getCommentRepository() {
         return (CommentRepository) baseRepository;
     }
@@ -92,8 +99,13 @@ public class CommentService extends BaseServiceImpl<Comment, Long> {
         }
         comment.setReplyCommentId(dto.getReplyCommentId());
         super.save(comment);
+
+        //创建消息提示
+        commentMessageService.create(comment.getFootprint(), comment);
+
         //更新评论统计记录
         statisticsService.updateCommentNumByInstanceId(comment.getFootprint().getId(), 1, SystemModule.footprint);
+
         return JsonUtil.getSuccess(CommonContact.SAVE_SUCCESS, CommonContact.SAVE_SUCCESS,
                 comment.toDetailDTO(configService.getConfigString(CommonContact.QINIU_BUCKET_URL)));
     }
@@ -113,6 +125,7 @@ public class CommentService extends BaseServiceImpl<Comment, Long> {
         User user = webContextUtils.getCheckCurrentUser();
         if (!Objects.equals(comment.getUser().getId(), user.getId()))
             return JsonUtil.getFailure(CommonContact.NO_PERMISSION, CommonErrorCode.COMMENT_DELETE_NO_PERMISSION);
+        commentMessageService.updateCommentById(comment);
         super.delete(comment);
         statisticsService.updateCommentNumByInstanceId(comment.getFootprint().getId(), -1, SystemModule.footprint);
         getCommentRepository().updateReplyCommentId(id);
@@ -127,18 +140,21 @@ public class CommentService extends BaseServiceImpl<Comment, Long> {
      * @param footprintId 足迹ID
      * @return 评论数据
      */
-    public JSONResult search(Integer number, Integer size, Long footprintId,Long currentTime) {
+    public JSONResult search(Integer number, Integer size, Long footprintId, Long currentTime) {
         //检查足迹是否被删除
         Footprint footprint = footprintService.findOne(footprintId);
-        if(footprint.getIfDelete()) return JsonUtil.getFailure("footprint already deleted",CommonErrorCode.FOOTPRINT_ALREADY_DELETE);
+        if (footprint.getIfDelete()) return JsonUtil.getFailure("footprint already deleted", CommonErrorCode.FOOTPRINT_ALREADY_DELETE);
+        if (currentTime == null) {
+            currentTime = System.currentTimeMillis();
+        }
         return JsonUtil.getSuccess(CommonContact.FETCH_SUCCESS, CommonContact.FETCH_SUCCESS,
-                search(number,size,footprintId,currentTime,Boolean.TRUE));
+                search(number, size, footprintId, currentTime, Boolean.TRUE));
     }
 
-    public Page search(Integer number, Integer size, Long footprintId,Long currentTime, Boolean b) {
+    public Page search(Integer number, Integer size, Long footprintId, Long currentTime, Boolean b) {
         Map<String, Object> params = Maps.newHashMap();
         params.put("footprint.id_eq", footprintId);
-        params.put("dateCreated_lte",currentTime);
+        params.put("dateCreated_lte", currentTime);
         Searchable searchable = Searchable.newSearchable(params, new PageRequest(number, size),
                 new Sort(Sort.Direction.DESC, "dateCreated"));
         Page<Comment> page = super.findAllWithNoCount(searchable);
@@ -148,7 +164,7 @@ public class CommentService extends BaseServiceImpl<Comment, Long> {
             page.getContent().forEach(x -> content.add(x.toDetailDTO(fixUrl)));
             page = new PageResult<>(content, searchable.getPage(), page.getTotalElements());
         }
-        ((PageResult)page).setCurrentTime(currentTime);
+        ((PageResult) page).setCurrentTime(currentTime);
         return page;
     }
 

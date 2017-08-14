@@ -559,4 +559,9 @@ public class SimpleBaseRepository<M, ID extends Serializable> extends SimpleJpaR
         return findOne(id) != null;
     }
 
+    @Override
+    public void clear(){
+        em.clear();
+    }
+
 }
