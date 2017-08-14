@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -94,7 +95,7 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
     Pagination pagination;
     private boolean commentCanFetch = false;
     private static int waitForResultValue = -1;
-
+    private View emptyView;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,10 +114,7 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
         listHolder.list.setOnItemClickListener(this);
         listHolder.list.setMode(PullToRefreshBase.Mode.BOTH);
         listHolder.list.setOnRefreshListener(this);
-        View emptyView = LayoutInflater.from(self).inflate(R.layout.comment_empty, (ViewGroup)getWindow().getDecorView(), false);
-        listHolder.empty_ll.removeAllViews();
-        listHolder.empty_ll.addView(emptyView);
-        listHolder.mayShowEmpty(adapter.getCount());
+        emptyView = LayoutInflater.from(self).inflate(R.layout.comment_empty, (ViewGroup)getWindow().getDecorView(), false);
         x.view().inject(this);
         HeaderHolder head=new HeaderHolder();
         head.init(self,"足迹详情");
@@ -187,7 +185,7 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
                                     CommentBean commentBean = response.getBodyBean();
                                     commentBeanList.add(0,commentBean);
                                     adapter.notifyDataSetChanged();
-                                    listHolder.list.onRefreshComplete();
+                                    delayRefreshComplete(100);
                                 }else if(response.getCode() == StaticVar.ERROR){
                                     StaticMethod.showToast("评论失败",self);
                                 }else{
@@ -199,8 +197,8 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
                         }
 
                         @Override
-                        public void onError(Throwable throwable, boolean b) {
-
+                        public void onError(Throwable ex, boolean b) {
+                            ex.printStackTrace();
                         }
 
                         @Override
@@ -296,22 +294,20 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
                        initPhotoList();
                    }
                    if(footPrintBean.getComments()!=null && footPrintBean.getComments().size()>0){
-                     //  commentBeanList.clear();
                        commentBeanList.addAll(footPrintBean.getComments());
                        adapter.notifyDataSetChanged();
-                       listHolder.mayShowEmpty(adapter.getCount());
-                       listHolder.list.onRefreshComplete();
                        commentNoTv.setText(commentBeanList.size()+"条评论");
                        if(commentBeanList.size()>=10){
                            commentCanFetch = true;
                        }
                    }
                }
-            }
+
+           }
 
            @Override
            public void onError(Throwable ex, boolean isOnCallback) {
-
+                ex.printStackTrace();
            }
 
            @Override
@@ -322,10 +318,20 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
            @Override
            public void onFinished() {
                Log.i(logTag,"onFinished------------------------>");
-
+               delayRefreshComplete(100);
+               mayShowEmpty(adapter.getCount());
            }
         });
 
+    }
+
+    private void delayRefreshComplete(final int delay) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                listHolder.list.onRefreshComplete();
+            }
+        }, delay);
     }
 
     private void fetchCommentPagination(){
@@ -365,7 +371,6 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
                             commentNoTv.setText(pagination.getTotalElements()+"条评论");
                             commentBeanList.addAll(footPrintBean.getComments());
                             adapter.notifyDataSetChanged();
-                            listHolder.list.onRefreshComplete();
                         } else if (response.getCode() == StaticVar.ERROR) {
                             StaticMethod.showToast("获取数据失败", self);
                         } else {
@@ -375,7 +380,7 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
 
                     @Override
                     public void onError(Throwable ex, boolean isOnCallback) {
-
+                        ex.printStackTrace();
                     }
 
                     @Override
@@ -385,16 +390,26 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
 
                     @Override
                     public void onFinished() {
+                        delayRefreshComplete(100);
+                        mayShowEmpty(adapter.getCount());
                     }
                 });
             }else{
                 Log.i(logTag,"fetch---------------->is false");
-                listHolder.mayShowEmpty(adapter.getCount());
-                listHolder.list.onRefreshComplete();
+                mayShowEmpty(adapter.getCount());
+                delayRefreshComplete(100);
             }
         }else{
-            listHolder.mayShowEmpty(adapter.getCount());
-            listHolder.list.onRefreshComplete();
+            mayShowEmpty(adapter.getCount());
+            delayRefreshComplete(100);
+        }
+    }
+
+    private void mayShowEmpty(int count) {
+        if(count>0&&emptyView.getParent()!=null){
+            listHolder.list.getRefreshableView().removeHeaderView(emptyView);
+        }else if(count<=0&&emptyView.getParent()==null){
+            listHolder.list.getRefreshableView().addHeaderView(emptyView);
         }
     }
 
