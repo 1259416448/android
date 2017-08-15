@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.bean.Pagination;
 import arvix.cn.ontheway.bean.FootPrintBean;
@@ -43,6 +44,7 @@ import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.service.inter.FootPrintSearchNotify;
 import arvix.cn.ontheway.service.inter.FootPrintSearchService;
 import arvix.cn.ontheway.ui.track.TrackDetailActivity;
+import arvix.cn.ontheway.utils.DLog;
 import arvix.cn.ontheway.utils.LocationHelper;
 import arvix.cn.ontheway.utils.MyProgressDialog;
 import arvix.cn.ontheway.utils.OnthewayApplication;
@@ -160,7 +162,7 @@ public class AROverlayView extends View implements FootPrintSearchNotify<FootPri
             newRotateStr = newRotateStr +"-"+  df.format(rotatedProjectionMatrix[i]);
             diffAbs = diffAbs + Math.abs(rotatedProjectionMatrix[i] - oldrotatedProjectionMatrix[i]);
         }
-        if(diffAbs>0.5){
+        if(diffAbs>0.01){
             Log.i(logTag,"updateRotatedProjectionMatrix--->change  new"  + newRotateStr);
             Log.i(logTag,"updateRotatedProjectionMatrix--->change  old"  + oldRotateStr);
             this.invalidate();
@@ -261,6 +263,18 @@ public class AROverlayView extends View implements FootPrintSearchNotify<FootPri
         float rectHeight;
     }
 
+    int height=0;
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        height=h;
+    }
+
+    private final float radius=StaticMethod.dip2px(App.self,20*1.414213562f);
+    float cx = StaticMethod.dip2px(App.self,55);
+    float cy = height - StaticMethod.dip2px(App.self,55);
+    LatLng center = new LatLng(OnthewayApplication.getInstahce(CacheService.class).getDouble(StaticVar.BAIDU_LOC_CACHE_LAT),OnthewayApplication.getInstahce(CacheService.class).getDouble(StaticVar.BAIDU_LOC_CACHE_LON));
+
 
     @Override
     protected void onDraw(final Canvas canvas) {
@@ -270,11 +284,7 @@ public class AROverlayView extends View implements FootPrintSearchNotify<FootPri
             try {
                 Log.i(logTag, "do onDraw------------------------------------>");
                 Map<String, Integer> drawPointRePointMap = new HashMap<String, Integer>();
-                LatLng center = new LatLng(cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LAT),cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LON));
                 LatLng target = null;
-                float radius = StaticMethod.dip2px(context,20*1.414213562f);
-                float cx = StaticMethod.dip2px(context,55);
-                float cy = canvas.getHeight() - StaticMethod.dip2px(context,55);
                 List<DrawTrackPointInfo> drawTrackPointInfoListTemp = new ArrayList<>();
                 DrawTrackPointInfo pointInfo = null;
                 //for start
