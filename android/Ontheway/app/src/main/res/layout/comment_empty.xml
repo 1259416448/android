@@ -4,6 +4,7 @@
     android:background="@color/white"
     android:gravity="center_horizontal"
     android:orientation="vertical"
+    android:id="@+id/track_empty_layout"
     android:layout_height="wrap_content">
     <ImageView
         android:layout_gravity="center"
