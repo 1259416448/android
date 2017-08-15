@@ -19,6 +19,7 @@
 #import "OTWPersonalClaimViewController.h"
 #import "OTWPersonalCollectController.h"
 #import "OTWPersonalFindViewController.h"
+#import "OTWPersonalWalletViewController.h"
 
 @interface OTWPersonalViewController() <UITableViewDataSource,UITableViewDelegate>
 
@@ -39,7 +40,7 @@
 @property (nonatomic,strong) UILabel *personalNameLabel;
 @property (nonatomic,strong) UIImageView *personalLeftIconImageView;
 @property (nonatomic,strong) UIView *personalMyTableViewFooter;
-@property (nonatomic,strong) UIView *myWalletView;
+@property (nonatomic,strong) UIView *myClaimView;
 @property (nonatomic,strong) UIView *mySiteView;
 @property (nonatomic,strong) UIImageView *personalWalletIconImageView;
 @property (nonatomic,strong) UILabel *personalWalletNameLabel;
@@ -65,9 +66,11 @@
 - (void) initData
 {
     _tableViewLabelArray = [[NSMutableArray alloc] init];
+    [_tableViewLabelArray addObject:@[@"我的足迹",@"wodezuji"]] ;
     [_tableViewLabelArray addObject:@[@"我的收藏",@"wodeshoucang"]];
-    [_tableViewLabelArray addObject:@[@"我的发现",@"faxianshangjia"]];
-    [_tableViewLabelArray addObject:@[@"我的认领",@"wd_renling"]];
+    [_tableViewLabelArray addObject:@[@"我的钱包",@"wd_qianbao"]] ;
+    //[_tableViewLabelArray addObject:@[@"我的发现",@"faxianshangjia"]];
+   // [_tableViewLabelArray addObject:@[@"我的认领",@"wd_renling"]];
     //获取用户数据
 }
 -(void)viewWillAppear:(BOOL)animated
@@ -126,18 +129,23 @@
 #pragma mark 点击行
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     if(indexPath.row==2){
-        OTWPersonalClaimViewController *PersonalClaimVC = [[OTWPersonalClaimViewController alloc] init];
-        [self.navigationController pushViewController:PersonalClaimVC animated:YES];
+        OTWPersonalWalletViewController *personalWalletVC = [[OTWPersonalWalletViewController alloc] init];
+        [self.navigationController pushViewController:personalWalletVC animated:YES];
     }
     
     if(indexPath.row==0){
-        OTWPersonalCollectController *personalCollectVC = [[OTWPersonalCollectController alloc] init];
-        [self.navigationController pushViewController:personalCollectVC animated:YES];
+        OTWPersonalFootprintsListController *personalSiteVC = [OTWPersonalFootprintsListController initWithIfMyFootprint:YES];
+        personalSiteVC.userId = [OTWUserModel shared].userId.description;
+        personalSiteVC.userNickname = [OTWUserModel shared].name;
+        personalSiteVC.userHeaderImg = [OTWUserModel shared].headImg;
+        [self.navigationController pushViewController:personalSiteVC animated:YES];
     }
 
     if(indexPath.row==1){
-        OTWPersonalFindViewController *personalFindVC = [[OTWPersonalFindViewController alloc] init];
-        [self.navigationController pushViewController:personalFindVC animated:YES];
+    OTWPersonalCollectController *personalCollectVC = [[OTWPersonalCollectController alloc] init];
+    [self.navigationController pushViewController:personalCollectVC animated:YES];
+//        OTWPersonalFindViewController *personalFindVC = [[OTWPersonalFindViewController alloc] init];
+//        [self.navigationController pushViewController:personalFindVC animated:YES];
     }
 }
 
@@ -178,7 +186,7 @@
 
 -(UITableView*)personalMyTableView{
     if(!_personalMyTableView){
-        _personalMyTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 65,SCREEN_WIDTH, SCREEN_HEIGHT-65) style:UITableViewStyleGrouped];
+        _personalMyTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 65,SCREEN_WIDTH, SCREEN_HEIGHT-65) style:UITableViewStylePlain];
         _personalMyTableView.dataSource = self;
         _personalMyTableView.delegate = self;
         _personalMyTableView.backgroundColor = [UIColor clearColor];
@@ -191,7 +199,7 @@
 -(UIView*)personalMyTableViewHeader{
     if(!_personalMyTableViewHeader){
         //设置header的背景
-        _personalMyTableViewHeader=[[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 155)];
+        _personalMyTableViewHeader=[[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 95)];
         _personalMyTableViewHeader.backgroundColor=[UIColor clearColor];
         
          //设置header 内容的背景
@@ -215,10 +223,10 @@
         [_personalMyTableViewHeader addSubview:self.underLineBottomView];
         
         //我的足迹
-        [_personalMyTableViewHeader addSubview:self.myFootprintsView];
+        //[_personalMyTableViewHeader addSubview:self.myFootprintsView];
         
-        UITapGestureRecognizer  *tapGesturFootprints=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapActionForFootprints)];
-        [self.myFootprintsView addGestureRecognizer:tapGesturFootprints];
+//        UITapGestureRecognizer  *tapGesturFootprints=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapActionForFootprints)];
+//        [self.myFootprintsView addGestureRecognizer:tapGesturFootprints];
         
     }
       return _personalMyTableViewHeader;
@@ -229,13 +237,13 @@
     OTWPersonalInfoController *personalInfoVC = [[OTWPersonalInfoController alloc] init];
     [self.navigationController pushViewController:personalInfoVC animated:YES];
 }
--(void)tapActionForFootprints{
-    OTWPersonalFootprintsListController *personalSiteVC = [OTWPersonalFootprintsListController initWithIfMyFootprint:YES];
-    personalSiteVC.userId = [OTWUserModel shared].userId.description;
-    personalSiteVC.userNickname = [OTWUserModel shared].name;
-    personalSiteVC.userHeaderImg = [OTWUserModel shared].headImg;
-    [self.navigationController pushViewController:personalSiteVC animated:YES];
-}
+//-(void)tapActionForFootprints{
+//    OTWPersonalFootprintsListController *personalSiteVC = [OTWPersonalFootprintsListController initWithIfMyFootprint:YES];
+//    personalSiteVC.userId = [OTWUserModel shared].userId.description;
+//    personalSiteVC.userNickname = [OTWUserModel shared].name;
+//    personalSiteVC.userHeaderImg = [OTWUserModel shared].headImg;
+//    [self.navigationController pushViewController:personalSiteVC animated:YES];
+//}
 
 -(UIImageView*)personalHeadImageView{
     if(!_personalHeadImageView){
@@ -303,15 +311,15 @@
         _myFootprintsView.layer.borderColor=[UIColor color_d5d5d5].CGColor;
         
         //我的足迹图标
-        [_myFootprintsView addSubview: self.personalIconImageView];
-        self.personalIconImageView.image=[UIImage imageNamed:@"wodezuji"];
+//        [_myFootprintsView addSubview: self.personalIconImageView];
+//        self.personalIconImageView.image=[UIImage imageNamed:@"wodezuji"];
         
         //我的足迹名称
-         [_myFootprintsView addSubview: self.personalNameLabel];
-        self.personalNameLabel.text=@"我的足迹";
+//         [_myFootprintsView addSubview: self.personalNameLabel];
+//        self.personalNameLabel.text=@"我的足迹";
         
         //向左的图标
-        [_myFootprintsView addSubview: self.personalLeftIconImageView];
+//        [_myFootprintsView addSubview: self.personalLeftIconImageView];
 
     }
     return _myFootprintsView;
@@ -341,17 +349,17 @@
 
 -(UIView*)personalMyTableViewFooter{
     if(!_personalMyTableViewFooter){
-        _personalMyTableViewFooter=[[UIView alloc]initWithFrame:CGRectMake(0,10, SCREEN_WIDTH, 110)];
+        _personalMyTableViewFooter=[[UIView alloc]initWithFrame:CGRectMake(0,0, SCREEN_WIDTH, 120)];
         
         [_personalMyTableViewFooter addSubview: self.mySiteView];
-        [_personalMyTableViewFooter addSubview: self.myWalletView];
+        [_personalMyTableViewFooter addSubview: self.myClaimView];
     }
     return _personalMyTableViewFooter;
 }
 
 -(UIView*)mySiteView{
     if(!_mySiteView){
-        _mySiteView=[[UIView alloc]initWithFrame:CGRectMake(0, self.myWalletView.MaxY+10, SCREEN_WIDTH, 50)];
+        _mySiteView=[[UIView alloc]initWithFrame:CGRectMake(0, self.myClaimView.MaxY+10, SCREEN_WIDTH, 50)];
         _mySiteView.backgroundColor=[UIColor whiteColor];
         _mySiteView.layer.borderWidth=0.5;
         _mySiteView.layer.borderColor=[UIColor color_d5d5d5].CGColor;
@@ -379,33 +387,34 @@
     OTWPersonalSiteController *personalSiteVC = [[OTWPersonalSiteController alloc] init];
     [self.navigationController pushViewController:personalSiteVC animated:YES];
 }
--(UIView*)myWalletView{
-    _myWalletView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 50)];
-    _myWalletView.backgroundColor=[UIColor whiteColor];
-    _myWalletView.layer.borderWidth=0.5;
-    _myWalletView.layer.borderColor=[UIColor color_d5d5d5].CGColor;
+-(UIView*)myClaimView{
+    _myClaimView=[[UIView alloc]initWithFrame:CGRectMake(0, 10, SCREEN_WIDTH, 50)];
+    _myClaimView.backgroundColor=[UIColor whiteColor];
+    _myClaimView.layer.borderWidth=0.5;
+    _myClaimView.layer.borderColor=[UIColor color_d5d5d5].CGColor;
     
-   //我的钱包图标
-    [_myWalletView addSubview: self.personalWalletIconImageView];
-    self.personalWalletIconImageView.image=[UIImage imageNamed:@"wd_qianbao"];
+   //我的认领图标
+    [_myClaimView addSubview: self.personalWalletIconImageView];
+    self.personalWalletIconImageView.image=[UIImage imageNamed:@"wd_renling"];
     
-    //我的钱包名称
-    [_myWalletView addSubview: self.personalWalletNameLabel];
-    self.personalWalletNameLabel.text=@"我的钱包";
+    //我的认领名称
+    [_myClaimView addSubview: self.personalWalletNameLabel];
+    self.personalWalletNameLabel.text=@"我的认领";
     
     //向左的图标
     UIImageView  *personalWalletLeftIconImageView=[[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-8-15, 16.5, 8, 15)];
     personalWalletLeftIconImageView.image=_arrowImge;
-    [_myWalletView addSubview: personalWalletLeftIconImageView];
+    [_myClaimView addSubview: personalWalletLeftIconImageView];
 
     UITapGestureRecognizer  *tapGesturWallet=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapActionForWallet)];
-    [_myWalletView addGestureRecognizer:tapGesturWallet];
+    [_myClaimView addGestureRecognizer:tapGesturWallet];
     
-    return _myWalletView;
+    return _myClaimView;
 }
 -(void)tapActionForWallet{
-    DLog(@"点击我的钱包");
-
+    DLog(@"点击我的认领");
+    OTWPersonalClaimViewController *PersonalClaimVC = [[OTWPersonalClaimViewController alloc] init];
+    [self.navigationController pushViewController:PersonalClaimVC animated:YES];
 }
 -(UIImageView*)personalWalletIconImageView{
     if(!_personalWalletIconImageView){

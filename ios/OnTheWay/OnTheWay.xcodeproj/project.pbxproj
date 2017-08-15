@@ -36,6 +36,7 @@
 		B17836E61F413AA800FC73DC /* findSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B17836E51F413AA800FC73DC /* findSearchViewController.m */; };
 		B17836E91F414EB400FC73DC /* findSearchViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B17836E81F414EB400FC73DC /* findSearchViewCell.m */; };
 		B17836EC1F4179AE00FC73DC /* OTWPersonalUserFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B17836EB1F4179AE00FC73DC /* OTWPersonalUserFeedbackViewController.m */; };
+		B17836EF1F428D8300FC73DC /* OTWPersonalWalletViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B17836EE1F428D8300FC73DC /* OTWPersonalWalletViewController.m */; };
 		B181AB591F1F7F33009929D1 /* OTWPraiseViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B181AB581F1F7F33009929D1 /* OTWPraiseViewModel.m */; };
 		B181AB5C1F1F7F56009929D1 /* OTWPraiseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B181AB5A1F1F7F56009929D1 /* OTWPraiseViewController.m */; };
 		B181AB5F1F1F7F85009929D1 /* OTWPraiseViewTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B181AB5E1F1F7F85009929D1 /* OTWPraiseViewTableCell.m */; };
@@ -234,6 +235,8 @@
 		B17836E81F414EB400FC73DC /* findSearchViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = findSearchViewCell.m; sourceTree = "<group>"; };
 		B17836EA1F4179AE00FC73DC /* OTWPersonalUserFeedbackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPersonalUserFeedbackViewController.h; sourceTree = "<group>"; };
 		B17836EB1F4179AE00FC73DC /* OTWPersonalUserFeedbackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPersonalUserFeedbackViewController.m; sourceTree = "<group>"; };
+		B17836ED1F428D8300FC73DC /* OTWPersonalWalletViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPersonalWalletViewController.h; sourceTree = "<group>"; };
+		B17836EE1F428D8300FC73DC /* OTWPersonalWalletViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPersonalWalletViewController.m; sourceTree = "<group>"; };
 		B181AB571F1F7F33009929D1 /* OTWPraiseViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPraiseViewModel.h; sourceTree = "<group>"; };
 		B181AB581F1F7F33009929D1 /* OTWPraiseViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPraiseViewModel.m; sourceTree = "<group>"; };
 		B181AB5A1F1F7F56009929D1 /* OTWPraiseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPraiseViewController.m; sourceTree = "<group>"; };
@@ -1014,6 +1017,8 @@
 				B1FE42321F2B08FE00D7D5D9 /* OTWPersonalFindViewController.m */,
 				B17836EA1F4179AE00FC73DC /* OTWPersonalUserFeedbackViewController.h */,
 				B17836EB1F4179AE00FC73DC /* OTWPersonalUserFeedbackViewController.m */,
+				B17836ED1F428D8300FC73DC /* OTWPersonalWalletViewController.h */,
+				B17836EE1F428D8300FC73DC /* OTWPersonalWalletViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1642,6 +1647,7 @@
 				D720919D1F27466500153542 /* MCYARTrackingManager.m in Sources */,
 				D720919F1F27466500153542 /* MCYCameraView.m in Sources */,
 				D7F6B0541F0DCE420013090A /* UIView+Frame.m in Sources */,
+				B17836EF1F428D8300FC73DC /* OTWPersonalWalletViewController.m in Sources */,
 				B1B0556A1F3058BE008274FE /* OTWShopActiveDetailsViewCellViewController.m in Sources */,
 				B181AB5F1F1F7F85009929D1 /* OTWPraiseViewTableCell.m in Sources */,
 				B1B0557E1F305BD1008274FE /* OTWFindBusinessmenModel.m in Sources */,

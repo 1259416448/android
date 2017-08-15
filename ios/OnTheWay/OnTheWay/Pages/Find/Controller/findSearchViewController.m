@@ -156,7 +156,7 @@
         clearSearchBar.clipsToBounds = YES;
         [clearSearchBar setBackgroundImage:[UIImage imageNamed:@"fx_guanbi"] forState:(UIControlStateNormal)];
         [clearSearchBar addTarget:self action:@selector(clearSearchBarClick) forControlEvents:UIControlEventTouchUpInside];
-          clearSearchBar.adjustsImageWhenHighlighted = NO;
+          clearSearchBar.showsTouchWhenHighlighted = NO;
         [_searchBar addSubview:clearSearchBar];
     }
     return _searchBar;
@@ -177,7 +177,7 @@
         _cancelBtn.frame =CGRectMake(self.searchBar.Witdh+30, 25.5+6, 35, 22.5);
         
         [_cancelBtn addTarget:self action:@selector(cancelBtnClick) forControlEvents:UIControlEventTouchUpInside];
-        _cancelBtn.adjustsImageWhenHighlighted = NO;
+        _cancelBtn.showsTouchWhenHighlighted = NO;
 
     }
     return _cancelBtn;
