@@ -1,10 +1,13 @@
 package arvix.cn.ontheway;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.support.v4.content.LocalBroadcastManager;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -15,6 +18,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.baidu.mapapi.bikenavi.BikeNavigateHelper;
+import com.baidu.mapapi.bikenavi.params.BikeNaviLaunchParam;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
@@ -32,12 +37,20 @@ import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
 import com.baidu.mapapi.search.poi.PoiDetailResult;
 import com.baidu.mapapi.search.poi.PoiIndoorResult;
 import com.baidu.mapapi.search.poi.PoiResult;
+import com.baidu.mapapi.walknavi.WalkNavigateHelper;
+import com.baidu.mapapi.walknavi.adapter.IWEngineInitListener;
+import com.baidu.mapapi.walknavi.adapter.IWRoutePlanListener;
+import com.baidu.mapapi.walknavi.model.WalkRoutePlanError;
+import com.baidu.mapapi.walknavi.params.WalkNaviLaunchParam;
+
+import java.util.ArrayList;
 import java.util.List;
 import arvix.cn.ontheway.service.BaiduLocationListenerService;
 import arvix.cn.ontheway.service.inter.BaiduPoiService;
 import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.MainActivity;
+import arvix.cn.ontheway.ui.WNaviGuideActivity;
 import arvix.cn.ontheway.ui.view.BottomDialog;
 import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticVar;
@@ -56,7 +69,10 @@ public class BaiduActivity extends BaseActivity implements BaiduMap.OnMarkerClic
     LocalBroadcastManager mLocalBroadcastManager;
     BroadcastReceiver mReceiver;
     private String searchKeyWord;
-
+    LatLng startPosition;
+    private WalkNavigateHelper mWNaviHelper;
+    WalkNaviLaunchParam walkParam;
+    private static boolean isPermissionRequested = false;
     /**
      * 监听Back键按下事件,方法2:
      * 注意:
@@ -85,9 +101,9 @@ public class BaiduActivity extends BaseActivity implements BaiduMap.OnMarkerClic
         }
         // 初始化位置
         // 设定中心点坐标
-        LatLng cenpt = new LatLng(lat,lon);
+        startPosition= new LatLng(lat,lon);
         // 定义地图状态(精确到50米)
-        MapStatus mMapStatus = new MapStatus.Builder().target(cenpt).zoom(18).build();
+        MapStatus mMapStatus = new MapStatus.Builder().target(startPosition).zoom(18).build();
         // 定义MapStatusUpdate对象，以便描述地图状态将要发生的变化
         MapStatusUpdate mMapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
         // 改变地图状态
@@ -154,6 +170,7 @@ public class BaiduActivity extends BaseActivity implements BaiduMap.OnMarkerClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_baidu);
+        requestPermission();
         searchKeyWord = getIntent().getStringExtra(BaiduActivity.EXTRA_KEYWORD);
         //获取地图控件引用
         mMapView = (MapView) findViewById(R.id.bmapView);
@@ -186,6 +203,11 @@ public class BaiduActivity extends BaseActivity implements BaiduMap.OnMarkerClic
         });
         //test cache
 //        new CacheDefauleTest(OnthewayApplication.cache).startTest();
+        try {
+            mWNaviHelper = WalkNavigateHelper.getInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -229,12 +251,75 @@ public class BaiduActivity extends BaseActivity implements BaiduMap.OnMarkerClic
 
     @Override
     public boolean onMarkerClick(Marker marker) {
+        /*
         String phoneNum=marker.getExtraInfo().getString("customData");
         BottomDialog dialog=new BottomDialog(self);
         ImageView iv=new ImageView(self);
         iv.setImageResource(R.drawable.header_default);
         dialog.setCustom(iv);
         dialog.show();
+        */
+        LatLng targetPosition = marker.getPosition();
+        walkParam = new WalkNaviLaunchParam().stPt(startPosition).endPt(targetPosition);
+        Log.d("View", "startBikeNavi");
+        try {
+            mWNaviHelper.initNaviEngine(this, new IWEngineInitListener() {
+                @Override
+                public void engineInitSuccess() {
+                    Log.d("View", "engineInitSuccess");
+                    routePlanWithWalkParam();
+                }
+
+                @Override
+                public void engineInitFail() {
+                    Log.d("View", "engineInitFail");
+                }
+            });
+        } catch (Exception e) {
+            Log.d("Exception", "startBikeNavi");
+            e.printStackTrace();
+        }
         return true;
+    }
+
+    private void routePlanWithWalkParam() {
+        mWNaviHelper.routePlanWithParams(walkParam, new IWRoutePlanListener() {
+            @Override
+            public void onRoutePlanStart() {
+                Log.d("View", "onRoutePlanStart");
+            }
+
+            @Override
+            public void onRoutePlanSuccess() {
+                Log.d("View", "onRoutePlanSuccess");
+                Intent intent = new Intent();
+                intent.setClass(BaiduActivity.this, WNaviGuideActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onRoutePlanFail(WalkRoutePlanError error) {
+                Log.d("View", "onRoutePlanFail");
+            }
+
+        });
+    }
+
+    private void requestPermission() {
+        if (Build.VERSION.SDK_INT >= 23 && !isPermissionRequested) {
+
+            isPermissionRequested = true;
+
+            ArrayList<String> permissions = new ArrayList<>();
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+            }
+
+            if (permissions.size() == 0) {
+                return;
+            } else {
+                requestPermissions(permissions.toArray(new String[permissions.size()]), 0);
+            }
+        }
     }
 }

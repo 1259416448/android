@@ -35,6 +35,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- SD卡读取权限，用户写入离线定位数据-->
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"></uses-permission>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
+    <!-- OpenGLES 2.0 -->
+    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
     <application
         tools:replace="android:name"
         tools:overrideLibrary="android.support.v7.appcompat"
@@ -148,7 +152,10 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="LoginActivity"
             />
-
+        <activity
+            android:name=".ui.WNaviGuideActivity"
+            android:label="WNaviGuideActivity"
+            />
         <activity android:name=".ui.ar.ArFootPrintActivity">
 
         </activity>
