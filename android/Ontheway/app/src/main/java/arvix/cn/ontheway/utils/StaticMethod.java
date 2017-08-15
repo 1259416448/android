@@ -32,6 +32,7 @@ import java.util.Random;
 import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.bean.BaseResponse;
+import arvix.cn.ontheway.bean.BaseResponseBodyNumber;
 import arvix.cn.ontheway.bean.FootPrintBean;
 import arvix.cn.ontheway.bean.Pagination;
 import arvix.cn.ontheway.bean.UserInfo;
@@ -199,6 +200,11 @@ public class StaticMethod {
 
     public static  BaseResponse genResponse(String jsonStr){
         BaseResponse baseResponse = JSON.parseObject(jsonStr,BaseResponse.class);
+        return baseResponse;
+    }
+
+    public static  BaseResponseBodyNumber genResponseBodyInt(String jsonStr){
+        BaseResponseBodyNumber baseResponse = JSON.parseObject(jsonStr,BaseResponseBodyNumber.class);
         return baseResponse;
     }
 

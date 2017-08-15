@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -49,6 +50,7 @@ import java.util.Map;
 import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.bean.BaseResponse;
+import arvix.cn.ontheway.bean.BaseResponseBodyNumber;
 import arvix.cn.ontheway.bean.Pagination;
 import arvix.cn.ontheway.bean.CommentBean;
 import arvix.cn.ontheway.bean.FootPrintBean;
@@ -67,7 +69,7 @@ import static android.text.style.DynamicDrawableSpan.ALIGN_BASELINE;
  * asdtiangxia@163.com
  */
 
-public class TrackDetailActivity  extends BaseActivity implements AdapterView.OnItemClickListener, PullToRefreshBase.OnRefreshListener2<ListView> {
+public class TrackDetailActivity  extends BaseActivity implements AdapterView.OnItemClickListener, PullToRefreshBase.OnRefreshListener2<ListView>,AdapterView.OnItemLongClickListener {
 
     private TrackDetailReplyAdapter adapter;
     private List<CommentBean> commentBeanList;
@@ -90,11 +92,14 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
     private View rightInfoLine;
     @ViewInject(R.id.comment_number_tv)
     private TextView commentNoTv;
+    @ViewInject(R.id.like_no_tv)
+    private TextView likeNoTv;
+
     private FootPrintBean footPrintBean;
     Pagination pagination;
     private boolean commentCanFetch = false;
     private static int waitForResultValue = -1;
-
+    private View emptyView;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,12 +116,11 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
         listHolder.list.getRefreshableView().setDividerHeight(StaticMethod.dip2px(self,1));
         listHolder.list.getRefreshableView().addHeaderView(LayoutInflater.from (self).inflate(R.layout.track_detail_header,listHolder.list,false));
         listHolder.list.setOnItemClickListener(this);
+        listHolder.list.getRefreshableView().setOnItemLongClickListener(this);
         listHolder.list.setMode(PullToRefreshBase.Mode.BOTH);
         listHolder.list.setOnRefreshListener(this);
-        View emptyView = LayoutInflater.from(self).inflate(R.layout.comment_empty, (ViewGroup)getWindow().getDecorView(), false);
-        listHolder.empty_ll.removeAllViews();
-        listHolder.empty_ll.addView(emptyView);
-        listHolder.mayShowEmpty(adapter.getCount());
+        emptyView = LayoutInflater.from(self).inflate(R.layout.comment_empty, (ViewGroup)getWindow().getDecorView(), false);
+
         x.view().inject(this);
         HeaderHolder head=new HeaderHolder();
         head.init(self,"足迹详情");
@@ -132,6 +136,12 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
         addressTv.setText(footPrintBean.getFootprintAddress());
         if(footPrintBean.getUserId() == App.userInfo.getId()){
             delTv.setVisibility(View.VISIBLE);
+            delTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    deleteFootPrint(footPrintBean.getFootprintId());
+                }
+            });
         }
         initPhotoList();
         //android:hint="icon 写评论"
@@ -187,7 +197,7 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
                                     CommentBean commentBean = response.getBodyBean();
                                     commentBeanList.add(0,commentBean);
                                     adapter.notifyDataSetChanged();
-                                    listHolder.list.onRefreshComplete();
+                                    delayRefreshComplete(100);
                                 }else if(response.getCode() == StaticVar.ERROR){
                                     StaticMethod.showToast("评论失败",self);
                                 }else{
@@ -199,8 +209,8 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
                         }
 
                         @Override
-                        public void onError(Throwable throwable, boolean b) {
-
+                        public void onError(Throwable ex, boolean b) {
+                            ex.printStackTrace();
                         }
 
                         @Override
@@ -218,10 +228,7 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
                 return false;
             }
         });
-
-
         attachKeyboardListeners(R.id.detail_root);
-
     }
 
     private void initPhotoList(){
@@ -290,28 +297,27 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
                    Log.i(logTag,"onSuccess-----   SUCCESS  ------------------->");
                    FootPrintBean fetchBean = response.getBodyBean();
                    footPrintBean = fetchBean;
+                  // ((TextView)findViewById(R.id.like_no_tv)).setText(footPrintBean.getFootprintLikeNum());
                    if(fetchBean.getFootprintPhotoArray()==null || fetchBean.getFootprintPhotoArray().size()==0){
                        findViewById(R.id.banner_ll).setVisibility(View.GONE);
                    }else{
                        initPhotoList();
                    }
                    if(footPrintBean.getComments()!=null && footPrintBean.getComments().size()>0){
-                     //  commentBeanList.clear();
                        commentBeanList.addAll(footPrintBean.getComments());
                        adapter.notifyDataSetChanged();
-                       listHolder.mayShowEmpty(adapter.getCount());
-                       listHolder.list.onRefreshComplete();
                        commentNoTv.setText(commentBeanList.size()+"条评论");
                        if(commentBeanList.size()>=10){
                            commentCanFetch = true;
                        }
                    }
                }
-            }
+
+           }
 
            @Override
            public void onError(Throwable ex, boolean isOnCallback) {
-
+                ex.printStackTrace();
            }
 
            @Override
@@ -322,24 +328,41 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
            @Override
            public void onFinished() {
                Log.i(logTag,"onFinished------------------------>");
-
+               delayRefreshComplete(100);
+               mayShowEmpty(adapter.getCount());
            }
         });
 
     }
 
+    private void delayRefreshComplete(final int delay) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                listHolder.list.onRefreshComplete();
+            }
+        }, delay);
+    }
+
     private void fetchCommentPagination(){
         if(commentCanFetch){
             boolean fetch = true;
-            if(pagination.getTotalPages()==0){
-                pagination.setNumber(1);
+            int totalPages = 0;
+            int total = footPrintBean.getFootprintCommentNum();
+            if(pagination.getSize()==0){
+                pagination.setSize(10);
+            }
+            if((total%pagination.getSize())==0){
+                totalPages = total/pagination.getSize()-1;
             }else{
-                if(pagination.getNumber() == pagination.getTotalPages()){
-                    fetch = false;
-                    StaticMethod.showToast("没有更多的数据了，评论一条吧",this);
-                }else{
-                    pagination.setNumber(pagination.getNumber()+1);
-                }
+                totalPages = total/pagination.getSize();
+            }
+            pagination.setNumber(1+pagination.getNumber());
+            if(totalPages < pagination.getNumber()){
+                fetch = false;
+                StaticMethod.showToast("没有更多的数据了，评论一条吧",this);
+                Log.i(logTag,"fetch---------------->is false");
+                listHolder.list.onRefreshComplete();
             }
             if(fetch){
                 RequestParams requestParams = new RequestParams(ServerUrl.COMMENT_SEARCH);
@@ -365,7 +388,6 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
                             commentNoTv.setText(pagination.getTotalElements()+"条评论");
                             commentBeanList.addAll(footPrintBean.getComments());
                             adapter.notifyDataSetChanged();
-                            listHolder.list.onRefreshComplete();
                         } else if (response.getCode() == StaticVar.ERROR) {
                             StaticMethod.showToast("获取数据失败", self);
                         } else {
@@ -375,7 +397,7 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
 
                     @Override
                     public void onError(Throwable ex, boolean isOnCallback) {
-
+                        ex.printStackTrace();
                     }
 
                     @Override
@@ -385,16 +407,22 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
 
                     @Override
                     public void onFinished() {
+                        delayRefreshComplete(100);
+                        mayShowEmpty(adapter.getCount());
                     }
                 });
-            }else{
-                Log.i(logTag,"fetch---------------->is false");
-                listHolder.mayShowEmpty(adapter.getCount());
-                listHolder.list.onRefreshComplete();
             }
         }else{
-            listHolder.mayShowEmpty(adapter.getCount());
-            listHolder.list.onRefreshComplete();
+            mayShowEmpty(adapter.getCount());
+            delayRefreshComplete(100);
+        }
+    }
+
+    private void mayShowEmpty(int count) {
+        if(count>0&&emptyView.getParent()!=null){
+            listHolder.list.getRefreshableView().removeHeaderView(emptyView);
+        }else if(count<=0&&emptyView.getParent()==null){
+            listHolder.list.getRefreshableView().addHeaderView(emptyView);
         }
     }
 
@@ -423,5 +451,96 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
     @Override
     public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
         fetchCommentPagination();
+    }
+
+    /**
+     * Callback method to be invoked when an item in this view has been
+     * clicked and held.
+     * <p>
+     * Implementers can call getItemAtPosition(position) if they need to access
+     * the data associated with the selected item.
+     *
+     * @param parent   The AbsListView where the click happened
+     * @param view     The view within the AbsListView that was clicked
+     * @param position The position of the view in the list
+     * @param id       The row id of the item that was clicked
+     * @return true if the callback consumed the long click, false otherwise
+     */
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        //长按删除
+        Log.i(logTag,"position-------------->"+position);
+        CommentBean commentBean = adapter.getItem(position);
+
+        if(commentBean.getUserId()==App.userInfo.getId()){
+            deleteComment(commentBean);
+        }
+        return false;
+    }
+
+    private void deleteFootPrint(long footPrintId){
+        RequestParams requestParams = new RequestParams(ServerUrl.FOOTPRINT_DELETE+"/"+footPrintId);
+        x.http().post(requestParams,new org.xutils.common.Callback.CommonCallback<String>(){
+            @Override
+            public void onSuccess(String result) {
+                BaseResponseBodyNumber response =  StaticMethod.genResponseBodyInt(result);
+                if (response.getCode() == StaticVar.SUCCESS) {
+                    StaticMethod.showToast("删除成功", self);
+                    finish();
+                } else if (response.getCode() == StaticVar.ERROR) {
+                    StaticMethod.showToast("删除数据失败", self);
+                } else {
+                    StaticMethod.showToast("删除数据失败" + response.getCode(), self);
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+            }
+        });
+    }
+
+
+
+    private void deleteComment(final CommentBean commentBean){
+        RequestParams requestParams = new RequestParams(ServerUrl.COMMENT_DELETE+"/"+commentBean.getCommentId());
+        x.http().post(requestParams,new org.xutils.common.Callback.CommonCallback<String>(){
+            @Override
+            public void onSuccess(String result) {
+                Log.i(logTag,result);
+                BaseResponse response =  StaticMethod.genResponse(result);
+                if (response.getCode() == StaticVar.SUCCESS) {
+                    adapter.remove(commentBean);
+                    adapter.notifyDataSetChanged();
+                    listHolder.list.onRefreshComplete();
+                    StaticMethod.showToast("删除成功", self);
+                } else if (response.getCode() == StaticVar.ERROR) {
+                    StaticMethod.showToast("删除数据失败", self);
+                } else {
+                    StaticMethod.showToast("删除数据失败" + response.getCode(), self);
+                }
+            }
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+            }
+
+            @Override
+            public void onFinished() {
+            }
+        });
     }
 }
