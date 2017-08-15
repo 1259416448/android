@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "OTWLaunchViewController.h"
 #import "OTWUserModel.h"
+#import "OTWUtils.h"
 
 #define UMAppKey @"598c217d8f4a9d55d80004f6"
 
@@ -111,14 +112,8 @@
 {
     //设置AppKey & launchOptions
     [UMessage startWithAppkey:UMAppKey launchOptions:launchOptions];
-    //初始化
-    [UMessage registerForRemoteNotifications];
-    //开启log
-    [UMessage setLogEnabled:YES];
     //检查是否为ios 10.0以上版本
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] < 10.0) {
-        
-    } else {
+    if ([OTWUtils system_version_greater_than_or_equal_to:10.0]) {
         UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
         center.delegate = self;
         UNAuthorizationOptions types10 = UNAuthorizationOptionBadge | UNAuthorizationOptionAlert | UNAuthorizationOptionSound;
@@ -129,8 +124,35 @@
                 //点击不允许
             }
         }];
-        
     }
+    if ([OTWUtils system_version_gerater_between:8.0 and:10.0]) {
+        UIMutableUserNotificationAction *action1 = [[UIMutableUserNotificationAction alloc] init];
+        action1.identifier = @"action1_identifier";
+        action1.title = @"Accept";
+        //点击时启动应用
+        action1.activationMode = UIUserNotificationActivationModeForeground;
+        UIMutableUserNotificationAction *action2 = [[UIMutableUserNotificationAction alloc] init];
+        action2.identifier = @"action2_identifier";
+        action2.title = @"Reject";
+        //点击时不启动应用，在后台处理
+        action2.activationMode = UIUserNotificationActivationModeBackground;
+        //需要解锁才能处理，如果action2.activationMode = UIUserNotificationActivationModeBackground则这个属性呗忽略
+        action2.authenticationRequired = YES;
+        action2.destructive = YES;
+        UIMutableUserNotificationCategory  *categorys = [[UIMutableUserNotificationCategory alloc] init];
+        //这组动作的唯一标示
+        categorys.identifier = @"category1";
+        [categorys setActions:@[action1,action2] forContext:(UIUserNotificationActionContextDefault)];
+        [UMessage registerForRemoteNotifications];
+    }
+    if ([OTWUtils system_version_greater_less_than:8.0]) {
+        DLog(@"进来了%@",@"版本82");
+        [UMessage registerForRemoteNotifications];
+    }
+    //初始化
+    [UMessage registerForRemoteNotifications];
+    //开启log
+    [UMessage setLogEnabled:YES];
 }
 
 #pragma mark iOS10新增：处理前台收到通知的代理方法

@@ -124,7 +124,7 @@
         _footprintSearchAddress.textFieldInset=UIEdgeInsetsMake(0,0,0,0);
         
         //替换搜索图标
-        [_footprintSearchAddress setImage:[UIImage imageNamed:@"sousuo_1"] forSearchBarIcon:UISearchBarIconSearch state:UIControlStateNormal];
+//        [_footprintSearchAddress setImage:[UIImage imageNamed:@"sousuo_1"] forSearchBarIcon:UISearchBarIconSearch state:UIControlStateNormal];
         
         //这个枚举可以对searchBar进行修改
         _footprintSearchAddress.searchBarStyle = UISearchBarStyleProminent;
@@ -145,6 +145,14 @@
         searchField.layer.borderColor = [UIColor clearColor].CGColor;
         searchField.backgroundColor=[[UIColor color_f4f4f4]colorWithAlphaComponent:0.9f];
         searchField.layer.borderWidth = 0.5;
+        //设置图标
+        UIImage *image = [UIImage imageNamed: @"sousuo_1"];
+        UIImageView *iView = [[UIImageView alloc] initWithImage:image];
+        iView.frame = CGRectMake(0, 0, 15 , 15);
+        UIView *myview = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 15 , 15)];
+        [myview addSubview: iView];
+        searchField.leftView = myview;
+        
         _footprintSearchAddress.delegate = self;
 
         UIButton * clearSearchBar = [UIButton buttonWithType:(UIButtonTypeRoundedRect)];

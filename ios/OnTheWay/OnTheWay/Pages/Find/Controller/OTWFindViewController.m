@@ -12,13 +12,13 @@
 #import "OTWFindModel.h"
 #import "OTWFindBusinessmenController.h"
 #import "CHCustomSearchBar.h"
-
+#import "findSearchViewController.h"
 
 @interface OTWFindViewController ()<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>{
     UITableView *_tableView;
     NSMutableArray *_status;
 }
-@property (nonatomic,strong) CHCustomSearchBar *SearchBar;
+@property (nonatomic,strong) UIView *SearchBar;
 @end
 
 @implementation OTWFindViewController
@@ -152,44 +152,38 @@
 }
 
 
--(CHCustomSearchBar*)SearchBar{
+-(UIView*)SearchBar{
     if(!_SearchBar){
-        _SearchBar=[[CHCustomSearchBar alloc] initWithFrame:CGRectMake(15, 25.5, SCREEN_WIDTH-30, 34)];
-        [_SearchBar setPlaceholder:@"搜索附近的美食、商城"];
-        [_SearchBar setContentMode:UIViewContentModeCenter];
+        _SearchBar=[[UIView alloc] initWithFrame:CGRectMake(15, 25.5, SCREEN_WIDTH-30, 34)];
         _SearchBar.layer.cornerRadius = 20;
         _SearchBar.layer.masksToBounds = YES;
+        _SearchBar.backgroundColor=[UIColor color_f4f4f4];
         
-        //自定义搜索框的大小
-        _SearchBar.textFieldInset=UIEdgeInsetsMake(0,0,0,0);
+        UITapGestureRecognizer  *tapGesturSearch=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapActionForSearch)];
+        [_SearchBar addGestureRecognizer:tapGesturSearch];
         
-        //替换搜索图标
-        [_SearchBar setImage:[UIImage imageNamed:@"sousuo_1"] forSearchBarIcon:UISearchBarIconSearch state:UIControlStateNormal];
+        UILabel *searchText=[[UILabel alloc]init];
+        searchText.text=@"搜索附近的美食，商场";
+        searchText.textColor=[UIColor color_979797];
+        searchText.font=[UIFont systemFontOfSize:14];
+        [searchText sizeToFit];
+        searchText.frame=CGRectMake((SCREEN_WIDTH-(searchText.Witdh+15+10))/2, (_SearchBar.Height-searchText.Height)/2, searchText.Witdh, searchText.Height);
         
-        //这个枚举可以对searchBar进行修改
-        _SearchBar.searchBarStyle = UISearchBarStyleProminent;
+        UIImageView *searchIcon=[[UIImageView alloc]initWithFrame:CGRectMake(searchText.MaxX-15-10-searchText.Witdh,(_SearchBar.Height-15)/2 , 15, 15)];
+        searchIcon.image=[UIImage imageNamed:@"sousuo_1"];
         
-        
-        UITextField *searchField = nil;
-        for (UIView *subview in  _SearchBar.subviews) {
-            if ([subview isKindOfClass:NSClassFromString(@"UIView")]&&subview.subviews.count>0) {
-                subview.backgroundColor = [UIColor color_f4f4f4];
-                [[subview.subviews objectAtIndex:0] removeFromSuperview];
-                break;
-            }
-        }
-        //的到搜索框 并设置他的属性
-        searchField = [[[_SearchBar.subviews firstObject] subviews] lastObject];
-        searchField.layer.cornerRadius = 30;
-        searchField.layer.masksToBounds = YES;
-        searchField.layer.borderColor = [UIColor clearColor].CGColor;
-        searchField.backgroundColor=[[UIColor color_f4f4f4]colorWithAlphaComponent:0.9f];
-        searchField.layer.borderWidth = 0.5;
-        _SearchBar.delegate = self;
+        [_SearchBar addSubview:searchText];
+        [_SearchBar addSubview:searchIcon];
         
     }
     return _SearchBar;
 }
 
+-(void)tapActionForSearch{
+    
+    findSearchViewController *findSearchVC = [[findSearchViewController alloc] init];
+    [self.navigationController pushViewController:findSearchVC animated:NO];
+
+}
 
 @end
