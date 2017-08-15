@@ -1,53 +1,75 @@
 package arvix.cn.ontheway.ui.track;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 
+import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.Callable;
 
 import arvix.cn.ontheway.R;
-import arvix.cn.ontheway.async.AsyncUtil;
-import arvix.cn.ontheway.async.Callback;
-import arvix.cn.ontheway.async.Result;
 import arvix.cn.ontheway.bean.FootPrintBean;
-import arvix.cn.ontheway.data.TrackListData;
+import arvix.cn.ontheway.bean.FootPrintSearchVo;
+import arvix.cn.ontheway.bean.Pagination;
+import arvix.cn.ontheway.service.inter.CacheService;
+import arvix.cn.ontheway.service.inter.FootPrintSearchNotify;
+import arvix.cn.ontheway.service.inter.FootPrintSearchService;
 import arvix.cn.ontheway.ui.BaseActivity;
+import arvix.cn.ontheway.ui.ar.ArFootPrintActivity;
 import arvix.cn.ontheway.ui.head.HeaderHolder;
 import arvix.cn.ontheway.ui.usercenter.MyTrackDetailActivity;
 import arvix.cn.ontheway.ui.view.ListViewHolder;
+import arvix.cn.ontheway.utils.MyProgressDialog;
+import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticMethod;
+import arvix.cn.ontheway.utils.StaticVar;
 
 /**
  * Created by asdtiang on 2017/7/28 0028.
  * asdtiangxia@163.com
  */
 
-public class TrackListActivity   extends BaseActivity implements AdapterView.OnItemClickListener, PullToRefreshBase.OnRefreshListener2<ListView>{
+public class TrackListActivity   extends BaseActivity implements AdapterView.OnItemClickListener, PullToRefreshBase.OnRefreshListener2<ListView>, FootPrintSearchNotify<FootPrintBean> {
 
     private TrackListAdapter adapter;
-    private List<FootPrintBean> datas;
+    private List<FootPrintBean> footPrintList;
     private ListViewHolder listHolder;
-    private int pageNum = 0;
-
+    Pagination pagination;
+    private View emptyView;
+    private FootPrintSearchVo footPrintSearchVo;
+    FootPrintSearchService footPrintSearchService;
+    CacheService cache;
+    MyProgressDialog wait;
+    private boolean fetchDataFinish = false;
+    private boolean refresh = false;
+    @ViewInject(R.id.to_map_btn)
+    private Button toMapBtn;
+    @ViewInject(R.id.to_ar_btn)
+    private Button toArBtn;
+    @ViewInject(R.id.create_btn)
+    private Button createBtn;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_list);
-        datas = new ArrayList();
-        initData(true);
-        adapter = new TrackListAdapter(this, R.layout.track_list_item,datas);
+        footPrintSearchService = OnthewayApplication.getInstahce(FootPrintSearchService.class);
+        cache = OnthewayApplication.getInstahce(CacheService.class);
+        footPrintList = new ArrayList();
+        adapter = new TrackListAdapter(this, R.layout.track_list_item, footPrintList);
         listHolder = ListViewHolder.initList(this);
         listHolder.list.setAdapter(adapter);
         listHolder.list.getRefreshableView().setDividerHeight(StaticMethod.dip2px(self,10));
@@ -55,49 +77,64 @@ public class TrackListActivity   extends BaseActivity implements AdapterView.OnI
         listHolder.list.setOnItemClickListener(this);
         listHolder.list.setMode(PullToRefreshBase.Mode.BOTH);
         listHolder.list.setOnRefreshListener(this);
-        listHolder.list.setRefreshing();
         HeaderHolder head=new HeaderHolder();
         head.init(self,"足迹列表");
+        emptyView = LayoutInflater.from(self).inflate(R.layout.comment_empty, (ViewGroup)getWindow().getDecorView(), false);
+        initData();
+        initEvent();
+    }
+    private void initEvent(){
+        toMapBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(self, TrackMapActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        toArBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(self, ArFootPrintActivity.class);
+                startActivity(intent);
+            }
+        });
+        createBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(self, TrackCreateActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     //正整数，小于等于0会导致不响应onActivityResult
     private final int REQ_GET_NAME_EDIT = new Random().nextInt(Integer.MAX_VALUE);
 
 
-    private void initData(final boolean refresh) {
-        final int reqPage = refresh ? 0 : pageNum;
-        AsyncUtil.goAsync(new Callable<Result<List<FootPrintBean>>>() {
+    private void mayShowEmpty(int count) {
+        if(count>0&&emptyView.getParent()!=null){
+            listHolder.list.getRefreshableView().removeHeaderView(emptyView);
+        }else if(count<=0&&emptyView.getParent()==null){
+            listHolder.list.getRefreshableView().addHeaderView(emptyView);
+        }
+    }
 
+    private void delayRefreshComplete(final int delay) {
+        new Handler().postDelayed(new Runnable() {
             @Override
-            public Result<List<FootPrintBean>> call() throws Exception {
-                Result<List<FootPrintBean> > ret = new Result<>();
-                ret.setData(TrackListData.genData());
-                return ret;
-            }
-        }, new Callback<Result<List<FootPrintBean>>>() {
-
-            @Override
-            public void onHandle(Result<List<FootPrintBean>> result) {
-                if (result.ok()) {
-                    //成功才更新page状态
-                    if (refresh) {
-                        pageNum = 0;
-                    }
-                    pageNum++;
-
-                    if (refresh) {
-                        datas.clear();
-                    }
-                    datas.addAll(result.getData());
-                    adapter.notifyDataSetChanged();
-                } else {
-                    new AlertDialog.Builder(TrackListActivity.this).setMessage(result.getErrorMsg()).show();
-                }
-                listHolder.mayShowEmpty(adapter.getCount());
+            public void run() {
                 listHolder.list.onRefreshComplete();
             }
-        });
-
+        }, delay);
+    }
+    private void initData() {
+        footPrintSearchVo = new FootPrintSearchVo();
+       // footPrintSearchVo.setSize(5);
+        footPrintSearchVo.setSearchType(FootPrintSearchVo.SearchType.list);
+        footPrintSearchVo.setLatitude(cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LAT));
+        footPrintSearchVo.setLongitude(cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LON));
+        footPrintSearchService.search(self,footPrintSearchVo,this);
     }
 
 
@@ -118,9 +155,14 @@ public class TrackListActivity   extends BaseActivity implements AdapterView.OnI
      */
     @Override
     public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-        initData(true);
+        footPrintSearchVo = new FootPrintSearchVo();
+       // footPrintSearchVo.setSize(5);
+        footPrintSearchVo.setSearchType(FootPrintSearchVo.SearchType.list);
+        footPrintSearchVo.setLatitude(cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LAT));
+        footPrintSearchVo.setLongitude(cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LON));
+        footPrintSearchService.search(self,footPrintSearchVo,this);
+        refresh = true;
     }
-
     /**
      * onPullUpToRefresh will be called only when the user has Pulled from
      * the end, and released.
@@ -129,6 +171,44 @@ public class TrackListActivity   extends BaseActivity implements AdapterView.OnI
      */
     @Override
     public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-        initData(false);
+        if(fetchDataFinish){
+            footPrintSearchVo.setNumber(footPrintSearchVo.getNumber()+1);
+            footPrintSearchService.search(self,footPrintSearchVo,this);
+        }else{
+            StaticMethod.showToast("没有更多的数据了，发布一条吧",this);
+            mayShowEmpty(adapter.getCount());
+            delayRefreshComplete(100);
+        }
+
+    }
+
+    /**
+     * 数据请求成功回调实现
+     * @param trackSearchVo
+     * @param paginationFetch
+     */
+    @Override
+    public void trackSearchDataFetchSuccess(FootPrintSearchVo trackSearchVo, Pagination<FootPrintBean> paginationFetch) {
+        try{
+            pagination = paginationFetch;
+            footPrintSearchVo = trackSearchVo;
+            Log.i(logTag,"trackSearchDataFetchSuccess---->"+pagination.getContent().size());
+            if(refresh){
+                footPrintList.clear();
+                refresh  = false;
+            }
+            footPrintList.addAll(pagination.getContent());
+            if(pagination.getContent().size()==footPrintSearchVo.getSize()){
+                fetchDataFinish = true;
+            }else{
+                fetchDataFinish = false;
+            }
+            adapter.notifyDataSetChanged();
+            delayRefreshComplete(100);
+            mayShowEmpty(adapter.getCount());
+            Log.i(logTag,"trackSearchDataFetchSuccess---->adapter.getCount()" + adapter.getCount());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

@@ -81,7 +81,6 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
     private TextView addressTv;
     @ViewInject(R.id.to_map_btn)
     private Button toMapBtn;
-
     @ViewInject(R.id.to_ar_btn)
     private Button toArBtn;
     @ViewInject(R.id.r_100m)
@@ -346,9 +345,9 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
     private void registerSensors() {
         sensorManager.registerListener(this,
                 sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR),
-                SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)  , SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) ,SensorManager.SENSOR_DELAY_NORMAL);
+                SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)  , SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) ,SensorManager.SENSOR_DELAY_FASTEST);
     }
 
     @Override

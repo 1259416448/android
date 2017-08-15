@@ -48,7 +48,7 @@ public class FootPrintSearchVo {
     }
 
     public void setLatitude(Double latitude) {
-        this.latitude = 30.544351;
+        this.latitude = latitude;
     }
 
     public Double getLongitude() {
@@ -56,7 +56,7 @@ public class FootPrintSearchVo {
     }
 
     public void setLongitude(Double longitude) {
-        this.longitude = 104.06787;
+        this.longitude = longitude;
     }
 
     public Long getCurrentTime() {

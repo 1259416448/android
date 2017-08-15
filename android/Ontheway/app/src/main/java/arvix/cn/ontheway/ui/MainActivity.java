@@ -12,32 +12,29 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
 import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
 import com.baidu.mapapi.search.poi.PoiDetailResult;
 import com.baidu.mapapi.search.poi.PoiIndoorResult;
 import com.baidu.mapapi.search.poi.PoiResult;
+
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
+
 import java.util.HashMap;
-import java.util.concurrent.Callable;
 
 import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.BaiduActivity;
 import arvix.cn.ontheway.R;
-import arvix.cn.ontheway.async.AsyncUtil;
-import arvix.cn.ontheway.async.Callback;
-import arvix.cn.ontheway.async.Result;
 import arvix.cn.ontheway.service.BaiduLocationListenerService;
 import arvix.cn.ontheway.service.inter.BaiduPoiService;
 import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.ui.ar.ArFootPrintActivity;
 import arvix.cn.ontheway.ui.msg.MsgIndexFrag;
 import arvix.cn.ontheway.ui.usercenter.MyProfileFragment;
-import arvix.cn.ontheway.utils.MyProgressDialog;
 import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticMethod;
 import arvix.cn.ontheway.utils.StaticVar;
-import arvix.cn.ontheway.utils.Windows;
 
 /**
  * Created by yd on 2017/7/19.
@@ -72,19 +69,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         Log.i(logTag,"onCreate----->");
         initView();
         initLocation();
-        final MyProgressDialog wait= Windows.waiting(self);
-        AsyncUtil.goAsync(new Callable<Result<Void>>() {
-            @Override
-            public Result<Void> call() throws Exception {
-                Thread.sleep(2000);
-                return null;
-            }
-        }, new Callback<Result<Void>>() {
-            @Override
-            public void onHandle(Result<Void> result) {
-                wait.dismiss();
-            }
-        });
     }
 
     private void initLocation(){
