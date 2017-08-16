@@ -41,7 +41,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="附近商家"
+                android:text="附近足迹"
                 android:layout_marginTop="5dp"
                 android:textSize="12sp"
                 android:textColor="#C4C4C4"/>

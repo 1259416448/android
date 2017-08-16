@@ -162,7 +162,7 @@ public class AROverlayView extends View implements FootPrintSearchNotify<FootPri
             newRotateStr = newRotateStr +"-"+  df.format(rotatedProjectionMatrix[i]);
             diffAbs = diffAbs + Math.abs(rotatedProjectionMatrix[i] - oldrotatedProjectionMatrix[i]);
         }
-        if(diffAbs>0.01){
+        if(diffAbs>0.3){
             Log.i(logTag,"updateRotatedProjectionMatrix--->change  new"  + newRotateStr);
             Log.i(logTag,"updateRotatedProjectionMatrix--->change  old"  + oldRotateStr);
             this.invalidate();
@@ -272,7 +272,7 @@ public class AROverlayView extends View implements FootPrintSearchNotify<FootPri
 
     private final float radius=StaticMethod.dip2px(App.self,20*1.414213562f);
     float cx = StaticMethod.dip2px(App.self,55);
-    float cy = height - StaticMethod.dip2px(App.self,55);
+
     LatLng center = new LatLng(OnthewayApplication.getInstahce(CacheService.class).getDouble(StaticVar.BAIDU_LOC_CACHE_LAT),OnthewayApplication.getInstahce(CacheService.class).getDouble(StaticVar.BAIDU_LOC_CACHE_LON));
 
 
@@ -288,6 +288,7 @@ public class AROverlayView extends View implements FootPrintSearchNotify<FootPri
                 List<DrawTrackPointInfo> drawTrackPointInfoListTemp = new ArrayList<>();
                 DrawTrackPointInfo pointInfo = null;
                 //for start
+                float cy = canvas.getHeight() - StaticMethod.dip2px(App.self,55);
                 for ( final FootPrintBean footPrintBean : this.pagination.getContent()) {
                     location = new Location(footPrintBean.getFootprintContent());
                     location.setLatitude(footPrintBean.getLatitude());
@@ -334,7 +335,7 @@ public class AROverlayView extends View implements FootPrintSearchNotify<FootPri
                             View convertView = LayoutInflater.from(context).inflate(R.layout.track_ar_item, rootView, false);
                             ViewHolder h = new ViewHolder();
                             x.view().inject(h, convertView);
-                            h.addressTv.setText(StaticMethod.genLesStr(footPrintBean.getFootprintAddress(), 4));
+                            h.addressTv.setText(StaticMethod.genLesAddressStr(footPrintBean.getFootprintAddress(), 4));
                             h.timeTv.setText(footPrintBean.getDateCreatedStr());
                             h.contentTv.setText(StaticMethod.genLesStr(footPrintBean.getFootprintContent(), 6));
                             Bitmap headerBitmap = dataCache.getTMem(footPrintBean.getUserHeadImg(), Bitmap.class);

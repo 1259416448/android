@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -20,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HeaderViewListAdapter;
 import android.widget.ImageView;
@@ -59,9 +61,11 @@ import arvix.cn.ontheway.http.ServerUrl;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.head.HeaderHolder;
 import arvix.cn.ontheway.ui.view.ListViewHolder;
+import arvix.cn.ontheway.utils.MyProgressDialog;
 import arvix.cn.ontheway.utils.StaticMethod;
 import arvix.cn.ontheway.utils.StaticVar;
 import arvix.cn.ontheway.utils.UIUtils;
+import arvix.cn.ontheway.utils.Windows;
 
 import static android.text.style.DynamicDrawableSpan.ALIGN_BASELINE;
 import static com.handmark.pulltorefresh.library.PullToRefreshBase.Mode.BOTH;
@@ -97,6 +101,9 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
     private TextView commentNoTv;
     @ViewInject(R.id.like_no_tv)
     private TextView likeNoTv;
+    @ViewInject(R.id.like_btn)
+    private Button likeBtn;
+
 
     private FootPrintBean footPrintBean;
     Pagination pagination;
@@ -134,10 +141,11 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
             }
         });
         initView();
+        initEvent();
     }
 
     private void initView() {
-        //init field;
+        //init field; 注意footPrintBean刚开始只有部分数据供显示，获取足迹详情后才有完整数据，部分字段初始化要放在initDat()里面
         StaticMethod.setCircularHeaderImg(footPrintBean.getUserHeadImg(),userHeader,userHeader.getWidth(),userHeader.getHeight());
         nicknameTv.setText(footPrintBean.getUserNickname());
         timeTv.setText(footPrintBean.getDateCreatedStr());
@@ -164,6 +172,10 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
         ImageSpan imgSpan = new ImageSpan(self, b,ALIGN_BASELINE);
         ssb.setSpan(imgSpan, 2, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         writeReplyEt.setHint(ssb);
+        attachKeyboardListeners(R.id.detail_root);
+    }
+
+    private void initEvent(){
         writeReplyEt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -217,7 +229,6 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
                                 e.printStackTrace();
                             }
                         }
-
                         @Override
                         public void onError(Throwable ex, boolean b) {
                             ex.printStackTrace();
@@ -225,9 +236,7 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
 
                         @Override
                         public void onCancelled(CancelledException e) {
-
                         }
-
                         @Override
                         public void onFinished() {
                             mayShowEmpty(commentBeanList.size());
@@ -238,8 +247,61 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
                 return true;
             }
         });
-        attachKeyboardListeners(R.id.detail_root);
+
+        likeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StaticMethod.goToLogin(self);
+                final  MyProgressDialog  wait = Windows.waiting(self);
+                RequestParams requestParams = new RequestParams();
+                requestParams.setUri( ServerUrl.FOOTPRINT_LIKE+"/"+footPrintBean.getFootprintId());
+                x.http().post(requestParams, new Callback.CommonCallback<String>() {
+                    @Override
+                    public void onSuccess(String result) {
+                        try {
+                            Log.i("onSuccess-->","result->"+result.toString());
+                            BaseResponse response = StaticMethod.genResponse(result);
+                            if(response.getCode()==StaticVar.SUCCESS) {
+                                if(footPrintBean.isIfLike()){
+                                    StaticMethod.showToast("取消点赞成功",self);
+                                    likeBtn.setBackgroundResource(R.drawable.ar_zan);
+                                    footPrintBean.setFootprintLikeNum(footPrintBean.getFootprintLikeNum()-1);
+                                    footPrintBean.setIfLike(false);
+                                }else{
+                                    StaticMethod.showToast("点赞成功",self);
+                                    footPrintBean.setFootprintLikeNum(footPrintBean.getFootprintLikeNum()+1);
+                                    likeBtn.setBackgroundResource(R.drawable.ar_zan_click);
+                                    footPrintBean.setIfLike(true);
+                                }
+                                likeNoTv.setText(footPrintBean.getFootprintLikeNum()+"");
+                            }else if(response.getCode() == StaticVar.ERROR){
+                                StaticMethod.showToast("操作失败",self);
+                            }else{
+                                StaticMethod.showToast("操作失败" + response.getCode(),self);
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                    @Override
+                    public void onError(Throwable ex, boolean b) {
+                        ex.printStackTrace();
+                    }
+
+                    @Override
+                    public void onCancelled(CancelledException e) {
+                    }
+                    @Override
+                    public void onFinished() {
+                        wait.dismiss();
+                    }
+                });
+            }
+        });
+
     }
+
+
 
     private void initPhotoList(){
         if(footPrintBean.getFootprintPhotoArray()!=null && footPrintBean.getFootprintPhotoArray().size()>0){
@@ -307,7 +369,10 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
                    Log.i(logTag,"onSuccess-----   SUCCESS  ------------------->");
                    FootPrintBean fetchBean = response.getBodyBean();
                    footPrintBean = fetchBean;
-                  // ((TextView)findViewById(R.id.like_no_tv)).setText(footPrintBean.getFootprintLikeNum());
+                   likeNoTv.setText(footPrintBean.getFootprintLikeNum()+"");
+                   if(footPrintBean.isIfLike()){
+                       likeBtn.setBackgroundResource(R.drawable.ar_zan_click);
+                   }
                    if(fetchBean.getFootprintPhotoArray()==null || fetchBean.getFootprintPhotoArray().size()==0){
                        findViewById(R.id.banner_ll).setVisibility(View.GONE);
                    }else{
@@ -483,19 +548,17 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
             position-=((HeaderViewListAdapter)parent.getAdapter()).getHeadersCount();
         }
         final int positionFinal=position;
-        new AlertDialog.Builder(self).setMessage("确认删除?").setNegativeButton("取消",null).setPositiveButton("删除", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //长按删除
-                Log.i(logTag,"position-------------->"+positionFinal);
-                CommentBean commentBean = adapter.getItem(positionFinal);
-
-                if(commentBean.getUserId()==App.userInfo.getId()){
+        final CommentBean commentBean = adapter.getItem(positionFinal);
+        if(commentBean.getUserId()==App.userInfo.getId()){
+            new AlertDialog.Builder(self).setMessage("确认删除?").setNegativeButton("取消",null).setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //长按删除
+                    Log.i(logTag,"position-------------->"+positionFinal);
                     deleteComment(commentBean);
                 }
-            }
-        }).show();
-
+            }).show();
+        }
         return false;
     }
 

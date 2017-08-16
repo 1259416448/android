@@ -30,6 +30,8 @@ public interface ServerUrl {
 
     String FOOTPRINT_DELETE =  BASE_URL + "/app/footprint/delete";
 
+    String FOOTPRINT_LIKE = BASE_URL +"/app/footprint/like";
+
 
     String FOOTPRINT_SHOW = BASE_URL +"/app/footprint/view";
 

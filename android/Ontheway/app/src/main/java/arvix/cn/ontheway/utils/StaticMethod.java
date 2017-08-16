@@ -83,23 +83,25 @@ public class StaticMethod {
                 source.replace("中国","");
                 int shiIndex =  source.indexOf("市");
                 if(shiIndex > -1){
-                    source = source.substring(shiIndex);
+                    source = source.substring(shiIndex+1);
                 }
                 int quIndex = source.indexOf("区");
                 if(quIndex>-1){
-                    source = source.substring(quIndex);
+                    source = source.substring(quIndex+1);
                 }else{
                     int xianIndex = source.indexOf("县");
                     if(xianIndex>-1){
-                        source = source.substring(xianIndex);
+                        source = source.substring(xianIndex+1);
                     }else{
                         int zhengIndex = source.indexOf("镇");
                         if(zhengIndex>-1){
-                            source = source.substring(zhengIndex);
+                            source = source.substring(zhengIndex+1);
                         }
                     }
                 }
-                source = source.substring(0,maxLength)+"...";
+                if(source.length()>maxLength){
+                    source = source.substring(0,maxLength)+"...";
+                }
             }
         }
         return source;
