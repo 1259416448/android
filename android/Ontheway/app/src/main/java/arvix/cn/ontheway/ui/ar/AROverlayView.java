@@ -89,7 +89,6 @@ public class AROverlayView extends View implements FootPrintSearchNotify<FootPri
         super(context);
         this.context = context;
         this.rootView = rootView;
-
         this.trackSearchVo = trackSearchVo;
         cache = OnthewayApplication.getInstahce(CacheService.class);
         dataCache = new CacheDefault();

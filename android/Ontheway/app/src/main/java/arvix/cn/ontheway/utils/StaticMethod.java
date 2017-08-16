@@ -263,9 +263,9 @@ public class StaticMethod {
         CacheService cache = OnthewayApplication.getInstahce(CacheService.class);
         Log.i("goToLogin:","cache.get(StaticVar.AUTH_TOKEN)------------->:"+cache.get(StaticVar.AUTH_TOKEN));
         if(cache.get(StaticVar.AUTH_TOKEN)!=null){
-            return 0;
+            return -1;
         }else{
-            int randomInt = new Random().nextInt(Integer.MAX_VALUE);
+            int randomInt = Math.abs(new Random().nextInt(Integer.MAX_VALUE));
             Intent intent = new Intent(activity, LoginActivity.class);
             activity.startActivityForResult(intent, randomInt);
             return randomInt;

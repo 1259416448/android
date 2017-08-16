@@ -251,7 +251,11 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
         likeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                StaticMethod.goToLogin(self);
+                int gotoLogin = StaticMethod.goToLogin(self);
+                if(gotoLogin>0){
+                    return;
+                }
+
                 final  MyProgressDialog  wait = Windows.waiting(self);
                 RequestParams requestParams = new RequestParams();
                 requestParams.setUri( ServerUrl.FOOTPRINT_LIKE+"/"+footPrintBean.getFootprintId());

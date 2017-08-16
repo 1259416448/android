@@ -70,7 +70,9 @@
 
                 <TextView
                     android:id="@+id/like_no_tv"
-                    android:layout_width="28dp"
+                    android:layout_width="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
                     android:layout_height="12dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="-6dp"
