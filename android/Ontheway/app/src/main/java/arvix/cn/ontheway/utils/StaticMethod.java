@@ -83,23 +83,25 @@ public class StaticMethod {
                 source.replace("中国","");
                 int shiIndex =  source.indexOf("市");
                 if(shiIndex > -1){
-                    source = source.substring(shiIndex);
+                    source = source.substring(shiIndex+1);
                 }
                 int quIndex = source.indexOf("区");
                 if(quIndex>-1){
-                    source = source.substring(quIndex);
+                    source = source.substring(quIndex+1);
                 }else{
                     int xianIndex = source.indexOf("县");
                     if(xianIndex>-1){
-                        source = source.substring(xianIndex);
+                        source = source.substring(xianIndex+1);
                     }else{
                         int zhengIndex = source.indexOf("镇");
                         if(zhengIndex>-1){
-                            source = source.substring(zhengIndex);
+                            source = source.substring(zhengIndex+1);
                         }
                     }
                 }
-                source = source.substring(0,maxLength)+"...";
+                if(source.length()>maxLength){
+                    source = source.substring(0,maxLength)+"...";
+                }
             }
         }
         return source;
@@ -261,9 +263,9 @@ public class StaticMethod {
         CacheService cache = OnthewayApplication.getInstahce(CacheService.class);
         Log.i("goToLogin:","cache.get(StaticVar.AUTH_TOKEN)------------->:"+cache.get(StaticVar.AUTH_TOKEN));
         if(cache.get(StaticVar.AUTH_TOKEN)!=null){
-            return 0;
+            return -1;
         }else{
-            int randomInt = new Random().nextInt(Integer.MAX_VALUE);
+            int randomInt = Math.abs(new Random().nextInt(Integer.MAX_VALUE));
             Intent intent = new Intent(activity, LoginActivity.class);
             activity.startActivityForResult(intent, randomInt);
             return randomInt;
