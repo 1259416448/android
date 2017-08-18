@@ -347,16 +347,14 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         if (sensorEvent.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
+          //  Log.d(TAG,"fffffffffffff:"+sensorEvent.values);
             float[] rotationMatrixFromVector = new float[16];
             float[] projectionMatrix = new float[16];
             float[] rotatedProjectionMatrix = new float[16];
-
             SensorManager.getRotationMatrixFromVector(rotationMatrixFromVector, sensorEvent.values);
-
             if (arCamera != null) {
                 projectionMatrix = arCamera.getProjectionMatrix();
             }
-
             Matrix.multiplyMM(rotatedProjectionMatrix, 0, projectionMatrix, 0, rotationMatrixFromVector, 0);
             this.arOverlayView.updateRotatedProjectionMatrix(rotatedProjectionMatrix);
         }
@@ -461,8 +459,8 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
         values[1] = (float) Math.toDegrees(values[1]);
         values[2] = (float) Math.toDegrees(values[2]);
       //  Log.i(TAG, "xDegrees:"+values[1]+" yDegrees:"+values[2]);
-        AROverlayViewOld.xDegrees = values[1];
-        AROverlayViewOld.yDegrees = values[2];
+        AROverlayView.xDegrees = values[1];
+        AROverlayView.yDegrees = values[2];
         /*
         if(values[0] >= -5 && values[0] < 5){
             Log.i(TAG, "正北");

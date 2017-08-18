@@ -50,7 +50,7 @@ import arvix.cn.ontheway.utils.Windows;
  * Created by ntdat on 1/13/17.
  */
 
-public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View.OnTouchListener {
+public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View.OnClickListener {
     private String logTag = this.getClass().getName();
     Context context;
     private float[] rotatedProjectionMatrix = new float[16];
@@ -81,7 +81,8 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
     java.text.DecimalFormat   df   =new   java.text.DecimalFormat("#.00");
     private double screenRadius = 0;
     private double radarZoom = 0;
-    long downTime=0;
+    public static float xDegrees;
+    public static float yDegrees;
     private  List<RadarPoint> radarPointList  = new ArrayList<>();
     private  List<ImageView> radarImageViewList  = new ArrayList<>();
     public AROverlayView(Context context, ViewGroup rootView, FootPrintSearchVo trackSearchVo) {
@@ -96,8 +97,9 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
         mBitPaint.setDither(true);
         drawXOffset = StaticMethod.dip2px(context, 0);
         drawYOffset = StaticMethod.dip2px(context, 50);
-        rootView.setOnTouchListener(this);
         currentLocation = new Location("");
+
+
     }
 
     private void updateLocationData(double lat, double lon) {
@@ -137,7 +139,7 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
             newRotateStr = newRotateStr +"-"+  df.format(rotatedProjectionMatrix[i]);
             diffAbs = diffAbs + Math.abs(rotatedProjectionMatrix[i] - oldRotatedProjectionMatrix[i]);
         }
-        if(diffAbs>0.3){
+        if(diffAbs>0.1){
             Log.i(logTag,"updateRotatedProjectionMatrix--->change  new"  + newRotateStr);
             Log.i(logTag,"updateRotatedProjectionMatrix--->change  old"  + oldRotateStr);
             this.move();
@@ -172,64 +174,81 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
     }
 
 
-    /**
-     * 足迹view点击事件
-     * Called when a touch event is dispatched to a view. This allows listeners to
-     * get a chance to respond before the target view.
-     *
-     * @param v     The view the touch event has been dispatched to.
-     * @param event The MotionEvent object containing full information about
-     *              the event.
-     * @return True if the listener has consumed the event, false otherwise.
-     */
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        Object obj = v.getTag();
-        if(obj!=null && (obj instanceof FootPrintBean)){
-            long tillTime=System.currentTimeMillis()-downTime;
-            //时间差在允许范围内时,视为一次单击事件成立
-            //if(tillTime<150) {
-                FootPrintBean footPrintBean = (FootPrintBean) obj;
-                Intent intent = new Intent(context, TrackDetailActivity.class);
-                intent.putExtra(StaticVar.EXTRA_TRACK_BEAN, footPrintBean);
-                context.startActivity(intent);
-           // }
-        }
-        return true;
-    }
 
     public void drawRadarPoint() {
-        float cy = this.rootView.getHeight() - StaticMethod.dip2px(App.self,55);
-        for(ImageView imageView : radarImageViewList){
-            rootView.removeView(imageView);
-        }
-        if(radarZoom==0){
-            double temp = rootView.getWidth()*rootView.getWidth()+ rootView.getHeight()*rootView.getHeight();
-            screenRadius = Math.sqrt(temp);
-            radarZoom = screenRadius/radius;
-        }
-        radarImageViewList.clear();
-        int halfSW = rootView.getWidth()/2;
-        for(RadarPoint radarPoint : radarPointList){
-            double left = cx -  (halfSW - radarPoint.x)/radarZoom;
-            double top ;
-            if(radarPoint.isNegative){
-                top = cy  +  (rootView.getHeight()-radarPoint.y + halfSW)/radarZoom;
-            }else{
-                top = cy - (rootView.getHeight()-radarPoint.y + halfSW)/radarZoom;
+        if(radarImageViewList.size()==0){
+            ImageView tempImageView = null;
+            for(int i=0;i<30;i++){
+                tempImageView = new ImageView(context);
+                FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(StaticMethod.dip2px(context,2), StaticMethod.dip2px(context,2));
+                layoutParams.setMargins(500,500,0,0);
+                tempImageView.setLayoutParams(layoutParams);
+                //  tempImageView.setLeft(500);
+                //   tempImageView.setTop(500);
+                tempImageView.setBackgroundResource(R.drawable.red_point);
+                radarImageViewList.add(tempImageView);
+                rootView.addView(tempImageView);
             }
-            ImageView imageView = new ImageView(context);
-            double pointRadius = (cx-left)*(cx-left)+(cy-top)*(cy-top);
-            if(Math.sqrt(pointRadius) < (radius)){
-                FrameLayout.LayoutParams marginLeftAndTop = new FrameLayout.LayoutParams(StaticMethod.dip2px(context,2), StaticMethod.dip2px(context,2));
-                marginLeftAndTop.setMargins((int)(left), (int)(top), 0, 0);
-                Log.i(logTag,"radarZoom:"+radarZoom+",left:"+(int)(left)+",top:"+(int)(top)+",screenRadius"+screenRadius+",sW:"+rootView.getWidth() +",sH:"+rootView.getHeight());
-                imageView.setLayoutParams(marginLeftAndTop);
+        }
+
+        float cy = this.rootView.getHeight() - StaticMethod.dip2px(App.self,55);
+        int halfSW = rootView.getWidth()/2;
+        int i=0;
+        ImageView imageView;
+        LatLng target = null;
+        double distance = 0;
+        double azimuth = 0;
+        double pLeft = 0;
+        double pTop = 0;
+        double realRadius = 1000.0;
+        if(trackSearchVo.getSearchDistance()== FootPrintSearchVo.SearchDistance.one){
+            realRadius = 100.0;
+        }
+        if(trackSearchVo.getSearchDistance()== FootPrintSearchVo.SearchDistance.two){
+            realRadius = 500.0;
+        }
+        if(trackSearchVo.getSearchDistance()== FootPrintSearchVo.SearchDistance.three){
+            realRadius = 1000.0;
+        }
+        radarZoom = radius/realRadius;
+        Log.i(logTag,"cx:"+cx+",cy:"+cy+",radius:"+radius);
+        for(RadarPoint radarPoint : radarPointList){
+            target = new LatLng(radarPoint.lat, radarPoint.lon);
+            distance = DistanceUtil.getDistance(center,target);
+            azimuth = StaticMethod.comAzimuth(center.latitude,center.longitude,radarPoint.lat,radarPoint.lon);
+          //  pLeft = cx + Math.sin(azimuth)*distance/realRadius*radius;
+          //  pTop =  cy - Math.cos(azimuth)*distance/realRadius*radius;
+            pLeft = cx + Math.sin(azimuth)*radarZoom*distance;
+            pTop =  cy - Math.cos(azimuth)*radarZoom*distance;
+            imageView = radarImageViewList.get(i);
+          //  if(Math.sqrt(pointRadius) < (radius)){
+            Log.i(logTag,"left:"+(int)(pLeft)+",top:"+(int)(pTop)+",realRadius"+realRadius+",sW:"+rootView.getWidth() +",sH:"+rootView.getHeight());
+            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(StaticMethod.dip2px(context,2), StaticMethod.dip2px(context,2));
+            layoutParams.setMargins((int)pLeft,(int)(pTop),0,0);
+            imageView.setLayoutParams(layoutParams);
+            i++;
+            if(i>30){
+                imageView = new ImageView(context);
                 imageView.setBackgroundResource(R.drawable.red_point);
-                rootView.addView(imageView);
                 radarImageViewList.add(imageView);
             }
+            //}
+        }
+    }
+
+    /**
+     * Called when a view has been clicked.
+     * 足迹view点击事件
+     * @param v The view that was clicked.
+     */
+    @Override
+    public void onClick(View v) {
+        Object obj = v.getTag();
+        if(obj!=null && (obj instanceof FootPrintBean)){
+            FootPrintBean footPrintBean = (FootPrintBean) obj;
+            Intent intent = new Intent(context, TrackDetailActivity.class);
+            intent.putExtra(StaticVar.EXTRA_TRACK_BEAN, footPrintBean);
+            context.startActivity(intent);
         }
     }
 
@@ -237,7 +256,8 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
     class RadarPoint {
         float x, y;
         boolean isNegative = false;
-
+        double lat;
+        double lon;
         @Override
         public String toString() {
             return x + ", " + y;
@@ -250,7 +270,6 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
             try {
                 Log.i(logTag, "do onDraw------------------------------------>");
                 Map<String, Integer> drawPointRePointMap = new HashMap<String, Integer>();
-                LatLng target = null;
                 //for start
                 radarPointList.clear();
                 RadarPoint radarPoint;
@@ -259,8 +278,6 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
                     location.setLatitude(footPrintBean.getLatitude());
                     location.setLongitude(footPrintBean.getLongitude());
                     location.setAltitude(this.alt);
-                    target = new LatLng(footPrintBean.getLatitude(), footPrintBean.getLongitude());
-                    Log.i(logTag,"distance---->" + DistanceUtil.getDistance(center,target));
                     float[] currentLocationInECEF = LocationHelper.WSG84toECEF(currentLocation);
                     float[] pointInECEF = LocationHelper.WSG84toECEF(location);
                     float[] pointInENU = LocationHelper.ECEFtoENU(currentLocation, currentLocationInECEF, pointInECEF);
@@ -270,6 +287,7 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
                     // if z > 0, the point will display on the opposite
                     float drawX = (0.5f + cameraCoordinateVector[0] / cameraCoordinateVector[3]) * this.rootView.getWidth();
                     float drawY = (0.5f - cameraCoordinateVector[1] / cameraCoordinateVector[3]) * this.rootView.getHeight();
+                    Log.i(logTag,"distance---->" +",x:"+cameraCoordinateVector[0]+",y:"+cameraCoordinateVector[0]);
                     drawX = (int) drawX;
                     drawY = (int) drawY;
                     rePointKeyTemp = drawX + "-" + drawY;
@@ -284,6 +302,8 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
                     radarPoint = new RadarPoint();
                     radarPoint.x = drawX;
                     radarPoint.y = drawY;
+                    radarPoint.lat = footPrintBean.getLatitude();
+                    radarPoint.lon = footPrintBean.getLongitude();
                     radarPoint.isNegative = true;
                     if (cameraCoordinateVector[2] < 0) {
                         radarPoint.isNegative = false;
@@ -296,7 +316,6 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
                             FrameLayout.LayoutParams marginLeftAndTop = new FrameLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             marginLeftAndTop.setMargins((int)drawX, (int)drawY, 0, 0);
                             convertViewTemp.setLayoutParams(marginLeftAndTop);
-                           // moveViewWithAnimation(convertViewTemp,convertViewTemp.getLeft()*1.0f,drawX,convertViewTemp.getTop()*1.0f,drawY,100,0,false);
                         } else {
                             View convertView = LayoutInflater.from(context).inflate(R.layout.track_ar_item, rootView, false);
                             ViewHolder h = new ViewHolder();
@@ -314,7 +333,7 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
                             marginLeftAndTop.setMargins((int)drawX, (int)drawY, 0, 0);
                             convertView.setLayoutParams(marginLeftAndTop);
                             convertView.setTag(footPrintBean);
-                            convertView.setOnTouchListener(this);
+                            convertView.setOnClickListener(this);
                             rootView.addView(convertView);
                             dataCache.putObjectMem(viewBitmapCachePrefix + footPrintBean.getFootprintId(), convertView);
                         }
@@ -332,7 +351,7 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
 
     protected void onDestroy() {
         preTrackBeanIdStr = "";
-        dataCache.clear();
+        dataCache.clearMem();
     }
     /**
      * 查询数据回调实现

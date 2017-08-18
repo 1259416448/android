@@ -144,6 +144,14 @@ public class CacheDefault implements CacheService {
         cacheMap.clear();
     }
 
+    /**
+     * 仅删除内存数据
+     */
+    @Override
+    public void clearMem() {
+        cacheMap.clear();
+    }
+
     @Override
     public String get(String key) {
         String result = null;
