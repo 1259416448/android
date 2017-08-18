@@ -8,20 +8,18 @@
 
 #import <Foundation/Foundation.h>
 
-@class OTWFootprintListModel;
-
 @interface OTWNewsCommentModel : NSObject
 
 //用户头像
-@property (nonatomic,copy) NSString *sUserImage;
+@property (nonatomic,copy) NSString *userHeadImg;
 //用户名
-@property (nonatomic,copy) NSString *sUserName;
+@property (nonatomic,copy) NSString *userNickname;
 //评论时间
-@property (nonatomic,copy) NSString *sCommentTime;
+@property (nonatomic,copy) NSString *dateCreatedStr;
 //评论内容
-@property (nonatomic,copy) NSString *sCommentContent;
+@property (nonatomic,copy) NSString *commentContent;
 //足迹内容
-@property (nonatomic,strong) OTWFootprintListModel *footprint;
+@property (nonatomic,strong) NSString *footprintContent;
 
 -(OTWNewsCommentModel *) initWithDictionary: (NSDictionary *)dic;
 

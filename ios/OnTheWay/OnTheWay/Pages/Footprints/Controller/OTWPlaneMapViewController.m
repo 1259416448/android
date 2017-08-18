@@ -55,6 +55,8 @@
 @property (nonatomic,strong) NSDictionary *reponseCacheData;
 @property (nonatomic,strong) NSMutableArray *currentAnnotations;
 @property (nonatomic,strong) NSMutableArray *previousAnnotations;
+@property (nonatomic,strong) OTWPointAnnotation *annotation;
+@property (nonatomic,strong) NSMutableArray<OTWPointAnnotation*> *mapAnnotations;
 @end
 
 @implementation OTWPlaneMapViewController
@@ -347,28 +349,31 @@
         self.currentAnnotations = [NSMutableArray array];
     }
     self.previousAnnotations = [self.currentAnnotations copy];
-    
-    for (OTWFootprintListModel *footprint in footprints) {
-        [self setAnnotations:footprint];
-    }
+    [self setAnnotations:footprints];
     if (self.previousAnnotations && self.previousAnnotations.count > 0) {
         [self removeAllAnnotations];
     }
 }
 
 #pragma mark 设置annotation
-- (void)setAnnotations:(OTWFootprintListModel*)footprint
+- (void)setAnnotations:(NSMutableArray<OTWFootprintListModel*>*)footprints
 {
+    NSMutableArray *newAnnotations = [NSMutableArray array];
     CLLocationCoordinate2D coor;
-    OTWPointAnnotation *annotation = [[OTWPointAnnotation alloc] init];
-    coor.latitude = footprint.latitude;
-    coor.longitude = footprint.longitude;
-    annotation.coordinate = coor;
-    annotation.footprint = footprint;
-    //百度地图sdk中的一个bug，必须设置title属性，后面才能响应didSelectAnnotationView代理
-    annotation.title = @"";
-    [_mapView addAnnotation:annotation];
-    [self.currentAnnotations addObject:annotation];
+    for (OTWFootprintListModel *footprint in footprints) {
+        if (!_annotation) {
+            _annotation = [[OTWPointAnnotation alloc] init];
+        }
+        coor.latitude = footprint.latitude;
+        coor.longitude = footprint.longitude;
+        _annotation.coordinate = coor;
+        _annotation.footprint = footprint;
+        //百度地图sdk中的一个bug，必须设置title属性，后面才能响应didSelectAnnotationView代理
+        _annotation.title = @"";
+        [newAnnotations addObject:_annotation];
+        [self.currentAnnotations addObject:_annotation];
+    }
+    [_mapView addAnnotations:newAnnotations];
 }
 
 #pragma mark 移除所有标注
