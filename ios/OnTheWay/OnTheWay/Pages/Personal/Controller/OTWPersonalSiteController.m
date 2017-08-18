@@ -15,6 +15,7 @@
 #import "OTWTabBarController.h"
 #import <STPopup/STPopup.h>
 #import "OTWPersonalUserFeedbackViewController.h"
+#import "OTWPersonalSiteHowClaimShopViewController.h"
 @interface OTWPersonalSiteController() <UITableViewDataSource,UITableViewDelegate>
 
 @property (nonatomic,strong) UIImage *arrowImge;
@@ -122,7 +123,7 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
         if(indexPath.row != 2){
-            UIImageView *backImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0 , 8, 15)];
+            UIImageView *backImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0 , 7, 12)];
             [backImageView setImage: _arrowImge ];
             cell.accessoryView =backImageView;
         }else{
@@ -164,7 +165,7 @@
 
 -(UITableView*)personalSiteTableView{
     if(!_personalSiteTableView){
-        _personalSiteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 65,SCREEN_WIDTH, SCREEN_HEIGHT-65) style:UITableViewStyleGrouped];
+        _personalSiteTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 65,SCREEN_WIDTH, SCREEN_HEIGHT-65) style:UITableViewStylePlain];
         _personalSiteTableView.dataSource = self;
         _personalSiteTableView.delegate = self;
         _personalSiteTableView.backgroundColor = [UIColor clearColor];
@@ -193,14 +194,44 @@
 -(UIView*)personalSiteTableViewFooter{
     if(!_personalSiteTableViewFooter){
         //设置header的背景
-        _personalSiteTableViewFooter=[[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 75)];
+        _personalSiteTableViewFooter=[[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 160)];
         _personalSiteTableViewFooter.backgroundColor=[UIColor clearColor];
-        UIView *tableViewFooterContentView = [[UIView alloc] initWithFrame:CGRectMake(0, 25, SCREEN_WIDTH, 50)];
+        
+        //如何认领商家
+        UIView *claimView=[[UIView alloc]initWithFrame:CGRectMake(0, 10, SCREEN_WIDTH, 50)];
+        claimView.layer.borderColor=[UIColor color_d5d5d5].CGColor;
+        claimView.layer.borderWidth=0.5;
+        claimView.backgroundColor=[UIColor whiteColor];
+        [_personalSiteTableViewFooter addSubview:claimView];
+        UITapGestureRecognizer *tapGesturr=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(jumpClaimClick)];
+        [claimView addGestureRecognizer:tapGesturr];
+        
+        //如何认领商家图标
+        UIImageView *claimIcon=[[UIImageView alloc]initWithFrame:CGRectMake(15, 16.5, 17, 17)];
+        claimIcon.image=[UIImage imageNamed:@"wd_sz_shanghu"];
+        [claimView addSubview:claimIcon];
+        
+        //如何认领商家文字
+        UILabel *claimText=[[UILabel alloc] initWithFrame:CGRectMake(claimIcon.MaxX+10, 14, 100, 20)];
+        claimText.text=@"如何认领商家";
+        claimText.textColor=[UIColor color_202020];
+        claimText.font=[UIFont systemFontOfSize:16];
+         [claimView addSubview:claimText];
+        
+        //如何认领商家向右箭头
+        UIImageView *claimLeftImg=[[UIImageView alloc]initWithFrame:CGRectMake(SCREEN_WIDTH-15-7,21.5, 7, 12)];
+        claimLeftImg.image=_arrowImge;
+        [claimView addSubview:claimLeftImg];
+        
+        //退出view
+        UIView *tableViewFooterContentView = [[UIView alloc] initWithFrame:CGRectMake(0, claimView.MaxY+50, SCREEN_WIDTH, 50)];
+        tableViewFooterContentView.backgroundColor = [UIColor whiteColor];
         
         UITapGestureRecognizer *tapGesturRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(OutButtonClick)];
         [tableViewFooterContentView addGestureRecognizer:tapGesturRecognizer];
+       
         
-        tableViewFooterContentView.backgroundColor = [UIColor whiteColor];
+        //退出文字
         UILabel *outSizeLabel = [[UILabel alloc] initWithFrame:CGRectMake((SCREEN_WIDTH - 66)/2, 15+0.5, 66, 20)];
         outSizeLabel.text = @"退出登录";
         outSizeLabel.textColor = [UIColor color_e50834];
@@ -216,6 +247,12 @@
         [tableViewFooterContentView addSubview:self.underLineBottomView];
     }
     return _personalSiteTableViewFooter;
+}
+-(void)jumpClaimClick{
+    DLog(@"点击了如何认领商家");
+    OTWPersonalSiteHowClaimShopViewController *howClaimShopVC = [[OTWPersonalSiteHowClaimShopViewController alloc] init];
+    [self.navigationController pushViewController:howClaimShopVC animated:YES];
+
 }
 @end
 
