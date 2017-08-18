@@ -15,6 +15,7 @@
 @property (nonatomic,strong) UILabel *userFeedbackContentTips;
 @property (nonatomic,strong) UIView *userFeedbackPhone;
 @property (nonatomic,strong) UITextField *userFeedbackPhoneTextView;
+@property (nonatomic,strong) UIView *customRightNavigationBarView;
 
 @end
 
@@ -35,7 +36,7 @@
     self.title = @"用户反馈";
     self.view.backgroundColor=[UIColor color_f4f4f4];
     [self setLeftNavigationImage:[UIImage imageNamed:@"back_2"]];
-    self.rightNavigationTitle=@"提交";
+  [self setCustomNavigationRightView:self.customRightNavigationBarView];
     
 
 
@@ -60,6 +61,24 @@
     // Pass the selected object to the new view controller.
 }
 */
+- (UIView *) customRightNavigationBarView
+{
+    if(!_customRightNavigationBarView){
+        _customRightNavigationBarView = [[UIView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-15-32, 30, 34, 22.5)];
+        _customRightNavigationBarView.backgroundColor = [UIColor clearColor];
+        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 34, 22.5)];
+        titleLabel.text = @"提交";
+        titleLabel.textColor = [UIColor color_202020];
+        titleLabel.font = [UIFont systemFontOfSize:16];
+        [_customRightNavigationBarView addSubview:titleLabel];
+        UITapGestureRecognizer *tapGesturRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userFeedbackReleaseTap)];
+        [_customRightNavigationBarView addGestureRecognizer:tapGesturRecognizer];
+    }
+    return _customRightNavigationBarView;
+}
+-(void)userFeedbackReleaseTap{
+    DLog(@"点击了提交");
+}
 -(UIView*)userFeedbackContent{
     if(!_userFeedbackContent){
         _userFeedbackContent=[[UIView alloc]initWithFrame:CGRectMake(0, self.navigationHeight, SCREEN_WIDTH, 200)];

@@ -29,6 +29,8 @@
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
             android:layout_marginTop="6dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:layout_weight="1"
             android:background="@drawable/search_radius"
             android:minHeight="33dp"
@@ -58,7 +60,9 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:orientation="horizontal">
+
                 <Button
+                    android:id="@+id/like_btn"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_gravity="center"
@@ -66,7 +70,9 @@
 
                 <TextView
                     android:id="@+id/like_no_tv"
-                    android:layout_width="28dp"
+                    android:layout_width="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
                     android:layout_height="12dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="-6dp"

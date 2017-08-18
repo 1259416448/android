@@ -1,1 +1,1 @@
-include ':app', ':PullToRefreshLibrary', ':ViewPagerLibrary',"photopicker","imagepickerModule"
+include ':app', ':PullToRefreshLibrary', ':ViewPagerLibrary', ':banner', "photopicker", "imagepickerModule"

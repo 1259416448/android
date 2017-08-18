@@ -81,7 +81,6 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
     private TextView addressTv;
     @ViewInject(R.id.to_map_btn)
     private Button toMapBtn;
-
     @ViewInject(R.id.to_ar_btn)
     private Button toArBtn;
     @ViewInject(R.id.r_100m)
@@ -106,6 +105,7 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
         setContentView(R.layout.activity_ar_track);
         UIUtils.setBarStyle(self);
         x.view().inject(self);
+        trackSearchVo.setSize(30);
         handler = new Handler(){
             public void handleMessage(Message msg){
                 String totalCount = msg.getData().getString("totalCount");
@@ -119,7 +119,7 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
         cameraContainerLayout = (FrameLayout) findViewById(R.id.camera_container_layout);
         surfaceView = (SurfaceView) findViewById(R.id.surface_view);
         tvCurrentLocation = (TextView) findViewById(R.id.tv_current_location);
-        arOverlayView = new AROverlayView(this,(ViewGroup)getWindow().getDecorView(),trackSearchVo);
+        arOverlayView = new AROverlayView(this,cameraContainerLayout,trackSearchVo);
 
         rangeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -254,13 +254,15 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
         requestLocationPermission();
         requestCameraPermission();
         registerSensors();
-        initAROverlayView();
+        Log.i(logTag,"onResume-------------------------------onResume");
+        arOverlayView.updateSearchParams();
     }
 
     @Override
     public void onPause() {
         releaseCamera();
         sensorManager.unregisterListener(this);
+        arOverlayView.onDestroy();
         super.onPause();
     }
 
@@ -268,7 +270,7 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
     protected void onDestroy() {
         super.onDestroy();
         sensorManager.unregisterListener(this);
-        if(null!=arOverlayView){
+        if(null!= arOverlayView){
             arOverlayView.onDestroy();
         }
     }
@@ -291,16 +293,8 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
         }
     }
 
-    public void initAROverlayView() {
-        if (arOverlayView.getParent() != null) {
-            ((ViewGroup) arOverlayView.getParent()).removeView(arOverlayView);
-        }
-        cameraContainerLayout.addView(arOverlayView);
-    }
-
     public void initARCameraView() {
         reloadSurfaceView();
-
         if (arCamera == null) {
             arCamera = new ARCamera(this, surfaceView);
         }
@@ -329,7 +323,6 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
         if (surfaceView.getParent() != null) {
             ((ViewGroup) surfaceView.getParent()).removeView(surfaceView);
         }
-
         cameraContainerLayout.addView(surfaceView);
     }
 
@@ -346,24 +339,22 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
     private void registerSensors() {
         sensorManager.registerListener(this,
                 sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR),
-                SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)  , SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) ,SensorManager.SENSOR_DELAY_NORMAL);
+                SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)  , SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) ,SensorManager.SENSOR_DELAY_FASTEST);
     }
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         if (sensorEvent.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
+          //  Log.d(TAG,"fffffffffffff:"+sensorEvent.values);
             float[] rotationMatrixFromVector = new float[16];
             float[] projectionMatrix = new float[16];
             float[] rotatedProjectionMatrix = new float[16];
-
             SensorManager.getRotationMatrixFromVector(rotationMatrixFromVector, sensorEvent.values);
-
             if (arCamera != null) {
                 projectionMatrix = arCamera.getProjectionMatrix();
             }
-
             Matrix.multiplyMM(rotatedProjectionMatrix, 0, projectionMatrix, 0, rotationMatrixFromVector, 0);
             this.arOverlayView.updateRotatedProjectionMatrix(rotatedProjectionMatrix);
         }

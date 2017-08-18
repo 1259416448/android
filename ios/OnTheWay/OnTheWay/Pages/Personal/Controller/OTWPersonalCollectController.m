@@ -14,7 +14,10 @@
     UITableView *tableView;
     NSMutableArray *status;
 }
-
+@property (nonatomic,strong) UIView *noResultView;
+@property (nonatomic,strong) UIImageView *noResultImage;
+@property (nonatomic,strong) UILabel *noResultLabelOne;
+@property (nonatomic,strong) UILabel *noResultLabelTwo;
 @end
 
 @implementation OTWPersonalCollectController
@@ -48,8 +51,14 @@
     
     tableView.separatorStyle = UITableViewCellSeparatorStyleNone;//将边框去掉
     
-    [self.view addSubview:tableView];
+    //有收藏
+    //[self.view addSubview:tableView];
     
+    //无收藏
+    [self.view addSubview:self.noResultView];
+    
+    //不显示底部菜单
+    [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -95,5 +104,49 @@
  // Pass the selected object to the new view controller.
  }
  */
+-(UIView*)noResultView{
+    if(!_noResultView){
+        _noResultView=[[UIView alloc]initWithFrame:CGRectMake(0, self.navigationHeight+1, SCREEN_WIDTH, SCREEN_HEIGHT-self.navigationHeight)];
+        _noResultView.backgroundColor=[UIColor whiteColor];
+        [_noResultView addSubview:self.noResultImage];
+        [_noResultView addSubview:self.noResultLabelOne];
+        [_noResultView addSubview:self.noResultLabelTwo];
+    }
+    
+    return _noResultView;
+}
+-(UIImageView*)noResultImage{
+    if(!_noResultImage){
+        _noResultImage=[[UIImageView alloc]init];
+        _noResultImage.frame=CGRectMake((SCREEN_WIDTH-151)/2, 130, 151, 109);
+        _noResultImage.image=[UIImage imageNamed:@"wd_wushoucang"];
+    }
+    return _noResultImage;
+}
 
+-(UILabel*)noResultLabelOne{
+    if(!_noResultLabelOne){
+        _noResultLabelOne=[[UILabel alloc]init];
+        _noResultLabelOne.text=@"你还没有任何收藏呢";
+        _noResultLabelOne.font=[UIFont systemFontOfSize:13];
+        _noResultLabelOne.textColor=[UIColor color_979797];
+        [_noResultLabelOne sizeToFit];
+        _noResultLabelOne.frame=CGRectMake(0, self.noResultImage.MaxY+15, SCREEN_WIDTH, _noResultLabelOne.Height);
+        _noResultLabelOne.textAlignment=NSTextAlignmentCenter;
+    }
+    return _noResultLabelOne;
+}
+
+-(UILabel*)noResultLabelTwo{
+    if(!_noResultLabelTwo){
+        _noResultLabelTwo=[[UILabel alloc]init];
+        _noResultLabelTwo.text=@"赶快行动起来吧";
+        _noResultLabelTwo.font=[UIFont systemFontOfSize:13];
+        _noResultLabelTwo.textColor=[UIColor color_979797];
+        [_noResultLabelTwo sizeToFit];
+        _noResultLabelTwo.frame=CGRectMake(0, self.noResultLabelOne.MaxY+10, SCREEN_WIDTH, _noResultLabelTwo.Height);
+        _noResultLabelTwo.textAlignment=NSTextAlignmentCenter;
+    }
+    return _noResultLabelTwo;
+}
 @end

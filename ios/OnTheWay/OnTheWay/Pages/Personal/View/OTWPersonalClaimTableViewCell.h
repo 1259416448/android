@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+@class OTWPersonalClaimModel;
+
 @interface OTWPersonalClaimTableViewCell : UITableViewCell
 
-@property (nonatomic,strong) UIButton *claimShopActiveBtn;
-@property (nonatomic,strong) UIButton *claimShopDetailBtn;
+@property (nonatomic,strong) OTWPersonalClaimModel *status;
+
 
 @end

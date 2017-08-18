@@ -1,13 +1,15 @@
 package arvix.cn.ontheway.ui.track;
 
 import android.content.Context;
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.AbsoluteSizeSpan;
@@ -17,13 +19,15 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.HeaderViewListAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -35,7 +39,6 @@ import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
 import com.youth.banner.loader.ImageLoader;
 
-import org.w3c.dom.Text;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.image.ImageOptions;
@@ -51,18 +54,22 @@ import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.bean.BaseResponse;
 import arvix.cn.ontheway.bean.BaseResponseBodyNumber;
-import arvix.cn.ontheway.bean.Pagination;
 import arvix.cn.ontheway.bean.CommentBean;
 import arvix.cn.ontheway.bean.FootPrintBean;
-import arvix.cn.ontheway.bean.UserInfo;
+import arvix.cn.ontheway.bean.Pagination;
 import arvix.cn.ontheway.http.ServerUrl;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.head.HeaderHolder;
 import arvix.cn.ontheway.ui.view.ListViewHolder;
+import arvix.cn.ontheway.utils.MyProgressDialog;
 import arvix.cn.ontheway.utils.StaticMethod;
 import arvix.cn.ontheway.utils.StaticVar;
+import arvix.cn.ontheway.utils.UIUtils;
+import arvix.cn.ontheway.utils.Windows;
 
 import static android.text.style.DynamicDrawableSpan.ALIGN_BASELINE;
+import static com.handmark.pulltorefresh.library.PullToRefreshBase.Mode.BOTH;
+import static com.handmark.pulltorefresh.library.PullToRefreshBase.Mode.PULL_FROM_START;
 
 /**
  * Created by asdtiang on 2017/7/31 0031.
@@ -94,11 +101,15 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
     private TextView commentNoTv;
     @ViewInject(R.id.like_no_tv)
     private TextView likeNoTv;
+    @ViewInject(R.id.like_btn)
+    private Button likeBtn;
+
 
     private FootPrintBean footPrintBean;
     Pagination pagination;
     private boolean commentCanFetch = false;
     private static int waitForResultValue = -1;
+
     private View emptyView;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -117,18 +128,24 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
         listHolder.list.getRefreshableView().addHeaderView(LayoutInflater.from (self).inflate(R.layout.track_detail_header,listHolder.list,false));
         listHolder.list.setOnItemClickListener(this);
         listHolder.list.getRefreshableView().setOnItemLongClickListener(this);
-        listHolder.list.setMode(PullToRefreshBase.Mode.BOTH);
+        listHolder.list.setMode(PullToRefreshBase.Mode.DISABLED);
         listHolder.list.setOnRefreshListener(this);
-        emptyView = LayoutInflater.from(self).inflate(R.layout.comment_empty, (ViewGroup)getWindow().getDecorView(), false);
-
+        emptyView=LayoutInflater.from(self).inflate(R.layout.comment_empty,listHolder.list.getRefreshableView(),false);
         x.view().inject(this);
         HeaderHolder head=new HeaderHolder();
         head.init(self,"足迹详情");
+        head.setUpRightBtn2(getResources().getDrawable(R.drawable.zj_fenxiang), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UIUtils.toast(self,"点了分享", Toast.LENGTH_SHORT);
+            }
+        });
         initView();
+        initEvent();
     }
 
     private void initView() {
-        //init field;
+        //init field; 注意footPrintBean刚开始只有部分数据供显示，获取足迹详情后才有完整数据，部分字段初始化要放在initDat()里面
         StaticMethod.setCircularHeaderImg(footPrintBean.getUserHeadImg(),userHeader,userHeader.getWidth(),userHeader.getHeight());
         nicknameTv.setText(footPrintBean.getUserNickname());
         timeTv.setText(footPrintBean.getDateCreatedStr());
@@ -155,6 +172,10 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
         ImageSpan imgSpan = new ImageSpan(self, b,ALIGN_BASELINE);
         ssb.setSpan(imgSpan, 2, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         writeReplyEt.setHint(ssb);
+        attachKeyboardListeners(R.id.detail_root);
+    }
+
+    private void initEvent(){
         writeReplyEt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -198,6 +219,7 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
                                     commentBeanList.add(0,commentBean);
                                     adapter.notifyDataSetChanged();
                                     delayRefreshComplete(100);
+                                    writeReplyEt.setText("");
                                 }else if(response.getCode() == StaticVar.ERROR){
                                     StaticMethod.showToast("评论失败",self);
                                 }else{
@@ -207,7 +229,6 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
                                 e.printStackTrace();
                             }
                         }
-
                         @Override
                         public void onError(Throwable ex, boolean b) {
                             ex.printStackTrace();
@@ -215,21 +236,76 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
 
                         @Override
                         public void onCancelled(CancelledException e) {
-
                         }
-
                         @Override
                         public void onFinished() {
-
+                            mayShowEmpty(commentBeanList.size());
                         }
                     });
                 }
 
-                return false;
+                return true;
             }
         });
-        attachKeyboardListeners(R.id.detail_root);
+
+        likeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int gotoLogin = StaticMethod.goToLogin(self);
+                if(gotoLogin>0){
+                    return;
+                }
+
+                final  MyProgressDialog  wait = Windows.waiting(self);
+                RequestParams requestParams = new RequestParams();
+                requestParams.setUri( ServerUrl.FOOTPRINT_LIKE+"/"+footPrintBean.getFootprintId());
+                x.http().post(requestParams, new Callback.CommonCallback<String>() {
+                    @Override
+                    public void onSuccess(String result) {
+                        try {
+                            Log.i("onSuccess-->","result->"+result.toString());
+                            BaseResponse response = StaticMethod.genResponse(result);
+                            if(response.getCode()==StaticVar.SUCCESS) {
+                                if(footPrintBean.isIfLike()){
+                                    StaticMethod.showToast("取消点赞成功",self);
+                                    likeBtn.setBackgroundResource(R.drawable.ar_zan);
+                                    footPrintBean.setFootprintLikeNum(footPrintBean.getFootprintLikeNum()-1);
+                                    footPrintBean.setIfLike(false);
+                                }else{
+                                    StaticMethod.showToast("点赞成功",self);
+                                    footPrintBean.setFootprintLikeNum(footPrintBean.getFootprintLikeNum()+1);
+                                    likeBtn.setBackgroundResource(R.drawable.ar_zan_click);
+                                    footPrintBean.setIfLike(true);
+                                }
+                                likeNoTv.setText(footPrintBean.getFootprintLikeNum()+"");
+                            }else if(response.getCode() == StaticVar.ERROR){
+                                StaticMethod.showToast("操作失败",self);
+                            }else{
+                                StaticMethod.showToast("操作失败" + response.getCode(),self);
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                    @Override
+                    public void onError(Throwable ex, boolean b) {
+                        ex.printStackTrace();
+                    }
+
+                    @Override
+                    public void onCancelled(CancelledException e) {
+                    }
+                    @Override
+                    public void onFinished() {
+                        wait.dismiss();
+                    }
+                });
+            }
+        });
+
     }
+
+
 
     private void initPhotoList(){
         if(footPrintBean.getFootprintPhotoArray()!=null && footPrintBean.getFootprintPhotoArray().size()>0){
@@ -297,7 +373,10 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
                    Log.i(logTag,"onSuccess-----   SUCCESS  ------------------->");
                    FootPrintBean fetchBean = response.getBodyBean();
                    footPrintBean = fetchBean;
-                  // ((TextView)findViewById(R.id.like_no_tv)).setText(footPrintBean.getFootprintLikeNum());
+                   likeNoTv.setText(footPrintBean.getFootprintLikeNum()+"");
+                   if(footPrintBean.isIfLike()){
+                       likeBtn.setBackgroundResource(R.drawable.ar_zan_click);
+                   }
                    if(fetchBean.getFootprintPhotoArray()==null || fetchBean.getFootprintPhotoArray().size()==0){
                        findViewById(R.id.banner_ll).setVisibility(View.GONE);
                    }else{
@@ -329,7 +408,7 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
            public void onFinished() {
                Log.i(logTag,"onFinished------------------------>");
                delayRefreshComplete(100);
-               mayShowEmpty(adapter.getCount());
+               mayShowEmpty(commentBeanList.size());
            }
         });
 
@@ -408,21 +487,22 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
                     @Override
                     public void onFinished() {
                         delayRefreshComplete(100);
-                        mayShowEmpty(adapter.getCount());
+                        mayShowEmpty(commentBeanList.size());
                     }
                 });
             }
         }else{
-            mayShowEmpty(adapter.getCount());
+            mayShowEmpty(commentBeanList.size());
             delayRefreshComplete(100);
         }
     }
 
     private void mayShowEmpty(int count) {
+            listHolder.list.setMode(count>0? BOTH:PULL_FROM_START);
         if(count>0&&emptyView.getParent()!=null){
             listHolder.list.getRefreshableView().removeHeaderView(emptyView);
         }else if(count<=0&&emptyView.getParent()==null){
-            listHolder.list.getRefreshableView().addHeaderView(emptyView);
+            listHolder.list.getRefreshableView().addHeaderView(emptyView,null,false);
         }
     }
 
@@ -468,12 +548,20 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
      */
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        //长按删除
-        Log.i(logTag,"position-------------->"+position);
-        CommentBean commentBean = adapter.getItem(position);
-
+        if(parent.getAdapter() instanceof HeaderViewListAdapter){
+            position-=((HeaderViewListAdapter)parent.getAdapter()).getHeadersCount();
+        }
+        final int positionFinal=position;
+        final CommentBean commentBean = adapter.getItem(positionFinal);
         if(commentBean.getUserId()==App.userInfo.getId()){
-            deleteComment(commentBean);
+            new AlertDialog.Builder(self).setMessage("确认删除?").setNegativeButton("取消",null).setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //长按删除
+                    Log.i(logTag,"position-------------->"+positionFinal);
+                    deleteComment(commentBean);
+                }
+            }).show();
         }
         return false;
     }
@@ -506,6 +594,7 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
 
             @Override
             public void onFinished() {
+                mayShowEmpty(commentBeanList.size());
             }
         });
     }
@@ -520,9 +609,8 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
                 Log.i(logTag,result);
                 BaseResponse response =  StaticMethod.genResponse(result);
                 if (response.getCode() == StaticVar.SUCCESS) {
-                    adapter.remove(commentBean);
+                    commentBeanList.remove(commentBean);
                     adapter.notifyDataSetChanged();
-                    listHolder.list.onRefreshComplete();
                     StaticMethod.showToast("删除成功", self);
                 } else if (response.getCode() == StaticVar.ERROR) {
                     StaticMethod.showToast("删除数据失败", self);
@@ -532,6 +620,7 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
             }
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
+                ex.printStackTrace();
             }
 
             @Override
@@ -540,6 +629,7 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
 
             @Override
             public void onFinished() {
+                mayShowEmpty(commentBeanList.size());
             }
         });
     }
