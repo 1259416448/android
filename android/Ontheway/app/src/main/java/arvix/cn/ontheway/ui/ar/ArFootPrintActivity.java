@@ -43,7 +43,7 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
     final static String TAG = "ARActivity";
     private  SurfaceView surfaceView;
     private FrameLayout cameraContainerLayout;
-    private AROverlayViewCustom arOverlayViewCustom;
+    private AROverlayView arOverlayView;
     private Camera camera;
     private ARCamera arCamera;
     public static TextView tvCurrentLocation;
@@ -119,7 +119,7 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
         cameraContainerLayout = (FrameLayout) findViewById(R.id.camera_container_layout);
         surfaceView = (SurfaceView) findViewById(R.id.surface_view);
         tvCurrentLocation = (TextView) findViewById(R.id.tv_current_location);
-        arOverlayViewCustom = new AROverlayViewCustom(this,cameraContainerLayout,trackSearchVo);
+        arOverlayView = new AROverlayView(this,cameraContainerLayout,trackSearchVo);
 
         rangeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -225,19 +225,19 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
                     StaticMethod.showToast("已经没有数据了",self);
                     trackSearchVo.setNumber(0);
                 }
-                arOverlayViewCustom.updateSearchParams();
+                arOverlayView.updateSearchParams();
             }
         });
     }
 
     private void updateSearchDistance(FootPrintSearchVo.SearchDistance distance){
         trackSearchVo.setSearchDistance(distance);
-        arOverlayViewCustom.updateSearchParams();
+        arOverlayView.updateSearchParams();
     }
 
     private void updateSearchTime(FootPrintSearchVo.SearchTime time){
         trackSearchVo.setSearchTime(time);
-        arOverlayViewCustom.updateSearchParams();
+        arOverlayView.updateSearchParams();
     }
 
 
@@ -255,14 +255,14 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
         requestCameraPermission();
         registerSensors();
         Log.i(logTag,"onResume-------------------------------onResume");
-        arOverlayViewCustom.updateSearchParams();
+        arOverlayView.updateSearchParams();
     }
 
     @Override
     public void onPause() {
         releaseCamera();
         sensorManager.unregisterListener(this);
-        arOverlayViewCustom.onDestroy();
+        arOverlayView.onDestroy();
         super.onPause();
     }
 
@@ -270,8 +270,8 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
     protected void onDestroy() {
         super.onDestroy();
         sensorManager.unregisterListener(this);
-        if(null!=arOverlayViewCustom){
-            arOverlayViewCustom.onDestroy();
+        if(null!= arOverlayView){
+            arOverlayView.onDestroy();
         }
     }
 
@@ -358,7 +358,7 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
             }
 
             Matrix.multiplyMM(rotatedProjectionMatrix, 0, projectionMatrix, 0, rotationMatrixFromVector, 0);
-            this.arOverlayViewCustom.updateRotatedProjectionMatrix(rotatedProjectionMatrix);
+            this.arOverlayView.updateRotatedProjectionMatrix(rotatedProjectionMatrix);
         }
         if (sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
             magneticFieldValues = sensorEvent.values;
@@ -424,8 +424,8 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
     }
 
     private void updateLatestLocation() {
-        if (arOverlayViewCustom !=null&&location!=null) {
-            arOverlayViewCustom.updateCurrentLocation(location);
+        if (arOverlayView !=null&&location!=null) {
+            arOverlayView.updateCurrentLocation(location);
             tvCurrentLocation.setText(String.format("lat: %s \nlon: %s \naltitude: %s \n",
                     location.getLatitude(), location.getLongitude(), location.getAltitude()));
         }
@@ -461,8 +461,8 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
         values[1] = (float) Math.toDegrees(values[1]);
         values[2] = (float) Math.toDegrees(values[2]);
       //  Log.i(TAG, "xDegrees:"+values[1]+" yDegrees:"+values[2]);
-        AROverlayView.xDegrees = values[1];
-        AROverlayView.yDegrees = values[2];
+        AROverlayViewOld.xDegrees = values[1];
+        AROverlayViewOld.yDegrees = values[2];
         /*
         if(values[0] >= -5 && values[0] < 5){
             Log.i(TAG, "正北");

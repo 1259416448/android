@@ -10,6 +10,7 @@ import android.support.annotation.IdRes;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -45,6 +46,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private RadioGroup tabRG;
     @ViewInject(R.id.tab_zuji)
     private TextView zuJiTextView;
+    @ViewInject(R.id.tab_ar_center_btn)
+    private ImageButton tabArCenterBtn;
     CacheService cache;
     LocalBroadcastManager mLocalBroadcastManager;
     BroadcastReceiver mReceiver;
@@ -83,7 +86,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 if (intent.getAction().equals(BaiduLocationListenerService.BROADCAST_LOCATION)) {
                     double lat = intent.getDoubleExtra(StaticVar.BAIDU_LOC_CACHE_LAT,0.0);
                     double lon = intent.getDoubleExtra(StaticVar.BAIDU_LOC_CACHE_LON,0.0);
-
                     poiService.search(lat,lon, "美食",1000,new OnGetPoiSearchResultListener(){
                         @Override
                         public void onGetPoiResult(PoiResult poiResult) {
@@ -113,6 +115,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         });
         tabRG.check(R.id.tab_faxian);
+        tabArCenterBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(self, ARView.class);
+                startActivity(intent);
+            }
+        });
        // fxBtn.setOnClickListener(this);
     }
 
