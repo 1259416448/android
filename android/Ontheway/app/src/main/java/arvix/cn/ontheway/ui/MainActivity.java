@@ -129,6 +129,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private static int waitForResultValue = -1;
 
+    private int lastCheckId=-1;
     public void changeFrag(int checkedId) {
         Fragment targetFrag = frags.get(checkedId);
 
@@ -136,15 +137,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             Log.i("zuji", "zuji--------------------------fffffff------->" + checkedId);
             if (checkedId == R.id.tab_faxian) {
                 targetFrag = new FaXianFrag();
+                lastCheckId=checkedId;
             } else if (checkedId == R.id.tab_xiaoxi) {
                 targetFrag = new MsgIndexFrag();
+                lastCheckId=checkedId;
                 //list Msg targetFrag = MsgListFrag.newInstance();
             } else if (checkedId == R.id.tab_wode) {
                 if(cache.get(StaticVar.AUTH_TOKEN)!=null){
                     targetFrag = new MyProfileFragment();
+                    lastCheckId=checkedId;
                 }else{
                     Log.i("MainThread----------->",Thread.currentThread().getName());
                     waitForResultValue = StaticMethod.goToLogin(self);
+                    tabRG.clearCheck();
                 }
             }
         }
@@ -158,8 +163,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
         Log.i(logTag,"main onActivityResult---------> requestCode :" +requestCode +",waitForResultValue:"+waitForResultValue  +",resultCode:"+resultCode+",RESULT_OK:"+RESULT_OK);
         if (requestCode == waitForResultValue) {
-           // changeFrag(R.id.tab_faxian);
-            tabRG.check(R.id.tab_wode);
+            // changeFrag(R.id.tab_faxian);
+            if (resultCode == RESULT_OK) {
+                tabRG.check(R.id.tab_wode);
+            } else {
+                tabRG.check(lastCheckId);
+            }
         }
     }
 
