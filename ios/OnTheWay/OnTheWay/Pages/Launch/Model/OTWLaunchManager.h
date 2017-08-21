@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "OTWTabBarController.h"
 #import "OTWFootprintDetailController.h"
+#import "OTWFootprintsViewController.h"
+#import "OTWPlaneMapViewController.h"
+
 
 typedef enum : NSUInteger {
     OTWTabBarSelectedIndexFind = 0,   // 发现
@@ -22,6 +25,9 @@ typedef enum : NSUInteger {
 @interface OTWLaunchManager : NSObject
 
 @property (nonatomic, strong) OTWTabBarController * _Nullable mainTabController;
+@property (nonatomic,strong) OTWFootprintsViewController * _Nullable footprintVC;
+@property (nonatomic,strong) OTWPlaneMapViewController * _Nullable footprintPlaneMapVC;
+
 
 + (instancetype _Nullable )sharedManager;
 
@@ -34,5 +40,6 @@ typedef enum : NSUInteger {
  * @param selectIndex 选中的Index
  */
 - (void)showSelectedControllerByIndex:(OTWTabBarSelectedIndex)selectIndex;
+
 
 @end

@@ -5,7 +5,8 @@ package cn.arvix.base.common.entity;
  *         e-mail ：yangyang_666@icloud.com ； tel ：18580128658 ；QQ ：296604153
  */
 public enum SystemModule {
-    footprint("足迹"),user("用户");
+
+    footprint("足迹"), user("用户"), business("商家"), businessExpand("商家拓展信息");
 
     private final String info;
 

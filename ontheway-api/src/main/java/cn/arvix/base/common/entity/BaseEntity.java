@@ -1,6 +1,8 @@
 package cn.arvix.base.common.entity;
 
 
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
@@ -19,6 +21,7 @@ public abstract class BaseEntity<ID extends Serializable> extends AbstractEntity
     @GeneratedValue
     //@GenericGenerator(name = "generator", strategy = "uuid")
     //@GeneratedValue(generator = "generator")
+    @ApiModelProperty(hidden = true)
     private ID id;
 
     @Override

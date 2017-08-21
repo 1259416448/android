@@ -123,7 +123,8 @@
         hud.label.text =@"服务端繁忙，请稍后";
     }
     hud.label.textColor = [UIColor whiteColor];
-    hud.bezelView.color = [UIColor blackColor];
+    hud.bezelView.color = [[UIColor blackColor] colorWithAlphaComponent:0.7];
+    hud.bezelView.style = MBProgressHUDBackgroundStyleSolidColor;
     [hud hideAnimated:YES afterDelay:2];
 }
 
@@ -135,7 +136,9 @@
     hud.label.numberOfLines = 0;
     hud.userInteractionEnabled = userInteractionEnabled;
     hud.label.textColor = [UIColor whiteColor];
-    hud.bezelView.color = [UIColor blackColor];
+    hud.bezelView.color = [[UIColor blackColor] colorWithAlphaComponent:0.7];
+    hud.bezelView.style = MBProgressHUDBackgroundStyleSolidColor;
+    
     [hud hideAnimated:YES afterDelay:2];
 }
 

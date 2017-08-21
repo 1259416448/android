@@ -13,7 +13,6 @@
 #import "OTWPersonalInfoController.h"
 #import "OTWPersonalSiteController.h"
 #import "OTWLoginViewController.h"
-#import "OTWRootViewController.h"
 #import "OTWTabBarController.h"
 #import "OTWPersonalFootprintsListController.h"
 #import "OTWPersonalClaimViewController.h"

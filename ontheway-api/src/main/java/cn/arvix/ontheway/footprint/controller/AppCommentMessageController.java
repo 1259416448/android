@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping(value = "/app/message/comment")
-public class CommentMessageController extends ExceptionHandlerController {
+public class AppCommentMessageController extends ExceptionHandlerController {
 
     private CommentMessageService service;
 

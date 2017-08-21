@@ -10,7 +10,6 @@
 #import "OTWCustomNavigationBar.h"
 #import "OTWUserModel.h"
 #import "GCTokenManager.h"
-#import "OTWRootViewController.h"
 #import "OTWLaunchManager.h"
 #import "OTWTabBarController.h"
 #import <STPopup/STPopup.h>

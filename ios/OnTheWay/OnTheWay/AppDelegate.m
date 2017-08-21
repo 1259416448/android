@@ -13,7 +13,7 @@
 #define UMAppKey @"598c217d8f4a9d55d80004f6"
 
 @interface AppDelegate ()<UNUserNotificationCenterDelegate>
-
+@property (nonatomic,assign) BOOL isNetWork;
 @end
 
 @implementation AppDelegate
@@ -34,6 +34,10 @@
     
     //配置友盟推送
     [self configureUMessageWithLaunchOptions:launchOptions];
+    
+    _isNetWork = [OTWNetworkManager isNetwork];
+    
+    DLog(@"当前网络状态 _isNetWork: %d",_isNetWork);
     
     [_window makeKeyAndVisible];
     return YES;
@@ -86,17 +90,21 @@
 //变得活跃
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     DLog(@"applicationDidBecomeActive");
-    //监听网络变化，需要重新初始化一下百度地图
+    //监听网络变化，需要重新初始化一下百度地图，如果开始没网络，后面监听到又网络，才重新初始化百度地图
     [OTWNetworkManager networkStatusWithBlock:^(PPNetworkStatusType status){
-        if(status != PPNetworkStatusNotReachable){
+        if(status != PPNetworkStatusNotReachable && !_isNetWork){
+            DLog(@"网络状态变化，由无网络变为有网络");
             _mapManager = [[BMKMapManager alloc]init];
             BOOL ret = [_mapManager start:@"13I7baCnebotHFHdyywGKZtPIVkzVM6h"  generalDelegate:nil];
             if (!ret) {
                 DLog(@"manager start failed!");
             }
+            _isNetWork = YES;
+        }else if(status == PPNetworkStatusNotReachable){
+            _isNetWork = NO;
         }
+        DLog(@"当前网络状态 _isNetWork: %d",_isNetWork);
     }];
-    
     
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }

@@ -21,9 +21,13 @@
 @property (nonatomic, strong) CMMotionManager *motionManager;
 @property (nonatomic, assign) CMAcceleration previousAcceleration;
 @property (nonatomic, strong) CLLocation *reloadLocationPrevious;
+//位置通知定时任务
 @property (nonatomic, strong) NSTimer *reportLocationTimer;
+//定位成功后发出成功通知的时间 = 0 表示第一次定位 第一次定位会立即通知
 @property (nonatomic, assign) NSTimeInterval reportLocationDate;
+//暂时没有发现有什么用，目前是错误后5s后发起错误回调
 @property (nonatomic, strong) NSTimer *locationSearchTimer;
+//开始时间
 @property (nonatomic, assign) NSTimeInterval locationSearchStartTime;
 @property (nonatomic, assign) BOOL catchupPitch;
 @property (nonatomic, strong) NSDate *headingStartDate;
@@ -478,6 +482,7 @@
 - (void)locationManager:(CLLocationManager *)manager
        didUpdateHeading:(CLHeading *)newHeading
 {
+    DLog(">>>>>>>>new Heading:%@",newHeading);
     if (newHeading.headingAccuracy < 0 || newHeading.headingAccuracy > self.minimumHeadingAccuracy) return;
     
     double previousHeading = self.heading;
@@ -531,7 +536,7 @@
     
     NSTimeInterval age = location.timestamp.timeIntervalSinceNow;
     
-    NSLog(@"Disregarding location: age:%f, self.minimumLocationAge:%f , self.minimumLocationHorizontalAccuracy:%f, location.horizontalAccuracy:%f", age, self.minimumLocationAge, self.minimumLocationHorizontalAccuracy, location.horizontalAccuracy);
+//    NSLog(@"Disregarding location: age:%f, self.minimumLocationAge:%f , self.minimumLocationHorizontalAccuracy:%f, location.horizontalAccuracy:%f", age, self.minimumLocationAge, self.minimumLocationHorizontalAccuracy, location.horizontalAccuracy);
     
     if (age < -self.minimumLocationAge
         || location.horizontalAccuracy > self.minimumLocationHorizontalAccuracy
@@ -557,10 +562,12 @@
         [self reportLocationToDelegate];
     }
     // Report is already scheduled, doing nothing, it will report last location delivered in max 5s
+    // 位置通知定时任务已经创建，这里什么也不做，将在5秒内通知最后一个位置更新
     else if (reportIsScheduled) {
         
     }
     // Scheduling report in 5s
+    //没有创建通知，这里创建位置报告
     else {
         [self startReportLocationTimer];
     }

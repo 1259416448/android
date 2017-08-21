@@ -12,7 +12,7 @@
 #import "AFNetworkActivityIndicatorManager.h"
 
 #ifdef DEBUG
-//#define kServerURL @"http://192.168.5.119:9100/"
+//#define kServerURL @"http://192.168.88.190:9100/"
 #define kServerURL @"http://106.75.52.213:9900/"
 #else
 #define kServerURL @""

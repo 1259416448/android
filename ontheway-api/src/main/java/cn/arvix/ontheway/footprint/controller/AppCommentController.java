@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @Controller
 @RequestMapping(value = "/app/footprint/comment")
-public class CommentController extends ExceptionHandlerController {
+public class AppCommentController extends ExceptionHandlerController {
 
     private CommentService service;
 

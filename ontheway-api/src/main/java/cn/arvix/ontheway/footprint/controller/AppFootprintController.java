@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @Controller
 @RequestMapping(value = "/app/footprint")
-public class FootprintController extends ExceptionHandlerController {
+public class AppFootprintController extends ExceptionHandlerController {
 
     private FootprintService service;
 
