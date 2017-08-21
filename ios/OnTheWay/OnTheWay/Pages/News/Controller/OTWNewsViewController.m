@@ -8,9 +8,12 @@
 
 #import "OTWNewsViewController.h"
 #import "OTWSystemNewsViewController.h"
+#import "OTWNoSystemNewViewController.h"
 #import "OTWPraiseViewController.h"
+#import "OTWNoPraiseViewController.h"
 #import "OTWNewCommentListViewController.h"
 #import "OTWNewFootprintsControllerViewController.h"
+#import "OTWNoFootprintViewController.h"
 #import "OTWNewsCell.h"
 #import "OTWFootprintService.h"
 #import "OTWFootprintSearchParams.h"
@@ -141,15 +144,25 @@
     switch (indexPath.row) {
         case 0: // 系统消息
         {
-            DLog(@"我点击了：%ld",indexPath.row);
-            OTWSystemNewsViewController *systemNewsVC = [[OTWSystemNewsViewController alloc] init];
-            [self.navigationController pushViewController:systemNewsVC animated:YES];
+            if (![self.newsModel.systemNum isEqualToString:@"0"]) {
+                OTWSystemNewsViewController *systemNewsVC = [[OTWSystemNewsViewController alloc] init];
+                [self.navigationController pushViewController:systemNewsVC animated:YES];
+            } else {
+                OTWNoSystemNewViewController *noSystemNewsVC = [[OTWNoSystemNewViewController alloc] init];
+                [self.navigationController pushViewController:noSystemNewsVC animated:YES];
+            }
+
         }
             break;
         case 1: // 新的赞
         {
-            OTWPraiseViewController *praiseVC = [[OTWPraiseViewController alloc] init];
-            [self.navigationController pushViewController:praiseVC animated:YES];
+            if (![self.newsModel.likeNum isEqualToString:@"0"]) {
+                OTWPraiseViewController *praiseVC = [[OTWPraiseViewController alloc] init];
+                [self.navigationController pushViewController:praiseVC animated:YES];
+            } else {
+                OTWNoPraiseViewController *noPraiseVC = [[OTWNoPraiseViewController alloc] init];
+                [self.navigationController pushViewController:noPraiseVC animated:YES];
+            }
         }
             break;
         case 2: // 新的评论
@@ -163,9 +176,13 @@
         case 3://新的足迹动态
         {
         
-            OTWNewFootprintsControllerViewController *newsFootprintsVC = [[OTWNewFootprintsControllerViewController alloc] init];
-            [self.navigationController pushViewController:newsFootprintsVC animated:YES];
-            
+            if (![self.newsModel.footprintNum isEqualToString:@"0"]) {
+                OTWNewFootprintsControllerViewController *newsFootprintsVC = [[OTWNewFootprintsControllerViewController alloc] init];
+                [self.navigationController pushViewController:newsFootprintsVC animated:YES];
+            } else {
+                OTWNoFootprintViewController *noFootprintsVC = [[OTWNoFootprintViewController alloc] init];
+                [self.navigationController pushViewController:noFootprintsVC animated:YES];
+            }
         }
         break;
         default:
