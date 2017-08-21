@@ -64,6 +64,10 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
     boolean isGPSEnabled;
     boolean isNetworkEnabled;
     boolean locationServiceAvailable;
+    @ViewInject(R.id.radar_frame)
+    private FrameLayout radarFrameLayout;
+    @ViewInject(R.id.radar_point_frame)
+    private FrameLayout radarPointFrameLayout;
     @ViewInject(R.id.time_btn_line)
     private View timeLine;
     @ViewInject(R.id.range_btn_line)
@@ -119,7 +123,7 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
         cameraContainerLayout = (FrameLayout) findViewById(R.id.camera_container_layout);
         surfaceView = (SurfaceView) findViewById(R.id.surface_view);
         tvCurrentLocation = (TextView) findViewById(R.id.tv_current_location);
-        arOverlayView = new AROverlayView(this,cameraContainerLayout,trackSearchVo);
+        arOverlayView = new AROverlayView(this,cameraContainerLayout,trackSearchVo,radarPointFrameLayout);
 
         rangeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -459,8 +463,11 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
         values[1] = (float) Math.toDegrees(values[1]);
         values[2] = (float) Math.toDegrees(values[2]);
       //  Log.i(TAG, "xDegrees:"+values[1]+" yDegrees:"+values[2]);
+
         AROverlayView.xDegrees = values[1];
         AROverlayView.yDegrees = values[2];
+        AROverlayView.zDegrees = values[0];
+      //  radarPointFrameLayout.setRotation(values[0]);
         /*
         if(values[0] >= -5 && values[0] < 5){
             Log.i(TAG, "正北");

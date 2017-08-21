@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -71,7 +72,7 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
     MyProgressDialog wait;
     private FootPrintSearchVo trackSearchVo;
     private final float radius= StaticMethod.dip2px(App.self , 37f);
-    float cx = StaticMethod.dip2px(App.self,55);
+    float cx = StaticMethod.dip2px(App.self,40);
     LatLng center = new LatLng(OnthewayApplication.getInstahce(CacheService.class).getDouble(StaticVar.BAIDU_LOC_CACHE_LAT),OnthewayApplication.getInstahce(CacheService.class).getDouble(StaticVar.BAIDU_LOC_CACHE_LON));
     private int headerImgWidth = StaticMethod.dip2px(App.self, 28);
     private String preTrackBeanIdStr = "";
@@ -83,9 +84,11 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
     private double radarZoom = 0;
     public static float xDegrees;
     public static float yDegrees;
+    public static float zDegrees;
     private  List<RadarPoint> radarPointList  = new ArrayList<>();
     private  List<ImageView> radarImageViewList  = new ArrayList<>();
-    public AROverlayView(Context context, ViewGroup rootView, FootPrintSearchVo trackSearchVo) {
+    private FrameLayout radarFrameLayout;
+    public AROverlayView(Context context, ViewGroup rootView, FootPrintSearchVo trackSearchVo,FrameLayout radarFrameLayout) {
         this.context = context;
         this.rootView = rootView;
         this.trackSearchVo = trackSearchVo;
@@ -98,7 +101,7 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
         drawXOffset = StaticMethod.dip2px(context, 0);
         drawYOffset = StaticMethod.dip2px(context, 50);
         currentLocation = new Location("");
-
+        this.radarFrameLayout = radarFrameLayout;
 
     }
 
@@ -173,7 +176,7 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
         }
     }
 
-
+    float currentDegree = 0;
 
     public void drawRadarPoint() {
         if(radarImageViewList.size()==0){
@@ -186,12 +189,13 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
                 //  tempImageView.setLeft(500);
                 //   tempImageView.setTop(500);
                 tempImageView.setBackgroundResource(R.drawable.red_point);
+                tempImageView.setVisibility(View.INVISIBLE);
                 radarImageViewList.add(tempImageView);
-                rootView.addView(tempImageView);
+                radarFrameLayout.addView(tempImageView);
             }
         }
 
-        float cy = this.rootView.getHeight() - StaticMethod.dip2px(App.self,55);
+        float cy = StaticMethod.dip2px(App.self,40);
         int halfSW = rootView.getWidth()/2;
         int i=0;
         ImageView imageView;
@@ -211,21 +215,38 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
             realRadius = 1000.0;
         }
         radarZoom = radius/realRadius;
-        Log.i(logTag,"cx:"+cx+",cy:"+cy+",radius:"+radius);
+        int diffY  = 1;
+
+        Map<String, Integer> drawPointRePointMap = new HashMap<String, Integer>();
+        float rotaDegree = zDegrees;
+        double zRadians = Math.toRadians(rotaDegree);
+        Log.i(logTag,"cx:"+cx+",cy:"+cy+",radius:"+radius+",rotaDegree:"+rotaDegree);
         for(RadarPoint radarPoint : radarPointList){
             target = new LatLng(radarPoint.lat, radarPoint.lon);
             distance = DistanceUtil.getDistance(center,target);
             azimuth = StaticMethod.comAzimuth(center.latitude,center.longitude,radarPoint.lat,radarPoint.lon);
           //  pLeft = cx + Math.sin(azimuth)*distance/realRadius*radius;
           //  pTop =  cy - Math.cos(azimuth)*distance/realRadius*radius;
-            pLeft = cx + Math.sin(azimuth)*radarZoom*distance;
-            pTop =  cy - Math.cos(azimuth)*radarZoom*distance;
+            pLeft = (int)(cx - Math.sin(azimuth)*radarZoom*distance);
+            pTop = (int) (cy + Math.cos(azimuth)*radarZoom*distance);
+            rePointKeyTemp = pLeft + "-" + pTop;
+            Integer rePointTimes = drawPointRePointMap.get(rePointKeyTemp);
+            if (rePointTimes == null) {
+                drawPointRePointMap.put(rePointKeyTemp, 1);
+            } else {
+                pLeft = pLeft - (diffY * rePointTimes)*Math.sin(zRadians);
+                pTop = pTop - (diffY * rePointTimes)*Math.cos(zRadians);
+                drawPointRePointMap.put(rePointKeyTemp, rePointTimes + 1);
+            }
             imageView = radarImageViewList.get(i);
           //  if(Math.sqrt(pointRadius) < (radius)){
-            Log.i(logTag,"left:"+(int)(pLeft)+",top:"+(int)(pTop)+",realRadius"+realRadius+",sW:"+rootView.getWidth() +",sH:"+rootView.getHeight());
+            Log.i(logTag,"left:"+(int)(pLeft)+",top:"+(int)(pTop)+",realRadius"+realRadius+",sW:"
+                    +rootView.getWidth() +",sH:"+rootView.getHeight()+",distance:"+distance +",serverDistance:"+radarPoint.serverDistance) ;
             FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(StaticMethod.dip2px(context,2), StaticMethod.dip2px(context,2));
+
             layoutParams.setMargins((int)pLeft,(int)(pTop),0,0);
             imageView.setLayoutParams(layoutParams);
+            imageView.setVisibility(View.VISIBLE);
             i++;
             if(i>30){
                 imageView = new ImageView(context);
@@ -234,6 +255,8 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
             }
             //}
         }
+        // 获取绕Z轴转过的角度
+        radarFrameLayout.setRotation(-rotaDegree);
     }
 
     /**
@@ -254,13 +277,13 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
 
 
     class RadarPoint {
-        float x, y;
         boolean isNegative = false;
         double lat;
         double lon;
+        double serverDistance;
         @Override
         public String toString() {
-            return x + ", " + y;
+            return lat + ", " +lon;
         }
     }
 
@@ -272,6 +295,9 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
                 Map<String, Integer> drawPointRePointMap = new HashMap<String, Integer>();
                 //for start
                 radarPointList.clear();
+                for(ImageView im : radarImageViewList){
+                    im.setVisibility(View.INVISIBLE);
+                }
                 RadarPoint radarPoint;
                 for ( final FootPrintBean footPrintBean : this.pagination.getContent()) {
                     location = new Location(footPrintBean.getFootprintContent());
@@ -300,11 +326,10 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
                         drawPointRePointMap.put(rePointKeyTemp, rePointTimes + 1);
                     }
                     radarPoint = new RadarPoint();
-                    radarPoint.x = drawX;
-                    radarPoint.y = drawY;
                     radarPoint.lat = footPrintBean.getLatitude();
                     radarPoint.lon = footPrintBean.getLongitude();
                     radarPoint.isNegative = true;
+                    radarPoint.serverDistance = footPrintBean.getDistance();
                     if (cameraCoordinateVector[2] < 0) {
                         radarPoint.isNegative = false;
                        // Log.i(logTag, "drawRadar point radarX:" + radarX + ",radarY:" + radarY + "  radius:"+radius);
