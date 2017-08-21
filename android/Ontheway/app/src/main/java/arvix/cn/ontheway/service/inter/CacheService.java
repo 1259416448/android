@@ -22,6 +22,11 @@ public interface CacheService {
 
     /**
      *
+     */
+    void clearMem();
+
+    /**
+     *
      * @param key
     */
 

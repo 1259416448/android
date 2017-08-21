@@ -5,7 +5,6 @@
     <LinearLayout
         android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
-        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
@@ -40,7 +39,6 @@
     </LinearLayout>
     <TextView
         android:id="@+id/reply_content_tv"
-        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:paddingRight="15dp"

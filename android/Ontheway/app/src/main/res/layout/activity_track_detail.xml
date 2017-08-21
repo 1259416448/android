@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:id="@+id/detail_root"
     android:layout_height="match_parent"
@@ -8,14 +8,14 @@
         android:id="@+id/content_line"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_weight="1">
         <include layout="@layout/header" />
         <include layout="@layout/common_list" />
     </LinearLayout>
 
     <LinearLayout
         android:gravity="center"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
@@ -29,6 +29,8 @@
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
             android:layout_marginTop="6dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:layout_weight="1"
             android:background="@drawable/search_radius"
             android:minHeight="33dp"
@@ -58,19 +60,24 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:orientation="horizontal">
+
                 <Button
+                    android:id="@+id/like_btn"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_gravity="center"
                     android:background="@drawable/zj_zan" />
+
                 <TextView
-                    android:id="@+id/like_number_tv"
-                    android:layout_width="28dp"
+                    android:id="@+id/like_no_tv"
+                    android:layout_width="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
                     android:layout_height="12dp"
+                    android:layout_gravity="center"
                     android:layout_marginTop="-6dp"
                     android:background="@drawable/like_number_bg"
                     android:gravity="center"
-                    android:layout_gravity="center"
                     android:text="5432"
                     android:textColor="@color/white"
                     android:textSize="8sp" />
@@ -79,4 +86,4 @@
         </LinearLayout>
 
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

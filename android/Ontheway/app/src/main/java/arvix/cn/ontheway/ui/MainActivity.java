@@ -10,34 +10,32 @@ import android.support.annotation.IdRes;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
 import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
 import com.baidu.mapapi.search.poi.PoiDetailResult;
 import com.baidu.mapapi.search.poi.PoiIndoorResult;
 import com.baidu.mapapi.search.poi.PoiResult;
+
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
+
 import java.util.HashMap;
-import java.util.concurrent.Callable;
 
 import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.BaiduActivity;
 import arvix.cn.ontheway.R;
-import arvix.cn.ontheway.async.AsyncUtil;
-import arvix.cn.ontheway.async.Callback;
-import arvix.cn.ontheway.async.Result;
 import arvix.cn.ontheway.service.BaiduLocationListenerService;
 import arvix.cn.ontheway.service.inter.BaiduPoiService;
 import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.ui.ar.ArFootPrintActivity;
 import arvix.cn.ontheway.ui.msg.MsgIndexFrag;
 import arvix.cn.ontheway.ui.usercenter.MyProfileFragment;
-import arvix.cn.ontheway.utils.MyProgressDialog;
 import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticMethod;
 import arvix.cn.ontheway.utils.StaticVar;
-import arvix.cn.ontheway.utils.Windows;
 
 /**
  * Created by yd on 2017/7/19.
@@ -48,6 +46,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private RadioGroup tabRG;
     @ViewInject(R.id.tab_zuji)
     private TextView zuJiTextView;
+    @ViewInject(R.id.tab_ar_center_btn)
+    private ImageButton tabArCenterBtn;
     CacheService cache;
     LocalBroadcastManager mLocalBroadcastManager;
     BroadcastReceiver mReceiver;
@@ -72,19 +72,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         Log.i(logTag,"onCreate----->");
         initView();
         initLocation();
-        final MyProgressDialog wait= Windows.waiting(self);
-        AsyncUtil.goAsync(new Callable<Result<Void>>() {
-            @Override
-            public Result<Void> call() throws Exception {
-                Thread.sleep(2000);
-                return null;
-            }
-        }, new Callback<Result<Void>>() {
-            @Override
-            public void onHandle(Result<Void> result) {
-                wait.dismiss();
-            }
-        });
     }
 
     private void initLocation(){
@@ -99,7 +86,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 if (intent.getAction().equals(BaiduLocationListenerService.BROADCAST_LOCATION)) {
                     double lat = intent.getDoubleExtra(StaticVar.BAIDU_LOC_CACHE_LAT,0.0);
                     double lon = intent.getDoubleExtra(StaticVar.BAIDU_LOC_CACHE_LON,0.0);
-
                     poiService.search(lat,lon, "美食",1000,new OnGetPoiSearchResultListener(){
                         @Override
                         public void onGetPoiResult(PoiResult poiResult) {
@@ -129,6 +115,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         });
         tabRG.check(R.id.tab_faxian);
+        tabArCenterBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(self, ARView.class);
+                startActivity(intent);
+            }
+        });
        // fxBtn.setOnClickListener(this);
     }
 
@@ -136,6 +129,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private static int waitForResultValue = -1;
 
+    private int lastCheckId=-1;
     public void changeFrag(int checkedId) {
         Fragment targetFrag = frags.get(checkedId);
 
@@ -143,15 +137,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             Log.i("zuji", "zuji--------------------------fffffff------->" + checkedId);
             if (checkedId == R.id.tab_faxian) {
                 targetFrag = new FaXianFrag();
+                lastCheckId=checkedId;
             } else if (checkedId == R.id.tab_xiaoxi) {
                 targetFrag = new MsgIndexFrag();
+                lastCheckId=checkedId;
                 //list Msg targetFrag = MsgListFrag.newInstance();
             } else if (checkedId == R.id.tab_wode) {
                 if(cache.get(StaticVar.AUTH_TOKEN)!=null){
                     targetFrag = new MyProfileFragment();
+                    lastCheckId=checkedId;
                 }else{
                     Log.i("MainThread----------->",Thread.currentThread().getName());
                     waitForResultValue = StaticMethod.goToLogin(self);
+                    tabRG.clearCheck();
                 }
             }
         }
@@ -165,8 +163,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
         Log.i(logTag,"main onActivityResult---------> requestCode :" +requestCode +",waitForResultValue:"+waitForResultValue  +",resultCode:"+resultCode+",RESULT_OK:"+RESULT_OK);
         if (requestCode == waitForResultValue) {
-           // changeFrag(R.id.tab_faxian);
-            tabRG.check(R.id.tab_wode);
+            // changeFrag(R.id.tab_faxian);
+            if (resultCode == RESULT_OK) {
+                tabRG.check(R.id.tab_wode);
+            } else {
+                tabRG.check(lastCheckId);
+            }
         }
     }
 

@@ -8,6 +8,10 @@
 
 #import "OTWBaseViewController.h"
 
+typedef void(^requestBackBlock) (id result);
+
 @interface OTWNewCommentListViewController : OTWBaseViewController
+
+-(void) sendRequest:(NSDictionary *) params completion:(requestBackBlock) block;
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OTWNewsModel.h"
 
 @interface OTWNewsCell : UITableViewCell
 
@@ -15,6 +16,7 @@
 @property (nonatomic, strong) UILabel *subTitleLabel;
 @property (nonatomic, strong) UIImageView *arrowImageView;
 @property (nonatomic, strong) UIView *line; //分割线
+@property (nonatomic, strong) OTWNewsModel *newsModel;
 
 - (void)addContentView;
 

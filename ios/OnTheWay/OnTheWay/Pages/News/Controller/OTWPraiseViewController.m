@@ -53,10 +53,9 @@ static NSString *const praiseID = @"praise";
 - (UITableView *)tableV
 {
     if (!_tableV) {
-        _tableV = [[UITableView alloc] initWithFrame: CGRectMake(0, self.navigationHeight, SCREEN_WIDTH,SCREEN_HEIGHT - self.navigationHeight) style:UITableViewStylePlain];
+        _tableV = [[UITableView alloc] initWithFrame: CGRectMake(0, self.navigationHeight, SCREEN_WIDTH,SCREEN_HEIGHT - self.navigationHeight) style:UITableViewStyleGrouped];
         _tableV.dataSource = self;
         _tableV.delegate = self;
-        _tableV.separatorColor  = [UIColor color_f4f4f4];
         _tableV.backgroundColor = [UIColor clearColor];
         _tableV.tableHeaderView = self.headerV;
     }
@@ -125,7 +124,7 @@ static NSString *const praiseID = @"praise";
     NSLog(@"x=%ld",(long)_hotestPraiseCells.count);
     if (indexPath.row == _hotestPraiseCells.count - 1) {
         NSLog(@"ok");
-        return cell.height + 20;
+        return cell.height;
     }
     return cell.height;
 }

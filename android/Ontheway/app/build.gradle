@@ -46,11 +46,11 @@ dependencies {
     compile 'com.android.support:design:23.+'
     compile 'com.android.support:support-v4:23.+'
 
-    compile 'com.youth.banner:banner:1.4.9'  //最新版本
     compile 'com.qiniu:qiniu-android-sdk:7.3.+'
 
     compile project(':PullToRefreshLibrary')
     compile project(path: ':ViewPagerLibrary')
     compile project(path: ':photopicker')
     compile project(path: ':imagepickerModule')
+    compile project(path: ':banner')
 }

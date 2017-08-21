@@ -66,12 +66,12 @@ public class TrackListAdapter  extends ArrayAdapter<FootPrintBean> {
         h.addressTv.setText(StaticMethod.genLesStr(bean.getFootprintAddress(),20));
         StaticMethod.setCircularHeaderImg(bean.getUserHeadImg(),h.userHeader,h.userHeader.getWidth(),h.userHeader.getHeight());
         h.trackPhotoIv.setVisibility(View.GONE);
-        if(!bean.getFootprintPhotoArray().isEmpty()){
+        if(bean.getFootprintPhotoArray()!=null && !bean.getFootprintPhotoArray().isEmpty()){
             h.trackPhotoIv.setVisibility(View.VISIBLE);
             StaticMethod.setImg(bean.getFootprintPhotoArray().get(0),h.trackPhotoIv,h.trackPhotoIv.getWidth(),h.trackPhotoIv.getHeight());
         }
         h.nicknameTv.setText(bean.getUserNickname());
-        h.timeTv.setText(bean.getDateCreated()+"");
+        h.timeTv.setText(bean.getDateCreatedStr()+"");
         return convertView;
     }
 

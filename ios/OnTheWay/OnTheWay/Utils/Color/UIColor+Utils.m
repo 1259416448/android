@@ -157,6 +157,9 @@
 + (UIColor *)color_979797 {
     return [UIColor colorWithHexString:@"979797"];
 }
++ (UIColor *)color_7d7d7d {
+    return [UIColor colorWithHexString:@"7d7d7d"];
+}
 + (UIColor *)color_e50834 {
     return [UIColor colorWithHexString:@"e50834"];
 }

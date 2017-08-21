@@ -28,12 +28,17 @@ public interface ServerUrl {
 
     String FOOTPRINT_CREATE =  BASE_URL + "/app/footprint/create";
 
+    String FOOTPRINT_DELETE =  BASE_URL + "/app/footprint/delete";
+
+    String FOOTPRINT_LIKE = BASE_URL +"/app/footprint/like";
+
+
     String FOOTPRINT_SHOW = BASE_URL +"/app/footprint/view";
 
     String COMMENT_SEARCH =BASE_URL +  "/app/footprint/comment/search";
 
     String COMMENT_CREATE = BASE_URL + "/app/footprint/comment/create";
-
+    String COMMENT_DELETE = BASE_URL + "/app/footprint/comment/delete";
 
 
 }

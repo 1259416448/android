@@ -32,6 +32,7 @@ import java.util.Random;
 import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.bean.BaseResponse;
+import arvix.cn.ontheway.bean.BaseResponseBodyNumber;
 import arvix.cn.ontheway.bean.FootPrintBean;
 import arvix.cn.ontheway.bean.Pagination;
 import arvix.cn.ontheway.bean.UserInfo;
@@ -82,23 +83,25 @@ public class StaticMethod {
                 source.replace("中国","");
                 int shiIndex =  source.indexOf("市");
                 if(shiIndex > -1){
-                    source = source.substring(shiIndex);
+                    source = source.substring(shiIndex+1);
                 }
                 int quIndex = source.indexOf("区");
                 if(quIndex>-1){
-                    source = source.substring(quIndex);
+                    source = source.substring(quIndex+1);
                 }else{
                     int xianIndex = source.indexOf("县");
                     if(xianIndex>-1){
-                        source = source.substring(xianIndex);
+                        source = source.substring(xianIndex+1);
                     }else{
                         int zhengIndex = source.indexOf("镇");
                         if(zhengIndex>-1){
-                            source = source.substring(zhengIndex);
+                            source = source.substring(zhengIndex+1);
                         }
                     }
                 }
-                source = source.substring(0,maxLength)+"...";
+                if(source.length()>maxLength){
+                    source = source.substring(0,maxLength)+"...";
+                }
             }
         }
         return source;
@@ -202,6 +205,11 @@ public class StaticMethod {
         return baseResponse;
     }
 
+    public static  BaseResponseBodyNumber genResponseBodyInt(String jsonStr){
+        BaseResponseBodyNumber baseResponse = JSON.parseObject(jsonStr,BaseResponseBodyNumber.class);
+        return baseResponse;
+    }
+
     public static <T> BaseResponse<T> genResponse(String jsonStr,Class<T> bodyType){
         BaseResponse baseResponse = JSON.parseObject(jsonStr,new TypeReference<BaseResponse<Pagination<FootPrintBean>>>(){});
         baseResponse.setBodyBean(TypeUtils.castToJavaBean(baseResponse.getBody(), bodyType));
@@ -255,9 +263,9 @@ public class StaticMethod {
         CacheService cache = OnthewayApplication.getInstahce(CacheService.class);
         Log.i("goToLogin:","cache.get(StaticVar.AUTH_TOKEN)------------->:"+cache.get(StaticVar.AUTH_TOKEN));
         if(cache.get(StaticVar.AUTH_TOKEN)!=null){
-            return 0;
+            return -1;
         }else{
-            int randomInt = new Random().nextInt(Integer.MAX_VALUE);
+            int randomInt = Math.abs(new Random().nextInt(Integer.MAX_VALUE));
             Intent intent = new Intent(activity, LoginActivity.class);
             activity.startActivityForResult(intent, randomInt);
             return randomInt;
@@ -300,5 +308,26 @@ public class StaticMethod {
         return bitmap;
     }
 
+    /**
+     * 计算方位角
+     * @param lat_a
+     * @param lng_a
+     * @param lat_b
+     * @param lng_b
+     * @return
+     */
+    public static double comAzimuth(double lat_a, double lng_a, double lat_b, double lng_b) {
+        double d = 0;
+        lat_a=lat_a*Math.PI/180;
+        lng_a=lng_a*Math.PI/180;
+        lat_b=lat_b*Math.PI/180;
+        lng_b=lng_b*Math.PI/180;
 
+        d=Math.sin(lat_a)*Math.sin(lat_b)+Math.cos(lat_a)*Math.cos(lat_b)*Math.cos(lng_b-lng_a);
+        d=Math.sqrt(1-d*d);
+        d=Math.cos(lat_b)*Math.sin(lng_b-lng_a)/d;
+        d=Math.asin(d)*180/Math.PI;
+//     d = Math.round(d*10000);
+        return d;
+    }
 }

@@ -169,7 +169,7 @@
     _totalComment.frame=CGRectMake(55, CGRectGetMaxY(_ShopDetailsIconList.frame)-15, SCREEN_WIDTH-55-15-140, 15);
         _totalComment.text=[[NSString stringWithFormat:@"%ld", (long)status.footprintCommentNum]  stringByAppendingString:@" 条回复"];
     
-    [_ShopDetailsIconList addSubview:self.FenxiangImageView];
+    //[_ShopDetailsIconList addSubview:self.FenxiangImageView];
     [_ShopDetailsIconList addSubview:self.ZanImageView];
     
 //    [_ZanImageView addTarget:self action:@selector(ZanClick) forControlEvents:UIControlEventTouchUpInside];
@@ -184,61 +184,65 @@
 
 -(UIView*)ZanImageView{
     if(!_ZanImageView){
-        _ZanImageView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 60, 25)];
+        _ZanImageView = [[UIView alloc] init];
         _ZanImageView.layer.borderWidth=0.5;
         _ZanImageView.layer.borderColor=[UIColor color_c4c4c4].CGColor;
         _ZanImageView.layer.cornerRadius=12;
         _ZanImageView.layer.masksToBounds = YES;
         
-        UIImageView *zanIcon=[[UIImageView alloc]initWithFrame:CGRectMake(15.5, 6, 12, 12)];
+        UIImageView *zanIcon=[[UIImageView alloc]initWithFrame:CGRectMake(11.5, 6, 12, 12)];
         zanIcon.image=[UIImage imageNamed:@"zan"];
         
-        UILabel *zanName=[[UILabel alloc]initWithFrame:CGRectMake(zanIcon.MaxX+5, 4, 12, 16.5)];
-        zanName.text=@"赞";
+        UILabel *zanName=[[UILabel alloc]init];
+        zanName.text=@"123";
         zanName.font=[UIFont systemFontOfSize:12];
         zanName.textColor=[UIColor color_202020];
+        [zanName sizeToFit];
+        zanName.frame=CGRectMake(zanIcon.MaxX+5, 4, zanName.Witdh, 16.5);
         
         [_ZanImageView addSubview:zanIcon];
         [_ZanImageView addSubview:zanName];
         
         UITapGestureRecognizer  *tapGesturZan=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(ZanClick)];
         [_ZanImageView addGestureRecognizer:tapGesturZan];
+        
+        _ZanImageView.frame=CGRectMake(_ShopDetailsIconList.Witdh-(23+zanName.Witdh+zanIcon.Witdh+5), 0, 23+zanName.Witdh+zanIcon.Witdh+5, 25);
     }
     return _ZanImageView;
 }
 
--(UIView*)FenxiangImageView{
-    if(!_FenxiangImageView){
-        _FenxiangImageView = [[UIView alloc] initWithFrame:CGRectMake(self.ZanImageView.MaxX+10, 0, 60, 25)] ;
-        _FenxiangImageView.layer.borderWidth=0.5;
-        _FenxiangImageView.layer.borderColor=[UIColor color_c4c4c4].CGColor;
-        _FenxiangImageView.layer.cornerRadius=12;
-        _FenxiangImageView.layer.masksToBounds = YES;
-        
-        UIImageView *shareIcon=[[UIImageView alloc]initWithFrame:CGRectMake(9.5, 6, 12, 12)];
-        shareIcon.image=[UIImage imageNamed:@"fenxiang"];
-        
-        UILabel *shareName=[[UILabel alloc]initWithFrame:CGRectMake(shareIcon.MaxX+5, 4, 25, 16.5)];
-        shareName.text=@"分享";
-        shareName.font=[UIFont systemFontOfSize:12];
-        shareName.textColor=[UIColor color_202020];
-        
-        [_FenxiangImageView addSubview:shareIcon];
-        [_FenxiangImageView addSubview:shareName];
-        UITapGestureRecognizer  *tapGesturFenxiang=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(FenxiangClick)];
-        [_FenxiangImageView addGestureRecognizer:tapGesturFenxiang];
-        
-    }
-    return _FenxiangImageView;
-}
+//-(UIView*)FenxiangImageView{
+//    if(!_FenxiangImageView){
+//        _FenxiangImageView = [[UIView alloc] initWithFrame:CGRectMake(self.ZanImageView.MaxX+10, 0, 60, 25)] ;
+//        _FenxiangImageView.layer.borderWidth=0.5;
+//        _FenxiangImageView.layer.borderColor=[UIColor color_c4c4c4].CGColor;
+//        _FenxiangImageView.layer.cornerRadius=12;
+//        _FenxiangImageView.layer.masksToBounds = YES;
+//        
+//        UIImageView *shareIcon=[[UIImageView alloc]initWithFrame:CGRectMake(9.5, 6, 12, 12)];
+//        shareIcon.image=[UIImage imageNamed:@"fenxiang"];
+//        
+//        UILabel *shareName=[[UILabel alloc]initWithFrame:CGRectMake(shareIcon.MaxX+5, 4, 25, 16.5)];
+//        shareName.text=@"分享";
+//        shareName.font=[UIFont systemFontOfSize:12];
+//        shareName.textColor=[UIColor color_202020];
+//        
+//        [_FenxiangImageView addSubview:shareIcon];
+//        [_FenxiangImageView addSubview:shareName];
+//        UITapGestureRecognizer  *tapGesturFenxiang=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(FenxiangClick)];
+//        [_FenxiangImageView addGestureRecognizer:tapGesturFenxiang];
+//        
+//    }
+//    return _FenxiangImageView;
+//}
 
 -(void)ZanClick{
     DLog(@"我点击了ZanClick");
 }
 
--(void)FenxiangClick{
-    DLog(@"我点击了FenxiangClick");
-}
+//-(void)FenxiangClick{
+//    DLog(@"我点击了FenxiangClick");
+//}
 
 -(CGFloat)photoH{
     if(!_photoH || _photoH == 0){
