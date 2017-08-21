@@ -54,12 +54,16 @@ static NSString *commentDeleteUrl = @"/app/footprint/comment/delete/{id}";
                 [viewController.tableView reloadData];
                 if(commentArray.count < _size){ //查询的数据小于分页数据 表示已完成 这里可能会存在多请求一次数据库
                     [viewController.tableView.mj_footer endRefreshingWithNoMoreData];
+                    viewController.tableView.mj_footer.hidden = YES;
+                    [viewController.tableView reloadData];
                 }else{
                     _number ++;
                     [viewController.tableView.mj_footer endRefreshing];
                 }
             }else{
                 [viewController.tableView.mj_footer endRefreshingWithNoMoreData];
+                viewController.tableView.mj_footer.hidden = YES;
+                [viewController.tableView reloadData];
             }
         }else{
             if([responseObject[@"messageCode"] isEqualToString:@"000202"]){
@@ -100,7 +104,11 @@ static NSString *commentDeleteUrl = @"/app/footprint/comment/delete/{id}";
                 }
                 i ++ ;
             }
-            if(viewController.commentFrameArray.count == 0) viewController.tableView.mj_footer.hidden = YES;
+            if(viewController.commentFrameArray.count == 0){
+                [viewController notFundCommentBGView].hidden = NO;
+                [viewController refreshTableViewHeader];
+                viewController.tableView.mj_footer.hidden = YES;
+            }
             [viewController.tableView reloadData];
         }else{
             [viewController errorTips:@"服务端繁忙，请稍后再试" userInteractionEnabled:NO];

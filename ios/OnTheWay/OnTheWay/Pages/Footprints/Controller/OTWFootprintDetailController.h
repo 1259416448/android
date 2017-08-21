@@ -33,4 +33,7 @@
  */
 @property (nonatomic, strong) NSString *fid;
 
+- (void) refreshTableViewHeader;
+
+- (UIView *) notFundCommentBGView;
 @end

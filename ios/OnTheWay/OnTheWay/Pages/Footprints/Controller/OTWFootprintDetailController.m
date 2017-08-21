@@ -50,9 +50,6 @@
 @property (nonatomic,strong) UIView *commentHeaderTopLine;
 @property (nonatomic,strong) UIImageView *commentHeaderImageView;
 @property (nonatomic,strong) UILabel *commentHeaderLabel;
-@property (nonatomic,strong) UIView *noCommentsV;
-@property (nonatomic,strong) UIImageView *noCommentsImageView;
-@property (nonatomic,strong) UILabel *noCommentsLabel;
 @property (nonatomic,strong) UIImageView *userHeadImgImageView;
 @property (nonatomic,strong) UIButton *userNicknameButton;
 @property (nonatomic,strong) UILabel *footprintDateCreateLabel;
@@ -67,6 +64,10 @@
 @property (nonatomic,strong) SDCycleScrollView *photoScrollView;
 @property (nonatomic,strong) UILabel *photoPageControllerLabel;
 @property (nonatomic,assign) BOOL wasKeyboardManagerEnabled;
+//没有评论显示缺省信息
+@property (nonatomic,strong) UIView *notFundCommentBGView;
+@property (nonatomic,strong) UIImageView *qiangshafaImageView;
+@property (nonatomic,strong) UILabel *qiangshafaLabel;
 
 @property (nonatomic,assign) BOOL openKeyboard;
 
@@ -233,10 +234,24 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     self.commentSunLabel.text = [[NSString stringWithFormat:@"%ld",(long)self.detailFrame.footprintDetailModel.footprintCommentNum] stringByAppendingString:@"条评论"];
     [self.view bringSubviewToFront:self.customNavigationBar];
     //设置一下下拉刷新初始化状态
-    if(self.commentFrameArray.count==0){
-        self.tableView.mj_footer.hidden = YES;
-    }else if(self.commentFrameArray.count<10){
+    if(self.commentFrameArray.count<10){
         [self.tableView.mj_footer endRefreshingWithNoMoreData];
+        self.tableView.mj_footer.hidden = YES;
+    }
+    [self refreshTableViewHeader];
+}
+
+/**
+ * 刷新header View ，主要是判断一下有误评论，需要动态改变一下 headerView的高度
+ */
+- (void) refreshTableViewHeader
+{
+    if(self.commentFrameArray.count == 0 && !self.notFundCommentBGView.hidden){
+        self.notFundCommentBGView.hidden = NO;
+        self.tableView.tableHeaderView.frame = CGRectMake(self.tableView.tableHeaderView.MinX, self.tableView.tableHeaderView.MinY, self.tableView.tableHeaderView.Witdh, self.tableView.tableHeaderView.Height + 170);
+    }else{
+        self.notFundCommentBGView.hidden = YES;
+        self.tableView.tableHeaderView.frame = CGRectMake(self.tableView.tableHeaderView.MinX, self.tableView.tableHeaderView.MinY, self.tableView.tableHeaderView.Witdh, self.detailFrame.cellHeight);
     }
 }
 
@@ -254,6 +269,9 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     [self.footprintHeaderBGView addSubview:self.commentHeaderBGView];
     [self.commentHeaderBGView addSubview:self.commentHeaderImageView];
     [self.commentHeaderBGView addSubview:self.commentHeaderLabel];
+    [self.footprintHeaderBGView addSubview:self.notFundCommentBGView];
+    [self.notFundCommentBGView addSubview:self.qiangshafaImageView];
+    [self.notFundCommentBGView addSubview:self.qiangshafaLabel];
     [self.tableHeaderView addSubview:self.footprintHeaderBGView];
     [self.footprintDetailBGView addSubview:self.topLine];
     [self.footprintDetailBGView addSubview:self.userHeadImgImageView];
@@ -339,7 +357,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 - (UITableView*) tableView
 {
     if(!_tableView){
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, self.navigationHeight, SCREEN_WIDTH, SCREEN_HEIGHT - self.navigationHeight-49) style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, self.navigationHeight, SCREEN_WIDTH, SCREEN_HEIGHT - self.navigationHeight-49) style:UITableViewStyleGrouped];
         //_tableView.frame = CGRectMake(0, self.navigationHeight, SCREEN_WIDTH, SCREEN_HEIGHT - self.navigationHeight);
         _tableView.dataSource = self;
         _tableView.delegate = self;
@@ -357,7 +375,42 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 #pragma mark - 代理方法
 #pragma mark 设置分组标题内容高度
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    return 0;
+    return 10;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    CGFloat h = 0.5;
+    if(tableView.mj_footer.isHidden){
+        h = 10;
+    }
+    return h;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    CGFloat h = 0.5;
+    if(tableView.mj_footer.isHidden){
+        h = 10;
+    }
+    UIView *sectionView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, h)];
+    if(h == 0.5){
+        sectionView.backgroundColor = [UIColor color_d5d5d5];
+    }else{
+        sectionView.backgroundColor = [UIColor clearColor];
+        UIView *line2 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 0.5)];
+        line2.backgroundColor = [UIColor color_d5d5d5];
+        [sectionView addSubview:line2];
+        
+    }
+    return sectionView;
+}
+
+- (UIView *) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *sectionView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 10)];
+    sectionView.backgroundColor = [UIColor clearColor];
+    return sectionView;
 }
 
 #pragma mark 设置每行高度（每行高度可以不一样）
@@ -561,7 +614,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     if(!_footprintDetailBGView){
         _footprintDetailBGView = [[UIView alloc] init];
         _footprintDetailBGView.backgroundColor = [UIColor whiteColor];
-        _footprintDetailBGView.frame = CGRectMake(0, 0, SCREEN_WIDTH, self.detailFrame.cellHeight - 36 - 10);
+        _footprintDetailBGView.frame = CGRectMake(0, 0, SCREEN_WIDTH, self.detailFrame.cellHeight - 46);
     }
     return _footprintDetailBGView;
 }
@@ -579,7 +632,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 - (UIView*)commentHeaderTopLine
 {
     if (!_commentHeaderTopLine) {
-        _commentHeaderTopLine = [[UIView alloc] initWithFrame:CGRectMake(0, self.detailFrame.cellHeight - 35, SCREEN_WIDTH, 0.5)];
+        _commentHeaderTopLine = [[UIView alloc] initWithFrame:CGRectMake(0, self.detailFrame.cellHeight - 36 , SCREEN_WIDTH, 0.5)];
         _commentHeaderTopLine.backgroundColor = [UIColor color_d5d5d5];
     }
     return _commentHeaderTopLine;
@@ -591,7 +644,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
         _commentHeaderBGView = [[UIView alloc] init];
         _commentHeaderBGView.backgroundColor = [UIColor whiteColor];
         CGFloat Y = CGRectGetMaxY(self.commentHeaderTopLine.frame);
-        _commentHeaderBGView.frame = CGRectMake(0, Y, SCREEN_WIDTH,35);
+        _commentHeaderBGView.frame = CGRectMake(0, Y, SCREEN_WIDTH,36);
     }
     return _commentHeaderBGView;
 }
@@ -617,17 +670,6 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
         _commentHeaderLabel.text = @"评论";
     }
     return _commentHeaderLabel;
-}
-
-- (UIView*)noCommentsV
-{
-    if (!_noCommentsV) {
-        _noCommentsV = [[UIView alloc] init];
-        CGFloat Y = CGRectGetMaxY(self.commentHeaderBGView.frame);
-        _noCommentsV.frame = CGRectMake(0, Y, SCREEN_WIDTH, 170.5);
-        _noCommentsV.backgroundColor = [UIColor whiteColor];
-    }
-    return _noCommentsV;
 }
 
 - (UIImageView *) userHeadImgImageView{
@@ -797,12 +839,8 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 - (UIView *) tableHeaderView
 {
     if(!_tableHeaderView){
-        _tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, self.detailFrame.cellHeight+10)];
+        _tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, self.detailFrame.cellHeight)];
         _tableHeaderView.backgroundColor = [UIColor clearColor];
-        //        _tableHeaderView.layer.shadowColor = [UIColor blackColor].CGColor;
-        //        _tableHeaderView.layer.shadowOpacity = 0.1;
-        //        _tableHeaderView.layer.shadowOffset = CGSizeMake(0, -0.5);
-        //        _tableHeaderView.layer.shadowRadius = 0.5;
     }
     return _tableHeaderView;
 }
@@ -926,6 +964,8 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
                 [self.commentFrameArray insertObject:newCommentFrame atIndex:0];
                 self.detailFrame.footprintDetailModel.footprintCommentNum++;
                 self.commentSunLabel.text = [[NSString stringWithFormat:@"%ld",(long)self.detailFrame.footprintDetailModel.footprintCommentNum] stringByAppendingString:@"条评论"];
+                //如果沙发显示，需要隐藏一下
+                [self refreshTableViewHeader];
                 [self.tableView reloadData];
             }else{
                 if([result[@"messageCode"] isEqualToString:@"000202"]){
@@ -1051,6 +1091,39 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
         _errorTipsLabel.textAlignment = NSTextAlignmentCenter;
     }
     return _errorTipsLabel;
+}
+
+- (UIView *) notFundCommentBGView
+{
+    if(!_notFundCommentBGView){
+        _notFundCommentBGView = [[UIView alloc] initWithFrame:CGRectMake(0, self.commentHeaderBGView.MaxY, SCREEN_WIDTH, 170)];
+        _notFundCommentBGView.backgroundColor = [UIColor whiteColor];
+        UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 0.5)];
+        line.backgroundColor = [UIColor color_d5d5d5];
+        [_notFundCommentBGView addSubview:line];
+    }
+    return _notFundCommentBGView;
+}
+
+- (UIImageView *) qiangshafaImageView
+{
+    if(!_qiangshafaImageView){
+        _qiangshafaImageView = [[UIImageView alloc] initWithFrame:CGRectMake((SCREEN_WIDTH - 55 )/2, 40, 55, 72)];
+        _qiangshafaImageView.image = [UIImage imageNamed:@"zj_qiangshafa"];
+    }
+    return _qiangshafaImageView;
+}
+
+- (UILabel *) qiangshafaLabel
+{
+    if(!_qiangshafaLabel){
+        _qiangshafaLabel = [[UILabel alloc] initWithFrame:CGRectMake((SCREEN_WIDTH - 140) / 2, self.qiangshafaImageView.MaxY, 140, 18.5)];
+        _qiangshafaLabel.textAlignment = NSTextAlignmentCenter;
+        _qiangshafaLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:13];
+        _qiangshafaLabel.textColor = [UIColor color_979797];
+        _qiangshafaLabel.text = @"还没人评论~快抢沙发！";
+    }
+    return _qiangshafaLabel;
 }
 
 - (void) setFid:(NSString *)fid
