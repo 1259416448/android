@@ -7,11 +7,11 @@
 //
 
 #import "OTWPrintARViewController.h"
-#import "MCYARConfiguration.h"
-#import "MCYARAnnotation.h"
+#import "ArvixARConfiguration.h"
+#import "ArvixARAnnotation.h"
 #import "OTWARCustomAnnotation.h"
-#import "MCYARAnnotationView.h"
-#import "MCYARViewController.h"
+#import "ArvixARAnnotationView.h"
+#import "ArvixARViewController.h"
 #import "OTWPlaneMapViewController.h"
 
 #import "OTWCustomAnnotationView.h"
@@ -22,14 +22,11 @@
 #import "OTWFootprintService.h"
 #import "OTWUITapGestureRecognizer.h"
 
-#import <BaiduMapAPI_Location/BMKLocationService.h>
-#import <BaiduMapAPI_Map/BMKMapComponent.h>
-#import <BaiduMapAPI_Search/BMKGeoCodeSearch.h>
-#import <BaiduMapAPI_Search/BMKPoiSearchType.h>
 #import <MJExtension.h>
 #import "MBProgressHUD+PYExtension.h"
+#import <BaiduMapAPI_Search/BMKGeoCodeSearch.h>
 
-@interface OTWPrintARViewController ()<MCYARDataSource,BMKLocationServiceDelegate,UIAlertViewDelegate>
+@interface OTWPrintARViewController ()<ArvixARDataSource,UIAlertViewDelegate,BMKGeoCodeSearchDelegate>
 
 @property(nonatomic,strong) UIButton *backButton;
 @property(nonatomic,strong) UIButton *refreshButton;
@@ -46,15 +43,23 @@
 @property(nonatomic,strong) UIButton *locationBtton_500m;
 @property(nonatomic,strong) UIButton *locationBtton_1000m;
 
+@property(nonatomic,strong) UIView *infoBGView;
+@property(nonatomic,strong) UILabel *footprintLabel;
+@property(nonatomic,strong) UIView *lineView;
+@property(nonatomic,strong) UILabel *footprintSumLabel;
+@property(nonatomic,strong) UIImageView *addressImageView;
+@property(nonatomic,strong) UIImage *addressImage;
+@property(nonatomic,strong) UILabel *addressLabel;
 
 //查询对象
 @property (nonatomic,strong) OTWFootprintSearchParams *footprintSearchParams;
-//定位
-@property (nonatomic,strong) BMKLocationService *locService;
-@property (nonatomic,copy) BMKUserLocation *userLocation;
 @property (nonatomic,strong) NSDictionary *reponseCacheData;
 
 @property (nonatomic,assign) BOOL ifFirstLoadData;
+
+//经纬度反解码
+@property (nonatomic,strong) BMKGeoCodeSearch *geoCodeSearch;
+
 
 @end
 
@@ -62,7 +67,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self initLocService];
     [self showARViewController];
     [self buildUI];
     self.ifFirstLoadData = NO;
@@ -73,17 +77,33 @@
     // Dispose of any resources that can be recreated.
 }
 
+-(void) viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(otwApplicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
+        self.navigationController.interactivePopGestureRecognizer.enabled = NO;    //让rootView禁止滑动
+    }
+}
+
+-(void) otwApplicationDidBecomeActive
+{
+    if([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied){ //移除页面上显示的数据
+        [self setAnnotations:@[]];
+        _ifFirstLoadData = NO;
+    }
+}
+
+-(void) viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
+    //当前方法一定不能省略
     [super viewWillAppear:animated];
-    _locService.delegate = self;
-    
-    self.dateButton_oneDay.hidden = YES;
-    self.dateButton_sevenDay.hidden = YES;
-    self.dateButton_oneMonth.hidden = YES;
-    self.locationBtton_100m.hidden = YES;
-    self.locationBtton_500m.hidden = YES;
-    self.locationBtton_1000m.hidden = YES;
+    self.geoCodeSearch.delegate = self;
+    [self hideAllButton];
     [self.navigationController setNavigationBarHidden:YES];
     [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
     //定位信息
@@ -91,17 +111,12 @@
         [self initCLLocationManager];
         return ;
     }
-    //检查页面是否已经加载过数据，如果没有加载，开启定位信息，进行数据加载
-    if(!self.ifFirstLoadData){
-        //增加一个加载状态
-        [_locService startUserLocationService];
-    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    _locService.delegate = nil;
+    self.geoCodeSearch.delegate = nil;
 }
 
 - (void)buildUI
@@ -171,16 +186,21 @@
     self.locationBtton_1000m.frame = CGRectMake(locationBtton_1000mX, locationButtonY, 45, 35);
     [self.view insertSubview:self.locationBtton_1000m aboveSubview:self.presenter];
     
-    //定位信息
-    if (!([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied)) {
-        [_locService startUserLocationService];
-    }
+    //附近足迹总信息
+    [self.view insertSubview:self.infoBGView aboveSubview:self.presenter];
+    [self.infoBGView addSubview:self.footprintLabel];
+    [self.infoBGView addSubview:self.lineView];
+    [self.infoBGView addSubview:self.footprintSumLabel];
+    [self.infoBGView addSubview:self.addressImageView];
+    [self.infoBGView addSubview:self.addressLabel];
+    
 }
 
 -(MBProgressHUD *) addLoadingHud
 {
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.bezelView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+    hud.bezelView.color = [[UIColor blackColor] colorWithAlphaComponent:0.7];
+    hud.bezelView.style = MBProgressHUDBackgroundStyleSolidColor;
     hud.activityIndicatorColor = [UIColor whiteColor];
     hud.userInteractionEnabled = NO;
     return hud;
@@ -220,15 +240,10 @@
     }
 }
 
-- (void) initLocService{
-    _locService = [[BMKLocationService alloc] init];
-    _locService.delegate = self;
-    _locService.desiredAccuracy = kCLLocationAccuracyBest;
-}
-
 #pragma mark 返回事件
 - (void)backButtonClick
 {
+    self.trackingManager.stopLocation = TRUE;
     [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexFind]; // 显示首页
 }
 
@@ -250,16 +265,31 @@
     self.locationBtton_1000m.hidden = !self.locationBtton_1000m.hidden;
 }
 
+-(void)hideAllButton
+{
+    self.dateButton_oneDay.hidden = YES;
+    self.dateButton_sevenDay.hidden = YES;
+    self.dateButton_oneMonth.hidden = YES;
+    self.locationBtton_100m.hidden = YES;
+    self.locationBtton_500m.hidden = YES;
+    self.locationBtton_1000m.hidden = YES;
+}
+
 - (void)planeMapButtonClick
 {
-    OTWPlaneMapViewController *planeMapVC = [[OTWPlaneMapViewController alloc] init];
-    [self.navigationController pushViewController:planeMapVC animated:NO];
+    NSArray *viewControllers = self.navigationController.viewControllers;
+    NSUInteger index = [viewControllers indexOfObject:[OTWLaunchManager sharedManager].footprintPlaneMapVC];
+    if(index != NSNotFound){
+        [self.navigationController popToViewController:[OTWLaunchManager sharedManager].footprintPlaneMapVC animated:NO];
+    }else{
+        [self.navigationController pushViewController:[OTWLaunchManager sharedManager].footprintPlaneMapVC animated:NO];
+    }
 }
 
 #pragma mark 刷新-换一批足迹
 - (void)refreshFootprints
 {
-    DLog(@"OTWUITapGestureRecognizer手势----%@",self.footprintSearchParams.mj_keyValues);
+    [self hideAllButton];
     [self getFootprints];
 }
 
@@ -269,7 +299,8 @@
 {
     NSMutableDictionary *condition = tapGesture.opId;
     self.footprintSearchParams.time = [condition objectForKey:@"searchParamValue"];
-    DLog(@"OTWUITapGestureRecognizer手势----%@",self.footprintSearchParams.mj_keyValues);
+    self.footprintSearchParams.number = 0;
+    [self dateButtonClick];
     [self getFootprints];
 }
 
@@ -278,7 +309,7 @@
 {
     NSMutableDictionary *condition = tapGesture.opId;
     self.footprintSearchParams.searchDistance = [condition objectForKey:@"searchParamValue"];
-    
+    self.footprintSearchParams.number = 0;
     if([self.footprintSearchParams.searchDistance isEqualToString:@"one"]){
         self.radar.maxDistance = 100;
     }else if([self.footprintSearchParams.searchDistance isEqualToString:@"two"]){
@@ -286,7 +317,7 @@
     }else if([self.footprintSearchParams.searchDistance isEqualToString:@"three"]){
         self.radar.maxDistance = 1000;
     }
-    DLog(@"OTWUITapGestureRecognizer手势----%@",self.footprintSearchParams.mj_keyValues);
+    [self locationButtonClick];
     [self getFootprints];
 }
 
@@ -295,12 +326,24 @@
 #pragma mark 跳转至足迹列表页面
 - (void)toFootprintListView
 {
-    [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexFootprintList];
+    //获取当前push View
+    NSArray *viewController = self.navigationController.viewControllers;
+    //检查 footprintVC 是否在 队列中
+    NSUInteger index = [viewController indexOfObject:[OTWLaunchManager sharedManager].footprintVC];
+    if(index != NSNotFound){ //存在
+        [self.navigationController popToViewController:[OTWLaunchManager sharedManager].footprintVC animated:NO];
+    }else{ //不存在
+        [self.navigationController pushViewController:[OTWLaunchManager sharedManager].footprintVC animated:NO];
+    }
 }
 
 #pragma mark 跳转至足迹发布页面
 - (void)toReleaseFootprintView
 {
+    //需要验证登陆
+    if([[OTWLaunchManager sharedManager] showLoginViewWithController:self completion:nil]){
+        return ;
+    }
     OTWFootprintReleaseViewController *footprintReleaseVC = [[OTWFootprintReleaseViewController alloc] init];
     [self.navigationController pushViewController:footprintReleaseVC animated:YES];
 }
@@ -320,7 +363,7 @@
     self.presenter.maxDistance = 3000;
     self.presenter.maxVisibleAnnotations = 100;
     self.presenter.verticalStackingEnabled = true;
-    self.trackingManager.userDistanceFilter = 15;
+    self.trackingManager.userDistanceFilter = 30;
     self.trackingManager.reloadDistanceFilter = 50;
     // debug
     self.uiOptions.closeButtonEnabled = false;
@@ -387,6 +430,8 @@
                     block(self.reponseCacheData);
                 }
             }
+            [self netWorkErrorTips:error];
+            self.ifFirstLoadData = NO;
         }
     } responseCache:^(id responseCache) {
         self.reponseCacheData = responseCache;
@@ -397,40 +442,35 @@
 - (void)getFootprints
 {
     [self fetchARFootprints:self.footprintSearchParams.mj_keyValues completion:^(id result) {
-        DLog(@"是否为最后一页%@",result[@"body"][@"last"]);
-        if (result[@"body"][@"last"]) {
-            self.footprintSearchParams.isLastPage = YES;
-            self.footprintSearchParams.number  = 0;
-        } else {
-            self.footprintSearchParams.number += 1;
-        }
-        if ([[NSString stringWithFormat:@"%@",result[@"body"][@"first"]] isEqualToString:@"true"]) {
-            self.footprintSearchParams.isFirstPage = YES;
-        }
         
-        NSMutableArray *footprintModels = [OTWFootprintListModel mj_objectArrayWithKeyValuesArray:result[@"body"][@"content"]];
-        if (footprintModels.count == 0) {
-            return;
+        if([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]){
+            //最后一页
+            if ([[NSString stringWithFormat:@"%@",result[@"body"][@"last"]] isEqualToString:@"1"]) {
+                self.footprintSearchParams.isLastPage = YES;
+                self.footprintSearchParams.number  = 0;
+                //提示，判断是否是第一页
+                if([[NSString stringWithFormat:@"%@",result[@"body"][@"first"]] isEqualToString:@"0"]){
+                    [self errorTips:@"已经是最后一批信息，再次点击会循环展示" userInteractionEnabled:NO];
+                }
+            } else {
+                self.footprintSearchParams.number += 1;
+            }
+            if ([[NSString stringWithFormat:@"%@",result[@"body"][@"first"]] isEqualToString:@"true"]) {
+                self.footprintSearchParams.isFirstPage = YES;
+            }
+            
+            NSMutableArray *footprintModels = [OTWFootprintListModel mj_objectArrayWithKeyValuesArray:result[@"body"][@"content"]];
+            if (footprintModels.count == 0) {
+                [self setAnnotations:@[]];
+            }else{
+                NSArray *dummyAnnotations = [self assembleAnnotation:footprintModels];
+                [self setAnnotations:dummyAnnotations];
+            }
+            self.footprintSumLabel.text = [NSString stringWithFormat:@"%@",result[@"body"][@"totalElements"]];
+        }else{
+            [self errorTips:@"服务端繁忙，请稍后再试" userInteractionEnabled:YES];
         }
-        NSArray *dummyAnnotations = [self assembleAnnotation:footprintModels];
-        [self setAnnotations:dummyAnnotations];
-        self.ifFirstLoadData = YES;
     }];
-}
-
-- (NSArray*)getDummyAnnotation:(double)centerLatitude centerLongitude:(double)centerLongitude altitudeDelta:(double)altitudeDelta count:(NSInteger)count
-{
-    NSMutableArray *annotations = [NSMutableArray array];
-    srand48(2);
-    
-    for (int i = 0; i < count; i++) {
-        CLLocation *location = [self getRandomLocation:centerLatitude centerLongitude:centerLongitude altitudeDelta:altitudeDelta];
-        
-        MCYARAnnotation *annotation = [[MCYARAnnotation alloc] initWithIdentifier:nil title:[NSString stringWithFormat:@"PppI(%d)", i] location:location];
-        [annotations addObject:annotation];
-    }
-    
-    return annotations;
 }
 
 #pragma mark 组装足迹annotation
@@ -439,7 +479,7 @@
     double altitudeDelta = 0;
     NSMutableArray *annotations = [NSMutableArray array];
     for (OTWFootprintListModel *footprint in footprints) {
-        CLLocation *location = [self getRandomLocation:footprint.latitude centerLongitude:footprint.longitude altitudeDelta:altitudeDelta];
+        CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(footprint.latitude, footprint.longitude) altitude:altitudeDelta horizontalAccuracy:1 verticalAccuracy:1 timestamp:[NSDate date]];
         OTWARCustomAnnotation *annotation = [[OTWARCustomAnnotation alloc] init];
         annotation.footprint = footprint;
         annotation.location = location;
@@ -448,29 +488,10 @@
     return annotations;
 }
 
-- (NSArray*)addDummyAnnotationWithLat:(double)lat lon:(double)lon altitude:(double)altitude title:(NSString*)title
-{
-    NSMutableArray *annotations = [NSMutableArray array];
-    CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(lat, lon) altitude:altitude horizontalAccuracy:0 verticalAccuracy:0 timestamp:[NSDate date]];
-    MCYARAnnotation *annotation = [[MCYARAnnotation alloc] initWithIdentifier:nil title:title location:location];
-    [annotations addObject:annotation];
-    
-    return annotations;
-}
-
-- (CLLocation*)getRandomLocation:(double)centerLatitude centerLongitude:(double)centerLongitude altitudeDelta:(double)altitudeDelta
-{
-    double lat = centerLatitude;
-    double lon = centerLongitude;
-    double altitude = drand48() * altitudeDelta;
-    
-    return [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(lat, lon) altitude:altitude horizontalAccuracy:1 verticalAccuracy:1 timestamp:[NSDate date]];
-}
-
 - (void)handleLocationFailure:(NSTimeInterval)elapsedSeconds acquiredLocationBefore:(BOOL)acquiredLocationBefore
-             arViewController:(MCYARViewController*)arViewController
+             arViewController:(ArvixARViewController*)arViewController
 {
-    MCYARViewController *arVC = arViewController;
+    ArvixARViewController *arVC = arViewController;
     if (arVC == nil) return;
     if ([Platform isSimulator]) return;
     
@@ -497,13 +518,14 @@
 {
     OTWARCustomAnnotation *annotation = gesture.opId;
     OTWFootprintDetailController *VC =  [[OTWFootprintDetailController alloc] init];
+    self.trackingManager.stopLocation = NO;
     [VC setFid:annotation.footprint.footprintId.description];
     [self.navigationController pushViewController:VC animated:YES];
 }
 
 
-#pragma mark - MCYARDatasource
-- (MCYARAnnotationView*)ar:(MCYARViewController*)arViewController viewForAnnotation:(MCYARAnnotation*)annotation
+#pragma mark - ArvixARDatasource
+- (ArvixARAnnotationView*)ar:(ArvixARViewController*)arViewController viewForAnnotation:(ArvixARAnnotation*)annotation
 {
     OTWCustomAnnotationView *annotationView = [[OTWCustomAnnotationView alloc] init];
     annotationView.frame = CGRectMake(0, 0, 164, 42);
@@ -511,24 +533,6 @@
     tapGesture.opId = annotation;
     [annotationView addGestureRecognizer:tapGesture];
     return annotationView;
-}
-
-#pragma mark - BMKLocationServiceDelegate
-- (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation
-{
-    _userLocation = userLocation;
-    //定位信息加载成功，一般刷新时会调用
-    self.footprintSearchParams.latitude = userLocation.location.coordinate.latitude;
-    self.footprintSearchParams.longitude = userLocation.location.coordinate.longitude;
-    self.footprintSearchParams.number = 0;
-    self.footprintSearchParams.currentTime = nil;
-    [self getFootprints];
-    [_locService stopUserLocationService];
-}
-
-- (void)didFailToLocateUserWithError:(NSError *)error
-{
-    [_locService stopUserLocationService];
 }
 
 #pragma mark 按钮初始化
@@ -724,6 +728,156 @@
         [_locationBtton_1000m addGestureRecognizer:tapGesture_1000m];
     }
     return _locationBtton_1000m;
+}
+
+- (UIView *)infoBGView
+{
+    if(!_infoBGView){
+        _infoBGView = [[UIView alloc] initWithFrame:CGRectMake(104, SCREEN_HEIGHT - 15 - 80 + 9, SCREEN_WIDTH - 104 - 15 - 57 * 3 , 80 - 9)];
+        _infoBGView.backgroundColor = [UIColor clearColor];
+    }
+    return _infoBGView;
+}
+
+- (UILabel*)footprintLabel
+{
+    if(!_footprintLabel){
+        _footprintLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 42, 10)];
+        _footprintLabel.textColor = [UIColor whiteColor];
+        _footprintLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:10];
+        _footprintLabel.layer.opacity = 0.7;
+        _footprintLabel.text = @"附近足迹";
+    }
+    return _footprintLabel;
+}
+
+-(UIView*)lineView
+{
+    if(!_lineView){
+        _lineView = [[UIView alloc] initWithFrame:CGRectMake(self.footprintLabel.MinX, self.footprintLabel.MaxY + 4, 40, 1)];
+        _lineView.backgroundColor = [UIColor whiteColor];
+        _lineView.layer.opacity = 0.4;
+    }
+    return _lineView;
+}
+
+-(UILabel*)footprintSumLabel
+{
+    if(!_footprintSumLabel){
+        _footprintSumLabel = [[UILabel alloc] initWithFrame:CGRectMake(_footprintLabel.MinX, self.lineView.MaxY + 4 , self.infoBGView.Witdh + 10 , 25)];
+        _footprintSumLabel.textColor = [UIColor whiteColor];
+        _footprintSumLabel.layer.opacity = 0.8;
+        _footprintSumLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:30];
+        _footprintSumLabel.text = @"0";
+    }
+    return _footprintSumLabel;
+}
+
+-(UIImage*)addressImage
+{
+    if(!_addressImage){
+        _addressImage =[UIImage imageNamed:@"dingwei"];
+    }
+    return _addressImage;
+}
+
+-(UIImageView*)addressImageView
+{
+    if(!_addressImageView){
+        _addressImageView = [[UIImageView alloc] initWithFrame:CGRectMake(_footprintLabel.MinX, self.footprintSumLabel.MaxY + 11, 10, 10)];
+        _addressImageView.image = self.addressImage;
+    }
+    return _addressImageView;
+}
+
+-(UILabel*)addressLabel
+{
+    if(!_addressLabel){
+        _addressLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.addressImageView.MaxX + 2, self.footprintSumLabel.MaxY + 10 , 150, 12)];
+        _addressLabel.textColor = [UIColor color_c4c4c4];
+        _addressLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:12];
+        _addressLabel.text = @"定位信息加载中~~~";
+    }
+    return _addressLabel;
+}
+
+-(BMKGeoCodeSearch*)geoCodeSearch
+{
+    if(!_geoCodeSearch){
+        _geoCodeSearch = [[BMKGeoCodeSearch alloc] init];
+        _geoCodeSearch.delegate = self;
+    }
+    return _geoCodeSearch;
+}
+
+- (void)arTrackingManager:(ArvixARTrackingManager *)trackingManager didUpdateUserLocation:(CLLocation *)location
+{
+    [super arTrackingManager:trackingManager didUpdateReloadLocation:location];
+    
+    DLog(@">>>>>>>>,定位成功");
+    
+    BMKReverseGeoCodeOption *reverseGeocodeSearchOption = [[BMKReverseGeoCodeOption alloc]init];
+    reverseGeocodeSearchOption.reverseGeoPoint = location.coordinate;
+    BOOL flag = [self.geoCodeSearch reverseGeoCode:reverseGeocodeSearchOption];
+    if(flag){
+        NSLog(@"反geo检索发送成功");
+    }else{
+        NSLog(@"反geo检索发送失败");
+    }
+    
+    //定位信息加载成功，一般刷新时会调用
+    if(!self.ifFirstLoadData){
+        self.ifFirstLoadData = YES;
+        self.footprintSearchParams.latitude = location.coordinate.latitude;
+        self.footprintSearchParams.longitude = location.coordinate.longitude;
+        self.footprintSearchParams.number = 0;
+        self.footprintSearchParams.currentTime = nil;
+        [self getFootprints];
+    }
+    
+}
+
+- (void)arTrackingManager:(ArvixARTrackingManager *)trackingManager didUpdateReloadLocation:(CLLocation *)location
+{
+    [super arTrackingManager:trackingManager didUpdateReloadLocation:location];
+    
+    DLog(@">>>>>>>>,重新定位成功，这里可以重载数据");
+    
+    
+    BMKReverseGeoCodeOption *reverseGeocodeSearchOption = [[BMKReverseGeoCodeOption alloc]init];
+    reverseGeocodeSearchOption.reverseGeoPoint = location.coordinate;
+    BOOL flag = [self.geoCodeSearch reverseGeoCode:reverseGeocodeSearchOption];
+    if(flag){
+        NSLog(@"反geo检索发送成功");
+    }else{
+        NSLog(@"反geo检索发送失败");
+    }
+    
+    //定位信息加载成功，一般刷新时会调用
+    if(!self.ifFirstLoadData){
+        self.ifFirstLoadData = YES;
+        self.footprintSearchParams.latitude = location.coordinate.latitude;
+        self.footprintSearchParams.longitude = location.coordinate.longitude;
+        self.footprintSearchParams.number = 0;
+        self.footprintSearchParams.currentTime = nil;
+        [self getFootprints];
+    }
+    
+}
+
+#pragma mark - BMKGeoCodeSearchDelegate
+- (void)onGetReverseGeoCodeResult:(BMKGeoCodeSearch *)searcher result:(BMKReverseGeoCodeResult *)result errorCode:(BMKSearchErrorCode)error
+{
+    if (error ==BMK_SEARCH_NO_ERROR){
+        if(result.poiList.count>0){
+            BMKPoiInfo *poiInfo = ((BMKPoiInfo *)result.poiList[0]);
+            self.addressLabel.text = poiInfo.address;
+        }else{
+            self.addressLabel.text = result.address;
+        }
+    }else{
+        self.addressLabel.text = @"定位信息加载失败~~~";
+    }
 }
 
 @end

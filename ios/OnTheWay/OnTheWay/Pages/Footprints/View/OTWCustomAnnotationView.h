@@ -6,8 +6,8 @@
 //  Copyright © 2017年 WeiHuan. All rights reserved.
 //
 #import <UIKit/UIKit.h>
-#import "MCYARAnnotationView.h"
+#import "ArvixARAnnotationView.h"
 
-@interface OTWCustomAnnotationView : MCYARAnnotationView<UIGestureRecognizerDelegate>
+@interface OTWCustomAnnotationView : ArvixARAnnotationView<UIGestureRecognizerDelegate>
 
 @end

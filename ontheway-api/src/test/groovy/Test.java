@@ -1,6 +1,7 @@
 import cn.arvix.base.common.utils.CommonContact;
 import cn.arvix.ontheway.sys.utils.HmacSHA256Utils;
 
+import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
@@ -17,7 +18,7 @@ public class Test {
 
     @org.junit.Test
     public void mobileDigest() {
-        System.out.println(HmacSHA256Utils.digest(CommonContact.HMAC256_KEY, "mobile:18580128658"));
+        System.out.println(HmacSHA256Utils.digest(CommonContact.HMAC256_KEY, "mobile:18402847183"));
     }
 
     @org.junit.Test
@@ -27,12 +28,17 @@ public class Test {
     }
 
     @org.junit.Test
-    public void headImg(){
+    public void headImg() {
         Random random = new Random();
         int i = 0;
-        while (i<100){
+        while (i < 100) {
             System.out.println(random.nextInt(14));
             i++;
         }
+    }
+
+    @org.junit.Test
+    public void test() {
+        System.out.println(Objects.equals(null, null));
     }
 }

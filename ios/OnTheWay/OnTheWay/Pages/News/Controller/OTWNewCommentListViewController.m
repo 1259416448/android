@@ -11,6 +11,7 @@
 #import "OTWNewsCommentTableCell.h"
 #import "OTWSystemNewService.h"
 #import "OTWNewsSearchParams.h"
+#import "OTWCustomNavigationBar.h"
 #import <MJExtension.h>
 #import <MJRefresh.h>
 
@@ -47,12 +48,13 @@
     [self setLeftNavigationImage:[UIImage imageNamed:@"back_2"]];
     self.view.backgroundColor = [UIColor color_f4f4f4];
     [self.view addSubview:self.tableV];
+    [self.view bringSubviewToFront:self.customNavigationBar];
 }
 
 - (UITableView *)tableV
 {
     if (!_tableV) {
-        _tableV = [[UITableView alloc] initWithFrame:CGRectMake(0, self.navigationHeight, SCREEN_WIDTH, SCREEN_HEIGHT) style:UITableViewStyleGrouped];
+        _tableV = [[UITableView alloc] initWithFrame:CGRectMake(0, self.navigationHeight - 20, SCREEN_WIDTH, SCREEN_HEIGHT) style:UITableViewStyleGrouped];
         _tableV.dataSource = self;
         _tableV.delegate = self;
         _tableV.backgroundColor = [UIColor clearColor];
@@ -94,10 +96,17 @@
     return 1;
 }
 
+
+
 #pragma mark 返回每组行数
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return self.commentArr.count;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 1;
 }
 
 #pragma mark返回每行单元格
@@ -128,7 +137,7 @@
     if (!_newsSearchParams) {
         _newsSearchParams = [[OTWNewsSearchParams alloc] init];
         _newsSearchParams.number = 0;
-        _newsSearchParams.size = 2;
+        _newsSearchParams.size = 15;
         _newsSearchParams.clear = false;
     }
     return _newsSearchParams;

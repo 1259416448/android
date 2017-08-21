@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping(value = "/app/message/like")
-public class LikeMessageController extends ExceptionHandlerController {
+public class AppLikeMessageController extends ExceptionHandlerController {
 
     private LikeRecordsService service;
 

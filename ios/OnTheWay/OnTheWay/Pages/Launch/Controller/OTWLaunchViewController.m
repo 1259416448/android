@@ -9,10 +9,6 @@
 #import "OTWLaunchViewController.h"
 #import "OTWLaunchManager.h"
 
-@interface OTWLaunchViewController ()
-
-@end
-
 @implementation OTWLaunchViewController
 
 - (void)viewDidLoad {
@@ -41,13 +37,7 @@
 #pragma mark - UI
 - (void)buildUI
 {
-    // 根据登录状态显示 登录页还是主页
-    //[[OTWLaunchManager sharedManager] showPersonalEditNicknameView];
-//    [[OTWLaunchManager sharedManager] showLoginView];
     [[OTWLaunchManager sharedManager] showMainTabView];
-    //[[OTWLaunchManager sharedManager] showPersonalInfoView];
-    //[[OTWLaunchManager sharedManager] showPersonalSiteView];
- //   [[OTWLaunchManager sharedManager] showFootprintView];
 }
 
 @end

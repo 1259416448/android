@@ -303,20 +303,26 @@
 #pragma mark 跳转至足迹列表页面
 - (void)toFootprintListView
 {
-    OTWFootprintsViewController *footprintListVC = [[OTWFootprintsViewController alloc] init];
-    [self.navigationController pushViewController:footprintListVC animated:YES];
+    NSArray *viewControllers = self.navigationController.viewControllers;
+    NSUInteger index = [viewControllers indexOfObject:[OTWLaunchManager sharedManager].footprintVC];
+    if(index != NSNotFound){
+        [self.navigationController popToViewController:[OTWLaunchManager sharedManager].footprintVC animated:NO];
+    }else{
+        [self.navigationController pushViewController:[OTWLaunchManager sharedManager].footprintVC animated:NO];
+    }
 }
 
 #pragma mark 跳转至AR足迹页面
 - (void)toARFootprintListView
 {
-    OTWFootprintsViewController *footprintListVC = [[OTWFootprintsViewController alloc] init];
-    [self.navigationController pushViewController:footprintListVC animated:YES];
+    [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
 #pragma mark 跳转至足迹发布页面
 - (void)toReleaseFootprintView
 {
+    //验证是否登陆
+    if([[OTWLaunchManager sharedManager] showLoginViewWithController:self completion:nil]) return ;
     OTWFootprintReleaseViewController *footprintReleaseVC = [[OTWFootprintReleaseViewController alloc] init];
     [self.navigationController pushViewController:footprintReleaseVC animated:YES];
 }
@@ -324,7 +330,6 @@
 #pragma mark 控制时间筛选按钮显示／隐藏
 - (void)dateButtonClick
 {
-    
     self.dateButton_oneDay.hidden = !self.dateButton_oneDay.hidden;
     self.dateButton_sevenDay.hidden = !self.dateButton_sevenDay.hidden;
     self.dateButton_oneMonth.hidden = !self.dateButton_oneMonth.hidden;
@@ -590,7 +595,7 @@
         _planeMapButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _planeMapButton.backgroundColor = [UIColor clearColor];
         [_planeMapButton setImage:[UIImage imageNamed:@"ar_ARditu"] forState:UIControlStateNormal];
-        [_arListButton addTarget:self action:@selector(toARFootprintListView) forControlEvents:UIControlEventTouchUpInside];
+        [_planeMapButton addTarget:self action:@selector(toARFootprintListView) forControlEvents:UIControlEventTouchUpInside];
     }
     return _planeMapButton;
 }

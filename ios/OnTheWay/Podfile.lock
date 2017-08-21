@@ -33,7 +33,7 @@ PODS:
     - SDWebImage/Core (= 4.0.0)
   - SDWebImage/Core (4.0.0)
   - STPopup (1.8.2)
-  - TZImagePickerController (1.8.8)
+  - TZImagePickerController (1.8.9)
   - UMessage_NOIDFA (1.5.3)
   - YSCategorys (1.2.0):
     - YSCategorys/Foundation (= 1.2.0)
@@ -73,7 +73,7 @@ SPEC CHECKSUMS:
   SDCycleScrollView: d0fd5fe40a80918371fd8939214eb3be81033d83
   SDWebImage: 76a6348bdc74eb5a55dd08a091ef298e56b55e41
   STPopup: b69b3e7484ef7d2baec5f9ab2939f8a7bcdfe218
-  TZImagePickerController: 5d2085b9a749210c3552d35ebe17a6a679438708
+  TZImagePickerController: b44f4cfc6d320dab9a53adcdda725099be36dcda
   UMessage_NOIDFA: 062d8440b387650535f9dc254449c86030246f3d
   YSCategorys: 86d951cd7fffe5ec39984fffb7f0314064e62474
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
