@@ -1,10 +1,9 @@
-package arvix.cn.ontheway.ui.ar;
+package arvix.cn.ontheway.ui.ar_draw;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.location.Location;
 import android.opengl.Matrix;
@@ -16,35 +15,30 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
-
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.utils.CoordinateConverter;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
 import org.xutils.image.ImageDecoder;
-import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
 import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.R;
-import arvix.cn.ontheway.bean.Pagination;
 import arvix.cn.ontheway.bean.FootPrintBean;
 import arvix.cn.ontheway.bean.FootPrintSearchVo;
-import arvix.cn.ontheway.service.impl.CacheDefault;
+import arvix.cn.ontheway.bean.Pagination;
+import arvix.cn.ontheway.service.impl.ArFootPrintCacheMemoryService;
 import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.service.inter.FootPrintSearchNotify;
 import arvix.cn.ontheway.service.inter.FootPrintSearchService;
 import arvix.cn.ontheway.ui.track.TrackDetailActivity;
-import arvix.cn.ontheway.utils.DLog;
 import arvix.cn.ontheway.utils.LocationHelper;
 import arvix.cn.ontheway.utils.MyProgressDialog;
 import arvix.cn.ontheway.utils.OnthewayApplication;
@@ -56,7 +50,7 @@ import arvix.cn.ontheway.utils.Windows;
  * Created by ntdat on 1/13/17.
  */
 
-public class AROverlayViewOld extends View implements FootPrintSearchNotify<FootPrintBean>, View.OnTouchListener {
+public class AROverlayViewDraw extends View implements FootPrintSearchNotify<FootPrintBean>, View.OnTouchListener {
     private String logTag = this.getClass().getName();
     Context context;
     private float[] rotatedProjectionMatrix = new float[16];
@@ -64,7 +58,7 @@ public class AROverlayViewOld extends View implements FootPrintSearchNotify<Foot
     private double latAndLonAndAltLast = 0.0;
     private double alt;//海拔
     CacheService cache;
-    CacheService dataCache;
+    ArFootPrintCacheMemoryService arFootPrintCacheMemoryService;
     FootPrintSearchService footPrintSearchService;
     private Pagination<FootPrintBean> pagination = new Pagination<>();
     private Paint mBitPaint;
@@ -76,22 +70,30 @@ public class AROverlayViewOld extends View implements FootPrintSearchNotify<Foot
     private ViewGroup rootView;
     MyProgressDialog wait;
     private FootPrintSearchVo trackSearchVo;
-    Paint circlePaint ;
-    Paint centerPaint ;
-    Paint pointPaint;
     public static float xDegrees;
     public static float yDegrees;
-    private List<DrawTrackPointInfo> drawTrackPointInfoList = new ArrayList<>();
+    public static float zDegrees;
+    private  List<RadarPoint> radarPointList  = new ArrayList<>();
+    private  List<ImageView> radarImageViewList  = new ArrayList<>();
+    private FrameLayout radarFrameLayout;
+    private List<DrawFootPrintItemInfo> drawFootPrintItemInfoList = new ArrayList<>();
     private float trackViewItemRectW = 0.0f;
     private float trackViewItemRectH = 0.0f;
     private float computeTouchDiffY = 0.0f;
-    public AROverlayViewOld(Context context, ViewGroup rootView, FootPrintSearchVo trackSearchVo) {
+    private final float radius= StaticMethod.dip2px(App.self , 37f);
+    float cx = StaticMethod.dip2px(App.self,40);
+    private String oldRotateStr = "";
+    private String newRotateStr = "";
+    private float[] oldRotatedProjectionMatrix = new float[16];
+    java.text.DecimalFormat   df   =new   java.text.DecimalFormat("#.00");
+    LatLng center = new LatLng(OnthewayApplication.getInstahce(CacheService.class).getDouble(StaticVar.BAIDU_LOC_CACHE_LAT),OnthewayApplication.getInstahce(CacheService.class).getDouble(StaticVar.BAIDU_LOC_CACHE_LON));
+    public AROverlayViewDraw(Context context, ViewGroup rootView, FootPrintSearchVo trackSearchVo,FrameLayout radarFrameLayout) {
         super(context);
         this.context = context;
         this.rootView = rootView;
         this.trackSearchVo = trackSearchVo;
         cache = OnthewayApplication.getInstahce(CacheService.class);
-        dataCache = new CacheDefault();
+        arFootPrintCacheMemoryService = new ArFootPrintCacheMemoryService();
         footPrintSearchService = OnthewayApplication.getInstahce(FootPrintSearchService.class);
         mBitPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mBitPaint.setFilterBitmap(true);
@@ -100,22 +102,10 @@ public class AROverlayViewOld extends View implements FootPrintSearchNotify<Foot
         drawYOffset = StaticMethod.dip2px(context, 50);
         trackViewItemRectW = StaticMethod.dip2px(context, 164);
         trackViewItemRectH = StaticMethod.dip2px(context, 41);
-        circlePaint = new Paint();
-        circlePaint.setAntiAlias(true); //設置畫筆為無鋸齒
-        circlePaint.setColor(Color.WHITE); //設置畫筆顏色
-        circlePaint.setStrokeWidth((float) 3.0); //線寬
-        circlePaint.setStyle(Paint.Style.STROKE); //空心效果
-
-        centerPaint = new Paint();
-        centerPaint.setAntiAlias(true); //設置畫筆為無鋸齒
-        centerPaint.setColor(Color.WHITE); //設置畫筆顏色
-
-        pointPaint= new Paint();
-        pointPaint.setAntiAlias(true); //設置畫筆為無鋸齒
-        pointPaint.setColor(Color.RED); //設置畫筆顏色
-
+        currentLocation = new Location("");
         rootView.setOnTouchListener(this);
         computeTouchDiffY = StaticMethod.getStatusBarHeight(context);
+        this.radarFrameLayout = radarFrameLayout;
     }
 
     private void updateLocationData(double lat, double lon) {
@@ -147,32 +137,34 @@ public class AROverlayViewOld extends View implements FootPrintSearchNotify<Foot
         footPrintSearchService.search(context,trackSearchVo,this);
     }
 
-
-    private String oldRotateStr = "";
-    private String newRotateStr = "";
-    private float[] oldrotatedProjectionMatrix = new float[16];
-    java.text.DecimalFormat   df   =new   java.text.DecimalFormat("#.00");
-
     public void updateRotatedProjectionMatrix(float[] rotatedProjectionMatrix) {
         this.rotatedProjectionMatrix = rotatedProjectionMatrix;
         newRotateStr = "";
         float diffAbs = 0;
         for(int i=0;i<rotatedProjectionMatrix.length;i++){
             newRotateStr = newRotateStr +"-"+  df.format(rotatedProjectionMatrix[i]);
-            diffAbs = diffAbs + Math.abs(rotatedProjectionMatrix[i] - oldrotatedProjectionMatrix[i]);
+            diffAbs = diffAbs + Math.abs(rotatedProjectionMatrix[i] - oldRotatedProjectionMatrix[i]);
         }
-        if(diffAbs>0.3){
+        if(diffAbs>0.1){
             Log.i(logTag,"updateRotatedProjectionMatrix--->change  new"  + newRotateStr);
             Log.i(logTag,"updateRotatedProjectionMatrix--->change  old"  + oldRotateStr);
             this.invalidate();
-            oldrotatedProjectionMatrix = rotatedProjectionMatrix;
+            oldRotatedProjectionMatrix = rotatedProjectionMatrix;
             oldRotateStr = newRotateStr;
         }
     }
 
-    public void updateCurrentLocation(Location currentLocation) {
-        this.currentLocation = currentLocation;
-        if (this.currentLocation != null) {
+    public void updateCurrentLocation(Location currentLocationInput) {
+        if (currentLocationInput != null) {
+            LatLng sourceLatLng = new LatLng(currentLocationInput.getLatitude(),currentLocationInput.getLongitude());
+            // 将GPS设备采集的原始GPS坐标转换成百度坐标
+            CoordinateConverter converter  = new CoordinateConverter();
+            converter.from(CoordinateConverter.CoordType.GPS);
+            // sourceLatLng待转换坐标
+            converter.coord(sourceLatLng);
+            LatLng desLatLng = converter.convert();
+            currentLocation.setLatitude(desLatLng.latitude);
+            currentLocation.setLongitude(desLatLng.longitude);
             double tempSum = this.currentLocation.getLatitude() + this.currentLocation.getLongitude() + currentLocation.getAltitude();
             if (Math.abs(tempSum - latAndLonAndAltLast) > 0.0001) {
                 if (currentLocation.hasAltitude()) {
@@ -182,12 +174,10 @@ public class AROverlayViewOld extends View implements FootPrintSearchNotify<Foot
                     this.alt = 0.0;
                     updateLocationData(currentLocation.getLatitude(), currentLocation.getLongitude());
                 }
+                Log.i(logTag,"currentLocation--->change");
             }
-            Log.i(logTag,"currentLocation--->change");
-            this.invalidate();
         }
     }
-
 
     /**
      * Called when a touch event is dispatched to a view. This allows listeners to
@@ -229,20 +219,18 @@ public class AROverlayViewOld extends View implements FootPrintSearchNotify<Foot
         return false;
     }
 
-
-
     private FootPrintBean computeTouchTrack(float touchX, float touchY){
         FootPrintBean footPrintBean = null;
         touchY = touchY - computeTouchDiffY;
-        if(drawTrackPointInfoList.size()>0){
-            DrawTrackPointInfo drawTrackPointInfo;
-            for(int i=drawTrackPointInfoList.size()-1;i>=0;i-- ){
-                drawTrackPointInfo = drawTrackPointInfoList.get(i);
-                Log.i(logTag,"touch--->touchX:"+touchX+",touchY:"+touchY +",drawX:"+drawTrackPointInfo.drawX+",drawY:"+drawTrackPointInfo.drawY
-                        +",rectHeight:"+drawTrackPointInfo.rectHeight +",rectWidth:"+drawTrackPointInfo.rectWidth +"    " + drawTrackPointInfo.footPrintBean.getFootprintContent());
-                if( drawTrackPointInfo.drawX < touchX &&  touchX < (drawTrackPointInfo.drawX + drawTrackPointInfo.rectWidth)
-                && drawTrackPointInfo.drawY < touchY && touchY <  (drawTrackPointInfo.drawY + drawTrackPointInfo.rectHeight)   ){
-                    footPrintBean = drawTrackPointInfo.footPrintBean;
+        if(drawFootPrintItemInfoList.size()>0){
+            DrawFootPrintItemInfo drawFootPrintItemInfo;
+            for(int i = drawFootPrintItemInfoList.size()-1; i>=0; i-- ){
+                drawFootPrintItemInfo = drawFootPrintItemInfoList.get(i);
+                Log.i(logTag,"touch--->touchX:"+touchX+",touchY:"+touchY +",drawX:"+ drawFootPrintItemInfo.drawX+",drawY:"+ drawFootPrintItemInfo.drawY
+                        +",rectHeight:"+ drawFootPrintItemInfo.rectHeight +",rectWidth:"+ drawFootPrintItemInfo.rectWidth +"    " + drawFootPrintItemInfo.footPrintBean.getFootprintContent());
+                if( drawFootPrintItemInfo.drawX < touchX &&  touchX < (drawFootPrintItemInfo.drawX + drawFootPrintItemInfo.rectWidth)
+                && drawFootPrintItemInfo.drawY < touchY && touchY <  (drawFootPrintItemInfo.drawY + drawFootPrintItemInfo.rectHeight)   ){
+                    footPrintBean = drawFootPrintItemInfo.footPrintBean;
                     break;
                 }
             }
@@ -250,30 +238,8 @@ public class AROverlayViewOld extends View implements FootPrintSearchNotify<Foot
         return footPrintBean;
     }
 
-    private class DrawTrackPointInfo {
-        public DrawTrackPointInfo(){
-            rectWidth = trackViewItemRectW;
-            rectHeight = trackViewItemRectH;
-        }
-        float drawX;
-        float drawY;
-        FootPrintBean footPrintBean;
-        float rectWidth;
-        float rectHeight;
+    public void clearData() {
     }
-
-    int height=0;
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        height=h;
-    }
-
-    private final float radius=StaticMethod.dip2px(App.self,20*1.414213562f);
-    float cx = StaticMethod.dip2px(App.self,55);
-
-    LatLng center = new LatLng(OnthewayApplication.getInstahce(CacheService.class).getDouble(StaticVar.BAIDU_LOC_CACHE_LAT),OnthewayApplication.getInstahce(CacheService.class).getDouble(StaticVar.BAIDU_LOC_CACHE_LON));
-
 
     @Override
     protected void onDraw(final Canvas canvas) {
@@ -283,11 +249,12 @@ public class AROverlayViewOld extends View implements FootPrintSearchNotify<Foot
             try {
                 Log.i(logTag, "do onDraw------------------------------------>");
                 Map<String, Integer> drawPointRePointMap = new HashMap<String, Integer>();
-                LatLng target = null;
-                List<DrawTrackPointInfo> drawTrackPointInfoListTemp = new ArrayList<>();
-                DrawTrackPointInfo pointInfo = null;
+                LatLng target ;
+                List<DrawFootPrintItemInfo> drawFootPrintItemInfoListTemp = new ArrayList<>();
+                DrawFootPrintItemInfo pointInfo ;
                 //for start
-                float cy = canvas.getHeight() - StaticMethod.dip2px(App.self,55);
+                radarPointList.clear();
+                RadarPoint radarPoint;
                 for ( final FootPrintBean footPrintBean : this.pagination.getContent()) {
                     location = new Location(footPrintBean.getFootprintContent());
                     location.setLatitude(footPrintBean.getLatitude());
@@ -315,29 +282,30 @@ public class AROverlayViewOld extends View implements FootPrintSearchNotify<Foot
                         drawY = drawY + drawYOffset * rePointTimes;
                         drawPointRePointMap.put(rePointKeyTemp, rePointTimes + 1);
                     }
-                    float radarX = (float) (drawX%radius*Math.cos(xDegrees));
-                    float radarY = (float) (drawY%radius*Math.cos(yDegrees));
-                    pointInfo = new DrawTrackPointInfo();
+                    pointInfo = new DrawFootPrintItemInfo(trackViewItemRectW,trackViewItemRectH);
                     pointInfo.footPrintBean = footPrintBean;
                     pointInfo.drawY = drawY;
                     pointInfo.drawX = drawX;
+                    radarPoint = new RadarPoint();
+                    radarPoint.lat = footPrintBean.getLatitude();
+                    radarPoint.lon = footPrintBean.getLongitude();
+                    radarPoint.isNegative = true;
                     if (cameraCoordinateVector[2] < 0) {
-                        drawTrackPointInfoListTemp.add(pointInfo);
-                        Log.i(logTag, "drawRadar point radarX:" + radarX + ",radarY:" + radarY + "  radius:"+radius);
-
-                        ArFootPrintActivity.tvCurrentLocation.setText(System.currentTimeMillis() + " show:" + cameraCoordinateVector[2]);
-                        bitmapTemp = dataCache.getTMem(viewBitmapCachePrefix + footPrintBean.getFootprintId(), Bitmap.class);
+                        drawFootPrintItemInfoListTemp.add(pointInfo);
+                        radarPoint.isNegative = false;
+                        ArFootPrintDrawActivity.tvCurrentLocation.setText(System.currentTimeMillis() + " show:" + cameraCoordinateVector[2]);
+                        bitmapTemp = arFootPrintCacheMemoryService.getT(viewBitmapCachePrefix + footPrintBean.getFootprintId(), Bitmap.class);
                         if (bitmapTemp != null) {
                             Log.i(logTag, "load form cache bitmap drawX:" + drawX + ",drawY:" + drawY + "  ");
                             canvas.drawBitmap(bitmapTemp, drawX, drawY, mBitPaint);
                         } else {
                             View convertView = LayoutInflater.from(context).inflate(R.layout.track_ar_item, rootView, false);
-                            ViewHolder h = new ViewHolder();
+                            FootPrintItemViewHolder h = new FootPrintItemViewHolder();
                             x.view().inject(h, convertView);
                             h.addressTv.setText(StaticMethod.genLesAddressStr(footPrintBean.getFootprintAddress(), 4));
                             h.timeTv.setText(footPrintBean.getDateCreatedStr());
                             h.contentTv.setText(StaticMethod.genLesStr(footPrintBean.getFootprintContent(), 6));
-                            Bitmap headerBitmap = dataCache.getTMem(footPrintBean.getUserHeadImg(), Bitmap.class);
+                            Bitmap headerBitmap = arFootPrintCacheMemoryService.getT(footPrintBean.getUserHeadImg(), Bitmap.class);
                             boolean headerLoaded = false;
                             boolean trackPhotoLoaded = false;
                             Log.i(logTag,"h.userHeader--->"+h.userHeader.getLayoutParams().width+ " "+StaticMethod.dip2px(context, 28));
@@ -346,7 +314,7 @@ public class AROverlayViewOld extends View implements FootPrintSearchNotify<Foot
                                 headerLoaded = true;
                             }
                             if (!TextUtils.isEmpty(footPrintBean.getFootprintPhoto())) {
-                                Bitmap trackPhotoBitmap = dataCache.getTMem(footPrintBean.getFootprintPhoto(), Bitmap.class);
+                                Bitmap trackPhotoBitmap = arFootPrintCacheMemoryService.getT(footPrintBean.getFootprintPhoto(), Bitmap.class);
                                 if (trackPhotoBitmap != null) {
                                     h.trackPhotoIv.setImageBitmap(trackPhotoBitmap);
                                     trackPhotoLoaded = true;
@@ -360,26 +328,102 @@ public class AROverlayViewOld extends View implements FootPrintSearchNotify<Foot
                             canvas.drawBitmap(bitmapTemp, drawX, drawY, mBitPaint);
 
                             if (trackPhotoLoaded && headerLoaded) {
-                                dataCache.putObjectMem(viewBitmapCachePrefix + footPrintBean.getFootprintId(), bitmapTemp);
+                                arFootPrintCacheMemoryService.putObject(viewBitmapCachePrefix + footPrintBean.getFootprintId(), bitmapTemp);
                             }
                             convertView.setDrawingCacheEnabled(false);
                         }
                     }
-                    canvas.drawCircle(cx - radarX,cy - radarY,StaticMethod.dip2px(context,2),pointPaint);
+                    radarPointList.add(radarPoint);
                 }
                 // for end
-                this.drawTrackPointInfoList = drawTrackPointInfoListTemp;
+                this.drawFootPrintItemInfoList = drawFootPrintItemInfoListTemp;
+                drawRadarPoint();
             } catch (Exception e) {
                 Log.e(logTag, "load image error", e);
                 e.printStackTrace();
             }
         }
     }
+    private double radarZoom = 0;
+    public void drawRadarPoint() {
+        if(radarImageViewList.size()==0){
+            ImageView tempImageView = null;
+            for(int i=0;i<30;i++){
+                tempImageView = new ImageView(context);
+                FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(StaticMethod.dip2px(context,2), StaticMethod.dip2px(context,2));
+                layoutParams.setMargins(500,500,0,0);
+                tempImageView.setLayoutParams(layoutParams);
+                tempImageView.setBackgroundResource(R.drawable.red_point);
+                tempImageView.setVisibility(View.INVISIBLE);
+                radarImageViewList.add(tempImageView);
+                radarFrameLayout.addView(tempImageView);
+            }
+        }
+        for (ImageView im : radarImageViewList) {
+            im.setVisibility(View.INVISIBLE);
+        }
+        float cy = StaticMethod.dip2px(App.self,40);
+        int i=0;
+        ImageView imageView;
+        LatLng target = null;
+        double distance ,azimuth ,pLeft , pTop;
+        double realRadius = 1000.0;
+        if(trackSearchVo.getSearchDistance()== FootPrintSearchVo.SearchDistance.one){
+            realRadius = 100.0;
+        }
+        if(trackSearchVo.getSearchDistance()== FootPrintSearchVo.SearchDistance.two){
+            realRadius = 500.0;
+        }
+        if(trackSearchVo.getSearchDistance()== FootPrintSearchVo.SearchDistance.three){
+            realRadius = 1000.0;
+        }
+        radarZoom = radius/realRadius;
+        int diffY  = 1;
+
+        Map<String, Integer> drawPointRePointMap = new HashMap<>();
+        float rotaDegree = zDegrees;
+        double zRadians = Math.toRadians(rotaDegree);
+        // Log.i(logTag,"cx:"+cx+",cy:"+cy+",radius:"+radius+",rotaDegree:"+rotaDegree);
+        for(RadarPoint radarPoint : radarPointList){
+            target = new LatLng(radarPoint.lat, radarPoint.lon);
+            distance = DistanceUtil.getDistance(center,target);
+            azimuth = StaticMethod.comAzimuth(center.latitude,center.longitude,radarPoint.lat,radarPoint.lon);
+            pLeft = (int)(cx - Math.sin(azimuth)*radarZoom*distance);
+            pTop = (int) (cy + Math.cos(azimuth)*radarZoom*distance);
+            rePointKeyTemp = pLeft + "-" + pTop;
+            Integer rePointTimes = drawPointRePointMap.get(rePointKeyTemp);
+            if (rePointTimes == null) {
+                drawPointRePointMap.put(rePointKeyTemp, 1);
+            } else {
+                pLeft = pLeft + (diffY * rePointTimes)*Math.sin(zRadians);
+                pTop = pTop - (diffY * rePointTimes)*Math.cos(zRadians);
+                drawPointRePointMap.put(rePointKeyTemp, rePointTimes + 1);
+            }
+            imageView = radarImageViewList.get(i);
+            //  if(Math.sqrt(pointRadius) < (radius)){
+            Log.i(logTag,"left:"+(int)(pLeft)+",top:"+(int)(pTop)+",realRadius"+realRadius+",sW:"
+                      +rootView.getWidth() +",sH:"+rootView.getHeight()+",distance:"+distance +",zDegrees:"+zDegrees) ;
+            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(StaticMethod.dip2px(context,2), StaticMethod.dip2px(context,2));
+
+            layoutParams.setMargins((int)pLeft,(int)(pTop),0,0);
+            imageView.setLayoutParams(layoutParams);
+            imageView.setVisibility(View.VISIBLE);
+            i++;
+            if(i>30){
+                imageView = new ImageView(context);
+                imageView.setBackgroundResource(R.drawable.red_point);
+                radarImageViewList.add(imageView);
+            }
+            //}
+        }
+        // 获取绕Z轴转过的角度
+        radarFrameLayout.setRotation(-rotaDegree);
+    }
 
 
 
     protected void onDestroy() {
-        dataCache.clear();
+        arFootPrintCacheMemoryService.clear();
     }
 
     private String preTrackBeanIdStr = "";
@@ -412,26 +456,25 @@ public class AROverlayViewOld extends View implements FootPrintSearchNotify<Foot
                     b.putString("totalCount", paginationFetch.getTotalElements()+"");
                     b.putString("address", cache.get(StaticVar.BAIDU_LOC_CACHE_ADDRESS));
                     msg.setData(b);
-                    ArFootPrintActivity.handler.sendMessage(msg);
+                    ArFootPrintDrawActivity.handler.sendMessage(msg);
                     //update activity end
                     trackSearchVo.setTotalPages(paginationFetch.getTotalPages());
                     for (final FootPrintBean footPrintBean : pagination.getContent()) {
                         newTrackBeanIdStr =newTrackBeanIdStr + footPrintBean.getFootprintId();
                         try {
-                            if (dataCache.getTMem(footPrintBean.getUserHeadImg(), Bitmap.class) == null) {
+                            if (arFootPrintCacheMemoryService.getT(footPrintBean.getUserHeadImg(), Bitmap.class) == null) {
                                 Bitmap bitmap = Glide.with(context)
                                         .load(footPrintBean.getUserHeadImg())
                                         .asBitmap()
                                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                                         .into(width, width)
                                         .get();
-                                // bitmap = ImageDecoder.cut2ScaleSize(bitmap,width-20, width-20,false);
                                 bitmap = ImageDecoder.cut2Circular(bitmap,false);
-                                dataCache.putObjectMem(footPrintBean.getUserHeadImg(), bitmap);
+                                arFootPrintCacheMemoryService.putObject(footPrintBean.getUserHeadImg(), bitmap);
                                 Log.i(logTag, "put cache:" + footPrintBean.getUserHeadImg());
                             }
                             if(footPrintBean.getFootprintPhoto()!=null){
-                                if (dataCache.getTMem(footPrintBean.getFootprintPhoto(), Bitmap.class) == null) {
+                                if (arFootPrintCacheMemoryService.getT(footPrintBean.getFootprintPhoto(), Bitmap.class) == null) {
                                     Log.i(logTag,"genCadhe:"+ footPrintBean.getFootprintPhoto());
                                     Bitmap bitmap = Glide.with(context)
                                             .load(footPrintBean.getFootprintPhoto())
@@ -440,7 +483,7 @@ public class AROverlayViewOld extends View implements FootPrintSearchNotify<Foot
                                             .into(width, width)
                                             .get(10, TimeUnit.SECONDS);
                                     Log.i(logTag, "put cache:" + footPrintBean.getFootprintPhoto());
-                                    dataCache.putObjectMem(footPrintBean.getFootprintPhoto(), bitmap);
+                                    arFootPrintCacheMemoryService.putObject(footPrintBean.getFootprintPhoto(), bitmap);
                                 }
                             }
                         } catch (Exception e) {
@@ -457,23 +500,6 @@ public class AROverlayViewOld extends View implements FootPrintSearchNotify<Foot
                 preTrackBeanIdStr = newTrackBeanIdStr;
             }
         }).start();
-    }
-
-    private class ViewHolder {
-        @ViewInject(R.id.header_iv)
-        ImageView userHeader;
-
-        @ViewInject(R.id.time_tv)
-        TextView timeTv;
-
-        @ViewInject(R.id.content_tv)
-        TextView contentTv;
-        @ViewInject(R.id.address_tv)
-        TextView addressTv;
-
-        @ViewInject(R.id.main_photo_iv)
-        ImageView trackPhotoIv;
-
     }
 }
 

@@ -1,4 +1,4 @@
-package arvix.cn.ontheway.ui.ar;
+package arvix.cn.ontheway.ui.ar_view;
 
 import android.content.Context;
 import android.content.Intent;
@@ -173,9 +173,6 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
             }
         }
     }
-
-    float currentDegree = 0;
-
     public void drawRadarPoint() {
         if(radarImageViewList.size()==0){
             ImageView tempImageView = null;
@@ -184,8 +181,6 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
                 FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(StaticMethod.dip2px(context,2), StaticMethod.dip2px(context,2));
                 layoutParams.setMargins(500,500,0,0);
                 tempImageView.setLayoutParams(layoutParams);
-                //  tempImageView.setLeft(500);
-                //   tempImageView.setTop(500);
                 tempImageView.setBackgroundResource(R.drawable.red_point);
                 tempImageView.setVisibility(View.INVISIBLE);
                 radarImageViewList.add(tempImageView);
@@ -194,14 +189,10 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
         }
 
         float cy = StaticMethod.dip2px(App.self,40);
-        int halfSW = rootView.getWidth()/2;
         int i=0;
         ImageView imageView;
         LatLng target = null;
-        double distance = 0;
-        double azimuth = 0;
-        double pLeft = 0;
-        double pTop = 0;
+        double distance, azimuth,pLeft,pTop;
         double realRadius = 1000.0;
         if(trackSearchVo.getSearchDistance()== FootPrintSearchVo.SearchDistance.one){
             realRadius = 100.0;

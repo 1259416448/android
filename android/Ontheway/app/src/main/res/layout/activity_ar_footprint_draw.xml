@@ -4,7 +4,7 @@
     android:id="@+id/activity_ar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="arvix.cn.ontheway.ui.ar_view.ArFootPrintActivity">
+    tools:context="arvix.cn.ontheway.ui.ar_draw.ArFootPrintDrawActivity">
     <FrameLayout
         android:id="@+id/camera_container_layout"
         android:layout_width="match_parent"
@@ -82,26 +82,26 @@
                 android:text="3456"
                 android:textColor="@color/white"
                 android:textSize="25sp" />
-           <LinearLayout
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content">
-               <ImageView
-                   android:layout_marginTop="1dp"
-                   android:layout_gravity="center"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:src="@drawable/dingwei"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_marginTop="1dp"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/dingwei"/>
 
-               <TextView
-                   android:id="@+id/address_tv"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:layout_gravity="center"
-                   android:layout_marginLeft="2dp"
-                   android:text="三里屯白家坊"
-                   android:textColor="#FFC4C4C4"
-                   android:textSize="12sp" />
-           </LinearLayout>
+                <TextView
+                    android:id="@+id/address_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="2dp"
+                    android:text="三里屯白家坊"
+                    android:textColor="#FFC4C4C4"
+                    android:textSize="12sp" />
+            </LinearLayout>
         </LinearLayout>
 
         <Button
@@ -208,38 +208,38 @@
                 android:id="@+id/range_btn_line"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-            <Button
-                android:id="@+id/r_100m"
-                android:layout_width="45dp"
-                android:layout_height="35dp"
-                android:layout_marginRight="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/black_btn_50dp"
-                android:text="100m"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
+                <Button
+                    android:id="@+id/r_100m"
+                    android:layout_width="45dp"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/black_btn_50dp"
+                    android:text="100m"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
 
-            <Button
-                android:id="@+id/r_500m"
-                android:layout_width="45dp"
-                android:layout_height="35dp"
-                android:layout_marginRight="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/black_btn_50dp"
-                android:text="500m"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
+                <Button
+                    android:id="@+id/r_500m"
+                    android:layout_width="45dp"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/black_btn_50dp"
+                    android:text="500m"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
 
-            <Button
-                android:id="@+id/r_1km"
-                android:layout_width="45dp"
-                android:layout_height="35dp"
-                android:layout_marginRight="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/black_btn_50dp"
-                android:text="1km"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
+                <Button
+                    android:id="@+id/r_1km"
+                    android:layout_width="45dp"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/black_btn_50dp"
+                    android:text="1km"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <Button
@@ -257,5 +257,5 @@
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginLeft="15dp"
-    />
+        />
 </RelativeLayout>
