@@ -61,7 +61,7 @@ import arvix.cn.ontheway.service.BaiduLocationListenerService;
 import arvix.cn.ontheway.service.inter.BaiduPoiService;
 import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.ui.BaseActivity;
-import arvix.cn.ontheway.ui.ar.ArFootPrintActivity;
+import arvix.cn.ontheway.ui.ar_view.ArFootPrintActivity;
 import arvix.cn.ontheway.ui.view.BottomDialog;
 import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticMethod;

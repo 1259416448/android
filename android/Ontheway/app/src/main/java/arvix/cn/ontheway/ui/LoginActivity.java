@@ -1,12 +1,16 @@
 package arvix.cn.ontheway.ui;
 
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -25,12 +29,12 @@ import arvix.cn.ontheway.bean.UserInfo;
 import arvix.cn.ontheway.check.CheckUtils;
 import arvix.cn.ontheway.http.ServerUrl;
 import arvix.cn.ontheway.service.inter.CacheService;
-import arvix.cn.ontheway.ui.head.HeaderHolder;
 import arvix.cn.ontheway.ui.view.BottomDialog;
 import arvix.cn.ontheway.utils.HmacSHA256Utils;
 import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticMethod;
 import arvix.cn.ontheway.utils.StaticVar;
+import arvix.cn.ontheway.utils.UIUtils;
 
 /**
  * Created by asdtiang on 2017/8/3 0003.
@@ -43,32 +47,38 @@ public class LoginActivity  extends BaseActivity  {
     private EditText phoneEt;
     @ViewInject(R.id.check_code_et)
     private EditText checkCodeEt;
-    @ViewInject(R.id.send_sms_btn)
-    private Button sendSmsBtn;
+    @ViewInject(R.id.send_sms_tv)
+    private TextView sendSmsTv;
     @ViewInject(R.id.login_btn)
     private Button loginBtn;
+    @ViewInject(R.id.phone_line)
+    private LinearLayout phoneLine;
+    @ViewInject(R.id.check_code_line)
+    private LinearLayout checkCodeLine;
+    @ViewInject(R.id.login_btn_line)
+    private LinearLayout loginBtnLine;
+
+
+    @ViewInject(R.id.phone_tv_icon)
+    private TextView phoneTvIcon;
+    @ViewInject(R.id.check_code_tv_icon)
+    private TextView checkCodeTvIcon;
     CacheService cache;
     private BottomDialog bottomDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        UIUtils.setBarStyle(self);
         x.view().inject(self);
         cache = OnthewayApplication.getInstahce(CacheService.class);
-        HeaderHolder head=new HeaderHolder();
-        head.init(self,"登录");
-        head.setUpLeftBtn(getResources().getDrawable(R.drawable.ar_guanbi,null), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
         initView();
+        initUi();
     }
 
 
     private void initView() {
-        sendSmsBtn.setOnClickListener(new View.OnClickListener() {
+        sendSmsTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String phone = phoneEt.getText().toString();
@@ -85,6 +95,8 @@ public class LoginActivity  extends BaseActivity  {
                             Log.i("o",o.toString());
                             Toast toast = Toast.makeText(getApplicationContext(),
                                     "验证码发送成功", Toast.LENGTH_LONG);
+                            loginBtnLine.setBackgroundResource(R.drawable.dl_button);
+                            loginBtn.setBackgroundResource(R.drawable.login_btn_click);
                             toast.setGravity(Gravity.CENTER, 0, 0);
                             toast.show();
                         }
@@ -168,10 +180,35 @@ public class LoginActivity  extends BaseActivity  {
             }
             });
 
-
-
-
         // fxBtn.setOnClickListener(this);
+    }
+
+    private void initUi(){
+        phoneEt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    Log.i(logTag,"phoneLine------------------>hasFocus");
+                    phoneLine.setBackgroundResource(R.drawable.login_text_boder_focused);
+                    phoneTvIcon.setCompoundDrawablesWithIntrinsicBounds (getResources().getDrawable(R.drawable.dl_shouji_click),null,null,null);
+                }else{
+                    phoneLine.setBackgroundResource(R.drawable.login_text_boder);
+                    phoneTvIcon.setCompoundDrawablesWithIntrinsicBounds (getResources().getDrawable(R.drawable.dl_shouji),null,null,null);
+                }
+            }
+        });
+        checkCodeEt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    checkCodeLine.setBackgroundResource(R.drawable.login_text_boder_focused);
+                    checkCodeTvIcon.setCompoundDrawablesWithIntrinsicBounds (getResources().getDrawable(R.drawable.dl_yanzhengma_click),null,null,null);
+                }else{
+                    checkCodeLine.setBackgroundResource(R.drawable.login_text_boder);
+                    checkCodeTvIcon.setCompoundDrawablesWithIntrinsicBounds (getResources().getDrawable(R.drawable.dl_yanzhengma),null,null,null);
+                }
+            }
+        });
     }
 
 

@@ -7,7 +7,7 @@
 //
 
 #import "OTWPersonalSiteHowClaimShopViewController.h"
-#import "findSearchViewController.h"
+#import "OTWSearchShopListViewController.h"
 
 @interface OTWPersonalSiteHowClaimShopViewController ()
 @property (nonatomic,strong) UIScrollView *bgView;
@@ -151,7 +151,7 @@
 }
 -(void)goClaimBtnClick{
     DLog(@"点击了我要认领商家");
-    findSearchViewController *findSearchVC = [[findSearchViewController alloc] init];
+    OTWSearchShopListViewController *findSearchVC = [[OTWSearchShopListViewController alloc] init];
     [self.navigationController pushViewController:findSearchVC animated:NO];
 
 }

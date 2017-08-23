@@ -7,16 +7,15 @@
 //
 
 #import "OTWSearchShopListViewController.h"
-
 #import "OTWSearchShopListViewCell.h"
-
 #import "OTWCustomNavigationBar.h"
-
 #import "CHCustomSearchBar.h"
+#import "OTWAddNewShopViewController.h"
 
-@interface OTWSearchShopListViewController ()<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>{
-    UITableView *_tableView;
+@interface OTWSearchShopListViewController ()<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate,UISearchBarDelegate>{
+
 }
+@property (nonatomic,strong) UITableView *tableView;
 @property (nonatomic,strong) CHCustomSearchBar *footprintSearchAddress;
 @property (nonatomic,strong) UIButton *cancelBtn;
 @property (nonatomic,strong) UIView *noResultView;
@@ -30,13 +29,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-        [self buildUI];
+    [self buildUI];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 -(void)buildUI{
     //设置标题 搜索--商家详情
@@ -44,28 +41,20 @@
     self.customNavigationBar.frame=CGRectMake(0, 0, SCREEN_WIDTH, 65);
     [self.customNavigationBar addSubview:self.footprintSearchAddress];
     self.customNavigationBar.backgroundColor=[UIColor whiteColor];
-    
     [self.customNavigationBar addSubview:self.cancelBtn];
     //大背景
     self.view.backgroundColor=[UIColor color_f4f4f4];
-    
-    
-    //创建一个分组样式的UITableView
-    _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0,65, SCREEN_WIDTH, SCREEN_HEIGHT-65-20) style:UITableViewStyleGrouped];
-    
-    _tableView.dataSource = self;
-    
-    _tableView.delegate = self;
-    
-    _tableView.backgroundColor = [UIColor clearColor];
-    
-    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;//将边框去掉
-    
     //有搜索结果
-    //[self.view addSubview:_tableView];
-    
+    [self.view addSubview:self.tableView];
+    self.tableView.hidden = YES;
     //无搜索结果
     [self.view addSubview:self.noResultView];
+    for (UIView *view in self.footprintSearchAddress.subviews) {
+        if ([view isKindOfClass:[UITextField class]]) {
+            UITextField *searchTextField = (UITextField*)view;
+            searchTextField.clearButtonMode = UITextFieldViewModeNever;
+        }
+    }
 }
 #pragma mark - 数据源方法
 #pragma mark 返回分组数
@@ -100,18 +89,17 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         //在此模块，以便重新布局
     }
-    
     return cell;
 }
 
-#pragma mark - 代理方法
 #pragma mark 重新设置单元格高度
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
     OTWSearchShopListViewCell *cell = (OTWSearchShopListViewCell *)[self tableView:tableView
                                                        cellForRowAtIndexPath:indexPath];
     return cell.frame.size.height;
 }
+
+
 -(CHCustomSearchBar*)footprintSearchAddress{
     if(!_footprintSearchAddress){
         _footprintSearchAddress=[[CHCustomSearchBar alloc] initWithFrame:CGRectMake(15, 25.5, SCREEN_WIDTH-45-35, 34)];
@@ -119,6 +107,7 @@
         [_footprintSearchAddress setContentMode:UIViewContentModeCenter];
         _footprintSearchAddress.layer.cornerRadius = 20;
         _footprintSearchAddress.layer.masksToBounds = YES;
+        
         
         //自定义搜索框的大小
         _footprintSearchAddress.textFieldInset=UIEdgeInsetsMake(0,0,0,0);
@@ -145,6 +134,7 @@
         searchField.layer.borderColor = [UIColor clearColor].CGColor;
         searchField.backgroundColor=[[UIColor color_f4f4f4]colorWithAlphaComponent:0.9f];
         searchField.layer.borderWidth = 0.5;
+        [searchField setClearButtonMode:UITextFieldViewModeNever];
         //设置图标
         UIImage *image = [UIImage imageNamed: @"sousuo_1"];
         UIImageView *iView = [[UIImageView alloc] initWithImage:image];
@@ -160,9 +150,10 @@
         clearSearchBar.layer.cornerRadius = clearSearchBar.frame.size.width /2;
         clearSearchBar.clipsToBounds = YES;
         [clearSearchBar setBackgroundImage:[UIImage imageNamed:@"fx_guanbi"] forState:(UIControlStateNormal)];
-       [clearSearchBar addTarget:self action:@selector(clearSearchBarClick) forControlEvents:UIControlEventTouchUpInside];
+        [clearSearchBar addTarget:self action:@selector(clearSearchBarClick) forControlEvents:UIControlEventTouchUpInside];
         
         [_footprintSearchAddress addSubview:clearSearchBar];
+        
     }
     return _footprintSearchAddress;
 }
@@ -186,7 +177,19 @@
     return _cancelBtn;
 }
 -(void)cancelBtnClick{
-    DLog(@"点击了取消");
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (UITableView*)tableView
+{
+    if (!_tableView) {
+        _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0,65, SCREEN_WIDTH, SCREEN_HEIGHT-65-20) style:UITableViewStyleGrouped];
+        _tableView.dataSource = self;
+        _tableView.delegate = self;
+        _tableView.backgroundColor = [UIColor clearColor];
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;//将边框去掉
+    }
+    return _tableView;
 }
 
 -(UIView*)noResultView{
@@ -252,7 +255,8 @@
     return _addClaimShopBtn;
 }
 -(void)addClaimShopBtnClick{
-    DLog(@"点击了添加商家并认领");
+    OTWAddNewShopViewController *addNewShopVC = [[OTWAddNewShopViewController alloc] init];
+    [self.navigationController pushViewController:addNewShopVC animated:NO];
 }
 /*
 #pragma mark - Navigation
