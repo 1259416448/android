@@ -380,7 +380,11 @@ public class ArFootPrintDrawActivity extends BaseActivity implements SensorEvent
             float[] rotationMatrixFromVector = new float[16];
             float[] projectionMatrix = new float[16];
             float[] rotatedProjectionMatrix = new float[16];
-
+            String str = "";
+            for(float f : sensorEvent.values){
+                str = str+","+f;
+            }
+            Log.i(TAG, "values----------------->:"+ str);
             SensorManager.getRotationMatrixFromVector(rotationMatrixFromVector, sensorEvent.values);
 
             if (arCamera != null) {

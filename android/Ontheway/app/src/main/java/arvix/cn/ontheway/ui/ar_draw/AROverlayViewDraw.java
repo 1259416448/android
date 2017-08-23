@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.R;
@@ -137,6 +138,7 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
         footPrintSearchService.search(context,trackSearchVo,this);
     }
 
+    DrawMoveCheck drawMoveCheck = new DrawMoveCheck();
     public void updateRotatedProjectionMatrix(float[] rotatedProjectionMatrix) {
         this.rotatedProjectionMatrix = rotatedProjectionMatrix;
         newRotateStr = "";
@@ -145,12 +147,16 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
             newRotateStr = newRotateStr +"-"+  df.format(rotatedProjectionMatrix[i]);
             diffAbs = diffAbs + Math.abs(rotatedProjectionMatrix[i] - oldRotatedProjectionMatrix[i]);
         }
-        if(diffAbs>0.1){
-            Log.i(logTag,"updateRotatedProjectionMatrix--->change  new"  + newRotateStr);
-            Log.i(logTag,"updateRotatedProjectionMatrix--->change  old"  + oldRotateStr);
+        drawMoveCheck.addMoveDiffAbs(diffAbs);
+        drawMoveCheck.computeMoveDiffAbs();
+        //这里的比较值越小，draw频率越高，移动会更流畅
+        if( diffAbs > drawMoveCheck.moveDiffAbs){
+         //   Log.i(logTag,"updateRotatedProjectionMatrix--->change  new"  + newRotateStr);
             this.invalidate();
             oldRotatedProjectionMatrix = rotatedProjectionMatrix;
             oldRotateStr = newRotateStr;
+            drawId = UUID.randomUUID().toString();
+            Log.i(logTag,"updateRotatedProjectionMatrix--->change  old"  + oldRotateStr +"  drawId :" + drawId);
         }
     }
 
@@ -240,16 +246,20 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
 
     public void clearData() {
     }
+    private String drawId = "";
+
+
 
     @Override
     protected void onDraw(final Canvas canvas) {
         super.onDraw(canvas);
         if (this.pagination.getContent() != null && this.pagination.getContent().size() > 0) {
             Location location;
+            String drawIdStr = drawId;
+            long start = System.currentTimeMillis();
             try {
-                Log.i(logTag, "do onDraw------------------------------------>");
+               // Log.i(logTag, "do onDraw------------------------------------>");
                 Map<String, Integer> drawPointRePointMap = new HashMap<String, Integer>();
-                LatLng target ;
                 List<DrawFootPrintItemInfo> drawFootPrintItemInfoListTemp = new ArrayList<>();
                 DrawFootPrintItemInfo pointInfo ;
                 //for start
@@ -260,8 +270,6 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
                     location.setLatitude(footPrintBean.getLatitude());
                     location.setLongitude(footPrintBean.getLongitude());
                     location.setAltitude(this.alt);
-                    target = new LatLng(footPrintBean.getLatitude(), footPrintBean.getLongitude());
-                    Log.i(logTag,"distance---->" + DistanceUtil.getDistance(center,target));
                     float[] currentLocationInECEF = LocationHelper.WSG84toECEF(currentLocation);
                     float[] pointInECEF = LocationHelper.WSG84toECEF(location);
                     float[] pointInENU = LocationHelper.ECEFtoENU(currentLocation, currentLocationInECEF, pointInECEF);
@@ -293,10 +301,10 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
                     if (cameraCoordinateVector[2] < 0) {
                         drawFootPrintItemInfoListTemp.add(pointInfo);
                         radarPoint.isNegative = false;
-                        ArFootPrintDrawActivity.tvCurrentLocation.setText(System.currentTimeMillis() + " show:" + cameraCoordinateVector[2]);
+                      //  ArFootPrintDrawActivity.tvCurrentLocation.setText(System.currentTimeMillis() + " show:" + cameraCoordinateVector[2]);
                         bitmapTemp = arFootPrintCacheMemoryService.getT(viewBitmapCachePrefix + footPrintBean.getFootprintId(), Bitmap.class);
                         if (bitmapTemp != null) {
-                            Log.i(logTag, "load form cache bitmap drawX:" + drawX + ",drawY:" + drawY + "  ");
+                           // Log.i(logTag, "load form cache bitmap drawX:" + drawX + ",drawY:" + drawY + "  ");
                             canvas.drawBitmap(bitmapTemp, drawX, drawY, mBitPaint);
                         } else {
                             View convertView = LayoutInflater.from(context).inflate(R.layout.track_ar_item, rootView, false);
@@ -308,7 +316,7 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
                             Bitmap headerBitmap = arFootPrintCacheMemoryService.getT(footPrintBean.getUserHeadImg(), Bitmap.class);
                             boolean headerLoaded = false;
                             boolean trackPhotoLoaded = false;
-                            Log.i(logTag,"h.userHeader--->"+h.userHeader.getLayoutParams().width+ " "+StaticMethod.dip2px(context, 28));
+                           // Log.i(logTag,"h.userHeader--->"+h.userHeader.getLayoutParams().width+ " "+StaticMethod.dip2px(context, 28));
                             if (headerBitmap != null) {
                                 h.userHeader.setImageBitmap(headerBitmap);
                                 headerLoaded = true;
@@ -338,6 +346,7 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
                 // for end
                 this.drawFootPrintItemInfoList = drawFootPrintItemInfoListTemp;
                 drawRadarPoint();
+                Log.i(logTag,"drawId:"+drawIdStr +" use time:"+(System.currentTimeMillis() - start));
             } catch (Exception e) {
                 Log.e(logTag, "load image error", e);
                 e.printStackTrace();
@@ -388,21 +397,30 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
             target = new LatLng(radarPoint.lat, radarPoint.lon);
             distance = DistanceUtil.getDistance(center,target);
             azimuth = StaticMethod.comAzimuth(center.latitude,center.longitude,radarPoint.lat,radarPoint.lon);
-            pLeft = (int)(cx - Math.sin(azimuth)*radarZoom*distance);
-            pTop = (int) (cy + Math.cos(azimuth)*radarZoom*distance);
+          //Log.i(logTag," Math.sin(azimuth):"+azimuth +","+Math.sin(azimuth));
+            pLeft = (int)(cx + Math.sin(azimuth)*radarZoom*distance);
+            pTop = (int) (cy - Math.cos(azimuth)*radarZoom*distance);
+
             rePointKeyTemp = pLeft + "-" + pTop;
             Integer rePointTimes = drawPointRePointMap.get(rePointKeyTemp);
             if (rePointTimes == null) {
                 drawPointRePointMap.put(rePointKeyTemp, 1);
             } else {
-                pLeft = pLeft + (diffY * rePointTimes)*Math.sin(zRadians);
-                pTop = pTop - (diffY * rePointTimes)*Math.cos(zRadians);
+                // TODO 雷达点偏移
+                /*
+                if(azimuth>0){
+                    pLeft = pLeft + (diffY * rePointTimes)*Math.sin(zRadians);
+                    pTop = pTop - (diffY * rePointTimes)*Math.cos(zRadians);
+                }else{
+                    pLeft = pLeft - (diffY * rePointTimes)*Math.sin(zRadians);
+                    pTop = pTop + (diffY * rePointTimes)*Math.cos(zRadians);
+                }*/
                 drawPointRePointMap.put(rePointKeyTemp, rePointTimes + 1);
             }
             imageView = radarImageViewList.get(i);
             //  if(Math.sqrt(pointRadius) < (radius)){
-            Log.i(logTag,"left:"+(int)(pLeft)+",top:"+(int)(pTop)+",realRadius"+realRadius+",sW:"
-                      +rootView.getWidth() +",sH:"+rootView.getHeight()+",distance:"+distance +",zDegrees:"+zDegrees) ;
+         //   Log.i(logTag,"left:"+(int)(pLeft)+",top:"+(int)(pTop)+",realRadius"+realRadius+",sW:"
+           //           +rootView.getWidth() +",sH:"+rootView.getHeight()+",distance:"+distance +",zDegrees:"+zDegrees) ;
             FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(StaticMethod.dip2px(context,2), StaticMethod.dip2px(context,2));
 
             layoutParams.setMargins((int)pLeft,(int)(pTop),0,0);

@@ -314,7 +314,7 @@ public class StaticMethod {
      * @param lng_a
      * @param lat_b
      * @param lng_b
-     * @return
+     * @return 有正负之分
      */
     public static double comAzimuth(double lat_a, double lng_a, double lat_b, double lng_b) {
         double d = 0;
@@ -322,12 +322,11 @@ public class StaticMethod {
         lng_a=lng_a*Math.PI/180;
         lat_b=lat_b*Math.PI/180;
         lng_b=lng_b*Math.PI/180;
-
         d=Math.sin(lat_a)*Math.sin(lat_b)+Math.cos(lat_a)*Math.cos(lat_b)*Math.cos(lng_b-lng_a);
         d=Math.sqrt(1-d*d);
         d=Math.cos(lat_b)*Math.sin(lng_b-lng_a)/d;
-        d=Math.asin(d)*180/Math.PI;
-//     d = Math.round(d*10000);
+        d= Math.asin(d)*180/Math.PI;
+        Log.i("comAzimuth","comAzimuth----->"+d);
         return d;
     }
 }
