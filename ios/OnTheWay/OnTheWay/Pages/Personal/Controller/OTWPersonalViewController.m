@@ -75,8 +75,13 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [[OTWLaunchManager sharedManager].mainTabController showTabBarWithAnimation:YES];
     [self buildPersonalInfo];
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [[OTWLaunchManager sharedManager].mainTabController showTabBarWithAnimation:YES];
 }
 
 -(void)buildPersonalInfo

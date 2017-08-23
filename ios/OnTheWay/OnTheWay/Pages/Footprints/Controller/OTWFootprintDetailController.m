@@ -23,6 +23,7 @@
 #import <MJExtension.h>
 
 #define footprintContentFont [UIFont systemFontOfSize:17]
+#define likeLabelFont [UIFont fontWithName:@"HelveticaNeue-Medium" size:8]
 #define padding 15
 
 @interface OTWFootprintDetailController () <UITableViewDataSource,UITableViewDelegate,SDCycleScrollViewDelegate,UITextViewDelegate>
@@ -31,7 +32,6 @@
 @property (nonatomic,strong) UILabel *commentSunLabel;
 @property (nonatomic,strong) UIView *likeView;
 @property (nonatomic,strong) UIImageView *likeImageView;
-@property (nonatomic,strong) UIView *shareView;
 @property (nonatomic,strong) UIImageView *shareImageView;
 @property (nonatomic,strong) UIView *writeCommentView;
 @property (nonatomic,strong) UILabel *commentLabel;
@@ -39,6 +39,11 @@
 @property (nonatomic,strong) UITextView *writeCommentTextView;
 @property (nonatomic,assign) CGFloat lastTextViewTextHeight;
 @property (nonatomic,assign) CGFloat lastTextViewDifHeight;
+
+//点赞总数
+@property (nonatomic,strong) UIView *likeSumBGView;
+@property (nonatomic,strong) UILabel *likeSumLabel;
+@property (nonatomic,strong) UILabel *plugsLabel;
 
 //评论填写区域 end
 
@@ -83,6 +88,10 @@
 
 @property (nonatomic,strong) NSString *deleteCommentId;
 
+@property (nonatomic,assign) BOOL ifSubLike;
+
+@property (nonatomic,assign) long likeTime;
+
 @end
 
 @implementation OTWFootprintDetailController
@@ -97,6 +106,8 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     [IQKeyboardManager sharedManager].shouldResignOnTouchOutside = YES;
     //监听键盘的通知
     self.automaticallyAdjustsScrollViewInsets = NO;
+    self.ifSubLike = NO;
+    self.likeTime = 0;
     [self buildUI];
     self.returnKeyHandler = [[IQKeyboardReturnKeyHandler alloc] initWithViewController:self];
     self.returnKeyHandler.lastTextFieldReturnKeyType = UIReturnKeySend;
@@ -153,11 +164,10 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
         if(transformY == 0){
             if(_openKeyboard){
                 self.commentBGView.frame = CGRectMake(self.commentBGView.MinX, self.commentBGView.MinY + self.lastTextViewDifHeight ,self.commentBGView.Witdh, 49);
-                self.writeCommentView.frame = CGRectMake(self.writeCommentView.MinX, self.writeCommentView.MinY, SCREEN_WIDTH - padding - 173, 33 );
+                self.writeCommentView.frame = CGRectMake(self.writeCommentView.MinX, self.writeCommentView.MinY, SCREEN_WIDTH - 160, 33 );
                 self.writeCommentTextView.frame = CGRectMake(self.writeCommentTextView.MinX, self.writeCommentTextView.MinY, self.writeCommentView.Witdh-33-15,20);
                 self.commentSunLabel.hidden = NO;
                 self.likeView.hidden = NO;
-                self.shareView.hidden = NO;
                 //判断是否输入内容
                 if(self.writeCommentTextView.text.length==0){
                     self.commentLabel.hidden = NO;
@@ -171,7 +181,6 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
                 self.writeCommentTextView.frame = CGRectMake(self.writeCommentTextView.MinX, self.writeCommentTextView.MinY, self.writeCommentView.Witdh-33-15, self.lastTextViewTextHeight);
                 self.commentSunLabel.hidden = YES;
                 self.likeView.hidden = YES;
-                self.shareView.hidden = YES;
                 self.commentLabel.hidden = YES;
             }
             _openKeyboard = YES;
@@ -227,7 +236,9 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     [self.commentBGView addSubview:self.writeCommentView];
     [self.commentBGView addSubview:self.commentSunLabel];
     [self.commentBGView addSubview:self.likeView];
-//    [self.commentBGView addSubview:self.shareView];
+    [self.likeView addSubview:self.likeSumBGView];
+    [self.likeSumBGView addSubview:self.likeSumLabel];
+    [self.likeSumBGView addSubview:self.plugsLabel];
     [self.writeCommentView addSubview:self.writeCommentTextView];
     [self.writeCommentView addSubview:self.writeCommentImageView];
     [self.writeCommentView addSubview:self.commentLabel];
@@ -239,6 +250,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
         self.tableView.mj_footer.hidden = YES;
     }
     [self refreshTableViewHeader];
+    [self refreshLikeBGView];
 }
 
 /**
@@ -253,6 +265,28 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
         self.notFundCommentBGView.hidden = YES;
         self.tableView.tableHeaderView.frame = CGRectMake(self.tableView.tableHeaderView.MinX, self.tableView.tableHeaderView.MinY, self.tableView.tableHeaderView.Witdh, self.detailFrame.cellHeight);
     }
+}
+
+/**
+ * 刷新点赞数据
+ */
+- (void) refreshLikeBGView
+{
+    //判断是否大于1w
+    CGSize textSize = CGSizeMake(19, 10);
+    NSString *content = [NSString stringWithFormat:@"%ld",(long)self.detailFrame.footprintDetailModel.footprintLikeNum];
+    if(self.detailFrame.footprintDetailModel.footprintLikeNum<10000){
+        textSize = [OTWUtils sizeWithString:content font:likeLabelFont maxSize:CGSizeMake(19, 10)];
+        self.plugsLabel.hidden = YES;
+    }else{
+        self.plugsLabel.hidden = NO;
+        content = @"9999";
+    }
+    CGFloat w = self.plugsLabel.hidden?10:14;
+    self.likeSumBGView.frame = CGRectMake(14 , 8.5 , textSize.width + w , 12 );
+    self.likeSumLabel.frame = CGRectMake(5, 1, textSize.width, textSize.height);
+    self.plugsLabel.frame = CGRectMake(self.likeSumLabel.MaxX, 0, 5, 10);
+    self.likeSumLabel.text = content;
 }
 
 #pragma mark - 加载更多评论
@@ -328,29 +362,22 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
                 NSString *tips = @"取消赞";
                 if(self.detailFrame.footprintDetailModel.ifLike){
                     self.detailFrame.footprintDetailModel.ifLike = NO;
+                    self.detailFrame.footprintDetailModel.footprintLikeNum -- ;
                 }else{
                     tips = @"已点赞";
                     self.detailFrame.footprintDetailModel.ifLike = YES;
+                    self.detailFrame.footprintDetailModel.footprintLikeNum ++ ;
                 }
-                MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-                //                UIImage *image = [[UIImage imageNamed:@"Checkmark"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-                //                UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
-                //                hud.customView = imageView;
-                //                hud.mode = MBProgressHUDModeCustomView;
-                hud.mode = MBProgressHUDModeText;
-                hud.label.text = tips;
-                hud.label.numberOfLines = 0;
-                hud.userInteractionEnabled = NO;
-                hud.label.textColor = [UIColor whiteColor];
-                hud.bezelView.color = [UIColor blackColor];
-                [hud hideAnimated:YES afterDelay:1.5];
+                [OTWUtils alertSuccess:tips userInteractionEnabled:NO target:self];
                 [self setlikeImageViewImage:self.detailFrame.footprintDetailModel.ifLike];
+                [self refreshLikeBGView];
             }else{
                 [self errorTips:@"服务端繁忙，请稍后再试" userInteractionEnabled:NO];
             }
         }else{
             [self netWorkErrorTips:error];
         }
+        self.ifSubLike = NO;
     }];
 }
 
@@ -489,7 +516,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 - (UIView *) writeCommentView
 {
     if(!_writeCommentView){
-        CGFloat W = SCREEN_WIDTH - 173;
+        CGFloat W = SCREEN_WIDTH - 160;
         _writeCommentView = [[UIView alloc] initWithFrame:CGRectMake(padding, 7, W , 33)];
         _writeCommentView.layer.cornerRadius = _writeCommentView.Height / 2.0;
         _writeCommentView.backgroundColor = [UIColor color_f4f4f4];
@@ -535,7 +562,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 - (UILabel *) commentSunLabel
 {
     if(!_commentSunLabel){
-        _commentSunLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.writeCommentView.MaxX + 10, 17.5, 70, 15)];
+        _commentSunLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.writeCommentView.MaxX + 10, 17.5, 93 , 15)];
         _commentSunLabel.font = [UIFont systemFontOfSize:11];
         _commentSunLabel.textColor = [UIColor color_979797];
     }
@@ -545,7 +572,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 -(UIView *) likeView
 {
     if(!_likeView){
-        _likeView = [[UIView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 62 - 17, 15, 17, 17)];
+        _likeView = [[UIView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 37 - 20, 0, 49, 50)];
         UITapGestureRecognizer *tapGesturRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapLikeAction)];
         [_likeView addGestureRecognizer:tapGesturRecognizer];
         [_likeView addSubview:self.likeImageView];
@@ -553,22 +580,10 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     return _likeView;
 }
 
--(UIView *) shareView
-{
-    if(!_shareView)
-    {
-        _shareView = [[UIView alloc] initWithFrame:CGRectMake(self.likeView.MaxX + 30 , 16.8, 17, 15)];
-        UITapGestureRecognizer *tapGesturRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapShareAction)];
-        [_shareView addGestureRecognizer:tapGesturRecognizer];
-        [_shareView addSubview:self.shareImageView];
-    }
-    return _shareView;
-}
-
 - (UIImageView *) likeImageView
 {
     if(!_likeImageView){
-        _likeImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 17, 17)];
+        _likeImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 13.5, 20, 20)];
         [self setlikeImageViewImage:self.detailFrame.footprintDetailModel.ifLike];
         _likeImageView.tintColor = [UIColor redColor];
     }
@@ -578,7 +593,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 - (void) setlikeImageViewImage:(BOOL) ifLike
 {
     if(ifLike){
-        self.likeImageView.image = [UIImage imageNamed:@"zj_zan_selected"];
+        self.likeImageView.image = [UIImage imageNamed:@"zj_zan_click"];
     }else{
         self.likeImageView.image = [UIImage imageNamed:@"zj_zan"];
     }
@@ -598,6 +613,10 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
 
 - (void) tapLikeAction
 {
+    //设置了一个3秒内不能重复提交
+    if(self.likeTime - [NSDate date].timeIntervalSince1970 > -3) return;
+    if(self.ifSubLike) return;
+    self.likeTime = [NSDate date].timeIntervalSince1970;
     [self likeFootprint:self.detailFrame.footprintDetailModel.footprintId.description];
 }
 
@@ -1124,6 +1143,37 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
         _qiangshafaLabel.text = @"还没人评论~快抢沙发！";
     }
     return _qiangshafaLabel;
+}
+
+- (UIView *) likeSumBGView
+{
+    if(!_likeSumBGView){
+        _likeSumBGView = [[UIView alloc] init];
+        _likeSumBGView.backgroundColor = [UIColor color_e50834];
+        _likeSumBGView.layer.cornerRadius = 6;
+    }
+    return _likeSumBGView;
+}
+
+- (UILabel *) likeSumLabel
+{
+    if(!_likeSumLabel){
+        _likeSumLabel = [[UILabel alloc] init];
+        _likeSumLabel.font = likeLabelFont;
+        _likeSumLabel.textColor = [UIColor whiteColor];
+    }
+    return _likeSumLabel;
+}
+
+- (UILabel *) plugsLabel
+{
+    if(!_plugsLabel){
+        _plugsLabel = [[UILabel alloc] init];
+        _plugsLabel.textColor = [UIColor whiteColor];
+        _plugsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:8];
+        _plugsLabel.text = @"+";
+    }
+    return _plugsLabel;
 }
 
 - (void) setFid:(NSString *)fid

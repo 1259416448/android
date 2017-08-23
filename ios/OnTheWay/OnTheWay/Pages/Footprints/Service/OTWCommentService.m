@@ -88,10 +88,7 @@ static NSString *commentDeleteUrl = @"/app/footprint/comment/delete/{id}";
 //删除足迹
 - (void) deleteCommentById:(NSString *)commentId viewController:(OTWFootprintDetailController *)viewController completion:(requestCompletionBlock)block
 {
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:viewController.view animated:YES];
-    hud.label.textColor = [UIColor whiteColor];
-    hud.bezelView.color = [UIColor blackColor];
-    hud.activityIndicatorColor = [UIColor whiteColor];
+    MBProgressHUD *hud = [OTWUtils alertLoading:@"" userInteractionEnabled:YES target:viewController];
     [OTWNetworkManager doPOST:[commentDeleteUrl stringByReplacingOccurrencesOfString:@"{id}" withString:commentId] parameters:nil success:^(id responseObject){
         [hud hideAnimated:YES];
         if([[NSString stringWithFormat:@"%@",responseObject[@"code"]] isEqualToString:@"0"]){

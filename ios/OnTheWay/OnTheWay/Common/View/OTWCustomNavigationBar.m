@@ -161,9 +161,9 @@
 #pragma mark UI
 - (void)buildUI {
     _backgroungImageView = [[UIImageView alloc] initWithFrame:self.bounds];
-    _backgroungImageView.backgroundColor = [UIColor color_22b2e7];
+    _backgroungImageView.backgroundColor = [UIColor clearColor];
     //_backgroungImageView.image = [UIImage imageNamed:@"wd_bg"];
-    _backgroungImageView.contentMode = UIViewContentModeTop;
+    //_backgroungImageView.contentMode = UIViewContentModeTop;
     _backgroungImageView.clipsToBounds  = YES;
     [self addSubview:_backgroungImageView];
 }
@@ -200,6 +200,12 @@
 - (void) clearShadowColor
 {
     self.layer.shadowColor = [UIColor clearColor].CGColor;
+}
+
+- (void) setNavigationBarFrame:(CGRect) frame
+{
+    self.frame = frame;
+    self.backgroungImageView.frame = self.bounds;
 }
 
 @end

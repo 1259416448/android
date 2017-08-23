@@ -29,4 +29,6 @@
 
 - (void) clearShadowColor;
 
+- (void) setNavigationBarFrame:(CGRect) frame;
+
 @end

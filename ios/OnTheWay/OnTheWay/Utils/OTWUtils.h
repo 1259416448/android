@@ -17,5 +17,25 @@
 #pragma mark 判断系统版本是否小于某个值
 + (BOOL)system_version_greater_less_than:(float)version;
 
+/**
+ * 弹出成功提示框，并在 1.5f 后关闭
+ */
+#pragma mark 弹出成功提示框
++ (MBProgressHUD *) alertSuccess:(NSString *)content userInteractionEnabled:(BOOL)userInteractionEnabled target:(UIViewController *)target;
 
+/**
+ * 带加载状态的提示框，不会自动关闭
+ */
++ (MBProgressHUD *) alertLoading:(NSString *)content userInteractionEnabled:(BOOL)userInteractionEnabled target:(UIViewController *)target;
+
+/**
+ *  计算文本的宽高
+ *
+ *  @param str     需要计算的文本
+ *  @param font    文本显示的字体
+ *  @param maxSize 文本显示的范围
+ *
+ *  @return 文本占用的真实宽高
+ */
++ (CGSize)sizeWithString:(NSString *)str font:(UIFont *)font maxSize:(CGSize)maxSize;
 @end

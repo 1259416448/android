@@ -26,5 +26,4 @@
           Diameter:(CGFloat)diameter;
 
 - (UIImage*)scaleToSize:(CGSize)newSize;
-
 @end

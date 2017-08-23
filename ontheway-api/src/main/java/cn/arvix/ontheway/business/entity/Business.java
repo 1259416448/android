@@ -62,7 +62,6 @@ public class Business extends BaseEntity<Long> {
     private String contactInfo;
 
     //类型IDs
-    @ApiModelProperty(hidden = true)
     @Type(type = "SetToStringUserType")
     @NotNull(message = "typeIds is not null")
     private Set<Long> typeIds;
