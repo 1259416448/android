@@ -35,6 +35,13 @@
 		18BCFA971F4A795000B8E09D /* OTWNoPraiseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BCFA961F4A795000B8E09D /* OTWNoPraiseViewController.m */; };
 		18BCFA9A1F4A802100B8E09D /* OTWNoSystemNewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BCFA991F4A802100B8E09D /* OTWNoSystemNewViewController.m */; };
 		18BCFA9D1F4A878900B8E09D /* OTWNoFootprintViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BCFA9C1F4A878900B8E09D /* OTWNoFootprintViewController.m */; };
+		18BCFAA01F4ADAF700B8E09D /* OTWAddNewShopViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BCFA9F1F4ADAF700B8E09D /* OTWAddNewShopViewController.m */; };
+		18BCFAA31F4ADCEA00B8E09D /* CreateShopModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BCFAA21F4ADCEA00B8E09D /* CreateShopModel.m */; };
+		18BCFAA61F4BCF2000B8E09D /* CreateShopTFCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BCFAA51F4BCF2000B8E09D /* CreateShopTFCell.m */; };
+		18BCFAA91F4C000500B8E09D /* CreateShopFormModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BCFAA81F4C000500B8E09D /* CreateShopFormModel.m */; };
+		18BCFAAC1F4D1A7200B8E09D /* CreateShopTVCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BCFAAB1F4D1A7200B8E09D /* CreateShopTVCell.m */; };
+		18BCFAAF1F4D36B100B8E09D /* CreateShopTVTWOCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BCFAAE1F4D36B100B8E09D /* CreateShopTVTWOCell.m */; };
+		18BCFAB21F4D4E7100B8E09D /* CreateShopPicCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BCFAB11F4D4E7100B8E09D /* CreateShopPicCell.m */; };
 		B13ADA1D1F1B23DA008E889C /* OTWSystemNewsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B13ADA1C1F1B23DA008E889C /* OTWSystemNewsViewController.m */; };
 		B13ADA201F1C5508008E889C /* OTWSystemNewsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B13ADA1F1F1C5508008E889C /* OTWSystemNewsCell.m */; };
 		B13ADA231F1C5660008E889C /* OTWSystemNewsCellFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = B13ADA221F1C5660008E889C /* OTWSystemNewsCellFrame.m */; };
@@ -241,6 +248,20 @@
 		18BCFA991F4A802100B8E09D /* OTWNoSystemNewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWNoSystemNewViewController.m; sourceTree = "<group>"; };
 		18BCFA9B1F4A878900B8E09D /* OTWNoFootprintViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWNoFootprintViewController.h; sourceTree = "<group>"; };
 		18BCFA9C1F4A878900B8E09D /* OTWNoFootprintViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWNoFootprintViewController.m; sourceTree = "<group>"; };
+		18BCFA9E1F4ADAF700B8E09D /* OTWAddNewShopViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWAddNewShopViewController.h; sourceTree = "<group>"; };
+		18BCFA9F1F4ADAF700B8E09D /* OTWAddNewShopViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWAddNewShopViewController.m; sourceTree = "<group>"; };
+		18BCFAA11F4ADCEA00B8E09D /* CreateShopModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateShopModel.h; sourceTree = "<group>"; };
+		18BCFAA21F4ADCEA00B8E09D /* CreateShopModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateShopModel.m; sourceTree = "<group>"; };
+		18BCFAA41F4BCF2000B8E09D /* CreateShopTFCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateShopTFCell.h; sourceTree = "<group>"; };
+		18BCFAA51F4BCF2000B8E09D /* CreateShopTFCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateShopTFCell.m; sourceTree = "<group>"; };
+		18BCFAA71F4C000500B8E09D /* CreateShopFormModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateShopFormModel.h; sourceTree = "<group>"; };
+		18BCFAA81F4C000500B8E09D /* CreateShopFormModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateShopFormModel.m; sourceTree = "<group>"; };
+		18BCFAAA1F4D1A7200B8E09D /* CreateShopTVCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateShopTVCell.h; sourceTree = "<group>"; };
+		18BCFAAB1F4D1A7200B8E09D /* CreateShopTVCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateShopTVCell.m; sourceTree = "<group>"; };
+		18BCFAAD1F4D36B100B8E09D /* CreateShopTVTWOCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateShopTVTWOCell.h; sourceTree = "<group>"; };
+		18BCFAAE1F4D36B100B8E09D /* CreateShopTVTWOCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateShopTVTWOCell.m; sourceTree = "<group>"; };
+		18BCFAB01F4D4E7100B8E09D /* CreateShopPicCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateShopPicCell.h; sourceTree = "<group>"; };
+		18BCFAB11F4D4E7100B8E09D /* CreateShopPicCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateShopPicCell.m; sourceTree = "<group>"; };
 		45C2D5CA9B6813E8ACAF6178 /* libPods-OnTheWay.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnTheWay.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B8637730B7A7E4B6ADD9FEE /* Pods-OnTheWay.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnTheWay.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OnTheWay/Pods-OnTheWay.debug.xcconfig"; sourceTree = "<group>"; };
 		68C4FF114BC411D8C8AADB56 /* Pods-OnTheWay.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnTheWay.release.xcconfig"; path = "Pods/Target Support Files/Pods-OnTheWay/Pods-OnTheWay.release.xcconfig"; sourceTree = "<group>"; };
@@ -564,6 +585,14 @@
 				B17836E21F3C32EE00FC73DC /* OTWSearchShopListViewCell.m */,
 				B17836E71F414EB400FC73DC /* findSearchViewCell.h */,
 				B17836E81F414EB400FC73DC /* findSearchViewCell.m */,
+				18BCFAA41F4BCF2000B8E09D /* CreateShopTFCell.h */,
+				18BCFAA51F4BCF2000B8E09D /* CreateShopTFCell.m */,
+				18BCFAAA1F4D1A7200B8E09D /* CreateShopTVCell.h */,
+				18BCFAAB1F4D1A7200B8E09D /* CreateShopTVCell.m */,
+				18BCFAAD1F4D36B100B8E09D /* CreateShopTVTWOCell.h */,
+				18BCFAAE1F4D36B100B8E09D /* CreateShopTVTWOCell.m */,
+				18BCFAB01F4D4E7100B8E09D /* CreateShopPicCell.h */,
+				18BCFAB11F4D4E7100B8E09D /* CreateShopPicCell.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -571,6 +600,10 @@
 		B1B0556C1F305A19008274FE /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				18BCFAA11F4ADCEA00B8E09D /* CreateShopModel.h */,
+				18BCFAA21F4ADCEA00B8E09D /* CreateShopModel.m */,
+				18BCFAA71F4C000500B8E09D /* CreateShopFormModel.h */,
+				18BCFAA81F4C000500B8E09D /* CreateShopFormModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -896,6 +929,8 @@
 				B17836DF1F3C329D00FC73DC /* OTWSearchShopListViewController.m */,
 				B17836E41F413AA700FC73DC /* findSearchViewController.h */,
 				B17836E51F413AA800FC73DC /* findSearchViewController.m */,
+				18BCFA9E1F4ADAF700B8E09D /* OTWAddNewShopViewController.h */,
+				18BCFA9F1F4ADAF700B8E09D /* OTWAddNewShopViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1578,6 +1613,7 @@
 				B17836E01F3C329D00FC73DC /* OTWSearchShopListViewController.m in Sources */,
 				D72091971F27466500153542 /* MCYARAnnotation.m in Sources */,
 				D720919B1F27466500153542 /* MCYARPresenter.m in Sources */,
+				18BCFAA61F4BCF2000B8E09D /* CreateShopTFCell.m in Sources */,
 				182FDFD11F332274003AF0F4 /* OTWARCustomAnnotation.m in Sources */,
 				DD14F2451F11CB5F004DFE4A /* GCTokenManager.m in Sources */,
 				D72091991F27466500153542 /* MCYARConfiguration.m in Sources */,
@@ -1611,6 +1647,7 @@
 				DDEA15F31F25D2A100056166 /* FLAnimatedImageView+WebCache.m in Sources */,
 				B1A2B5C71F2987B300EAABE0 /* OTWPersonalSiteGanderViewController.m in Sources */,
 				189881061F46C80D003BC734 /* OTWNewsSearchParams.m in Sources */,
+				18BCFAAC1F4D1A7200B8E09D /* CreateShopTVCell.m in Sources */,
 				1822EE631F20845A00E07665 /* OTWFootprintsChangeAddressModel.m in Sources */,
 				D7F6B03D1F0D39060013090A /* README.md in Sources */,
 				DDEA16161F319D3300056166 /* OTWPersonalFootprintService.m in Sources */,
@@ -1625,6 +1662,7 @@
 				D7F6B0B31F1089400013090A /* OTWLoginService.m in Sources */,
 				DD14F2401F113654004DFE4A /* HmacUtils.m in Sources */,
 				DDEA16011F29B35F00056166 /* QiniuUploadHelper.m in Sources */,
+				18BCFAA91F4C000500B8E09D /* CreateShopFormModel.m in Sources */,
 				D7F6B0371F0D38EA0013090A /* README.md in Sources */,
 				B1FE42331F2B08FE00D7D5D9 /* OTWPersonalFindViewController.m in Sources */,
 				1843A7D31F26E5FD00A285A3 /* OTWNewFootprintsControllerViewController.m in Sources */,
@@ -1646,6 +1684,7 @@
 				DDC0A93A1F1F77D100A6E4DB /* OTWSystemNewsModel.m in Sources */,
 				D7F6B0B91F14E5C60013090A /* OTWCustomTabBar.m in Sources */,
 				D720919C1F27466500153542 /* MCYARRadar.m in Sources */,
+				18BCFAAF1F4D36B100B8E09D /* CreateShopTVTWOCell.m in Sources */,
 				1802494C1F41773A004B0CDE /* OTWUtils.m in Sources */,
 				D7F6B0B61F10AA2D0013090A /* OTWLoginViewController.m in Sources */,
 				DDEA15E41F25CCA500056166 /* PYProgressView.m in Sources */,
@@ -1665,6 +1704,7 @@
 				B13ADA1D1F1B23DA008E889C /* OTWSystemNewsViewController.m in Sources */,
 				D7F6B0581F0DCF040013090A /* UIColor+Utils.m in Sources */,
 				DD9452F31F15DE23004EDDED /* OTWFootprintListFrame.m in Sources */,
+				18BCFAA01F4ADAF700B8E09D /* OTWAddNewShopViewController.m in Sources */,
 				DDEA15FE1F299DFB00056166 /* OTWDocument.m in Sources */,
 				B1A9C5A61F43F16F009EF68D /* OTWPersonalClaimModel.m in Sources */,
 				1822EE661F20846F00E07665 /* OTWFootprintsChangeAddressCellTableViewCell.m in Sources */,
@@ -1696,6 +1736,7 @@
 				D7F6B04C1F0DCB9D0013090A /* OTWCustomNavigationBar.m in Sources */,
 				DDEA15FB1F298A5A00056166 /* QiniuUploadService.m in Sources */,
 				DDEA15E11F25CCA500056166 /* PYPhotosViewController.m in Sources */,
+				18BCFAB21F4D4E7100B8E09D /* CreateShopPicCell.m in Sources */,
 				B13ADA231F1C5660008E889C /* OTWSystemNewsCellFrame.m in Sources */,
 				B17836E91F414EB400FC73DC /* findSearchViewCell.m in Sources */,
 				B1B055791F305B8A008274FE /* OTWShopDetailsViewCell.m in Sources */,
@@ -1706,6 +1747,7 @@
 				D720919D1F27466500153542 /* MCYARTrackingManager.m in Sources */,
 				D720919F1F27466500153542 /* MCYCameraView.m in Sources */,
 				D7F6B0541F0DCE420013090A /* UIView+Frame.m in Sources */,
+				18BCFAA31F4ADCEA00B8E09D /* CreateShopModel.m in Sources */,
 				B17836EF1F428D8300FC73DC /* OTWPersonalWalletViewController.m in Sources */,
 				B1B0556A1F3058BE008274FE /* OTWShopActiveDetailsViewCellViewController.m in Sources */,
 				B181AB5F1F1F7F85009929D1 /* OTWPraiseViewTableCell.m in Sources */,
@@ -1867,7 +1909,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.WeiHuan.OnTheWay;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1f65f87b-d3ba-4399-b1ec-f39a637fc430";
+				PROVISIONING_PROFILE = "96420818-81d9-489e-ae79-786750a87a6c";
 				PROVISIONING_PROFILE_SPECIFIER = cn.arvix.ontheway;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
