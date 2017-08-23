@@ -7,11 +7,11 @@
 //
 
 #import "OTWARViewController.h"
-#import "MCYARConfiguration.h"
-#import "MCYARAnnotation.h"
+#import "ArvixARConfiguration.h"
+#import "ArvixARAnnotation.h"
 #import "OTWARCustomAnnotation.h"
-#import "MCYARAnnotationView.h"
-#import "MCYARViewController.h"
+#import "ArvixARAnnotationView.h"
+#import "ArvixARViewController.h"
 #import "OTWPlaneMapViewController.h"
 
 #import "OTWCustomAnnotationView.h"
@@ -29,7 +29,7 @@
 #import <MJExtension.h>
 #import "MBProgressHUD+PYExtension.h"
 
-@interface OTWARViewController ()<MCYARDataSource,BMKLocationServiceDelegate>
+@interface OTWARViewController ()<ArvixARDataSource,BMKLocationServiceDelegate>
 
 @property(nonatomic,strong) UIButton *backButton;
 @property(nonatomic,strong) UIButton *refreshButton;
@@ -60,9 +60,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self initLocService];
-    [self showARViewController];
-    [self buildUI];
+//    [self initLocService];
+//    [self showARViewController];
+//    [self buildUI];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -70,25 +70,25 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    _locService.delegate = self;
-    self.dateButton_oneDay.hidden = YES;
-    self.dateButton_sevenDay.hidden = YES;
-    self.dateButton_oneMonth.hidden = YES;
-    self.locationBtton_100m.hidden = YES;
-    self.locationBtton_500m.hidden = YES;
-    self.locationBtton_1000m.hidden = YES;
-    [self.navigationController setNavigationBarHidden:YES];
-    [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    _locService.delegate = nil;
-}
+//- (void)viewWillAppear:(BOOL)animated
+//{
+//    [super viewWillAppear:animated];
+//    _locService.delegate = self;
+//    self.dateButton_oneDay.hidden = YES;
+//    self.dateButton_sevenDay.hidden = YES;
+//    self.dateButton_oneMonth.hidden = YES;
+//    self.locationBtton_100m.hidden = YES;
+//    self.locationBtton_500m.hidden = YES;
+//    self.locationBtton_1000m.hidden = YES;
+//    [self.navigationController setNavigationBarHidden:YES];
+//    [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
+//}
+//
+//- (void)viewWillDisappear:(BOOL)animated
+//{
+//    [super viewWillDisappear:animated];
+//    _locService.delegate = nil;
+//}
 
 - (void)buildUI
 {
@@ -212,23 +212,6 @@
     }
 }
 
-//- (void)nextButtonClick
-//{
-//    double lat = 30.740117;
-//    double lon = 104.063477;
-//    double deltaLat = 0.04;
-//    double deltaLon = 0.07;
-//    double altitudeDelta = 0;
-//    NSInteger count = 50;
-//    
-//#warning 这是假数据，需要换为真实数据
-//    NSArray *dummyAnnotations = [self getDummyAnnotation:lat centerLongitude:lon deltaLat:deltaLat deltaLon:deltaLon altitudeDelta:altitudeDelta count:count];
-////    [self.presenter clear];
-////    /[self clearRadar];
-//    [self setAnnotations:dummyAnnotations];
-//}
-
-
 #pragma mark 返回事件
 - (void)backButtonClick
 {
@@ -255,8 +238,13 @@
 
 - (void)planeMapButtonClick
 {
-    OTWPlaneMapViewController *planeMapVC = [[OTWPlaneMapViewController alloc] init];
-    [self.navigationController pushViewController:planeMapVC animated:NO];
+    NSArray *viewControllers = self.navigationController.viewControllers;
+    NSUInteger index = [viewControllers indexOfObject:[OTWLaunchManager sharedManager].footprintPlaneMapVC];
+    if(index != NSNotFound){
+        [self.navigationController popToViewController:[OTWLaunchManager sharedManager].footprintPlaneMapVC animated:NO];
+    }else{
+        [self.navigationController pushViewController:[OTWLaunchManager sharedManager].footprintPlaneMapVC animated:NO];
+    }
 }
 
 #pragma mark 刷新-换一批足迹
@@ -272,7 +260,7 @@
 {
     NSMutableDictionary *condition = tapGesture.opId;
     self.footprintSearchParams.time = [condition objectForKey:@"searchParamValue"];
-    DLog(@"OTWUITapGestureRecognizer手势----%@",self.footprintSearchParams.mj_keyValues);
+    //[self dateButtonClick];
     [self getFootprints];
 }
 
@@ -289,7 +277,7 @@
     }else if([self.footprintSearchParams.searchDistance isEqualToString:@"three"]){
         self.radar.maxDistance = 1000;
     }
-    DLog(@"OTWUITapGestureRecognizer手势----%@",self.footprintSearchParams.mj_keyValues);
+    //[self locationButtonClick];
     [self getFootprints];
 }
 
@@ -426,7 +414,7 @@
     for (int i = 0; i < count; i++) {
         CLLocation *location = [self getRandomLocation:centerLatitude centerLongitude:centerLongitude altitudeDelta:altitudeDelta];
         
-        MCYARAnnotation *annotation = [[MCYARAnnotation alloc] initWithIdentifier:nil title:[NSString stringWithFormat:@"PppI(%d)", i] location:location];
+        ArvixARAnnotation *annotation = [[ArvixARAnnotation alloc] initWithIdentifier:nil title:[NSString stringWithFormat:@"PppI(%d)", i] location:location];
         [annotations addObject:annotation];
     }
     
@@ -452,7 +440,7 @@
 {
     NSMutableArray *annotations = [NSMutableArray array];
     CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(lat, lon) altitude:altitude horizontalAccuracy:0 verticalAccuracy:0 timestamp:[NSDate date]];
-    MCYARAnnotation *annotation = [[MCYARAnnotation alloc] initWithIdentifier:nil title:title location:location];
+    ArvixARAnnotation *annotation = [[ArvixARAnnotation alloc] initWithIdentifier:nil title:title location:location];
     [annotations addObject:annotation];
     
     return annotations;
@@ -468,9 +456,9 @@
 }
 
 - (void)handleLocationFailure:(NSTimeInterval)elapsedSeconds acquiredLocationBefore:(BOOL)acquiredLocationBefore
-             arViewController:(MCYARViewController*)arViewController
+             arViewController:(ArvixARViewController*)arViewController
 {
-    MCYARViewController *arVC = arViewController;
+    ArvixARViewController *arVC = arViewController;
     if (arVC == nil) return;
     if ([Platform isSimulator]) return;
     
@@ -502,8 +490,8 @@
 }
 
 
-#pragma mark - MCYARDatasource
-- (MCYARAnnotationView*)ar:(MCYARViewController*)arViewController viewForAnnotation:(MCYARAnnotation*)annotation
+#pragma mark - ArvixARDatasource
+- (ArvixARAnnotationView*)ar:(ArvixARViewController*)arViewController viewForAnnotation:(ArvixARAnnotation*)annotation
 {
     OTWCustomAnnotationView *annotationView = [[OTWCustomAnnotationView alloc] init];
     annotationView.frame = CGRectMake(0, 0, 164, 42);

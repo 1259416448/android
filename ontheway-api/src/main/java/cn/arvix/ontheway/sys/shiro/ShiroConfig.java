@@ -165,7 +165,8 @@ public class ShiroConfig {
                 "/api/v1/login/sms",
                 "/app/footprint/search/**",
                 "/app/footprint/view/**",
-                "/app/footprint/user/**"
+                "/app/footprint/user/**",
+                "/app/business/type/all"
         );
         return statelessAuthcFilter;
     }

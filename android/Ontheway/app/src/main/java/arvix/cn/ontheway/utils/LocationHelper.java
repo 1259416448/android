@@ -41,9 +41,9 @@ public class LocationHelper {
         float dy = ecefCurrentLocation[1] - ecefPOI[1];
         float dz = ecefCurrentLocation[2] - ecefPOI[2];
 
-        float east =  - slon*dx + clon*dy;
+        float east =  -slon*dx + clon*dy;
 
-        float north =  slat*clon*dx  + slat*slon*dy + clat*dz;
+        float north =  -slat*clon*dx  - slat*slon*dy + clat*dz;
 
         float up = clat*clon*dx + clat*slon*dy + slat*dz;
 

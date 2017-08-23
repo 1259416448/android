@@ -79,17 +79,6 @@
 		B1B055881F305C0C008274FE /* OTWPersonalFindTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B1B055851F305C0C008274FE /* OTWPersonalFindTableViewCell.m */; };
 		B1B0558F1F305E00008274FE /* OTWShopActiveDetailsViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B1B0558E1F305E00008274FE /* OTWShopActiveDetailsViewCell.m */; };
 		B1FE42331F2B08FE00D7D5D9 /* OTWPersonalFindViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B1FE42321F2B08FE00D7D5D9 /* OTWPersonalFindViewController.m */; };
-		D72091971F27466500153542 /* MCYARAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = D72091831F27466500153542 /* MCYARAnnotation.m */; };
-		D72091981F27466500153542 /* MCYARAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = D72091851F27466500153542 /* MCYARAnnotationView.m */; };
-		D72091991F27466500153542 /* MCYARConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = D72091871F27466500153542 /* MCYARConfiguration.m */; };
-		D720919A1F27466500153542 /* MCYARPresenter+Stacking.m in Sources */ = {isa = PBXBuildFile; fileRef = D72091891F27466500153542 /* MCYARPresenter+Stacking.m */; };
-		D720919B1F27466500153542 /* MCYARPresenter.m in Sources */ = {isa = PBXBuildFile; fileRef = D720918B1F27466500153542 /* MCYARPresenter.m */; };
-		D720919C1F27466500153542 /* MCYARRadar.m in Sources */ = {isa = PBXBuildFile; fileRef = D720918D1F27466500153542 /* MCYARRadar.m */; };
-		D720919D1F27466500153542 /* MCYARTrackingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D720918F1F27466500153542 /* MCYARTrackingManager.m */; };
-		D720919E1F27466500153542 /* MCYARViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D72091911F27466500153542 /* MCYARViewController.m */; };
-		D720919F1F27466500153542 /* MCYCameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = D72091931F27466500153542 /* MCYCameraView.m */; };
-		D72091A01F27466500153542 /* ar_leida@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D72091951F27466500153542 /* ar_leida@2x.png */; };
-		D72091A11F27466500153542 /* ar_leida@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D72091961F27466500153542 /* ar_leida@3x.png */; };
 		D7F6AFF61F0D32FB0013090A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6AFF51F0D32FB0013090A /* main.m */; };
 		D7F6AFF91F0D32FB0013090A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6AFF81F0D32FB0013090A /* AppDelegate.m */; };
 		D7F6B0041F0D32FB0013090A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7F6B0021F0D32FB0013090A /* LaunchScreen.storyboard */; };
@@ -105,7 +94,6 @@
 		D7F6B0541F0DCE420013090A /* UIView+Frame.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B0531F0DCE420013090A /* UIView+Frame.m */; };
 		D7F6B0581F0DCF040013090A /* UIColor+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B0571F0DCF040013090A /* UIColor+Utils.m */; };
 		D7F6B05B1F0DD0280013090A /* OTWBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B05A1F0DD0280013090A /* OTWBaseViewController.m */; };
-		D7F6B05E1F0DD1D80013090A /* OTWRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B05D1F0DD1D80013090A /* OTWRootViewController.m */; };
 		D7F6B0781F0DD3F90013090A /* OTWNewsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B0771F0DD3F90013090A /* OTWNewsViewController.m */; };
 		D7F6B07B1F0DD41F0013090A /* OTWFootprintsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B07A1F0DD41F0013090A /* OTWFootprintsViewController.m */; };
 		D7F6B0811F0DD44C0013090A /* OTWARViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B0801F0DD44C0013090A /* OTWARViewController.m */; };
@@ -120,7 +108,6 @@
 		D7F6B0BF1F15C09E0013090A /* OTWTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B0BE1F15C09E0013090A /* OTWTabBarController.m */; };
 		D7F6B0C61F160E590013090A /* OTWAlbumSelectHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B0C51F160E590013090A /* OTWAlbumSelectHelper.m */; };
 		D7F6B0CB1F1627000013090A /* OTWNewsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B0CA1F1627000013090A /* OTWNewsCell.m */; };
-		D8B4FC771A533A05D5B2B46D /* libPods-OnTheWay.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 45C2D5CA9B6813E8ACAF6178 /* libPods-OnTheWay.a */; };
 		DD14F23B1F1132FE004DFE4A /* NSString+RegexCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = DD14F23A1F1132FE004DFE4A /* NSString+RegexCategory.m */; };
 		DD14F2401F113654004DFE4A /* HmacUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = DD14F23F1F113654004DFE4A /* HmacUtils.m */; };
 		DD14F2431F114436004DFE4A /* CommonContact.m in Sources */ = {isa = PBXBuildFile; fileRef = DD14F2421F114436004DFE4A /* CommonContact.m */; };
@@ -130,6 +117,18 @@
 		DD3520961F186E0700E8D725 /* OTWFootprintDetailModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DD3520951F186E0700E8D725 /* OTWFootprintDetailModel.m */; };
 		DD35209A1F18715400E8D725 /* OTWCommentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DD3520991F18715400E8D725 /* OTWCommentModel.m */; };
 		DD35209D1F188FBF00E8D725 /* OTWFootprintDetailViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DD35209C1F188FBF00E8D725 /* OTWFootprintDetailViewCell.m */; };
+		DD86E9231F45EFD700D49A64 /* libPods-OnTheWay.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 45C2D5CA9B6813E8ACAF6178 /* libPods-OnTheWay.a */; };
+		DD86E9531F46BA8600D49A64 /* ArvixARAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = DD86E9421F46BA8600D49A64 /* ArvixARAnnotation.m */; };
+		DD86E9541F46BA8600D49A64 /* ArvixARAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = DD86E9441F46BA8600D49A64 /* ArvixARAnnotationView.m */; };
+		DD86E9551F46BA8600D49A64 /* ArvixARConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = DD86E9461F46BA8600D49A64 /* ArvixARConfiguration.m */; };
+		DD86E9561F46BA8600D49A64 /* ArvixARPresenter+Stacking.m in Sources */ = {isa = PBXBuildFile; fileRef = DD86E9481F46BA8600D49A64 /* ArvixARPresenter+Stacking.m */; };
+		DD86E9571F46BA8600D49A64 /* ArvixARPresenter.m in Sources */ = {isa = PBXBuildFile; fileRef = DD86E94A1F46BA8600D49A64 /* ArvixARPresenter.m */; };
+		DD86E9581F46BA8600D49A64 /* ArvixARRadar.m in Sources */ = {isa = PBXBuildFile; fileRef = DD86E94C1F46BA8600D49A64 /* ArvixARRadar.m */; };
+		DD86E9591F46BA8600D49A64 /* ArvixARTrackingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DD86E94E1F46BA8600D49A64 /* ArvixARTrackingManager.m */; };
+		DD86E95A1F46BA8600D49A64 /* ArvixARViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DD86E9501F46BA8600D49A64 /* ArvixARViewController.m */; };
+		DD86E95B1F46BA8600D49A64 /* ArvixCameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = DD86E9521F46BA8600D49A64 /* ArvixCameraView.m */; };
+		DD86E95F1F46DDCF00D49A64 /* ar_leida@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DD86E95D1F46DDCF00D49A64 /* ar_leida@2x.png */; };
+		DD86E9601F46DDCF00D49A64 /* ar_leida@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = DD86E95E1F46DDCF00D49A64 /* ar_leida@3x.png */; };
 		DD9452EE1F15CC29004EDDED /* OTWFootprintListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DD9452ED1F15CC29004EDDED /* OTWFootprintListModel.m */; };
 		DD9452F01F15D139004EDDED /* OTWFootprintListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DD9452EF1F15D139004EDDED /* OTWFootprintListTableViewCell.m */; };
 		DD9452F31F15DE23004EDDED /* OTWFootprintListFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = DD9452F21F15DE23004EDDED /* OTWFootprintListFrame.m */; };
@@ -173,6 +172,7 @@
 		DDEA160F1F30A0DF00056166 /* OTWPersonalFootprintTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DDEA160E1F30A0DF00056166 /* OTWPersonalFootprintTableViewCell.m */; };
 		DDEA16121F30AF6D00056166 /* OTWPersonalFootprintFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = DDEA16111F30AF6D00056166 /* OTWPersonalFootprintFrame.m */; };
 		DDEA16161F319D3300056166 /* OTWPersonalFootprintService.m in Sources */ = {isa = PBXBuildFile; fileRef = DDEA16151F319D3300056166 /* OTWPersonalFootprintService.m */; };
+		DDF4A0FE1F4AACBE00996F6F /* CommonAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF4A0FD1F4AACBE00996F6F /* CommonAlert.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -337,26 +337,6 @@
 		B1B0558E1F305E00008274FE /* OTWShopActiveDetailsViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWShopActiveDetailsViewCell.m; sourceTree = "<group>"; };
 		B1FE42311F2B08FE00D7D5D9 /* OTWPersonalFindViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPersonalFindViewController.h; sourceTree = "<group>"; };
 		B1FE42321F2B08FE00D7D5D9 /* OTWPersonalFindViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPersonalFindViewController.m; sourceTree = "<group>"; };
-		D72091821F27466500153542 /* MCYARAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCYARAnnotation.h; sourceTree = "<group>"; };
-		D72091831F27466500153542 /* MCYARAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCYARAnnotation.m; sourceTree = "<group>"; };
-		D72091841F27466500153542 /* MCYARAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCYARAnnotationView.h; sourceTree = "<group>"; };
-		D72091851F27466500153542 /* MCYARAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCYARAnnotationView.m; sourceTree = "<group>"; };
-		D72091861F27466500153542 /* MCYARConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCYARConfiguration.h; sourceTree = "<group>"; };
-		D72091871F27466500153542 /* MCYARConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCYARConfiguration.m; sourceTree = "<group>"; };
-		D72091881F27466500153542 /* MCYARPresenter+Stacking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MCYARPresenter+Stacking.h"; sourceTree = "<group>"; };
-		D72091891F27466500153542 /* MCYARPresenter+Stacking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MCYARPresenter+Stacking.m"; sourceTree = "<group>"; };
-		D720918A1F27466500153542 /* MCYARPresenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCYARPresenter.h; sourceTree = "<group>"; };
-		D720918B1F27466500153542 /* MCYARPresenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCYARPresenter.m; sourceTree = "<group>"; };
-		D720918C1F27466500153542 /* MCYARRadar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCYARRadar.h; sourceTree = "<group>"; };
-		D720918D1F27466500153542 /* MCYARRadar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCYARRadar.m; sourceTree = "<group>"; };
-		D720918E1F27466500153542 /* MCYARTrackingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCYARTrackingManager.h; sourceTree = "<group>"; };
-		D720918F1F27466500153542 /* MCYARTrackingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCYARTrackingManager.m; sourceTree = "<group>"; };
-		D72091901F27466500153542 /* MCYARViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCYARViewController.h; sourceTree = "<group>"; };
-		D72091911F27466500153542 /* MCYARViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCYARViewController.m; sourceTree = "<group>"; };
-		D72091921F27466500153542 /* MCYCameraView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCYCameraView.h; sourceTree = "<group>"; };
-		D72091931F27466500153542 /* MCYCameraView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCYCameraView.m; sourceTree = "<group>"; };
-		D72091951F27466500153542 /* ar_leida@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ar_leida@2x.png"; sourceTree = "<group>"; };
-		D72091961F27466500153542 /* ar_leida@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ar_leida@3x.png"; sourceTree = "<group>"; };
 		D7F6AFF11F0D32FB0013090A /* OnTheWay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheWay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7F6AFF51F0D32FB0013090A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D7F6AFF71F0D32FB0013090A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -385,8 +365,6 @@
 		D7F6B0571F0DCF040013090A /* UIColor+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Utils.m"; sourceTree = "<group>"; };
 		D7F6B0591F0DD0280013090A /* OTWBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWBaseViewController.h; sourceTree = "<group>"; };
 		D7F6B05A1F0DD0280013090A /* OTWBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWBaseViewController.m; sourceTree = "<group>"; };
-		D7F6B05C1F0DD1D80013090A /* OTWRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWRootViewController.h; sourceTree = "<group>"; };
-		D7F6B05D1F0DD1D80013090A /* OTWRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWRootViewController.m; sourceTree = "<group>"; };
 		D7F6B0761F0DD3F90013090A /* OTWNewsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWNewsViewController.h; sourceTree = "<group>"; };
 		D7F6B0771F0DD3F90013090A /* OTWNewsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWNewsViewController.m; sourceTree = "<group>"; };
 		D7F6B0791F0DD41F0013090A /* OTWFootprintsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWFootprintsViewController.h; sourceTree = "<group>"; };
@@ -434,6 +412,26 @@
 		DD3520991F18715400E8D725 /* OTWCommentModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTWCommentModel.m; path = ../../../Common/Model/OTWCommentModel.m; sourceTree = "<group>"; };
 		DD35209B1F188FAF00E8D725 /* OTWFootprintDetailViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTWFootprintDetailViewCell.h; sourceTree = "<group>"; };
 		DD35209C1F188FBF00E8D725 /* OTWFootprintDetailViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWFootprintDetailViewCell.m; sourceTree = "<group>"; };
+		DD86E9411F46BA8600D49A64 /* ArvixARAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArvixARAnnotation.h; sourceTree = "<group>"; };
+		DD86E9421F46BA8600D49A64 /* ArvixARAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArvixARAnnotation.m; sourceTree = "<group>"; };
+		DD86E9431F46BA8600D49A64 /* ArvixARAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArvixARAnnotationView.h; sourceTree = "<group>"; };
+		DD86E9441F46BA8600D49A64 /* ArvixARAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArvixARAnnotationView.m; sourceTree = "<group>"; };
+		DD86E9451F46BA8600D49A64 /* ArvixARConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArvixARConfiguration.h; sourceTree = "<group>"; };
+		DD86E9461F46BA8600D49A64 /* ArvixARConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArvixARConfiguration.m; sourceTree = "<group>"; };
+		DD86E9471F46BA8600D49A64 /* ArvixARPresenter+Stacking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ArvixARPresenter+Stacking.h"; sourceTree = "<group>"; };
+		DD86E9481F46BA8600D49A64 /* ArvixARPresenter+Stacking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ArvixARPresenter+Stacking.m"; sourceTree = "<group>"; };
+		DD86E9491F46BA8600D49A64 /* ArvixARPresenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArvixARPresenter.h; sourceTree = "<group>"; };
+		DD86E94A1F46BA8600D49A64 /* ArvixARPresenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArvixARPresenter.m; sourceTree = "<group>"; };
+		DD86E94B1F46BA8600D49A64 /* ArvixARRadar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArvixARRadar.h; sourceTree = "<group>"; };
+		DD86E94C1F46BA8600D49A64 /* ArvixARRadar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArvixARRadar.m; sourceTree = "<group>"; };
+		DD86E94D1F46BA8600D49A64 /* ArvixARTrackingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArvixARTrackingManager.h; sourceTree = "<group>"; };
+		DD86E94E1F46BA8600D49A64 /* ArvixARTrackingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArvixARTrackingManager.m; sourceTree = "<group>"; };
+		DD86E94F1F46BA8600D49A64 /* ArvixARViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArvixARViewController.h; sourceTree = "<group>"; };
+		DD86E9501F46BA8600D49A64 /* ArvixARViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArvixARViewController.m; sourceTree = "<group>"; };
+		DD86E9511F46BA8600D49A64 /* ArvixCameraView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArvixCameraView.h; sourceTree = "<group>"; };
+		DD86E9521F46BA8600D49A64 /* ArvixCameraView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArvixCameraView.m; sourceTree = "<group>"; };
+		DD86E95D1F46DDCF00D49A64 /* ar_leida@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ar_leida@2x.png"; sourceTree = "<group>"; };
+		DD86E95E1F46DDCF00D49A64 /* ar_leida@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ar_leida@3x.png"; sourceTree = "<group>"; };
 		DD9452EB1F15CA28004EDDED /* OTWFootprintListTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTWFootprintListTableViewCell.h; sourceTree = "<group>"; };
 		DD9452EC1F15CC13004EDDED /* OTWFootprintListModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTWFootprintListModel.h; sourceTree = "<group>"; };
 		DD9452ED1F15CC29004EDDED /* OTWFootprintListModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWFootprintListModel.m; sourceTree = "<group>"; };
@@ -514,6 +512,8 @@
 		DDEA16111F30AF6D00056166 /* OTWPersonalFootprintFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPersonalFootprintFrame.m; sourceTree = "<group>"; };
 		DDEA16141F319D3300056166 /* OTWPersonalFootprintService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPersonalFootprintService.h; sourceTree = "<group>"; };
 		DDEA16151F319D3300056166 /* OTWPersonalFootprintService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPersonalFootprintService.m; sourceTree = "<group>"; };
+		DDF4A0FC1F4AACBE00996F6F /* CommonAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonAlert.h; sourceTree = "<group>"; };
+		DDF4A0FD1F4AACBE00996F6F /* CommonAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonAlert.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -521,7 +521,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D8B4FC771A533A05D5B2B46D /* libPods-OnTheWay.a in Frameworks */,
+				DD86E9231F45EFD700D49A64 /* libPods-OnTheWay.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -628,41 +628,6 @@
 			children = (
 			);
 			path = Model;
-			sourceTree = "<group>";
-		};
-		D72091811F27466500153542 /* MCYAugmentedReality */ = {
-			isa = PBXGroup;
-			children = (
-				D72091821F27466500153542 /* MCYARAnnotation.h */,
-				D72091831F27466500153542 /* MCYARAnnotation.m */,
-				D72091841F27466500153542 /* MCYARAnnotationView.h */,
-				D72091851F27466500153542 /* MCYARAnnotationView.m */,
-				D72091861F27466500153542 /* MCYARConfiguration.h */,
-				D72091871F27466500153542 /* MCYARConfiguration.m */,
-				D72091881F27466500153542 /* MCYARPresenter+Stacking.h */,
-				D72091891F27466500153542 /* MCYARPresenter+Stacking.m */,
-				D720918A1F27466500153542 /* MCYARPresenter.h */,
-				D720918B1F27466500153542 /* MCYARPresenter.m */,
-				D720918C1F27466500153542 /* MCYARRadar.h */,
-				D720918D1F27466500153542 /* MCYARRadar.m */,
-				D720918E1F27466500153542 /* MCYARTrackingManager.h */,
-				D720918F1F27466500153542 /* MCYARTrackingManager.m */,
-				D72091901F27466500153542 /* MCYARViewController.h */,
-				D72091911F27466500153542 /* MCYARViewController.m */,
-				D72091921F27466500153542 /* MCYCameraView.h */,
-				D72091931F27466500153542 /* MCYCameraView.m */,
-				D72091941F27466500153542 /* Resources */,
-			);
-			path = MCYAugmentedReality;
-			sourceTree = "<group>";
-		};
-		D72091941F27466500153542 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				D72091951F27466500153542 /* ar_leida@2x.png */,
-				D72091961F27466500153542 /* ar_leida@3x.png */,
-			);
-			path = Resources;
 			sourceTree = "<group>";
 		};
 		D72091A61F27478700153542 /* View */ = {
@@ -810,7 +775,7 @@
 		D7F6B03E1F0D390D0013090A /* Libs */ = {
 			isa = PBXGroup;
 			children = (
-				D72091811F27466500153542 /* MCYAugmentedReality */,
+				DD86E9401F46BA8600D49A64 /* ArvixAugmentedReality */,
 				DDEA15F41F2708B400056166 /* BaiduMap */,
 				DDEA15EA1F25D28E00056166 /* FLAnimatedImage */,
 				DDEA15BA1F25CCA500056166 /* PYPhotoBrowser */,
@@ -830,8 +795,6 @@
 				D7F6B0631F0DD3690013090A /* Find */,
 				D7F6B05F1F0DD35C0013090A /* AR */,
 				D7F6B0421F0D39160013090A /* README.md */,
-				D7F6B05C1F0DD1D80013090A /* OTWRootViewController.h */,
-				D7F6B05D1F0DD1D80013090A /* OTWRootViewController.m */,
 			);
 			path = Pages;
 			sourceTree = "<group>";
@@ -860,6 +823,8 @@
 				DD14F2441F11CB5F004DFE4A /* GCTokenManager.m */,
 				1802494A1F41773A004B0CDE /* OTWUtils.h */,
 				1802494B1F41773A004B0CDE /* OTWUtils.m */,
+				DDF4A0FC1F4AACBE00996F6F /* CommonAlert.h */,
+				DDF4A0FD1F4AACBE00996F6F /* CommonAlert.m */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1273,6 +1238,41 @@
 			name = NString;
 			sourceTree = "<group>";
 		};
+		DD86E9401F46BA8600D49A64 /* ArvixAugmentedReality */ = {
+			isa = PBXGroup;
+			children = (
+				DD86E9411F46BA8600D49A64 /* ArvixARAnnotation.h */,
+				DD86E9421F46BA8600D49A64 /* ArvixARAnnotation.m */,
+				DD86E9431F46BA8600D49A64 /* ArvixARAnnotationView.h */,
+				DD86E9441F46BA8600D49A64 /* ArvixARAnnotationView.m */,
+				DD86E9451F46BA8600D49A64 /* ArvixARConfiguration.h */,
+				DD86E9461F46BA8600D49A64 /* ArvixARConfiguration.m */,
+				DD86E9471F46BA8600D49A64 /* ArvixARPresenter+Stacking.h */,
+				DD86E9481F46BA8600D49A64 /* ArvixARPresenter+Stacking.m */,
+				DD86E9491F46BA8600D49A64 /* ArvixARPresenter.h */,
+				DD86E94A1F46BA8600D49A64 /* ArvixARPresenter.m */,
+				DD86E94B1F46BA8600D49A64 /* ArvixARRadar.h */,
+				DD86E94C1F46BA8600D49A64 /* ArvixARRadar.m */,
+				DD86E94D1F46BA8600D49A64 /* ArvixARTrackingManager.h */,
+				DD86E94E1F46BA8600D49A64 /* ArvixARTrackingManager.m */,
+				DD86E94F1F46BA8600D49A64 /* ArvixARViewController.h */,
+				DD86E9501F46BA8600D49A64 /* ArvixARViewController.m */,
+				DD86E9511F46BA8600D49A64 /* ArvixCameraView.h */,
+				DD86E9521F46BA8600D49A64 /* ArvixCameraView.m */,
+				DD86E95C1F46DDCF00D49A64 /* Resources */,
+			);
+			path = ArvixAugmentedReality;
+			sourceTree = "<group>";
+		};
+		DD86E95C1F46DDCF00D49A64 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				DD86E95D1F46DDCF00D49A64 /* ar_leida@2x.png */,
+				DD86E95E1F46DDCF00D49A64 /* ar_leida@3x.png */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		DDEA15BA1F25CCA500056166 /* PYPhotoBrowser */ = {
 			isa = PBXGroup;
 			children = (
@@ -1517,13 +1517,13 @@
 				DDEA15B61F21A91200056166 /* OTWNewsCommentList.plist in Resources */,
 				DDDAE08F1F1CFA5B00981E60 /* OTWFootprintDetail.plist in Resources */,
 				D7F6B0041F0D32FB0013090A /* LaunchScreen.storyboard in Resources */,
-				D72091A01F27466500153542 /* ar_leida@2x.png in Resources */,
+				DD86E95F1F46DDCF00D49A64 /* ar_leida@2x.png in Resources */,
 				18B034CD1F171ED300F53461 /* OTWFindBusinessmen.plist in Resources */,
 				B13ADA281F1C9932008E889C /* OTWSystemNews.plist in Resources */,
 				DDC0A9431F1F7B1800A6E4DB /* OTWUserFootprintList.plist in Resources */,
 				DDDAE0931F1F0D4C00981E60 /* Assets.xcassets in Resources */,
 				DD9452F51F160CD7004EDDED /* OTWFootprintList.plist in Resources */,
-				D72091A11F27466500153542 /* ar_leida@3x.png in Resources */,
+				DD86E9601F46DDCF00D49A64 /* ar_leida@3x.png in Resources */,
 				DDEA15E51F25CCA500056166 /* PYPhotosView.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1608,7 +1608,7 @@
 			files = (
 				B1B0558F1F305E00008274FE /* OTWShopActiveDetailsViewCell.m in Sources */,
 				B17836E61F413AA800FC73DC /* findSearchViewController.m in Sources */,
-				D720919A1F27466500153542 /* MCYARPresenter+Stacking.m in Sources */,
+				DD86E9561F46BA8600D49A64 /* ArvixARPresenter+Stacking.m in Sources */,
 				D7F6B0401F0D390D0013090A /* README.md in Sources */,
 				B17836E01F3C329D00FC73DC /* OTWSearchShopListViewController.m in Sources */,
 				D72091971F27466500153542 /* MCYARAnnotation.m in Sources */,
@@ -1616,8 +1616,8 @@
 				18BCFAA61F4BCF2000B8E09D /* CreateShopTFCell.m in Sources */,
 				182FDFD11F332274003AF0F4 /* OTWARCustomAnnotation.m in Sources */,
 				DD14F2451F11CB5F004DFE4A /* GCTokenManager.m in Sources */,
-				D72091991F27466500153542 /* MCYARConfiguration.m in Sources */,
 				DDEA15DF1F25CCA500056166 /* PYPhotosPreviewController.m in Sources */,
+				DDF4A0FE1F4AACBE00996F6F /* CommonAlert.m in Sources */,
 				1843A7D61F26E67800A285A3 /* OTWNewFootprintsTableViewCell.m in Sources */,
 				B18A43081F207D14002C7A5A /* OTWNewsCommentModel.m in Sources */,
 				D7F6AFF91F0D32FB0013090A /* AppDelegate.m in Sources */,
@@ -1628,6 +1628,7 @@
 				B1B055781F305B8A008274FE /* OTWShopActiveViewCell.m in Sources */,
 				189881031F469BAF003BC734 /* OTWSystemNewService.m in Sources */,
 				B1B055861F305C0C008274FE /* OTWPersonalClaimTableViewCell.m in Sources */,
+				DD86E9531F46BA8600D49A64 /* ArvixARAnnotation.m in Sources */,
 				D7F6B07B1F0DD41F0013090A /* OTWFootprintsViewController.m in Sources */,
 				B1B055871F305C0C008274FE /* OTWPersonalCollectTableViewCell.m in Sources */,
 				DD9452EE1F15CC29004EDDED /* OTWFootprintListModel.m in Sources */,
@@ -1657,6 +1658,7 @@
 				18BCFA971F4A795000B8E09D /* OTWNoPraiseViewController.m in Sources */,
 				189880FD1F4599AD003BC734 /* OTWSystemNewsDetailController.m in Sources */,
 				1843A7D91F2737D600A285A3 /* OTWPersonalClaimViewController.m in Sources */,
+				DD86E95B1F46BA8600D49A64 /* ArvixCameraView.m in Sources */,
 				D7F6B0811F0DD44C0013090A /* OTWARViewController.m in Sources */,
 				B18A43101F2088C2002C7A5A /* OTWNewsCommentTableCell.m in Sources */,
 				D7F6B0B31F1089400013090A /* OTWLoginService.m in Sources */,
@@ -1664,6 +1666,7 @@
 				DDEA16011F29B35F00056166 /* QiniuUploadHelper.m in Sources */,
 				18BCFAA91F4C000500B8E09D /* CreateShopFormModel.m in Sources */,
 				D7F6B0371F0D38EA0013090A /* README.md in Sources */,
+				DD86E9551F46BA8600D49A64 /* ArvixARConfiguration.m in Sources */,
 				B1FE42331F2B08FE00D7D5D9 /* OTWPersonalFindViewController.m in Sources */,
 				1843A7D31F26E5FD00A285A3 /* OTWNewFootprintsControllerViewController.m in Sources */,
 				DD35209D1F188FBF00E8D725 /* OTWFootprintDetailViewCell.m in Sources */,
@@ -1679,7 +1682,6 @@
 				D7F6B0A91F1081850013090A /* OTWNetworkManager.m in Sources */,
 				DDD4AB4B1F1AFC6900D42CF3 /* OTWFootprintDetailFrame.m in Sources */,
 				DDEA16121F30AF6D00056166 /* OTWPersonalFootprintFrame.m in Sources */,
-				D720919E1F27466500153542 /* MCYARViewController.m in Sources */,
 				B18A43051F207BB6002C7A5A /* OTWNewCommentListViewController.m in Sources */,
 				DDC0A93A1F1F77D100A6E4DB /* OTWSystemNewsModel.m in Sources */,
 				D7F6B0B91F14E5C60013090A /* OTWCustomTabBar.m in Sources */,
@@ -1692,14 +1694,15 @@
 				DDB8C29F1F14AF230091E7B0 /* OTWUserModel.m in Sources */,
 				D7F6B09A1F0F75510013090A /* OTWLaunchViewController.m in Sources */,
 				DDEA15B91F22177900056166 /* OTWUITapGestureRecognizer.m in Sources */,
-				D7F6B05E1F0DD1D80013090A /* OTWRootViewController.m in Sources */,
 				DD35209A1F18715400E8D725 /* OTWCommentModel.m in Sources */,
 				DDE0B7421F3323490016E59C /* OTWCommentService.m in Sources */,
 				D7F6B0CB1F1627000013090A /* OTWNewsCell.m in Sources */,
 				B183D9981F221D9900CF3E1F /* OTWPrintARViewController.m in Sources */,
 				1812CA881F39AEAB00510905 /* OTWPointAnnotation.m in Sources */,
+				DD86E95A1F46BA8600D49A64 /* ArvixARViewController.m in Sources */,
 				DD3520941F18670800E8D725 /* OTWFootprintDetailController.m in Sources */,
 				D7F6B05B1F0DD0280013090A /* OTWBaseViewController.m in Sources */,
+				DD86E9591F46BA8600D49A64 /* ArvixARTrackingManager.m in Sources */,
 				DDEA15DD1F25CCA500056166 /* UIView+PYExtension.m in Sources */,
 				B13ADA1D1F1B23DA008E889C /* OTWSystemNewsViewController.m in Sources */,
 				D7F6B0581F0DCF040013090A /* UIColor+Utils.m in Sources */,
@@ -1713,6 +1716,7 @@
 				DDEA15EF1F25D28E00056166 /* FLAnimatedImage.m in Sources */,
 				DDEA15F01F25D28E00056166 /* FLAnimatedImageView.m in Sources */,
 				DDEA15DC1F25CCA500056166 /* MBProgressHUD+PYExtension.m in Sources */,
+				DD86E9571F46BA8600D49A64 /* ArvixARPresenter.m in Sources */,
 				B181AB591F1F7F33009929D1 /* OTWPraiseViewModel.m in Sources */,
 				D7F6B0461F0D39320013090A /* README.md in Sources */,
 				18B034E11F1CE42700F53461 /* OTWFindViewController.m in Sources */,
@@ -1720,9 +1724,9 @@
 				DDEA15E81F25CCA500056166 /* PYPhotosView.m in Sources */,
 				B181AB5C1F1F7F56009929D1 /* OTWPraiseViewController.m in Sources */,
 				B1B0557F1F305BD1008274FE /* OTWFindModel.m in Sources */,
+				DD86E9541F46BA8600D49A64 /* ArvixARAnnotationView.m in Sources */,
 				D7F6AFF61F0D32FB0013090A /* main.m in Sources */,
 				18B034C51F171BC100F53461 /* OTWFindBusinessmenController.m in Sources */,
-				D72091981F27466500153542 /* MCYARAnnotationView.m in Sources */,
 				DDEA15E21F25CCA500056166 /* PYPhoto.m in Sources */,
 				DDDFB2EB1F3AEFC000A7BAD1 /* OTWCustomAnnotationView.m in Sources */,
 				B1B055881F305C0C008274FE /* OTWPersonalFindTableViewCell.m in Sources */,
@@ -1744,8 +1748,6 @@
 				DDEA15E01F25CCA500056166 /* PYPhotosReaderController.m in Sources */,
 				DDEA160F1F30A0DF00056166 /* OTWPersonalFootprintTableViewCell.m in Sources */,
 				1822EE6B1F209E4900E07665 /* OTWFootprintChangeAddressArrayModel.m in Sources */,
-				D720919D1F27466500153542 /* MCYARTrackingManager.m in Sources */,
-				D720919F1F27466500153542 /* MCYCameraView.m in Sources */,
 				D7F6B0541F0DCE420013090A /* UIView+Frame.m in Sources */,
 				18BCFAA31F4ADCEA00B8E09D /* CreateShopModel.m in Sources */,
 				B17836EF1F428D8300FC73DC /* OTWPersonalWalletViewController.m in Sources */,
@@ -1905,7 +1907,7 @@
 				DEVELOPMENT_TEAM = SEMAPEJ292;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/OnTheWay/PrefixHeader.pch";
 				INFOPLIST_FILE = OnTheWay/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.WeiHuan.OnTheWay;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1926,7 +1928,7 @@
 				DEVELOPMENT_TEAM = SEMAPEJ292;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/OnTheWay/PrefixHeader.pch";
 				INFOPLIST_FILE = OnTheWay/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.WeiHuan.OnTheWay;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -53,4 +53,22 @@ public interface CommonErrorCode {
      */
     String COMMENT_DELETE_NO_PERMISSION = "000301";
 
+
+    // ----- business类型错误代码 ------
+
+    /**
+     * 类型不存在
+     */
+    String BUSINESS_TYPE_PARENT_MISS = "000401";
+
+    /**
+     * 当前类型不允许变更parentId
+     */
+    String BUSINESS_TYPE_NOT_ALLOW_UPDATE_PARENT_ID = "000402";
+
+    /**
+     * 当前类型包含子类型，不允许删除
+     */
+    String BUSINESS_TYPE_HAS_CHILDREN = "000403";
+
 }

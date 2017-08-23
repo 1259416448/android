@@ -6,9 +6,9 @@
 //  Copyright © 2017年 WeiHuan. All rights reserved.
 //
 
-#import "MCYARAnnotation.h"
+#import "ArvixARAnnotation.h"
 
-@interface OTWARCustomAnnotation : MCYARAnnotation
+@interface OTWARCustomAnnotation : ArvixARAnnotation
 
 @property (nonatomic, strong) OTWFootprintListModel *footprint;
 

@@ -34,7 +34,7 @@
 @property (nonatomic,strong) UITableView *footprintTableView;
 
 @property(nonatomic,strong) UIButton *cameraButton;
-@property(nonatomic,strong) UIButton *arListButton;
+@property(nonatomic,strong) UIButton *arButton;
 @property(nonatomic,strong) UIButton *planeMapButton;
 
 @property (nonatomic,strong) OTWFootprintSearchParams *footprintSearchParams;
@@ -146,7 +146,7 @@
     
     [self.view addSubview:self.cameraButton];
     
-    [self.view addSubview:self.arListButton];
+    [self.view addSubview:self.arButton];
     
     [self.view addSubview:self.planeMapButton];
     
@@ -267,17 +267,17 @@
     }
     return _cameraButton;
 }
-- (UIButton*)arListButton
+- (UIButton*)arButton
 {
-    if (!_arListButton) {
-        _arListButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        _arListButton.backgroundColor = [UIColor clearColor];
+    if (!_arButton) {
+        _arButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _arButton.backgroundColor = [UIColor clearColor];
         CGFloat arListButtonX = CGRectGetMaxX(self.cameraButton.frame) + 7;
-        self.arListButton.frame = CGRectMake(arListButtonX, self.cameraButton.MinY, 50, 50);
-        [_arListButton setImage:[UIImage imageNamed:@"ar_ARditu"] forState:UIControlStateNormal];
-        [_arListButton addTarget:self action:@selector(toFootprintListView) forControlEvents:UIControlEventTouchUpInside];
+        _arButton.frame = CGRectMake(arListButtonX, self.cameraButton.MinY, 50, 50);
+        [_arButton setImage:[UIImage imageNamed:@"ar_ARditu"] forState:UIControlStateNormal];
+        [_arButton addTarget:self action:@selector(toFootprintARView) forControlEvents:UIControlEventTouchUpInside];
     }
-    return _arListButton;
+    return _arButton;
 }
 
 - (UIButton*)planeMapButton
@@ -285,7 +285,7 @@
     if (!_planeMapButton) {
         _planeMapButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _planeMapButton.backgroundColor = [UIColor clearColor];
-        CGFloat planeMapButtonX = CGRectGetMaxX(self.arListButton.frame) + 7;
+        CGFloat planeMapButtonX = CGRectGetMaxX(self.arButton.frame) + 7;
         self.planeMapButton.frame = CGRectMake(planeMapButtonX, self.cameraButton.MinY, 50, 50);
         [_planeMapButton setImage:[UIImage imageNamed:@"ar_pingmian"] forState:UIControlStateNormal];
         [_planeMapButton addTarget:self action:@selector(planeMapButtonClick) forControlEvents:UIControlEventTouchUpInside];
@@ -294,9 +294,9 @@
 }
 
 #pragma mark 跳转至足迹列表页面
-- (void)toFootprintListView
+- (void)toFootprintARView
 {
-    [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexFootprints];
+    [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
 #pragma mark 跳转至足迹发布页面
@@ -310,9 +310,13 @@
 
 -(void)planeMapButtonClick
 {
-    DLog(@"我点击了pingmianClick");
-    OTWPlaneMapViewController *planeMapVC = [[OTWPlaneMapViewController alloc] init];
-    [self.navigationController pushViewController:planeMapVC animated:NO];
+    NSArray *viewControllers = self.navigationController.viewControllers;
+    NSUInteger index = [viewControllers indexOfObject:[OTWLaunchManager sharedManager].footprintPlaneMapVC];
+    if(index != NSNotFound){
+        [self.navigationController popToViewController:[OTWLaunchManager sharedManager].footprintPlaneMapVC animated:NO];
+    }else{
+        [self.navigationController pushViewController:[OTWLaunchManager sharedManager].footprintPlaneMapVC animated:NO];
+    }
 }
 
 -(void)loadMoreFootprints:(BOOL)reflesh

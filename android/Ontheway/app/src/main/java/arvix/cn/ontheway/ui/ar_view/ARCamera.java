@@ -1,4 +1,4 @@
-package arvix.cn.ontheway.ui.ar;
+package arvix.cn.ontheway.ui.ar_view;
 
 import android.annotation.TargetApi;
 import android.app.Activity;

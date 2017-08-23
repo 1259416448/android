@@ -1,6 +1,7 @@
 package cn.arvix.ontheway.footprint.entity;
 
 import cn.arvix.base.common.entity.BaseEntity;
+import cn.arvix.base.common.utils.CommonContact;
 import cn.arvix.base.common.utils.HibernateValidationUtil;
 import cn.arvix.base.common.utils.TimeMaker;
 import cn.arvix.ontheway.footprint.dto.CommentDetailDTO;
@@ -49,11 +50,11 @@ public class Comment extends BaseEntity<Long> {
         return builder.toString();
     }
 
-    public CommentDetailDTO toDetailDTO(String fixUrl){
+    public CommentDetailDTO toDetailDTO(String fixUrl) {
         CommentDetailDTO detailDTO = new CommentDetailDTO();
         detailDTO.setCommentContent(this.content);
         detailDTO.setUserId(this.getUser().getId());
-        detailDTO.setUserHeadImg(fixUrl + this.getUser().getHeadImg());
+        detailDTO.setUserHeadImg(fixUrl + this.getUser().getHeadImg() + "?" + CommonContact.USER_HEAD_IMG_FIX);
         detailDTO.setUserNickname(this.getUser().getName());
         detailDTO.setDateCreate(TimeMaker.toTimeMillis(this.getDateCreated()));
         detailDTO.setDateCreatedStr(TimeMaker.dateCreatedStr(detailDTO.getDateCreate()));

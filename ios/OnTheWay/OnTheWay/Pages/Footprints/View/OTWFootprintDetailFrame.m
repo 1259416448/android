@@ -33,11 +33,14 @@
     
     CGSize textSize = [self sizeWithString:_footprintDetailModel.footprintContent font:footprintContentFont maxSize:CGSizeMake(SCREEN_WIDTH-padding*2, 2000)];
     _contentH = textSize.height;
-    if (_footprintDetailModel.footprintCommentNum > 0) {
-        _cellHeight = textSize.height+paddingTop+paddingBottom + _photoViewH + 20 + 208;
-    } else {
-        _cellHeight = textSize.height+paddingTop+paddingBottom + _photoViewH + 20 + 36;
-    }
+//    if (_footprintDetailModel.footprintCommentNum > 0) {
+//        _cellHeight = textSize.height+paddingTop+paddingBottom + _photoViewH + 20 + 208;
+//    } else {
+//        _cellHeight = textSize.height+paddingTop+paddingBottom + _photoViewH + 20 + 36;
+//    }
+    
+    //说明 第一个10 是内容差10 pt   第二个 10 表示 足迹详情 与 评论标题 之间的距离是10  ； 36 表示评论标题 height 36
+    _cellHeight = textSize.height+paddingTop+paddingBottom + _photoViewH + 10 + 10 + 36;
     
     if(_photoViewH == 0){
         _cellHeight -= 10;

@@ -124,9 +124,6 @@ static NSInteger defaultTag = 10000;
             self.iconImageView.frame = CGRectMake(0, -space, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
         }
             break;
-        case OTWTabBarItemTypeHidden:{
-            self.hidden = YES;
-        }
         default:
             break;
     }

@@ -108,23 +108,33 @@
             OTWPersonalViewController *personalVC = [[OTWPersonalViewController alloc] init];
             UINavigationController * personalNav = [[UINavigationController alloc] initWithRootViewController:personalVC]; // 我的
             
-            OTWFootprintsViewController *footprintsVC = [[OTWFootprintsViewController alloc] init]; //足迹列表
-            UINavigationController *footprintsList = [[UINavigationController alloc] initWithRootViewController:footprintsVC];
+            config.viewControllers = @[findNav, footprintsNav, arNav, newsNav, personalNav];
             
-            OTWPlaneMapViewController *footprintPlaneMapVC = [[OTWPlaneMapViewController alloc] init]; //足迹地图
-            UINavigationController *footprintsMap = [[UINavigationController alloc] initWithRootViewController:footprintPlaneMapVC];
-            
-            config.viewControllers = @[findNav, footprintsNav, arNav, newsNav, personalNav,footprintsList,footprintsMap];
-            
-            config.normalImages = @[@"fx_faxian", @"fx_zuji", @"fx_AR", @"fx_xiaoxi", @"fx_wode",@"fx_zuji",@"fx_zuji"];
-            config.selectedImages = @[@"fx_faxian_click", @"fx_zuji", @"fx_AR", @"fx_xiaoxi_click", @"fx_wode_click",@"fx_zuji",@"fx_zuji"];
-            config.titles = @[@"发现", @"足迹", @"AR", @"消息", @"我的",@"足迹列表",@"足迹地图"];
+            config.normalImages = @[@"fx_faxian", @"fx_zuji", @"fx_AR", @"fx_xiaoxi", @"fx_wode"];
+            config.selectedImages = @[@"fx_faxian_click", @"fx_zuji", @"fx_AR", @"fx_xiaoxi_click", @"fx_wode_click"];
+            config.titles = @[@"发现", @"足迹", @"AR", @"消息", @"我的"];
             config.selectedColor = [UIColor colorWithHexString:@"262626"];
             config.normalColor = [UIColor colorWithHexString:@"9b9b9b"];
             return config;
         }];
     }
     return _mainTabController;
+}
+
+- (OTWFootprintsViewController *) footprintVC
+{
+    if(!_footprintVC){
+        _footprintVC = [[OTWFootprintsViewController alloc] init];
+    }
+    return _footprintVC;
+}
+
+- (OTWPlaneMapViewController *) footprintPlaneMapVC
+{
+    if(!_footprintPlaneMapVC){
+        _footprintPlaneMapVC = [[OTWPlaneMapViewController alloc] init];
+    }
+    return _footprintPlaneMapVC;
 }
 
 @end

@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MCYARViewController.h"
+#import "ArvixARViewController.h"
 
 typedef void(^requestBackBlock) (id result);
 
-@interface OTWPrintARViewController : MCYARViewController
+@interface OTWPrintARViewController : ArvixARViewController
 
 -(void) fetchARFootprints:(NSDictionary *) params completion:(requestBackBlock) block;
 
