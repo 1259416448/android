@@ -35,7 +35,8 @@ public class TrackListData {
         footPrintBean.setUserNickname(GenTestData.genNickname());
         footPrintBean.setFootprintId(id);
         footPrintBean.setMonth(month);
-        footPrintBean.setDay(day);
+        footPrintBean.setDay(""+day);
+        footPrintBean.setDayInt(day);
         List<String> photoList = new ArrayList<>();
         if(photoCount==1){
             photoList.add("http://osx4pwgde.bkt.clouddn.com/c47c40d45342467e3f62acb873f296c0.jpg");

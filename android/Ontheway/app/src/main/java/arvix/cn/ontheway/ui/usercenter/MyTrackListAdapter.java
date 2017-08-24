@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.xutils.image.ImageOptions;
@@ -93,7 +94,7 @@ public class MyTrackListAdapter extends ArrayAdapter<FootPrintBean> {
         FootPrintBean bean = getItem(position);
         h.monthTimeLine.setVisibility(View.VISIBLE);
         h.dayTimeTv.setVisibility(View.VISIBLE);
-        if( position==0 && currentDay==bean.getDay()){
+        if( position==0 && currentDay==bean.getDayInt()){
             h.monthTimeLine.setVisibility(View.GONE);
             h.dayTimeTv.setVisibility(View.INVISIBLE);
         }if(position>0){
@@ -101,16 +102,21 @@ public class MyTrackListAdapter extends ArrayAdapter<FootPrintBean> {
             if (bean.getMonth()==lastBean.getMonth()) {
                 h.monthTimeLine.setVisibility(View.GONE);
             }
-            if (bean.getDay()==lastBean.getDay() && bean.getMonth()==lastBean.getMonth()) {
+            if (bean.getDayInt()==lastBean.getDayInt() && bean.getMonth()==lastBean.getMonth()) {
                 h.dayTimeTv.setVisibility(View.INVISIBLE);
             }
         }
       //  ImageView imageView = (ImageView)convertView.findViewById(R.id.photo4_grid_img_item);
         int row = 1;//行
         int column = 1;//列
-        int photoCount = bean.getFootprintPhotoArray().size();
+        int photoCount = 0 ;
+        h.photo4Relative.setVisibility(View.VISIBLE);
         h.gridLayout.removeAllViews();
-
+        if(bean.getFootprintPhotoArray()!=null){
+            photoCount = bean.getFootprintPhotoArray().size();
+        }else{
+            h.photo4Relative.setVisibility(View.GONE);
+        }
         if(photoCount==1){
             ImageView imageView = new ImageView(ctx);
             appendImage(h.gridLayout,imageView,bean.getFootprintPhotoArray().get(0),oneImW,oneImH);
@@ -161,7 +167,7 @@ public class MyTrackListAdapter extends ArrayAdapter<FootPrintBean> {
         h.gridLayout.setColumnCount(column);
         h.gridLayout.setRowCount(row);
         h.monthTimeTv.setText(bean.getMonth()+"月");
-        h.dayTimeTv.setText(bean.getDay()+"日");
+        h.dayTimeTv.setText(bean.getDay());
         h.contentTv.setText(StaticMethod.genLesStr(bean.getFootprintContent(),30));
         h.addressTv.setText(StaticMethod.genLesStr(bean.getFootprintAddress(),15));
         return convertView;
@@ -211,6 +217,8 @@ public class MyTrackListAdapter extends ArrayAdapter<FootPrintBean> {
         GridLayout gridLayout;
         @ViewInject(R.id.show_count_tv)
         TextView photoCountTv;
+        @ViewInject(R.id.photo4_relative)
+        RelativeLayout photo4Relative;
 
     }
 

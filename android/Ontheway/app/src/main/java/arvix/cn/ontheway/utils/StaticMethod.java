@@ -1,8 +1,10 @@
 package arvix.cn.ontheway.utils;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.content.LocalBroadcastManager;
@@ -12,6 +14,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -328,5 +331,28 @@ public class StaticMethod {
         d= Math.asin(d)*180/Math.PI;
         Log.i("comAzimuth","comAzimuth----->"+d);
         return d;
+    }
+
+    /**
+     * 注册用户信息变化事件
+     * @param self
+     * @param nicknameTv
+     * @param headerIV
+     */
+    public static BroadcastReceiver registerUserInfoChange(Activity self,final TextView nicknameTv, final ImageView headerIV){
+        IntentFilter filter=new IntentFilter(StaticVar.BROADCAST_ACTION_USER_CHANGE);
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(null!=nicknameTv){
+                    nicknameTv.setText(App.userInfo.getName());
+                }
+                if(headerIV!=null){
+                    StaticMethod.setCircularHeaderImg(headerIV,110,110);
+                }
+            }
+        };
+        LocalBroadcastManager.getInstance(self).registerReceiver(receiver, filter);
+        return receiver;
     }
 }
