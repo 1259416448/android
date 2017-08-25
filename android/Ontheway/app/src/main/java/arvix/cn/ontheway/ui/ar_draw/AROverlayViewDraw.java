@@ -109,7 +109,7 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
         this.radarFrameLayout = radarFrameLayout;
     }
 
-    private void updateLocationData(double lat, double lon) {
+    public void updateLocationData(double lat, double lon) {
         if (lat == 0.0 && lon == 0.0) {
             Log.w(this.getClass().getName(), "lat and lon is 0.0");
             return;
