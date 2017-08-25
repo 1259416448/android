@@ -16,12 +16,14 @@
 #import "UIView+Frame.h"
 #import "UIColor+Utils.h"
 #import "UIImage+Color.h"
+#import "UIImage+RoundedCorner.h"
 
 #import "OTWBaseViewController.h"
 #import "OTWNetworkManager.h"
 #import "OTWLaunchManager.h"
 #import <YSCategorys/YSKit.h>
-#import "UIImageView+WebCache.h"
+#import <UIImageView+WebCache.h>
+#import <UIButton+WebCache.h>
 #import <AFNetworking/UIImageView+AFNetworking.h>
 #import <MBProgressHUD.h>
 #import "OTWUtils.h"

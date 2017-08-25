@@ -29,6 +29,11 @@
 + (MBProgressHUD *) alertLoading:(NSString *)content userInteractionEnabled:(BOOL)userInteractionEnabled target:(UIViewController *)target;
 
 /**
+ * 弹出失败提示框，并在 1.5f 后关闭
+ */
++ (MBProgressHUD *) alertFailed:(NSString *)content userInteractionEnabled:(BOOL)userInteractionEnabled target:(UIViewController *)target;
+
+/**
  *  计算文本的宽高
  *
  *  @param str     需要计算的文本

@@ -445,9 +445,9 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     return [self.commentFrameArray objectAtIndex:indexPath.row].cellHeight;
 }
 #pragma mark 点击行
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    DLog(@"我点击了：%ld",indexPath.row);
-}
+//-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+//    DLog(@"我点击了：%ld",indexPath.row);
+//}
 
 #pragma mark - 返回第indexPath这行对应的内容
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -456,6 +456,17 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     OTWFootprintDetailViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
         cell = [OTWFootprintDetailViewCell cellWithTableView:tableView reuseIdentifier:identifier];
+        WeakSelf(self);
+        cell.block = ^(UITableViewCell *cell){
+            //然后使用indexPathForCell方法，就得到indexPath了~
+            NSIndexPath *indexPath = [tableView indexPathForCell:cell];
+            OTWCommentFrame *commentFrame = weakself.commentFrameArray[indexPath.row];
+            OTWPersonalFootprintsListController *personalSiteVC = [OTWPersonalFootprintsListController initWithIfMyFootprint:[[OTWUserModel shared].userId.description isEqualToString:commentFrame.commentModel.userId.description]];
+            personalSiteVC.userId = commentFrame.commentModel.userId.description;
+            personalSiteVC.userNickname = commentFrame.commentModel.userNickname;
+            personalSiteVC.userHeaderImg = commentFrame.commentModel.userHeadImg;
+            [weakself.navigationController pushViewController:personalSiteVC animated:YES];
+        };
     }
     // 设置数据
     [cell setData:self.commentFrameArray[indexPath.row]];
@@ -493,6 +504,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     return _alertController;
 }
 
+#pragma mark - 删除足迹评论
 - (void) deleteCommentById
 {
     if(_deleteCommentId){

@@ -222,16 +222,16 @@
     if(scrollView.contentOffset.y<= 0 && !self.ifChangedOne){
         [UIView animateWithDuration:0.5f animations:^{
            [self changeNavigationViewFrameOne];
-        } completion:^(BOOL finished){
             self.ifChangedOne = YES;
+        } completion:^(BOOL finished){
             self.ifChangedTwo = NO;
         }];
     }else if(scrollView.contentOffset.y>0 && !self.ifChangedTwo){
         [UIView animateWithDuration:0.5f animations:^{
             [self changeNavigationViewFrameTwo];
+            self.ifChangedTwo = YES;
         } completion:^(BOOL finished){
             self.ifChangedOne = NO;
-            self.ifChangedTwo = YES;
         }];
     }
 }

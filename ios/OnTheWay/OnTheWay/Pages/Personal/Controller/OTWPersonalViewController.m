@@ -19,6 +19,7 @@
 #import "OTWPersonalCollectController.h"
 #import "OTWPersonalFindViewController.h"
 #import "OTWPersonalWalletViewController.h"
+#import "OTWBusinessFetchController.h"
 
 @interface OTWPersonalViewController() <UITableViewDataSource,UITableViewDelegate>
 
@@ -76,13 +77,13 @@
 {
     [super viewWillAppear:animated];
     [self buildPersonalInfo];
-}
-
--(void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
     [[OTWLaunchManager sharedManager].mainTabController showTabBarWithAnimation:YES];
 }
+
+//-(void)viewDidAppear:(BOOL)animated
+//{
+//    [super viewDidAppear:animated];
+//}
 
 -(void)buildPersonalInfo
 {
@@ -417,8 +418,10 @@
 }
 -(void)tapActionForWallet{
     DLog(@"点击我的认领");
-    OTWPersonalClaimViewController *PersonalClaimVC = [[OTWPersonalClaimViewController alloc] init];
-    [self.navigationController pushViewController:PersonalClaimVC animated:YES];
+//    OTWPersonalClaimViewController *PersonalClaimVC = [[OTWPersonalClaimViewController alloc] init];
+//    [self.navigationController pushViewController:PersonalClaimVC animated:YES];
+    OTWBusinessFetchController *vc = [[OTWBusinessFetchController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 -(UIImageView*)personalWalletIconImageView{
     if(!_personalWalletIconImageView){

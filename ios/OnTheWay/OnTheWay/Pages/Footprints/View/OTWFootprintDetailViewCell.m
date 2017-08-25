@@ -14,8 +14,8 @@
 
 //评论相关 start
 @property (nonatomic,strong) UIView *commentBGView;
-@property (nonatomic,strong) UIImageView *commentUserHeadImgView;
-@property (nonatomic,strong) UILabel *commentUserNicknameLabel;
+@property (nonatomic,strong) UIButton *commentUserHeaderImgButton;
+@property (nonatomic,strong) UIButton *commentUserNicknameButton;
 @property (nonatomic,strong) UILabel *commentDateCreatedLabel;
 @property (nonatomic,strong) UILabel *commentContentLabel;
 @property (nonatomic,strong) UIView *bottomLine;
@@ -43,8 +43,10 @@
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         self.backgroundColor = [UIColor clearColor];
         [self.contentView addSubview:self.commentBGView];
-        [self.commentBGView addSubview:self.commentUserHeadImgView];
-        [self.commentBGView addSubview:self.commentUserNicknameLabel];
+        //[self.commentBGView addSubview:self.commentUserHeadImgView];
+        [self.commentBGView addSubview:self.commentUserHeaderImgButton];
+        //[self.commentBGView addSubview:self.commentUserNicknameLabel];
+        [self.commentBGView addSubview:self.commentUserNicknameButton];
         [self.commentBGView addSubview:self.commentDateCreatedLabel];
         [self.commentBGView addSubview:self.commentContentLabel];
         [self.commentBGView addSubview:self.bottomLine];
@@ -55,14 +57,24 @@
 - (void)setData:(OTWCommentFrame *)data
 {
     //设值
-    [self.commentUserHeadImgView setImageWithURL:[NSURL URLWithString:data.commentModel.userHeadImg]];
-    self.commentUserNicknameLabel.text = data.commentModel.userNickname;
+    //这里是图片圆角处理
+//    [self.commentUserHeaderImgButton sd_setImageWithURL:[NSURL URLWithString:data.commentModel.userHeadImg] forState:UIControlStateNormal completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+//        if(image){
+//            [self.commentUserHeaderImgButton setImage:[image roundedCornerImageWithCornerRadius:80] forState:UIControlStateNormal];
+//        }
+//    }];
+    [self.commentUserHeaderImgButton sd_setImageWithURL:[NSURL URLWithString:data.commentModel.userHeadImg] forState:UIControlStateNormal];
+    self.commentUserHeaderImgButton.imageView.layer.cornerRadius = 15;
+    [self.commentUserNicknameButton setTitle:data.commentModel.userNickname forState:UIControlStateNormal];
+    //这里需要设置按钮的frame
+    self.commentUserNicknameButton.frame = CGRectMake(self.commentUserHeaderImgButton.MaxX, 16, data.nicknameW, 15);
     self.commentDateCreatedLabel.text = data.commentModel.dateCreatedStr;
     self.commentContentLabel.text = data.commentModel.commentContent;
     //设置frame
     self.commentBGView.frame = CGRectMake(0, 0, SCREEN_WIDTH, data.cellHeight);
-    CGFloat X = self.commentUserNicknameLabel.MinX;
+    CGFloat X = self.commentUserHeaderImgButton.MaxX;
     CGFloat W = SCREEN_WIDTH - X - padding;
+    self.commentDateCreatedLabel.frame = CGRectMake(self.commentUserNicknameButton.MinX, self.commentUserNicknameButton.MaxY + 3, W, 10);
     self.commentContentLabel.frame = CGRectMake(X, self.commentDateCreatedLabel.MaxY+10, W, data.contentH);
 }
 
@@ -76,38 +88,12 @@
     return _commentBGView;
 }
 
-- (UIImageView *) commentUserHeadImgView
-{
-    if(!_commentUserHeadImgView){
-        _commentUserHeadImgView = [[UIImageView alloc] init];
-        _commentUserHeadImgView.frame = CGRectMake(padding, 15, 30, 30);
-        //设置图片原型
-        _commentUserHeadImgView.layer.cornerRadius = _commentUserHeadImgView.Witdh/2.0;
-        _commentUserHeadImgView.layer.masksToBounds = YES;
-    }
-    return _commentUserHeadImgView;
-}
-
-- (UILabel *) commentUserNicknameLabel
-{
-    if(!_commentUserNicknameLabel){
-        _commentUserNicknameLabel = [[UILabel alloc] init];
-        _commentUserNicknameLabel.textColor = [UIColor color_202020];
-        _commentUserNicknameLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
-        CGFloat X = self.commentUserHeadImgView.MaxX+10;
-        CGFloat W = SCREEN_WIDTH - padding - X;
-        _commentUserNicknameLabel.frame = CGRectMake(X, 16, W, 15);
-    }
-    return _commentUserNicknameLabel;
-}
-
 - (UILabel *) commentDateCreatedLabel
 {
     if(!_commentDateCreatedLabel){
         _commentDateCreatedLabel = [[UILabel alloc] init];
         _commentDateCreatedLabel.textColor = [UIColor color_979797];
         _commentDateCreatedLabel.font = [UIFont systemFontOfSize:12];
-        _commentDateCreatedLabel.frame = CGRectMake(self.commentUserNicknameLabel.MinX, self.commentUserNicknameLabel.MaxY+3, self.commentUserNicknameLabel.Witdh, 10);
     }
     return _commentDateCreatedLabel;
 }
@@ -119,7 +105,6 @@
         _commentContentLabel.textColor = [UIColor color_202020];
         _commentContentLabel.font = commentContentFont;
         _commentContentLabel.numberOfLines = 0;
-        
     }
     return _commentContentLabel;
 }
@@ -133,4 +118,36 @@
     return _bottomLine;
 }
 
+- (UIButton *) commentUserHeaderImgButton
+{
+    if(!_commentUserHeaderImgButton){
+        _commentUserHeaderImgButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _commentUserHeaderImgButton.imageEdgeInsets  = UIEdgeInsetsMake(15, 15, 0, 10);
+        [_commentUserHeaderImgButton addTarget:self action:@selector(userHeaderImgOrNicknameClick:) forControlEvents:UIControlEventTouchUpInside];
+        _commentUserHeaderImgButton.frame = CGRectMake(0, 0, 55, 45);
+    }
+    return _commentUserHeaderImgButton;
+}
+
+- (UIButton *) commentUserNicknameButton
+{
+    if(!_commentUserNicknameButton){
+        _commentUserNicknameButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _commentUserNicknameButton.titleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
+        [_commentUserNicknameButton setTitleColor:[UIColor color_202020] forState:UIControlStateNormal];
+        [_commentUserNicknameButton addTarget:self action:@selector(userHeaderImgOrNicknameClick:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _commentUserNicknameButton;
+}
+
+#pragma mark - button selector
+
+- (void) userHeaderImgOrNicknameClick:(UIButton *)sender
+{
+    if(self.block){
+        //首先获得Cell：button的父视图是commentBGView -> contentView，再上一层才是UITableViewCell
+        UITableViewCell *cell = (UITableViewCell *)sender.superview.superview.superview;
+        self.block(cell);
+    }
+}
 @end

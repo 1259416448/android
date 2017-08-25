@@ -97,16 +97,19 @@ static NSString *commentDeleteUrl = @"/app/footprint/comment/delete/{id}";
             for (OTWCommentFrame *commentFrame in viewController.commentFrameArray) {
                 if([commentFrame.commentModel.commentId.description isEqualToString:commentId]){
                     [viewController.commentFrameArray removeObjectAtIndex:i];
+                    [viewController.tableView beginUpdates];
+                    [viewController.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
+                    [viewController.tableView endUpdates];
                     break;
                 }
                 i ++ ;
             }
             if(viewController.commentFrameArray.count == 0){
                 [viewController notFundCommentBGView].hidden = NO;
-                [viewController refreshTableViewHeader];
                 viewController.tableView.mj_footer.hidden = YES;
+                [viewController refreshTableViewHeader];
+                [viewController.tableView reloadData];
             }
-            [viewController.tableView reloadData];
         }else{
             [viewController errorTips:@"服务端繁忙，请稍后再试" userInteractionEnabled:NO];
         }
