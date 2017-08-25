@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
@@ -311,27 +312,32 @@ public class StaticMethod {
         return bitmap;
     }
 
-    /**
-     * 计算方位角
-     * @param lat_a
-     * @param lng_a
-     * @param lat_b
-     * @param lng_b
-     * @return 有正负之分
-     */
-    public static double comAzimuth(double lat_a, double lng_a, double lat_b, double lng_b) {
-        double d = 0;
-        lat_a=lat_a*Math.PI/180;
-        lng_a=lng_a*Math.PI/180;
-        lat_b=lat_b*Math.PI/180;
-        lng_b=lng_b*Math.PI/180;
-        d=Math.sin(lat_a)*Math.sin(lat_b)+Math.cos(lat_a)*Math.cos(lat_b)*Math.cos(lng_b-lng_a);
-        d=Math.sqrt(1-d*d);
-        d=Math.cos(lat_b)*Math.sin(lng_b-lng_a)/d;
-        d= Math.asin(d)*180/Math.PI;
-        Log.i("comAzimuth","comAzimuth----->"+d);
-        return d;
+
+    public static  double comAzimuth(double lat1, double long1, double lat2, double long2)
+
+    {
+
+        double degToRad = Math.PI / 180.0;
+
+        double phi1 = lat1 * degToRad;
+
+        double phi2 = lat2 * degToRad;
+
+        double lam1 = long1 * degToRad;
+
+        double lam2 = long2 * degToRad;
+        double d =  Math.atan2(Math.sin(lam2-lam1)*Math.cos(phi2),
+
+                Math.cos(phi1)*Math.sin(phi2) - Math.sin(phi1)*Math.cos(phi2)*Math.cos(lam2-lam1)
+
+        ) * 180/Math.PI;
+
+
+        return  d;
+
     }
+
+
 
     /**
      * 注册用户信息变化事件
