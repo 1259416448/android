@@ -23,4 +23,20 @@ public class CheckUtils {
         return  result;
     }
 
+    public static boolean checkPhone(String phone){
+        boolean result = true;
+        if (!phone.trim().matches("^1\\d{10}$")) {
+            result  = false;
+        }
+        return  result;
+    }
+
+    public static boolean checkSmsCode(String code){
+        boolean result = true;
+        if (!code.trim().matches("\\d{6}$")) {
+            result  = false;
+        }
+        return  result;
+    }
+
 }

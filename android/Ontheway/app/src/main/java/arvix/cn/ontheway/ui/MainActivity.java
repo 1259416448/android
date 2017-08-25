@@ -30,8 +30,8 @@ import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.service.BaiduLocationListenerService;
 import arvix.cn.ontheway.service.inter.BaiduPoiService;
 import arvix.cn.ontheway.service.inter.CacheService;
+import arvix.cn.ontheway.test.ARViewTest;
 import arvix.cn.ontheway.ui.ar_draw.ArFootPrintDrawActivity;
-import arvix.cn.ontheway.ui.ar_view.ArFootPrintActivity;
 import arvix.cn.ontheway.ui.msg.MsgIndexFrag;
 import arvix.cn.ontheway.ui.usercenter.MyProfileFragment;
 import arvix.cn.ontheway.utils.OnthewayApplication;
@@ -120,7 +120,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         tabArCenterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(self, ARView.class);
+                Intent intent = new Intent(self, ARViewTest.class);
                 startActivity(intent);
             }
         });

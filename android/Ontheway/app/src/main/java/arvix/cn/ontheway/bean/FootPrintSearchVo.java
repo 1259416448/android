@@ -12,7 +12,7 @@ public class FootPrintSearchVo {
     private int totalPages = 0;
     private Double latitude;
     private Double longitude;
-    private Long currentTime;
+    private Long currentTime = 0l;
     private Double distance;
     private SearchType searchType;
     private SearchTime searchTime;

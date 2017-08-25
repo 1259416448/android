@@ -65,7 +65,6 @@ public class MyProfileFragment extends BaseFragment {
         IntentFilter filter=new IntentFilter(StaticVar.BROADCAST_ACTION_USER_CHANGE);
         LocalBroadcastManager.getInstance(act).registerReceiver(receiver,filter);
         StaticMethod.setCircularHeaderImg(headerIV,110,110);
-
         return root;
     }
 

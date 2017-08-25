@@ -18,6 +18,7 @@ import org.xutils.x;
 import java.util.HashMap;
 import java.util.Map;
 
+import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.bean.BaseResponse;
 import arvix.cn.ontheway.http.ServerUrl;

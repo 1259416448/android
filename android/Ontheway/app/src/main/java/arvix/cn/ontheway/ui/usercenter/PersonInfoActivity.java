@@ -24,6 +24,7 @@ import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.bean.BaseResponse;
 import arvix.cn.ontheway.bean.UserInfo;
 import arvix.cn.ontheway.http.ServerUrl;
+import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.service.inter.FileUploadCallBack;
 import arvix.cn.ontheway.service.inter.ImageFileUploadService;
 import arvix.cn.ontheway.ui.BaseActivity;
@@ -115,8 +116,8 @@ public class PersonInfoActivity extends BaseActivity {
             if (requestCode == REQ_GET_NAME_EDIT) {
                 String s = data.getStringExtra(EditNicknameActivity.EXTRA_NICKNAME);
                 nameTV.setText(s);
-                App.userInfo.setUsername(s);
-                LocalBroadcastManager.getInstance(self).sendBroadcast(new Intent(StaticVar.BROADCAST_ACTION_USER_CHANGE));
+                App.userInfo.setName(s);
+                StaticMethod.updateUserInfo(self,App.userInfo);
             }
         }
     }

@@ -5,7 +5,7 @@ import android.location.Location;
 
 import com.raw.utils.PaintUtils;
 
-import arvix.cn.ontheway.ui.ARView;
+import arvix.cn.ontheway.test.ARViewTest;
 
 
 public class RadarView{
@@ -59,7 +59,7 @@ public class RadarView{
 
 	float  yaw = 0;
 	double[] bearings;
-	ARView arView = new ARView();
+	ARViewTest arView = new ARViewTest();
 	
 	public RadarView(DataView dataView, double[] bearings){
 		this.bearings = bearings;

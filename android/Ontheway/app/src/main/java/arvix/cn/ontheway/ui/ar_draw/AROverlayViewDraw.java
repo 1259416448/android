@@ -398,9 +398,10 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
             distance = DistanceUtil.getDistance(center,target);
             azimuth = StaticMethod.comAzimuth(center.latitude,center.longitude,radarPoint.lat,radarPoint.lon);
           //Log.i(logTag," Math.sin(azimuth):"+azimuth +","+Math.sin(azimuth));
+           // Log.i("comAzimuth","comAzimuth compute-ttttttt---->"+azimuth +",Math.sin(azimuth):"+Math.sin(azimuth)+",Math.cos(azimuth):"+Math.cos(azimuth));
             pLeft = (int)(cx + Math.sin(azimuth)*radarZoom*distance);
             pTop = (int) (cy - Math.cos(azimuth)*radarZoom*distance);
-
+          //  Log.i("pLeft","pLeft:"+pLeft +",pTop:"+pTop+",cx:"+cx +",cy:"+cy);
             rePointKeyTemp = pLeft + "-" + pTop;
             Integer rePointTimes = drawPointRePointMap.get(rePointKeyTemp);
             if (rePointTimes == null) {

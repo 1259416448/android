@@ -32,7 +32,7 @@ public interface ServerUrl {
 
     String FOOTPRINT_LIKE = BASE_URL +"/app/footprint/like";
 
-
+    String FOOTPRINT_USER = BASE_URL +"/app/footprint/user";
     String FOOTPRINT_SHOW = BASE_URL +"/app/footprint/view";
 
     String COMMENT_SEARCH =BASE_URL +  "/app/footprint/comment/search";

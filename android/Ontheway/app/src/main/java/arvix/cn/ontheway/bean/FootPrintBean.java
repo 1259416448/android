@@ -15,7 +15,8 @@ public class FootPrintBean implements Serializable{
     private float distance;
     private long footprintId;
     private int month;
-    private int day;
+    private String day;
+    private int dayInt;
     private List<String> footprintPhotoArray;
     private List<CommentBean> comments;
     private String footprintAddress;
@@ -85,14 +86,6 @@ public class FootPrintBean implements Serializable{
 
     public void setMonth(int month) {
         this.month = month;
-    }
-
-    public int getDay() {
-        return day;
-    }
-
-    public void setDay(int day) {
-        this.day = day;
     }
 
     public String getUserHeadImg() {
@@ -189,5 +182,21 @@ public class FootPrintBean implements Serializable{
 
     public void setCurrentTime(long currentTime) {
         this.currentTime = currentTime;
+    }
+
+    public String getDay() {
+        return day;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
+    }
+
+    public int getDayInt() {
+        return dayInt;
+    }
+
+    public void setDayInt(int dayInt) {
+        this.dayInt = dayInt;
     }
 }
