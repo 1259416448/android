@@ -336,10 +336,7 @@
     }
     NSDictionary *footprint = [NSDictionary dictionaryWithObjectsAndKeys:self.addressModel.address,@"address",[self.footprintTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]],@"content",[NSNumber numberWithDouble:self.addressModel.latitude],@"latitude",[NSNumber numberWithDouble:self.addressModel.longitude],@"longitude",nil];
     //1、首先上传图片
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.label.textColor = [UIColor whiteColor];
-    hud.bezelView.color = [UIColor blackColor];
-    hud.activityIndicatorColor = [UIColor whiteColor];
+    MBProgressHUD *hud = [OTWUtils alertLoading:@"" userInteractionEnabled:NO target:self];
     if(self.publishPhotosView.images.count > 0){
         //显示正在上传提示
         hud.label.text = @"正在上传图片";
@@ -371,7 +368,7 @@
         if(result){
             [hud hideAnimated:YES];
             if([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]){
-                [self errorTips:@"发布成功" userInteractionEnabled:YES];
+                [OTWUtils alertSuccess:@"发布成功" userInteractionEnabled:YES target:self];
                 NSDictionary *dict = result[@"body"];
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"releasedFoorprint" object:nil userInfo:dict];
                 [self performSelector:@selector(cacelRelease) withObject:nil afterDelay:1.5f];

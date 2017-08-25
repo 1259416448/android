@@ -9,6 +9,7 @@
 #import "OTWBaseViewController.h"
 #import "OTWPersonalFootprintsListModel.h"
 #import <MJRefresh.h>
+#import "OTWNotFundFootprintView.h"
 
 @interface OTWPersonalFootprintsListController : OTWBaseViewController
 
@@ -24,7 +25,15 @@
 
 @property (nonatomic,strong) NSMutableArray<OTWPersonalFootprintsListModel *> *status;
 
+@property (nonatomic,strong) OTWNotFundFootprintView *notFundFootprintView;
+
+@property (nonatomic,assign) BOOL ifInsertCreateCell;
+
 +(instancetype) initWithIfMyFootprint: (BOOL) ifMyFootprint;
+
+- (void) insertCreateCell;
+
+@property (nonatomic,strong) UIButton *button;
 
 @end
 

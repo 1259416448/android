@@ -3,6 +3,7 @@ package cn.arvix.ontheway.business.controller;
 import cn.arvix.base.common.entity.JSONResult;
 import cn.arvix.base.common.web.controller.ExceptionHandlerController;
 import cn.arvix.ontheway.business.dto.CreateAndClaimDTO;
+import cn.arvix.ontheway.business.entity.Business;
 import cn.arvix.ontheway.business.service.BusinessService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,13 @@ public class AppBusinessController extends ExceptionHandlerController {
     @PostMapping(value = "/create")
     public JSONResult create(@RequestBody CreateAndClaimDTO dto) {
         return businessService.createAndClaim(dto);
+    }
+
+    @ApiOperation(value = "app端抓取百度POI数据保存接口，当前接口必须指定类型")
+    @ResponseBody
+    @PostMapping(value = "/fetch/create")
+    public JSONResult createFetchData(@RequestBody Business dto) {
+        return businessService.createFetchData(dto);
     }
 
 }

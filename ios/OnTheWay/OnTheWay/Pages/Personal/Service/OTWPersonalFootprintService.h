@@ -15,4 +15,6 @@ typedef void(^requestCompletionBlock)(id result, NSError *error);
 
 - (void) userFootprintList:(NSDictionary *) params userId:(NSString *)userId viewController:(UIViewController *)viewController completion:(requestCompletionBlock)block;
 
+- (BOOL) checkIfNotFund:(UIViewController *)viewController;
+
 @end

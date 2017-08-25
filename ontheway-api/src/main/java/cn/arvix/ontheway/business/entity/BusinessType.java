@@ -41,8 +41,11 @@ public class BusinessType extends BaseEntity<Long> {
     //父级ID，如果为空，表示顶级节点
     private Long parentId;
 
-    //图标Str
+    //图标Str IOS
     private String iconStr;
+
+    //图标Str Android
+    private String iconStrAndroid;
 
     //是否展示
     private Boolean ifShow = Boolean.TRUE;
@@ -71,6 +74,7 @@ public class BusinessType extends BaseEntity<Long> {
         jsonMap.put("ifTop", ifTop);
         jsonMap.put("parentId", parentId);
         jsonMap.put("iconStr", iconStr);
+        jsonMap.put("iconStrAndroid", iconStrAndroid);
         jsonMap.put("ifShow", ifShow);
         jsonMap.put("hasChildren", hasChildren);
         jsonMap.put("colorCode", colorCode);
@@ -141,5 +145,13 @@ public class BusinessType extends BaseEntity<Long> {
 
     public void setColorCode(String colorCode) {
         this.colorCode = colorCode;
+    }
+
+    public String getIconStrAndroid() {
+        return iconStrAndroid;
+    }
+
+    public void setIconStrAndroid(String iconStrAndroid) {
+        this.iconStrAndroid = iconStrAndroid;
     }
 }
