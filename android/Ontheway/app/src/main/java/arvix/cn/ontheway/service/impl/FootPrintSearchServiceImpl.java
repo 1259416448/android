@@ -66,7 +66,7 @@ public class FootPrintSearchServiceImpl implements FootPrintSearchService {
             requestParams.addParameter("searchDistance", trackSearchVo.getSearchDistance());
         }
         if(trackSearchVo.getSearchTime()!=null){
-            requestParams.addParameter("searchTime", trackSearchVo.getSearchTime());
+            requestParams.addParameter("time", trackSearchVo.getSearchTime());
         }
         x.http().get(requestParams, new Callback.CommonCallback<String>() {
             @Override

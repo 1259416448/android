@@ -384,11 +384,13 @@ public class ArFootPrintDrawActivity extends BaseActivity implements SensorEvent
             float[] rotationMatrixFromVector = new float[16];
             float[] projectionMatrix = new float[16];
             float[] rotatedProjectionMatrix = new float[16];
+            /*
             String str = "";
             for(float f : sensorEvent.values){
                 str = str+","+f;
             }
             Log.i(TAG, "values----------------->:"+ str);
+           */
             SensorManager.getRotationMatrixFromVector(rotationMatrixFromVector, sensorEvent.values);
 
             if (arCamera != null) {
@@ -407,7 +409,7 @@ public class ArFootPrintDrawActivity extends BaseActivity implements SensorEvent
         }
         if (sensorEvent.sensor.getType() == Sensor.TYPE_ORIENTATION) {
             float degree = sensorEvent.values[0];// 存放了方向值 90
-            Log.i(TAG, "degree----------------->:"+degree);
+           // Log.i(TAG, "degree----------------->:"+degree);
             AROverlayViewDraw.zDegrees = degree;
         }
       //  calculateOrientation();

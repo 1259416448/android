@@ -72,7 +72,7 @@ public class TrackListActivity   extends BaseActivity implements AdapterView.OnI
         adapter = new TrackListAdapter(this, R.layout.track_list_item, footPrintList);
         listHolder = ListViewHolder.initList(this);
         listHolder.list.setAdapter(adapter);
-        listHolder.list.getRefreshableView().setDividerHeight(StaticMethod.dip2px(self,10));
+        listHolder.list.getRefreshableView().setDividerHeight(0);
         x.view().inject(this);
         listHolder.list.setOnItemClickListener(this);
         listHolder.list.setMode(PullToRefreshBase.Mode.BOTH);

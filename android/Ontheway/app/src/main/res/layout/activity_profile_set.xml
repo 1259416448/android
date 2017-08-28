@@ -26,10 +26,11 @@
             android:background="@color/white"
             android:src="@drawable/arrow_right" />
     </LinearLayout>
+    <include layout="@layout/common_line_hr" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="2dp"
         android:background="@color/white">
         <TextView
             android:layout_width="wrap_content"
@@ -45,14 +46,14 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginRight="15dp"
-
             android:background="@color/white"
             android:src="@drawable/arrow_right" />
     </LinearLayout>
+
+    <include layout="@layout/common_line_hr" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="2dp"
         android:background="@color/white">
         <TextView
             android:layout_width="wrap_content"
@@ -68,13 +69,42 @@
     </LinearLayout>
 
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/white">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:src="@drawable/wd_sz_shanghu"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:textColor="@color/text_label_default"
+            android:layout_gravity="center"
+            android:textSize="16sp"
+            android:text="如何认领商家"
+            />
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="15dp"
+            android:background="@color/white"
+            android:src="@drawable/arrow_right" />
+    </LinearLayout>
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="50dp"
-
         android:background="@color/white">
-
         <Button
             android:id="@+id/sign_out_btn"
             android:layout_width="match_parent"
