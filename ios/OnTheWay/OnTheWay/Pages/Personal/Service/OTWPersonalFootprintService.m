@@ -29,7 +29,9 @@ static NSString *userFootprintUrl = @"/app/footprint/user/{userId}";
 {
     if(!_number) _number = 0;
     if(!_size) _size = 15;
-    
+    if(!viewController.ifInsertCreateCell){
+        [viewController insertCreateCell];
+    }
     if(_currentTime){
         params = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithInt:_number],@"number",[NSNumber numberWithInt:_size],@"size",_currentTime,@"currentTime",nil];
     }else{
@@ -76,12 +78,19 @@ static NSString *userFootprintUrl = @"/app/footprint/user/{userId}";
                 [viewController.tableView reloadData];
                 if(array.count < _size){ //查询的数据小于分页数据 表示已完成 这里可能会存在多请求一次数据库
                     [viewController.tableView.mj_footer endRefreshingWithNoMoreData];
+                    viewController.tableView.mj_footer.hidden = YES;
                 }else{
                     _number ++;
                     [viewController.tableView.mj_footer endRefreshing];
                 }
             }else{
+                //如果status == 0 或者 只有 相机发布数据
+                if(viewController.status.count == 0 || [self checkIfNotFund:viewController]){
+                    viewController.notFundFootprintView.hidden = NO;
+                    viewController.button.hidden = YES;
+                }
                 [viewController.tableView.mj_footer endRefreshingWithNoMoreData];
+                viewController.tableView.mj_footer.hidden = YES;
             }
         }else{ //请求失败，服务端错误
             [viewController errorTips:@"服务端繁忙，请稍后再试" userInteractionEnabled:NO];
@@ -90,6 +99,20 @@ static NSString *userFootprintUrl = @"/app/footprint/user/{userId}";
         [viewController.tableView.mj_footer endRefreshing];
         [viewController netWorkErrorTips:error];
     }];
+}
+
+- (BOOL) checkIfNotFund:(OTWPersonalFootprintsListController *)viewController
+{
+    if(viewController.status.count == 1){
+        OTWPersonalFootprintsListModel *model = viewController.status[0];
+        if([model.month isEqualToString:@"0"] && model.monthData.count == 1){
+            OTWPersonalFootprintFrame *footprint = model.monthData[0];
+            if(footprint.hasRelease){
+                return YES;
+            }
+        }
+    }
+    return NO;
 }
 
 @end

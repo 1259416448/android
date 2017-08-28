@@ -1,12 +1,21 @@
 package arvix.cn.ontheway.ui;
 
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -25,12 +34,12 @@ import arvix.cn.ontheway.bean.UserInfo;
 import arvix.cn.ontheway.check.CheckUtils;
 import arvix.cn.ontheway.http.ServerUrl;
 import arvix.cn.ontheway.service.inter.CacheService;
-import arvix.cn.ontheway.ui.head.HeaderHolder;
 import arvix.cn.ontheway.ui.view.BottomDialog;
 import arvix.cn.ontheway.utils.HmacSHA256Utils;
 import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticMethod;
 import arvix.cn.ontheway.utils.StaticVar;
+import arvix.cn.ontheway.utils.UIUtils;
 
 /**
  * Created by asdtiang on 2017/8/3 0003.
@@ -43,35 +52,50 @@ public class LoginActivity  extends BaseActivity  {
     private EditText phoneEt;
     @ViewInject(R.id.check_code_et)
     private EditText checkCodeEt;
-    @ViewInject(R.id.send_sms_btn)
-    private Button sendSmsBtn;
+    @ViewInject(R.id.send_sms_tv)
+    private TextView sendSmsTv;
     @ViewInject(R.id.login_btn)
     private Button loginBtn;
+    @ViewInject(R.id.phone_line)
+    private LinearLayout phoneLine;
+    @ViewInject(R.id.check_code_line)
+    private LinearLayout checkCodeLine;
+    @ViewInject(R.id.login_btn_line)
+    private LinearLayout loginBtnLine;
+    @ViewInject(R.id.phone_tv_icon)
+    private TextView phoneTvIcon;
+    @ViewInject(R.id.error_info_line)
+    private LinearLayout errorInfoLine;
+    @ViewInject(R.id.error_tv)
+    private TextView errorTv;
+    @ViewInject(R.id.check_code_tv_icon)
+    private TextView checkCodeTvIcon;
     CacheService cache;
-    private BottomDialog bottomDialog;
+    private Handler mainHandler;
+    private final int sumSeconds = 60;
+    private int currentCountSec = sumSeconds;
+    private final int endCountTag = -1;
+    private boolean phoneOk = false;
+    private boolean smsOk = false;
+    private boolean sendSmsClick = false;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        UIUtils.setBarStyle(self);
         x.view().inject(self);
         cache = OnthewayApplication.getInstahce(CacheService.class);
-        HeaderHolder head=new HeaderHolder();
-        head.init(self,"登录");
-        head.setUpLeftBtn(getResources().getDrawable(R.drawable.ar_guanbi,null), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
         initView();
     }
 
-
     private void initView() {
-        sendSmsBtn.setOnClickListener(new View.OnClickListener() {
+        sendSmsTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String phone = phoneEt.getText().toString();
+                errorInfoLine.setVisibility(View.GONE);
                 Log.i("","------------------------------------>"+phone);
                 if(CheckUtils.checkPhone(getApplicationContext(),phone)){
                     String digest = HmacSHA256Utils.digest(StaticVar.SALT_KEY,"mobile:"+phone);
@@ -83,10 +107,27 @@ public class LoginActivity  extends BaseActivity  {
                         @Override
                         public void onSuccess(String o) {
                             Log.i("o",o.toString());
-                            Toast toast = Toast.makeText(getApplicationContext(),
-                                    "验证码发送成功", Toast.LENGTH_LONG);
-                            toast.setGravity(Gravity.CENTER, 0, 0);
-                            toast.show();
+                            loginBtnCheckClick();
+                            sendSmsClick = true;
+                            sendSmsTv.setEnabled(false);
+                            sendSmsTv.setTextColor(Color.parseColor("#C4C4C4"));
+                            if(currentCountSec==sumSeconds){//启动倒计时
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        while(currentCountSec>0){
+                                            mainHandler.sendEmptyMessage(currentCountSec--);
+                                            try {
+                                                Thread.sleep(1000);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                        currentCountSec = sumSeconds;
+                                        mainHandler.sendEmptyMessage(endCountTag);
+                                    }
+                                }).start();
+                            }
                         }
 
                         @Override
@@ -137,7 +178,9 @@ public class LoginActivity  extends BaseActivity  {
                                     setResult(RESULT_OK, data);
                                     finish();
                                 }else if(response.getCode() == StaticVar.ERROR){
-                                    StaticMethod.showToast("登录失败",self);
+                                    phoneLine.setBackgroundResource(R.drawable.login_text_boder);
+                                    errorTv.setText(response.getMessage());
+                                    errorInfoLine.setVisibility(View.VISIBLE);
                                 }else{
                                     StaticMethod.showToast("登录失败" + response.getCode(),self);
                                     finish();
@@ -145,7 +188,6 @@ public class LoginActivity  extends BaseActivity  {
                             }catch (Exception e){
                                 e.printStackTrace();
                             }
-
 
                         }
 
@@ -167,12 +209,80 @@ public class LoginActivity  extends BaseActivity  {
                 }
             }
             });
+        phoneEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(CheckUtils.checkPhone(s.toString())){
+                    phoneLine.setBackgroundResource(R.drawable.login_text_boder_focused);
+                    phoneTvIcon.setCompoundDrawablesWithIntrinsicBounds (getResources().getDrawable(R.drawable.dl_shouji_click),null,null,null);
+                    phoneOk = true;
+                }else{
+                    phoneOk = false;
+                    phoneLine.setBackgroundResource(R.drawable.login_text_boder);
+                    phoneTvIcon.setCompoundDrawablesWithIntrinsicBounds (getResources().getDrawable(R.drawable.dl_shouji),null,null,null);
+                }
+                loginBtnCheckClick();
+                errorInfoLine.setVisibility(View.GONE);
+            }
+        });
+        checkCodeEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
 
-        // fxBtn.setOnClickListener(this);
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(CheckUtils.checkSmsCode(s.toString())){
+                    smsOk = true;
+                    checkCodeLine.setBackgroundResource(R.drawable.login_text_boder_focused);
+                    checkCodeTvIcon.setCompoundDrawablesWithIntrinsicBounds (getResources().getDrawable(R.drawable.dl_yanzhengma_click),null,null,null);
+                }else{
+                    smsOk = false;
+                    checkCodeLine.setBackgroundResource(R.drawable.login_text_boder);
+                    checkCodeTvIcon.setCompoundDrawablesWithIntrinsicBounds (getResources().getDrawable(R.drawable.dl_yanzhengma),null,null,null);
+                }
+                loginBtnCheckClick();
+                errorInfoLine.setVisibility(View.GONE);
+            }
+        });
+
+        //主线程的 handler 接收到 子线程的消息，然后修改TextView的显示
+        mainHandler=new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                sendSmsTv.setText("已发送("+currentCountSec+"s)");
+                if(msg.what == endCountTag){
+                    sendSmsTv.setEnabled(true);
+                    sendSmsTv.setTextColor(Color.parseColor("#E50834"));
+                    sendSmsTv.setText("获取验证码");
+                }
+            }
+        };
     }
 
+    private void loginBtnCheckClick(){
+        if(phoneOk && smsOk && sendSmsClick){
+            loginBtnLine.setBackgroundResource(R.drawable.dl_button);
+            loginBtn.setBackgroundResource(R.drawable.login_btn_click);
+        }else{
+            loginBtnLine.setBackground(null);
+            loginBtn.setBackgroundResource(R.drawable.login_btn);
+        }
+    }
 
 }

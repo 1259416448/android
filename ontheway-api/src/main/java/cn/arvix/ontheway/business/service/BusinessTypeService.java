@@ -72,6 +72,7 @@ public class BusinessTypeService extends BaseServiceImpl<BusinessType, Long> {
         }
         dbEntity.setName(m.getName());
         dbEntity.setIconStr(m.getIconStr());
+        dbEntity.setIconStrAndroid(m.getIconStrAndroid());
         dbEntity.setIfTop(m.getIfTop());
         dbEntity.setWeight(m.getWeight());
         dbEntity.setParentId(m.getParentId());

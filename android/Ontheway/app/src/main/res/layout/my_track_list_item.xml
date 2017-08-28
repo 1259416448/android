@@ -61,6 +61,7 @@
             android:text="13日"
             />
         <RelativeLayout
+            android:id="@+id/photo4_relative"
             android:layout_marginLeft="15.5dp"
             android:layout_marginTop="15dp"
             android:layout_width="80dp"

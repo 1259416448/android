@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "OTWCommentFrame.h"
 
+typedef void(^ButtonClickBlock)(UITableViewCell *cell);
+
 @interface OTWFootprintDetailViewCell : UITableViewCell
 /**
  *创建cell
@@ -16,5 +18,7 @@
 + (instancetype)cellWithTableView:(UITableView *)tableView reuseIdentifier:(NSString*)identifier;
 
 - (void)setData:(OTWCommentFrame *)data;
+
+@property (nonatomic,copy) ButtonClickBlock block;
 
 @end

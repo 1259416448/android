@@ -30,7 +30,8 @@ import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.service.BaiduLocationListenerService;
 import arvix.cn.ontheway.service.inter.BaiduPoiService;
 import arvix.cn.ontheway.service.inter.CacheService;
-import arvix.cn.ontheway.ui.ar.ArFootPrintActivity;
+import arvix.cn.ontheway.test.ARViewTest;
+import arvix.cn.ontheway.ui.ar_draw.ArFootPrintDrawActivity;
 import arvix.cn.ontheway.ui.msg.MsgIndexFrag;
 import arvix.cn.ontheway.ui.usercenter.MyProfileFragment;
 import arvix.cn.ontheway.utils.OnthewayApplication;
@@ -62,7 +63,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             @Override
             public void onClick(View view) {
                 Log.i("zuji", "zuji--------------------------------->");
-                Intent intent = new Intent(self, ArFootPrintActivity.class);
+                //Intent intent = new Intent(self, ArFootPrintActivity.class);
+                Intent intent = new Intent(self, ArFootPrintDrawActivity.class);
                 intent.putExtra(BaiduActivity.EXTRA_KEYWORD, "美食");
                 startActivity(intent);
             }
@@ -118,7 +120,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         tabArCenterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(self, ARView.class);
+                Intent intent = new Intent(self, ARViewTest.class);
                 startActivity(intent);
             }
         });

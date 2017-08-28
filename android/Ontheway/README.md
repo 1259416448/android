@@ -26,6 +26,9 @@ Format: ![在AR的视图中找到有趣的人的足迹和有趣的地点](https:
 导入成功后，请用android真机进行测试或者开发（http://www.cnblogs.com/farewell-farewell/p/6290271.html），不支持模拟器运行。
 注意：有些android需要安装对应的驱动程序，请下载安装，否则会找不到设备
 
+#android版本支持
+目前支持到api 21，即android 5.0
+
 
 
 

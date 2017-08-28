@@ -29,7 +29,7 @@ import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.service.inter.FootPrintSearchNotify;
 import arvix.cn.ontheway.service.inter.FootPrintSearchService;
 import arvix.cn.ontheway.ui.BaseActivity;
-import arvix.cn.ontheway.ui.ar.ArFootPrintActivity;
+import arvix.cn.ontheway.ui.ar_view.ArFootPrintActivity;
 import arvix.cn.ontheway.ui.head.HeaderHolder;
 import arvix.cn.ontheway.ui.usercenter.MyTrackDetailActivity;
 import arvix.cn.ontheway.ui.view.ListViewHolder;

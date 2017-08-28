@@ -1,4 +1,4 @@
-package arvix.cn.ontheway.ui.ar;
+package arvix.cn.ontheway.ui.ar_draw;
 
 import android.Manifest;
 import android.content.Intent;
@@ -17,33 +17,38 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
-
 import arvix.cn.ontheway.BaiduActivity;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.bean.FootPrintSearchVo;
+import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.ui.BaseActivity;
+import arvix.cn.ontheway.ui.ar_view.ARCamera;
 import arvix.cn.ontheway.ui.track.TrackCreateActivity;
 import arvix.cn.ontheway.ui.track.TrackListActivity;
 import arvix.cn.ontheway.ui.track.TrackMapActivity;
+import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticMethod;
+import arvix.cn.ontheway.utils.StaticVar;
 import arvix.cn.ontheway.utils.UIUtils;
 
-public class ArFootPrintActivity extends BaseActivity implements SensorEventListener, LocationListener {
+public class ArFootPrintDrawActivity extends BaseActivity implements SensorEventListener, LocationListener {
 
     final static String TAG = "ARActivity";
     private  SurfaceView surfaceView;
     private FrameLayout cameraContainerLayout;
-    private AROverlayView arOverlayView;
+    private AROverlayViewDraw arOverlayView;
     private Camera camera;
     private ARCamera arCamera;
     public static TextView tvCurrentLocation;
@@ -58,7 +63,7 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
 
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 0; // 10 meters
     private static final long MIN_TIME_BW_UPDATES = 0;//1000 * 60 * 1; // 1 minute
-    private FootPrintSearchVo trackSearchVo = new FootPrintSearchVo();
+    FootPrintSearchVo trackSearchVo = new FootPrintSearchVo();
     private LocationManager locationManager;
     public Location location;
     boolean isGPSEnabled;
@@ -101,15 +106,26 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
     private Button timeThreeBtn;
     @ViewInject(R.id.refresh_btn)
     private Button refreshBtn;
+    @ViewInject(R.id.back_img)
+    private Button backBtn;
+    public static int SCREEN_WIDTH  = 0;
+
+    public static int SCREEN_HEIGHT  = 0;
+
     public static Handler handler = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // currentArTrackActivity = this;
-        setContentView(R.layout.activity_ar_track);
+        setContentView(R.layout.activity_ar_footprint_draw);
         UIUtils.setBarStyle(self);
-        x.view().inject(self);
-        trackSearchVo.setSize(30);
+        x.view().inject(this);
+        DisplayMetrics metrics = new DisplayMetrics();
+        this.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        // 屏幕的分辨率
+        SCREEN_WIDTH = metrics.widthPixels;
+        SCREEN_HEIGHT = metrics.heightPixels;
+
         handler = new Handler(){
             public void handleMessage(Message msg){
                 String totalCount = msg.getData().getString("totalCount");
@@ -117,13 +133,13 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
                 updateUi(totalCount,address);
             }
         };
-
+        trackSearchVo.setSize(30);
         searchKeyWord = getIntent().getStringExtra(BaiduActivity.EXTRA_KEYWORD);
         sensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);
         cameraContainerLayout = (FrameLayout) findViewById(R.id.camera_container_layout);
         surfaceView = (SurfaceView) findViewById(R.id.surface_view);
         tvCurrentLocation = (TextView) findViewById(R.id.tv_current_location);
-        arOverlayView = new AROverlayView(this,cameraContainerLayout,trackSearchVo,radarPointFrameLayout);
+        arOverlayView = new AROverlayViewDraw(this,(ViewGroup)getWindow().getDecorView(),trackSearchVo,radarPointFrameLayout);
 
         rangeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,6 +151,7 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
                 }
             }
         });
+
         timeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -145,6 +162,8 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
                 }
             }
         });
+
+
         toTrackListBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -168,12 +187,14 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
                 startActivity(intent);
             }
         });
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         initSearchEvent();
     }
-
-
-
-
     private void initSearchEvent(){
         r100mBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -248,9 +269,9 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
     public void updateUi(String totalCount,String address){
         totalCountTv.setText(totalCount);
         addressTv.setText(StaticMethod.genLesAddressStr(address,5));
+        // draw ui
+        arOverlayView.invalidate();
     }
-
-
 
     @Override
     public void onResume() {
@@ -258,15 +279,13 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
         requestLocationPermission();
         requestCameraPermission();
         registerSensors();
-        Log.i(logTag,"onResume-------------------------------onResume");
-        arOverlayView.updateSearchParams();
+        initAROverlayView();
     }
 
     @Override
     public void onPause() {
         releaseCamera();
         sensorManager.unregisterListener(this);
-        arOverlayView.onDestroy();
         super.onPause();
     }
 
@@ -274,8 +293,8 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
     protected void onDestroy() {
         super.onDestroy();
         sensorManager.unregisterListener(this);
-        if(null!= arOverlayView){
-            arOverlayView.onDestroy();
+        if(null!=arOverlayView){
+            arOverlayView.clearData();
         }
     }
 
@@ -297,8 +316,16 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
         }
     }
 
+    public void initAROverlayView() {
+        if (arOverlayView.getParent() != null) {
+            ((ViewGroup) arOverlayView.getParent()).removeView(arOverlayView);
+        }
+        cameraContainerLayout.addView(arOverlayView);
+    }
+
     public void initARCameraView() {
         reloadSurfaceView();
+
         if (arCamera == null) {
             arCamera = new ARCamera(this, surfaceView);
         }
@@ -308,6 +335,7 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
         cameraContainerLayout.addView(arCamera);
         arCamera.setKeepScreenOn(true);
         initCamera();
+
     }
 
     private void initCamera() {
@@ -327,6 +355,7 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
         if (surfaceView.getParent() != null) {
             ((ViewGroup) surfaceView.getParent()).removeView(surfaceView);
         }
+
         cameraContainerLayout.addView(surfaceView);
     }
 
@@ -343,30 +372,45 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
     private void registerSensors() {
         sensorManager.registerListener(this,
                 sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR),
-                SensorManager.SENSOR_DELAY_FASTEST);
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)  , SensorManager.SENSOR_DELAY_FASTEST);
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) ,SensorManager.SENSOR_DELAY_FASTEST);
+                SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)  , SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) ,SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION) ,SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         if (sensorEvent.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
-          //  Log.d(TAG,"fffffffffffff:"+sensorEvent.values);
             float[] rotationMatrixFromVector = new float[16];
             float[] projectionMatrix = new float[16];
             float[] rotatedProjectionMatrix = new float[16];
+            String str = "";
+            for(float f : sensorEvent.values){
+                str = str+","+f;
+            }
+            Log.i(TAG, "values----------------->:"+ str);
             SensorManager.getRotationMatrixFromVector(rotationMatrixFromVector, sensorEvent.values);
+
             if (arCamera != null) {
                 projectionMatrix = arCamera.getProjectionMatrix();
             }
+
             Matrix.multiplyMM(rotatedProjectionMatrix, 0, projectionMatrix, 0, rotationMatrixFromVector, 0);
             this.arOverlayView.updateRotatedProjectionMatrix(rotatedProjectionMatrix);
         }
-        if (sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
+
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
             magneticFieldValues = sensorEvent.values;
-        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
+        }
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             accelerometerValues = sensorEvent.values;
-        calculateOrientation();
+        }
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_ORIENTATION) {
+            float degree = sensorEvent.values[0];// 存放了方向值 90
+            Log.i(TAG, "degree----------------->:"+degree);
+            AROverlayViewDraw.zDegrees = degree;
+        }
+      //  calculateOrientation();
     }
 
 
@@ -428,8 +472,18 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
     private void updateLatestLocation() {
         if (arOverlayView !=null&&location!=null) {
             arOverlayView.updateCurrentLocation(location);
-            tvCurrentLocation.setText(String.format("lat: %s \nlon: %s \naltitude: %s \n",
-                    location.getLatitude(), location.getLongitude(), location.getAltitude()));
+          //  tvCurrentLocation.setText(String.format("lat: %s \nlon: %s \naltitude: %s \n",
+            //        location.getLatitude(), location.getLongitude(), location.getAltitude()));
+            CacheService cache = OnthewayApplication.getInstahce(CacheService.class);
+            Double latCache = cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LAT);
+            Double lonCache = 0.0;
+            if(latCache!=null){
+                lonCache = cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LON);
+                Log.i(this.getClass().getName(),"init location from cache");
+                trackSearchVo.setLongitude(lonCache);
+                trackSearchVo.setLatitude(latCache);
+                arOverlayView.updateLocationData(latCache,lonCache);
+            }
         }
     }
 
@@ -459,16 +513,14 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
         SensorManager.getOrientation(R, values);
         // 要经过一次数据格式的转换，转换为度
         values[0] = (float) Math.toDegrees(values[0]);
-      //  Log.i(TAG, values[0]+"");
+        //  Log.i(TAG, values[0]+"");
         values[1] = (float) Math.toDegrees(values[1]);
         values[2] = (float) Math.toDegrees(values[2]);
-      //  Log.i(TAG, "xDegrees:"+values[1]+" yDegrees:"+values[2]);
+        //  Log.i(TAG, "xDegrees:"+values[1]+" yDegrees:"+values[2]);
+        AROverlayViewDraw.xDegrees = values[1];
+        AROverlayViewDraw.yDegrees = values[2];
+        AROverlayViewDraw.zDegrees = values[0];
 
-        AROverlayView.xDegrees = values[1];
-        AROverlayView.yDegrees = values[2];
-        AROverlayView.zDegrees = values[0];
-      //  radarPointFrameLayout.setRotation(values[0]);
-        /*
         if(values[0] >= -5 && values[0] < 5){
             Log.i(TAG, "正北");
         }
@@ -493,6 +545,6 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
         else if(values[0] >= -85 && values[0] <-5){
             Log.i(TAG, "西北");
         }
-        */
+
     }
 }

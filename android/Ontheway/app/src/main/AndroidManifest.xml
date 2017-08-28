@@ -157,12 +157,13 @@
             android:label="WNaviGuideActivity"
             />
         <activity
-            android:name=".ui.ARView"
+            android:name=".test.ARViewTest"
             android:label="ARView"
             />
-        <activity android:name=".ui.ar.ArFootPrintActivity">
+        <activity android:name=".ui.ar_view.ArFootPrintActivity">
 
         </activity>
+        <activity android:name=".ui.ar_draw.ArFootPrintDrawActivity"></activity>
     </application>
 
 </manifest>

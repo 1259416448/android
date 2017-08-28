@@ -58,11 +58,10 @@ public class Business extends BaseEntity<Long> {
     //联系方式
     @ApiModelProperty(value = "联系方式")
     @NotNull(message = "contactInfo is not null")
-    @Length(min = 1, max = 64, message = "1 <= contactInfo <= 64 ")
+    @Length(min = 0, max = 255, message = "0 <= contactInfo <= 255 ")
     private String contactInfo;
 
     //类型IDs
-    @ApiModelProperty(hidden = true)
     @Type(type = "SetToStringUserType")
     @NotNull(message = "typeIds is not null")
     private Set<Long> typeIds;
@@ -88,6 +87,8 @@ public class Business extends BaseEntity<Long> {
 
     //商家是否展示 如果是用户自己添加的商家，需要认领通过后才会展示
     private Boolean ifShow = Boolean.FALSE;
+
+    private String poiDetailUrl;
 
     /**
      * checkLack
@@ -183,5 +184,13 @@ public class Business extends BaseEntity<Long> {
 
     public void setIfShow(Boolean ifShow) {
         this.ifShow = ifShow;
+    }
+
+    public String getPoiDetailUrl() {
+        return poiDetailUrl;
+    }
+
+    public void setPoiDetailUrl(String poiDetailUrl) {
+        this.poiDetailUrl = poiDetailUrl;
     }
 }

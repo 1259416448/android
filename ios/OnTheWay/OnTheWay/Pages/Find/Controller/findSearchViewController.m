@@ -157,7 +157,7 @@
         [clearSearchBar setBackgroundImage:[UIImage imageNamed:@"fx_guanbi"] forState:(UIControlStateNormal)];
         [clearSearchBar addTarget:self action:@selector(clearSearchBarClick) forControlEvents:UIControlEventTouchUpInside];
           clearSearchBar.showsTouchWhenHighlighted = NO;
-        [_searchBar addSubview:clearSearchBar];
+//        [_searchBar addSubview:clearSearchBar];
     }
     return _searchBar;
 }

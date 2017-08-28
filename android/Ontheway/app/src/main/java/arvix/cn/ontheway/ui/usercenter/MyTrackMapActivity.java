@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.mapapi.map.BaiduMap;
@@ -51,6 +52,7 @@ import arvix.cn.ontheway.ui.MainActivity;
 import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticMethod;
 import arvix.cn.ontheway.utils.StaticVar;
+import arvix.cn.ontheway.utils.UIUtils;
 
 /**
  * Created by asdtiang on 2017/7/25 0025.
@@ -71,6 +73,8 @@ public class MyTrackMapActivity extends BaseActivity {
     private LinearLayout toMyTrackListLi;
     @ViewInject(R.id.to_my_track_btn)
     private Button toMyTrackListBtn ;
+    @ViewInject(R.id.nickname_tv)
+    TextView nicknameTv;
 
     /**
      * 监听Back键按下事件,方法2:
@@ -174,9 +178,9 @@ public class MyTrackMapActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_track_map);
+        UIUtils.setBarStyle(self);
         x.view().inject(this);
         StaticMethod.setCircularHeaderImg(headerIV,180,180);
-
         searchKeyWord = getIntent().getStringExtra(BaiduActivity.EXTRA_KEYWORD);
         //获取地图控件引用
         mMapView = (MapView) findViewById(R.id.bmapView);
@@ -223,6 +227,8 @@ public class MyTrackMapActivity extends BaseActivity {
                 startActivity(new Intent(self,MyTrackListActivity.class));
             }
         });
+        nicknameTv.setText(App.userInfo.getName());
+        receiverUserInfoChange = StaticMethod.registerUserInfoChange(self,nicknameTv,headerIV);
     }
 
     @Override
