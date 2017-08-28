@@ -35,8 +35,15 @@
 		18BCFA971F4A795000B8E09D /* OTWNoPraiseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BCFA961F4A795000B8E09D /* OTWNoPraiseViewController.m */; };
 		18BCFA9A1F4A802100B8E09D /* OTWNoSystemNewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BCFA991F4A802100B8E09D /* OTWNoSystemNewViewController.m */; };
 		18BCFA9D1F4A878900B8E09D /* OTWNoFootprintViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BCFA9C1F4A878900B8E09D /* OTWNoFootprintViewController.m */; };
+		18BCFAA01F4ADAF700B8E09D /* OTWAddNewShopViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BCFA9F1F4ADAF700B8E09D /* OTWAddNewShopViewController.m */; };
+		18BCFAA31F4ADCEA00B8E09D /* CreateShopModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BCFAA21F4ADCEA00B8E09D /* CreateShopModel.m */; };
+		18BCFAA61F4BCF2000B8E09D /* CreateShopTFCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BCFAA51F4BCF2000B8E09D /* CreateShopTFCell.m */; };
+		18BCFAA91F4C000500B8E09D /* CreateShopFormModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BCFAA81F4C000500B8E09D /* CreateShopFormModel.m */; };
+		18BCFAAC1F4D1A7200B8E09D /* CreateShopTVCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BCFAAB1F4D1A7200B8E09D /* CreateShopTVCell.m */; };
+		18BCFAAF1F4D36B100B8E09D /* CreateShopTVTWOCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BCFAAE1F4D36B100B8E09D /* CreateShopTVTWOCell.m */; };
+		18BCFAB21F4D4E7100B8E09D /* CreateShopPicCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BCFAB11F4D4E7100B8E09D /* CreateShopPicCell.m */; };
 		B12360111F4C075F00E8FA62 /* OTWPersonalWalletDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B12360101F4C075F00E8FA62 /* OTWPersonalWalletDetailViewController.m */; };
-		B12360141F4D182900E8FA62 /* OTWPersonalWalletDetailViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B12360131F4D182900E8FA62 /* OTWPersonalWalletDetailViewCell.m */; };
+        B12360141F4D182900E8FA62 /* OTWPersonalWalletDetailViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B12360131F4D182900E8FA62 /* OTWPersonalWalletDetailViewCell.m */; };
 		B13ADA1D1F1B23DA008E889C /* OTWSystemNewsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B13ADA1C1F1B23DA008E889C /* OTWSystemNewsViewController.m */; };
 		B13ADA201F1C5508008E889C /* OTWSystemNewsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B13ADA1F1F1C5508008E889C /* OTWSystemNewsCell.m */; };
 		B13ADA231F1C5660008E889C /* OTWSystemNewsCellFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = B13ADA221F1C5660008E889C /* OTWSystemNewsCellFrame.m */; };
@@ -636,6 +643,10 @@
 				B1B055851F305C0C008274FE /* OTWPersonalFindTableViewCell.m */,
 				DDEA160D1F30A0DF00056166 /* OTWPersonalFootprintTableViewCell.h */,
 				DDEA160E1F30A0DF00056166 /* OTWPersonalFootprintTableViewCell.m */,
+				DDA1AF041F4C27B200281DFC /* OTWMyInfoView.h */,
+				DDA1AF051F4C27B200281DFC /* OTWMyInfoView.m */,
+				DD67B33A1F4D51B400429EFA /* OTWNotFundFootprintView.h */,
+				DD67B33B1F4D51B400429EFA /* OTWNotFundFootprintView.m */,
 				B12360121F4D182900E8FA62 /* OTWPersonalWalletDetailViewCell.h */,
 				B12360131F4D182900E8FA62 /* OTWPersonalWalletDetailViewCell.m */,
 			);
@@ -1716,6 +1727,7 @@
 				B18A43051F207BB6002C7A5A /* OTWNewCommentListViewController.m in Sources */,
 				DDC0A93A1F1F77D100A6E4DB /* OTWSystemNewsModel.m in Sources */,
 				D7F6B0B91F14E5C60013090A /* OTWCustomTabBar.m in Sources */,
+				18BCFAAF1F4D36B100B8E09D /* CreateShopTVTWOCell.m in Sources */,
 				1802494C1F41773A004B0CDE /* OTWUtils.m in Sources */,
 				D7F6B0B61F10AA2D0013090A /* OTWLoginViewController.m in Sources */,
 				DDEA15E41F25CCA500056166 /* PYProgressView.m in Sources */,
