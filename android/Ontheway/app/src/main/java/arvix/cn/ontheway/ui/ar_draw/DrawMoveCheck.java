@@ -10,7 +10,7 @@ package arvix.cn.ontheway.ui.ar_draw;
  */
 
 public class DrawMoveCheck {
-    private boolean isMoving = false;
+    public static boolean isMoving = false;
     private int checkArraySize = 5;
     //这个值越小，移动手机时draw频率会加快。
     float moveDiffAbsMin = 0.01f;
