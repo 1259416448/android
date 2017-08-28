@@ -7,7 +7,7 @@
 //
 
 #import "OTWPersonalWalletViewController.h"
-
+#import "OTWPersonalWalletDetailViewController.h"
 @interface OTWPersonalWalletViewController (){
     NSNumber *num;
 }
@@ -158,7 +158,9 @@
 }
 -(void)walletDetailBtnClick{
     DLog(@"点击了钱包明细");
-
+ 
+    OTWPersonalWalletDetailViewController *personalWalletDetailVC = [[OTWPersonalWalletDetailViewController alloc] init];
+    [self.navigationController pushViewController:personalWalletDetailVC animated:YES];
 }
 
 -(UIView*)contenView{
