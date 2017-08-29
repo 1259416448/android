@@ -1,4 +1,4 @@
-package arvix.cn.ontheway.ui;
+package arvix.cn.ontheway.test;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -37,7 +37,7 @@ import com.raw.arview.DataView;
 import com.raw.utils.Compatibility;
 import com.raw.utils.PaintUtils;
 
-public class ARView extends Activity implements SensorEventListener{
+public class ARViewTest extends Activity implements SensorEventListener{
 
 	private static Context _context;
 	WakeLock mWakeLock;
@@ -137,7 +137,7 @@ public class ARView extends Activity implements SensorEventListener{
 		addContentView(upperLayerLayout, upperLayerLayoutParams);
 
 		if(!isInited){
-			dataView = new DataView(ARView.this);
+			dataView = new DataView(ARViewTest.this);
 			paintScreen = new PaintUtils();
 			isInited = true;
 		}
@@ -253,9 +253,9 @@ public class ARView extends Activity implements SensorEventListener{
 
 			SensorManager.getOrientation(Rot, results);
 
-			ARView.azimuth = (float)(((results[0]*180)/Math.PI)+180);
-			ARView.pitch = (float)(((results[1]*180/Math.PI))+90);
-			ARView.roll = (float)(((results[2]*180/Math.PI)));
+			ARViewTest.azimuth = (float)(((results[0]*180)/Math.PI)+180);
+			ARViewTest.pitch = (float)(((results[1]*180/Math.PI))+90);
+			ARViewTest.roll = (float)(((results[2]*180/Math.PI)));
 
 			radarMarkerView.postInvalidate();
 		}
@@ -272,13 +272,13 @@ public class ARView extends Activity implements SensorEventListener{
 }
 class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 
-	ARView arView;
+	ARViewTest arView;
 	SurfaceHolder holder;
 	Camera camera;
 
 	public CameraView(Context context) {
 		super(context);
-		arView = (ARView) context;
+		arView = (ARViewTest) context;
 
 		holder = getHolder();
 		holder.addCallback(this);
@@ -372,13 +372,13 @@ class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 }
 class RadarMarkerView extends View{
 
-	ARView arView;
+	ARViewTest arView;
 	DisplayMetrics displayMetrics;
 	RelativeLayout upperLayoutView = null;
 	public RadarMarkerView(Context context, DisplayMetrics displayMetrics, RelativeLayout rel) {
 		super(context);
 
-		arView = (ARView) context;
+		arView = (ARViewTest) context;
 		this.displayMetrics = displayMetrics;
 		upperLayoutView = rel;
 	}
@@ -386,16 +386,16 @@ class RadarMarkerView extends View{
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		ARView.paintScreen.setWidth(canvas.getWidth());
-		ARView.paintScreen.setHeight(canvas.getHeight());
-		ARView.paintScreen.setCanvas(canvas);
+		ARViewTest.paintScreen.setWidth(canvas.getWidth());
+		ARViewTest.paintScreen.setHeight(canvas.getHeight());
+		ARViewTest.paintScreen.setCanvas(canvas);
 
 
-		if (!ARView.dataView.isInited()) {
-			ARView.dataView.init(ARView.paintScreen.getWidth(), ARView.paintScreen.getHeight(),arView.camera, displayMetrics,upperLayoutView);
+		if (!ARViewTest.dataView.isInited()) {
+			ARViewTest.dataView.init(ARViewTest.paintScreen.getWidth(), ARViewTest.paintScreen.getHeight(),arView.camera, displayMetrics,upperLayoutView);
 		}
 
-		ARView.dataView.draw(ARView.paintScreen, ARView.azimuth, ARView.pitch, ARView.roll);
+		ARViewTest.dataView.draw(ARViewTest.paintScreen, ARViewTest.azimuth, ARViewTest.pitch, ARViewTest.roll);
 	}
 }
 class ResolutionsOrder implements java.util.Comparator<Camera.Size> {

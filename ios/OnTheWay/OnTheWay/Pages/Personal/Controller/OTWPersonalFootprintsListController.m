@@ -12,24 +12,18 @@
 #import "OTWPersonalFootprintService.h"
 #import <AFNetworking/UIImageView+AFNetworking.h>
 #import "OTWCustomNavigationBar.h"
+#import "OTWPersonalStatisticsModel.h"
+#import "OTWMyInfoView.h"
 
 @interface OTWPersonalFootprintsListController ()<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>
 
 @property (nonatomic,strong) UIView *personalFootprintsListTableViewHeader;
-@property (nonatomic,strong) UILabel *userName;
-@property (nonatomic,strong) UIView *headerImgBg;
-@property (nonatomic,strong) UIImageView *headerImg;
-@property (nonatomic,strong) UIImageView *bgImg;
-@property (nonatomic,strong) UILabel *fansNum;
-@property (nonatomic,strong) UIView *fansView;
-@property (nonatomic,strong) UILabel *centerCell;
-@property (nonatomic,strong) UILabel *zanNum;
-@property (nonatomic,strong) UIView *zanView;
-@property (nonatomic,strong) UIButton *button;
+@property (nonatomic,strong) OTWMyInfoView *myInfoView;
 @property (nonatomic,strong) UIView *likeView;
-@property (nonatomic,strong) UIView *myInfoView;
-@property (nonatomic,assign) CGFloat cellViewWidth;
 @property (nonatomic,strong) OTWPersonalFootprintService *service;
+@property (nonatomic,strong) OTWPersonalStatisticsModel *statisticsModel;
+@property (nonatomic,assign) BOOL ifChangedOne;
+@property (nonatomic,assign) BOOL ifChangedTwo;
 
 @end
 
@@ -49,6 +43,12 @@
     // Do any additional setup after loading the view.
     
     [self buildUI];
+    
+    self.ifChangedOne = YES;
+    
+    self.ifChangedTwo = NO;
+    
+    self.ifInsertCreateCell = NO;
     
     if(_ifMyFootprint){ //增加一个发布通知
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addReleasedFootprint:) name:@"releasedFoorprint" object:nil];
@@ -85,27 +85,24 @@
         footprintFrame.leftContent = @"今天";
         [footprintFrame initData];
         [model.monthData addObject:footprintFrame];
-        [_status addObject:model];
+        [self.status addObject:model];
+        self.ifInsertCreateCell = YES;
     }
 }
 
 -(void)buildUI{
-    
-    _status = [[NSMutableArray alloc] init];
-    
-    [self insertCreateCell];
+
     //设置标题
-    //    self.title = @"商家详情";
     [self setLeftNavigationImage:[UIImage imageNamed:@"wd_back_wirte"]];
     [self setNavigationImage:[UIImage imageNamed:@"wd_bg"]];
-    
     [self.customNavigationBar clearShadowColor];
+    
+    [self.customNavigationBar addSubview:self.myInfoView];
     
     if(!_ifMyFootprint){
         //关注
         [self setCustomNavigationRightView:self.likeView];
     }
-    //[self setRightNavigationTitle:@"+ 关注"];
     //大背景
     self.view.backgroundColor=[UIColor whiteColor];
     
@@ -124,13 +121,47 @@
     [self.view addSubview:_tableView];
     
     //设置tableview的第一行显示内容
-    _tableView.tableHeaderView=self.personalFootprintsListTableViewHeader;
-    
+    //_tableView.tableHeaderView=self.personalFootprintsListTableViewHeader;
     
     [self.view addSubview:self.button];
     
     [_tableView.mj_footer beginRefreshing];
     
+    [self changeNavigationViewFrameOne];
+    
+    [self.view addSubview:self.notFundFootprintView];
+    
+    self.notFundFootprintView.hidden = YES;
+    
+    [self.view bringSubviewToFront:self.customNavigationBar];
+    
+}
+
+/**
+ * 设置顶部 Navigation 为初始化样子
+ */
+- (void) changeNavigationViewFrameOne
+{
+    [self.customNavigationBar setNavigationBarFrame:CGRectMake(self.customNavigationBar.MinX, self.customNavigationBar.MinY, self.customNavigationBar.Witdh, 266)];
+    [self.customNavigationBar setBackgroundColor:[UIColor clearColor]];
+    self.tableView.frame = CGRectMake(0, self.customNavigationBar.Height - 34, SCREEN_WIDTH, SCREEN_HEIGHT - self.customNavigationBar.Height + 34 + 49);
+    [self.myInfoView changeFrameOne];
+//    self.ifChangedOne = YES;
+//    self.ifChangedTwo = NO;
+}
+
+/**
+ * 设置顶部 Navigation 为向下滑动样式
+ */
+- (void) changeNavigationViewFrameTwo
+{
+    [self.customNavigationBar setNavigationBarFrame:CGRectMake(self.customNavigationBar.MinX, self.customNavigationBar.MinY, self.customNavigationBar.Witdh, 150)];
+    [self.customNavigationBar setBackgroundColor:[UIColor clearColor]];
+    //[self setNavigationImage:[UIImage imageNamed:@"wd_bg2"]];
+    self.tableView.frame = CGRectMake(0, self.customNavigationBar.Height - 21, SCREEN_WIDTH, SCREEN_HEIGHT - self.customNavigationBar.Height + 21 + 49);
+    [self.myInfoView changeFrameTwo];
+//    self.ifChangedOne = NO;
+//    self.ifChangedTwo = YES;
 }
 
 - (void) addReleasedFootprint:(NSNotification*)sender
@@ -139,15 +170,20 @@
     OTWPersonalFootprintFrame *footprintFrame = [OTWPersonalFootprintFrame initWithFootprintDetail:footprintDetail];
     footprintFrame.leftContent = @"";
     [footprintFrame initData];
-    [_status[0].monthData insertObject:footprintFrame atIndex:1];
+    [self.status[0].monthData insertObject:footprintFrame atIndex:1];
+    if(!self.notFundFootprintView.hidden){
+        self.notFundFootprintView.hidden = YES;
+        self.button.hidden = NO;
+        self.tableView.hidden = NO;
+    }
     [_tableView reloadData];
 }
 
 - (void) deletedFootprint:(NSNotification*)sender
 {
     NSDictionary *dict = sender.userInfo;
-    for (int i = 0; i<_status.count; i++) {
-        NSMutableArray<OTWPersonalFootprintFrame *> *monthDate = _status[i].monthData;
+    for (int i = 0; i<self.status.count; i++) {
+        NSMutableArray<OTWPersonalFootprintFrame *> *monthDate = self.status[i].monthData;
         BOOL remove = NO;
         for (int n = 0;n< monthDate.count; n++) {
             if([monthDate[n].footprintDetal.footprintId.description isEqualToString:dict[@"footprintId"]]){
@@ -157,11 +193,16 @@
             }
         }
         if(remove && monthDate.count == 0){
-            [_status removeObjectAtIndex:i];
+            [self.status removeObjectAtIndex:i];
             break;
         }
     }
     [_tableView reloadData];
+    if(self.status.count == 0 || [self.service checkIfNotFund:self]){
+        self.notFundFootprintView.hidden = NO;
+        self.button.hidden = YES;
+        self.tableView.hidden = YES;
+    }
 }
 
 -(void) loadMore
@@ -171,13 +212,34 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return _status.count;
+    return self.status.count;
+}
+
+//滚动事件监听
+#pragma mark 滚动时间监听
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if(scrollView.contentOffset.y<= 0 && !self.ifChangedOne){
+        [UIView animateWithDuration:0.5f animations:^{
+           [self changeNavigationViewFrameOne];
+            self.ifChangedOne = YES;
+        } completion:^(BOOL finished){
+            self.ifChangedTwo = NO;
+        }];
+    }else if(scrollView.contentOffset.y>0 && !self.ifChangedTwo){
+        [UIView animateWithDuration:0.5f animations:^{
+            [self changeNavigationViewFrameTwo];
+            self.ifChangedTwo = YES;
+        } completion:^(BOOL finished){
+            self.ifChangedOne = NO;
+        }];
+    }
 }
 
 #pragma mark 返回每组行数
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return _status[section].monthData.count;
+    return self.status[section].monthData.count;
 }
 
 #pragma mark 自定义cell
@@ -190,20 +252,20 @@
         cell.backgroundColor = [UIColor whiteColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
-    [cell setData:_status[indexPath.section].monthData[indexPath.row]];
+    [cell setData:self.status[indexPath.section].monthData[indexPath.row]];
     return cell;
 }
 #pragma mark - 代理方法
 #pragma mark 重新设置单元格高度
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return _status[indexPath.section].monthData[indexPath.row].cellHeight;
+    return self.status[indexPath.section].monthData[indexPath.row].cellHeight;
 }
 
 #pragma mark 点击行
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     //判断点击行是否是创建
-    OTWPersonalFootprintFrame *footprintFrame = _status[indexPath.section].monthData[indexPath.row];
+    OTWPersonalFootprintFrame *footprintFrame = self.status[indexPath.section].monthData[indexPath.row];
     if(footprintFrame.hasRelease){ //发布
         OTWFootprintReleaseViewController *releaseVC = [[OTWFootprintReleaseViewController alloc] init];
         [self.navigationController pushViewController:releaseVC animated:YES];
@@ -216,10 +278,14 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    if(section==0 && _status.count>0 && [_status[0].month isEqualToString:@"0"]){
-        return 0;
+    if(section==0 && self.status.count>0 && [self.status[0].month isEqualToString:@"0"]){
+        return 10;
     }else{
-        return 30;
+        if(section == 0){
+            return 40;
+        }else{
+            return 30;
+        }
     }
 }
 
@@ -244,33 +310,41 @@
 - (UIView *) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     
     BOOL check = YES;
-    if(section==0 && _status.count>0 && [_status[0].month isEqualToString:@"0"]){
+    if(section==0 && self.status.count>0 && [self.status[0].month isEqualToString:@"0"]){
         check = NO;
     }
     
     UIView * sectionHeader=[[UIView alloc] init];
     
     if(check){
-        sectionHeader.frame=CGRectMake(0, 0, SCREEN_WIDTH,30);
+        
+        CGFloat y = 0;
+        
+        if(section == 0){
+            y = 10;
+            sectionHeader.frame=CGRectMake(0, 0, SCREEN_WIDTH,40);
+        }else{
+            sectionHeader.frame=CGRectMake(0, 0, SCREEN_WIDTH,30);
+        }
         sectionHeader .backgroundColor=[UIColor clearColor];
         
         //月份的左边线条
-        UILabel *sectionHeaderLeft=[[UILabel alloc] initWithFrame:CGRectMake(22.5, 0, 1,30)];
+        UILabel *sectionHeaderLeft=[[UILabel alloc] initWithFrame:CGRectMake(22.5, y + 0, 1,30)];
         sectionHeaderLeft.backgroundColor=[UIColor color_d5d5d5];
         [sectionHeader addSubview:sectionHeaderLeft];
         
         //月份的左边圆点
-        UILabel *sectionHeaderCil=[[UILabel alloc] initWithFrame:CGRectMake(20, 4.5, 6,6)];
+        UILabel *sectionHeaderCil=[[UILabel alloc] initWithFrame:CGRectMake(20, y + 4.5, 6,6)];
         sectionHeaderCil.backgroundColor=[UIColor color_202020];
         sectionHeaderCil.layer.cornerRadius = 3;
         sectionHeaderCil.layer.masksToBounds = YES;
         [sectionHeader addSubview:sectionHeaderCil];
         
         //月份的名称
-        UIView *sectionHeaderTextView = [[UIView alloc] initWithFrame:CGRectMake(36, 0, 40, 15)];
+        UIView *sectionHeaderTextView = [[UIView alloc] initWithFrame:CGRectMake(36,y + 0, 40, 15)];
         sectionHeaderTextView.backgroundColor = [UIColor whiteColor];
         UILabel *sectionHeaderText=[[UILabel alloc] init];
-        sectionHeaderText.text=[_status[section].month stringByAppendingString:@"月"];
+        sectionHeaderText.text=[self.status[section].month stringByAppendingString:@"月"];
         sectionHeaderText.frame=CGRectMake(0, 0, 40, 15);
         sectionHeaderText.font=[UIFont fontWithName:@"HelveticaNeue-Medium" size:17];
         sectionHeaderText.textColor=[UIColor color_202020];
@@ -289,141 +363,6 @@
     // Dispose of any resources that can be recreated.
 }
 
--(UIView*)personalFootprintsListTableViewHeader{
-    if(!_personalFootprintsListTableViewHeader){
-        _personalFootprintsListTableViewHeader=[[UIView alloc]init];
-        _personalFootprintsListTableViewHeader.backgroundColor=[UIColor whiteColor];
-        _personalFootprintsListTableViewHeader.frame=CGRectMake(0, 0,SCREEN_WIDTH, 238 + 23);
-        
-        //背景图片
-        [_personalFootprintsListTableViewHeader addSubview:self.bgImg];
-        
-        //头像背景
-        [_personalFootprintsListTableViewHeader addSubview:self.headerImgBg];
-        //头像
-        [self.headerImgBg addSubview:self.headerImg];
-        //名称
-        [_personalFootprintsListTableViewHeader addSubview:self.userName];
-        if(!_ifMyFootprint){
-            //粉丝
-            [_personalFootprintsListTableViewHeader addSubview:self.fansView];
-            //中间阻隔线
-            [_personalFootprintsListTableViewHeader addSubview:self.centerCell];
-            //被赞
-            [_personalFootprintsListTableViewHeader addSubview:self.zanView];
-        }else{
-            //粉丝
-            //关注
-            //被赞
-            [_personalFootprintsListTableViewHeader addSubview:self.myInfoView];
-        }
-    }
-    return _personalFootprintsListTableViewHeader;
-}
-
--(UILabel*)userName{
-    if(!_userName){
-        _userName=[[UILabel alloc] initWithFrame:CGRectMake(0,self.headerImgBg.MaxY+10 , SCREEN_WIDTH, 22.5)];
-        _userName.text=_userNickname;
-        _userName.textColor=[UIColor whiteColor];
-        _userName.textAlignment=NSTextAlignmentCenter;
-        _userName.font=[UIFont systemFontOfSize:16];
-    }
-    return _userName;
-}
--(UIView*)headerImgBg{
-    if(!_headerImgBg){
-        _headerImgBg=[[UIView alloc] init];
-        _headerImgBg.frame=CGRectMake((SCREEN_WIDTH-90)/2, 1, 90, 90);
-        _headerImgBg.layer.cornerRadius=90/2;
-        _headerImgBg.layer.masksToBounds = YES;
-        _headerImgBg.backgroundColor=[UIColor whiteColor];
-    }
-    return _headerImgBg;
-}
-
--(UIImageView*)headerImg{
-    if(!_headerImg){
-        _headerImg=[[UIImageView alloc]init];
-        _headerImg.frame=CGRectMake(4, 4, 82, 82);
-        [_headerImg setImageWithURL:[NSURL URLWithString:_userHeaderImg]];
-        _headerImg.layer.cornerRadius=82/2;
-        _headerImg.layer.masksToBounds = YES;
-    }
-    return _headerImg;
-}
-
--(UIImageView*)bgImg{
-    if(!_bgImg){
-        _bgImg=[[UIImageView alloc]init];
-        _bgImg.frame=CGRectMake(0, 0, SCREEN_WIDTH, 238);
-        _bgImg.contentMode = UIViewContentModeBottom;
-        _bgImg.clipsToBounds  = YES;
-        _bgImg.image=[UIImage imageNamed:@"wd_bg"];
-    }
-    return _bgImg;
-}
-
--(UIView *) fansView
-{
-    if(!_fansView){
-        _fansView = [[UIView alloc] initWithFrame:CGRectMake(0, self.userName.MaxY+30, (SCREEN_WIDTH-1)/2, 13+15+7)];
-        _fansView.backgroundColor = [UIColor clearColor];
-        [_fansView addSubview:self.fansNum];
-        UILabel *fansLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, self.fansNum.MaxY + 7, _fansView.Witdh, 13)];
-        fansLabel.text = @"粉丝";
-        fansLabel.textColor = [UIColor color_ffc6c8];
-        fansLabel.font = [UIFont systemFontOfSize:12];
-        fansLabel.textAlignment=NSTextAlignmentCenter;
-        [_fansView addSubview:fansLabel];
-    }
-    return _fansView;
-}
-
--(UILabel*)fansNum{
-    if(!_fansNum){
-        _fansNum=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.fansView.Witdh , 15)];
-        _fansNum.text=@"4321" ;
-        _fansNum.textColor=[UIColor whiteColor];
-        _fansNum.font=[UIFont systemFontOfSize:18];
-        _fansNum.textAlignment=NSTextAlignmentCenter;
-    }
-    return _fansNum;
-}
-
--(UIView *) zanView
-{
-    if(!_zanView){
-        _zanView = [[UIView alloc] initWithFrame:CGRectMake(self.fansView.MaxX+1, self.fansView.MinY, self.fansView.Witdh, self.fansView.Height)];
-        _zanView.backgroundColor = [UIColor clearColor];
-        [_zanView addSubview:self.zanNum];
-        UILabel *zanLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, self.fansNum.MaxY + 7, _fansView.Witdh, 13)];
-        zanLabel.text = @"被赞";
-        zanLabel.textColor = [UIColor color_ffc6c8];
-        zanLabel.font = [UIFont systemFontOfSize:12];
-        zanLabel.textAlignment=NSTextAlignmentCenter;
-        [_zanView addSubview:zanLabel];
-    }
-    return _zanView;
-}
-
--(UILabel*)zanNum{
-    if(!_zanNum){
-        _zanNum=[[UILabel alloc]initWithFrame:CGRectMake(0 , 0, self.zanView.Witdh , 15)];
-        _zanNum.text=@"887" ;
-        _zanNum.textColor=[UIColor whiteColor];
-        _zanNum.font=[UIFont systemFontOfSize:18];
-        _zanNum.textAlignment=NSTextAlignmentCenter;
-    }
-    return _zanNum;
-}
--(UILabel*)centerCell{
-    if(!_centerCell){
-        _centerCell=[[UILabel alloc]initWithFrame:CGRectMake(self.fansView.MaxX,  self.userName.MaxY+37.5, 1, 20)];
-        _centerCell.backgroundColor=[UIColor color_ffc6c8];
-    }
-    return _centerCell;
-}
 -(UIButton*)button{
     if(!_button){
         _button=[[UIButton alloc] init];
@@ -463,44 +402,13 @@
     return _likeView;
 }
 
--(UIView *) myInfoView
+-(OTWMyInfoView *) myInfoView
 {
     if(!_myInfoView){
-        _myInfoView = [[UIView alloc] initWithFrame:CGRectMake(0, self.userName.MaxY + 30, SCREEN_WIDTH, 13+15+7)];
-        
-        //粉丝
-        UIView *myFansView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, (SCREEN_WIDTH - 2)/3, _myInfoView.Height)];
-        UILabel *myFansLabel = [self getMyInfoLabel:myFansView];
-        myFansLabel.text=@"4321";
-        UILabel *myFansTitleLabel = [self getMyInfoTitleLabel:myFansLabel title:@"粉丝"];
-        [myFansView addSubview:myFansLabel];
-        [myFansView addSubview:myFansTitleLabel];
-        [_myInfoView addSubview:myFansView];
-        
-        UILabel *centerCellOne=[[UILabel alloc]initWithFrame:CGRectMake(myFansView.MaxX + 1, 7.5 , 1, 20)];
-        centerCellOne.backgroundColor=[UIColor color_ffc6c8];
-        [_myInfoView addSubview:centerCellOne];
-        
-        //关注
-        UIView *myLikeView = [[UIView alloc] initWithFrame:CGRectMake(myFansView.MaxX +1, 0, myFansView.Witdh, myFansView.Height)];
-        UILabel *myLikeLabel = [self getMyInfoLabel:myLikeView];
-        myLikeLabel.text=@"456";
-        UILabel *myLikeTitleLabel = [self getMyInfoTitleLabel:myLikeLabel title:@"关注"];
-        [myLikeView addSubview:myLikeLabel];
-        [myLikeView addSubview:myLikeTitleLabel];
-        [_myInfoView addSubview:myLikeView];
-        UILabel *centerCellTwo=[[UILabel alloc]initWithFrame:CGRectMake(myLikeView.MaxX + 1, 7.5 , 1, 20)];
-        centerCellTwo.backgroundColor=[UIColor color_ffc6c8];
-        [_myInfoView addSubview:centerCellTwo];
-        
-        //被赞
-        UIView *myZanView = [[UIView alloc] initWithFrame:CGRectMake(myLikeView.MaxX +1, 0, myFansView.Witdh, myFansView.Height)];
-        UILabel *myZanLabel = [self getMyInfoLabel:myZanView];
-        myZanLabel.text=@"887";
-        UILabel *myZanTitleLabel = [self getMyInfoTitleLabel:myZanLabel title:@"被赞"];
-        [myZanView addSubview:myZanLabel];
-        [myZanView addSubview:myZanTitleLabel];
-        [_myInfoView addSubview:myZanView];
+        _myInfoView = [OTWMyInfoView initWithUserInfo:self.userNickname userId:self.userId userHeaderImg:self.userHeaderImg ifMy:self.ifMyFootprint];
+        _myInfoView.statistics = self.statisticsModel;
+        //[_myInfoView changeFrameTwo];
+        [_myInfoView refleshData];
     }
     return _myInfoView;
 }
@@ -544,6 +452,37 @@
         _service = [[OTWPersonalFootprintService alloc] init];
     }
     return _service;
+}
+
+- (OTWPersonalStatisticsModel *)statisticsModel
+{
+    if(!_statisticsModel){
+        _statisticsModel = [[OTWPersonalStatisticsModel alloc] init];
+        _statisticsModel.likeNum = 45654;
+        _statisticsModel.fansNum = 99999;
+    }
+    return _statisticsModel;
+}
+
+- (OTWNotFundFootprintView *) notFundFootprintView
+{
+    if(!_notFundFootprintView){
+        _notFundFootprintView = [OTWNotFundFootprintView initWithIfMy:self.ifMyFootprint];
+        WeakSelf(self);
+        _notFundFootprintView.block = ^(){
+            OTWFootprintReleaseViewController *releaseVC = [[OTWFootprintReleaseViewController alloc] init];
+            [weakself.navigationController pushViewController:releaseVC animated:YES];
+        };
+    }
+    return _notFundFootprintView;
+}
+
+- (NSMutableArray<OTWPersonalFootprintsListModel *> *) status
+{
+    if(!_status){
+        _status = [[NSMutableArray alloc] init];
+    }
+    return _status;
 }
 
 -(void) dealloc

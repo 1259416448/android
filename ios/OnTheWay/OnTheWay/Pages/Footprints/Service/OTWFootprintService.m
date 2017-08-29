@@ -91,14 +91,11 @@ static NSString *deleteFootprintUrl = @"/app/footprint/delete/{id}";
 #pragma mark - 删除足迹
 +(void) deleteFootprintById:(NSString *) footprintId viewController:(OTWFootprintDetailController *)viewController completion:(requestCompletionBlock)block{
     if(!footprintId) return;
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:viewController.view animated:YES];
-    hud.label.textColor = [UIColor whiteColor];
-    hud.bezelView.color = [UIColor blackColor];
-    hud.activityIndicatorColor = [UIColor whiteColor];
+    MBProgressHUD *hud = [OTWUtils alertLoading:@"" userInteractionEnabled:NO target:viewController];
     [OTWNetworkManager doPOST:[deleteFootprintUrl stringByReplacingOccurrencesOfString:@"{id}" withString:footprintId] parameters:nil success:^(id responseObject) {
         [hud hideAnimated:YES];
         if([[NSString stringWithFormat:@"%@",responseObject[@"code"]] isEqualToString:@"0"]){
-            [viewController errorTips:@"删除成功" userInteractionEnabled:YES];
+            [OTWUtils  alertSuccess:@"删除成功" userInteractionEnabled:YES target:viewController];
             //发送删除成功通知
             NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:footprintId,@"footprintId", nil];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"foorprintAlreadyDeleted" object:nil userInfo:dict];

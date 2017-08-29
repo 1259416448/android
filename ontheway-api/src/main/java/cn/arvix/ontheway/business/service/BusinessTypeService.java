@@ -72,6 +72,7 @@ public class BusinessTypeService extends BaseServiceImpl<BusinessType, Long> {
         }
         dbEntity.setName(m.getName());
         dbEntity.setIconStr(m.getIconStr());
+        dbEntity.setIconStrAndroid(m.getIconStrAndroid());
         dbEntity.setIfTop(m.getIfTop());
         dbEntity.setWeight(m.getWeight());
         dbEntity.setParentId(m.getParentId());
@@ -137,8 +138,8 @@ public class BusinessTypeService extends BaseServiceImpl<BusinessType, Long> {
     public String getColorCodeByTypeIds(Set<Long> ids) {
         Map<String, Object> params = Maps.newHashMap();
         params.put("id_in", ids);
-        //颜色代码只能添加到一级类型中
-        params.put("parentId_isNull", "");
+        //颜色代码只能添加到二级类型中
+        params.put("parentId_isNotNull", "");
         List<BusinessType> businessTypeList = super.findAllWithNoPageNoSort(Searchable.newSearchable(params));
         String colorCode = null;
         if (businessTypeList.size() > 0) {

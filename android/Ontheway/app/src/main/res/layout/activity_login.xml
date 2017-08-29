@@ -94,8 +94,31 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/error_info_line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/dl_tanhao" />
+
+        <TextView
+            android:id="@+id/error_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:text="手机号错误，请重新输入。"
+            android:textColor="#FFF43531"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="331dp"
-        android:background="@drawable/dl_button"
         android:id="@+id/login_btn_line"
         android:layout_gravity="center"
         android:gravity="center"

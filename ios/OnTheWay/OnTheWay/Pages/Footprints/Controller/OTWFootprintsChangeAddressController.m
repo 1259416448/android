@@ -53,9 +53,6 @@
     
     _ifFirstSearch = YES;
     
-
-    self.footprintTableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMore)];
-    
     [self initData];
     
     [self buildUI];
@@ -101,10 +98,13 @@
     [self setCustomNavigationLeftView:self.customLeftNavigationBarView];
     //大背景
     self.view.backgroundColor=[UIColor color_f4f4f4];
-    [self.view addSubview:self.footprintTableView];
     //搜索框
     
     [self.footprintTableViewTableViewHeader addSubview:self.footprintSearchAddress];
+    
+    [self.view addSubview:self.footprintTableView];
+    
+    self.footprintTableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMore)];
     
     [self.view addSubview:self.searchBG];
     
@@ -139,8 +139,6 @@
     }
 }
 
-
-
 - (UIView *) customLeftNavigationBarView
 {
     if(!_customLeftNavigationBarView){
@@ -164,7 +162,7 @@
 
 -(UITableView *)footprintTableView{
     if(!_footprintTableView){
-        _footprintTableView=[[UITableView alloc] initWithFrame:CGRectMake(0,65, SCREEN_WIDTH, SCREEN_HEIGHT-self.navigationHeight) style:UITableViewStyleGrouped];
+        _footprintTableView=[[UITableView alloc] initWithFrame:CGRectMake(0,self.navigationHeight, SCREEN_WIDTH, SCREEN_HEIGHT-self.navigationHeight) style:UITableViewStyleGrouped];
         _footprintTableView.dataSource = self;
         
         _footprintTableView.delegate = self;
@@ -184,7 +182,6 @@
         _footprintTableViewTableViewHeader.backgroundColor=[UIColor clearColor];
         _footprintTableViewTableViewHeader.layer.borderColor=[UIColor color_d5d5d5].CGColor;
         _footprintTableViewTableViewHeader.layer.borderWidth=0.5;
-        
     }
     return _footprintTableViewTableViewHeader;
 }

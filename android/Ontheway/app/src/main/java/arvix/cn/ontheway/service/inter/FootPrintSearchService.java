@@ -20,4 +20,7 @@ public interface FootPrintSearchService {
      */
     void search(Context context, FootPrintSearchVo trackSearchVo, FootPrintSearchNotify<FootPrintBean> trackSearchNotify);
 
+
+    void fetchByUser(Context context,FootPrintSearchVo searchVo,Long userId,FootPrintSearchNotify<FootPrintBean> searchNotify);
+
 }

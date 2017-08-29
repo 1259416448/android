@@ -32,12 +32,15 @@ import org.xutils.x;
 import arvix.cn.ontheway.BaiduActivity;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.bean.FootPrintSearchVo;
+import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.ar_view.ARCamera;
 import arvix.cn.ontheway.ui.track.TrackCreateActivity;
 import arvix.cn.ontheway.ui.track.TrackListActivity;
 import arvix.cn.ontheway.ui.track.TrackMapActivity;
+import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticMethod;
+import arvix.cn.ontheway.utils.StaticVar;
 import arvix.cn.ontheway.utils.UIUtils;
 
 public class ArFootPrintDrawActivity extends BaseActivity implements SensorEventListener, LocationListener {
@@ -332,6 +335,7 @@ public class ArFootPrintDrawActivity extends BaseActivity implements SensorEvent
         cameraContainerLayout.addView(arCamera);
         arCamera.setKeepScreenOn(true);
         initCamera();
+
     }
 
     private void initCamera() {
@@ -380,11 +384,13 @@ public class ArFootPrintDrawActivity extends BaseActivity implements SensorEvent
             float[] rotationMatrixFromVector = new float[16];
             float[] projectionMatrix = new float[16];
             float[] rotatedProjectionMatrix = new float[16];
+            /*
             String str = "";
             for(float f : sensorEvent.values){
                 str = str+","+f;
             }
             Log.i(TAG, "values----------------->:"+ str);
+           */
             SensorManager.getRotationMatrixFromVector(rotationMatrixFromVector, sensorEvent.values);
 
             if (arCamera != null) {
@@ -403,7 +409,7 @@ public class ArFootPrintDrawActivity extends BaseActivity implements SensorEvent
         }
         if (sensorEvent.sensor.getType() == Sensor.TYPE_ORIENTATION) {
             float degree = sensorEvent.values[0];// 存放了方向值 90
-            Log.i(TAG, "degree----------------->:"+degree);
+           // Log.i(TAG, "degree----------------->:"+degree);
             AROverlayViewDraw.zDegrees = degree;
         }
       //  calculateOrientation();
@@ -468,8 +474,18 @@ public class ArFootPrintDrawActivity extends BaseActivity implements SensorEvent
     private void updateLatestLocation() {
         if (arOverlayView !=null&&location!=null) {
             arOverlayView.updateCurrentLocation(location);
-            tvCurrentLocation.setText(String.format("lat: %s \nlon: %s \naltitude: %s \n",
-                    location.getLatitude(), location.getLongitude(), location.getAltitude()));
+          //  tvCurrentLocation.setText(String.format("lat: %s \nlon: %s \naltitude: %s \n",
+            //        location.getLatitude(), location.getLongitude(), location.getAltitude()));
+            CacheService cache = OnthewayApplication.getInstahce(CacheService.class);
+            Double latCache = cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LAT);
+            Double lonCache = 0.0;
+            if(latCache!=null){
+                lonCache = cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LON);
+                Log.i(this.getClass().getName(),"init location from cache");
+                trackSearchVo.setLongitude(lonCache);
+                trackSearchVo.setLatitude(latCache);
+                arOverlayView.updateLocationData(latCache,lonCache);
+            }
         }
     }
 

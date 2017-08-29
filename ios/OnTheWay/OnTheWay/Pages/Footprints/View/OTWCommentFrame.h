@@ -21,6 +21,8 @@
 
 @property (nonatomic,assign) CGFloat contentH;
 
+@property (nonatomic,assign) CGFloat nicknameW;
+
 -(void) setCommentModel:(OTWCommentModel *)commentModel;
 
 @end

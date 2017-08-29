@@ -2,11 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="10dp"
-    android:layout_marginLeft="15dp"
-    android:layout_marginRight="15dp"
-
-    android:background="@color/white">
+    android:background="@color/bg_default"
+    >
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/track_item_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <LinearLayout
         android:layout_gravity="center"
         android:layout_width="match_parent"
@@ -88,5 +93,6 @@
             android:textSize="11sp"
             android:textColor="@color/text_label_small"
             android:layout_height="wrap_content" />
+    </LinearLayout>
     </LinearLayout>
 </LinearLayout>

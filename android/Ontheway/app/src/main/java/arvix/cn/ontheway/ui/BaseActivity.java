@@ -1,6 +1,7 @@
 package arvix.cn.ontheway.ui;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -19,6 +20,7 @@ import arvix.cn.ontheway.R;
 public class BaseActivity extends Activity {
     protected BaseActivity self;
     protected String logTag = this.getClass().getName();
+    protected BroadcastReceiver receiverUserInfoChange;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,6 +79,9 @@ public class BaseActivity extends Activity {
 
         if (keyboardListenersAttached) {
             rootLayout.getViewTreeObserver().removeOnGlobalLayoutListener(keyboardLayoutListener);
+        }
+        if(receiverUserInfoChange!=null){
+            LocalBroadcastManager.getInstance(self).unregisterReceiver(receiverUserInfoChange);
         }
     }
 
