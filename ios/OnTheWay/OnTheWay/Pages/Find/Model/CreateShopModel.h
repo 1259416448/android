@@ -15,14 +15,20 @@ typedef enum : NSUInteger {
     CreateSHopCellType_TV,
     CreateSHopCellType_TV_BACK,
     CreateSHopCellType_TV_TWO,
+    CreateSHopCellType_Address,
     //upload picture
     CreateSHopCellType_PIC,
+    CreateSHopCellType_Card_PIC
 } CreateShopCellType;
 
 @interface CreateShopModel : NSObject
 
 //项目名称
 @property (nonatomic,copy) NSString *title;
+//项目名称字体长度
+@property (nonatomic,assign) CGFloat titileW;
+//项目名称子标题字体长度
+@property (nonatomic,assign) CGFloat childTitleW;
 
 @property (nonatomic,copy) NSString *placeholder;
 //表单对应的字段

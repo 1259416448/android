@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 /** 记录scrollerView的x值 */
 @property (nonatomic, assign) CGFloat originalX;
 
+@property (nonatomic,strong) UIImage *selectImage;
+
 @end
 
 static PYPhotosViewController *_handleController;
@@ -83,6 +85,15 @@ static NSInteger _photosViewCount;
 + (instancetype)photosView
 {
     return [[self alloc] init];
+}
+
++ (instancetype)initphotosViewWithImage:(UIImage *)selectImage
+{
+    PYPhotosView *view = [[self alloc] init];
+    if (selectImage) {
+        [view.addImageButton setBackgroundImage:selectImage forState:UIControlStateNormal];
+    }
+    return view;
 }
 
 + (instancetype)photosViewWithThumbnailUrls:(NSArray<NSString *> *)thumbnailUrls originalUrls:(NSArray<NSString *> *)originalUrls
@@ -429,7 +440,7 @@ static NSInteger _photosViewCount;
     maxCount = self.photosMaxCol > 0 ? self.photosMaxCol : 1;
     if (state == PYPhotosViewStateDidCompose) { // 已经发布
         if (self.photos.count > 0 && self.layoutType == PYPhotosViewLayoutTypeFlow && self.autoLayoutWithWeChatSytle) {
-           maxCount = count == 4 ? 2 : maxCount;
+            maxCount = count == 4 ? 2 : maxCount;
         }
     } else if (state == PYPhotosViewStateWillCompose){ // 未发布
         if (count < self.imagesMaxCountWhenWillCompose) count ++;
