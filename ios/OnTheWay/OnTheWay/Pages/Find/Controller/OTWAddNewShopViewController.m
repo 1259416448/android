@@ -7,10 +7,12 @@
 //
 
 #import "OTWAddNewShopViewController.h"
+#import "OTWAddNewShopNextViewController.h"
 #import "CreateShopTFCell.h"
 #import "CreateShopTVCell.h"
 #import "CreateShopTVTWOCell.h"
 #import "CreateShopPicCell.h"
+#import "CreateShopAddressCell.h"
 
 #import <MJExtension.h>
 
@@ -54,23 +56,26 @@
 {
     CreateShopModel *nameModel = [[CreateShopModel alloc] init];
     nameModel.title = @"商家名称";
+    nameModel.titileW = 70.f;
     nameModel.placeholder = @"请输入商家名称";
     nameModel.isRequire = YES;
-    nameModel.key = @"name";
+    nameModel.key = @"shopName";
     nameModel.cellType = CreateSHopCellType_TF;
     nameModel.maxInputLenth = 30;
     [self.tableViewData addObject:nameModel];
     
     CreateShopModel *addressModel = [[CreateShopModel alloc] init];
     addressModel.title = @"商家地址";
+    addressModel.titileW = 70.f;
     addressModel.placeholder = @"请选择商家地址";
     addressModel.isRequire = YES;
     addressModel.key = @"address";
-    addressModel.cellType = CreateSHopCellType_TV;
+    addressModel.cellType = CreateSHopCellType_Address;
     [self.tableViewData addObject:addressModel];
     
     CreateShopModel *phoneModel = [[CreateShopModel alloc] init];
     phoneModel.title = @"商家电话";
+    phoneModel.titileW = 70.f;
     phoneModel.placeholder = @"请输入商家电话";
     phoneModel.isRequire = NO;
     phoneModel.key = @"contactInfo";
@@ -80,15 +85,18 @@
     
     CreateShopModel *shopTpyeModel = [[CreateShopModel alloc] init];
     shopTpyeModel.title = @"商家类型";
+    shopTpyeModel.titileW = 70.f;
     shopTpyeModel.isRequire = NO;
     shopTpyeModel.placeholder = @"请选择商家类型";
-    shopTpyeModel.key = @"shopType";
+    shopTpyeModel.key = @"typeIds";
     shopTpyeModel.cellType = CreateSHopCellType_TV_BACK;
     [self.tableViewData addObject:shopTpyeModel];
     
     CreateShopModel *picTipModel = [[CreateShopModel alloc] init];
     picTipModel.cellType = CreateSHopCellType_TV_TWO;
     picTipModel.title = @"上传商家照片";
+    picTipModel.titileW = 100.f;
+    picTipModel.childTitleW = 100.f;
     picTipModel.placeholder = @"最多上传9张照片";
     [self.tableViewData addObject:picTipModel];
     
@@ -134,6 +142,9 @@
     if (createModel.cellType == CreateSHopCellType_PIC) {
         return [CreateShopPicCell cellHeight:createModel];
     }
+    if (createModel.cellType == CreateSHopCellType_Address) {
+        return [CreateShopAddressCell cellHeight:createModel];
+    }
     return 50.f;
 }
 
@@ -157,6 +168,17 @@
         if (cell == nil)
         {
             cell = [[CreateShopTVCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:tvCellId];
+        }
+        [cell refreshContent:createModel formModel:self.createShopFormModel control:self.navigationController];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        return cell;
+    }
+    if (createModel.cellType == CreateSHopCellType_Address) {
+        static NSString *addressCellId = @"addressCellId";
+        CreateShopAddressCell *cell = [tableView dequeueReusableCellWithIdentifier:addressCellId];
+        if (cell == nil)
+        {
+            cell = [[CreateShopAddressCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:addressCellId];
         }
         [cell refreshContent:createModel formModel:self.createShopFormModel control:self.navigationController];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -191,6 +213,9 @@
 - (void)submitFormData
 {
     DLog(@"form表单数据为:%@",self.createShopFormModel.mj_keyValues);
+    OTWAddNewShopNextViewController *addNewShopNextVC = [[OTWAddNewShopNextViewController alloc] init];
+    [addNewShopNextVC setCreateShopFormData:self.createShopFormModel];
+    [self.navigationController pushViewController:addNewShopNextVC animated:NO];
 }
 
 #pragma mark 设置cell数据

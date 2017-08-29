@@ -44,7 +44,7 @@
 - (UILabel*)titleV
 {
     if (!_titleV) {
-        _titleV = [[UILabel alloc] initWithFrame:CGRectMake(TFCellPadding_15, TFCellPadding_15, 70, 20)];
+        _titleV = [[UILabel alloc] init];
         [_titleV setFont:[UIFont systemFontOfSize:16]];
         [_titleV setBackgroundColor:[UIColor whiteColor]];
     }
@@ -57,8 +57,6 @@
         _requireV = [[UILabel alloc] init];
         _requireV.text = @"*";
         [_requireV setFont:[UIFont systemFontOfSize:16]];
-        CGFloat requireVX = CGRectGetMaxX(self.titleV.frame) + TFCellPadding_5;
-        _requireV.frame = CGRectMake(requireVX, 23.5, 8.5, 10);
         _requireV.textColor = [UIColor redColor];
     }
     return _requireV;
@@ -72,9 +70,6 @@
         _textField.font = [UIFont systemFontOfSize:14];
         _textField.textColor = [UIColor color_979797];
         _textField.textAlignment = NSTextAlignmentRight;
-        CGFloat textFieldX = CGRectGetMaxX(self.requireV.frame) + TFCellPadding_15;
-        CGFloat textFieldW = SCREEN_WIDTH -  CGRectGetMaxX(self.requireV.frame) - TFCellPadding_15 * 2;
-        _textField.frame = CGRectMake(textFieldX, 10, textFieldW, 30);
         _textField.delegate = self;
     }
     return _textField;
@@ -97,6 +92,16 @@
     }
     _createShopModel = createModel;
     _formModel = formModel;
+    
+    self.titleV.frame = CGRectMake(TFCellPadding_15, TFCellPadding_15, createModel.titileW, 20);
+    
+    CGFloat requireVX = CGRectGetMaxX(self.titleV.frame) + TFCellPadding_5;
+    self.requireV.frame = CGRectMake(requireVX, 23.5, 8.5, 10);
+    
+    CGFloat textFieldX = CGRectGetMaxX(self.requireV.frame) + TFCellPadding_15;
+    CGFloat textFieldW = SCREEN_WIDTH -  CGRectGetMaxX(self.requireV.frame) - TFCellPadding_15 * 2;
+    self.textField.frame = CGRectMake(textFieldX, 10, textFieldW, 30);
+    
     self.titleV.text = createModel.title;
     self.textField.placeholder = createModel.placeholder;
     self.textField.text = [formModel valueForKey:createModel.key];

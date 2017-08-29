@@ -84,6 +84,8 @@
     _createShopModel = createModel;
     self.titleV.text = createModel.title;
     self.childTitleV.text = createModel.placeholder;
+    self.titleV.frame = CGRectMake(TFCellPadding_15, TFCellPadding_15, createModel.titileW, 20);
+    self.childTitleV.frame = CGRectMake(TFCellPadding_15, CGRectGetMaxY(self.titleV.frame) + 5, createModel.childTitleW, 20);
 }
 
 @end
