@@ -107,7 +107,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/to_ar_btn"
+            android:id="@+id/to_create_btn"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginBottom="30dp"
@@ -248,7 +248,6 @@
                 android:id="@+id/range_btn"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-
                 android:layout_weight="1"
                 android:background="@drawable/juli" />
         </LinearLayout>
@@ -256,6 +255,7 @@
     <Button
         android:background="@drawable/back_1"
         android:id="@+id/back_img"
+        android:layout_marginTop="24.5dp"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginLeft="15dp"

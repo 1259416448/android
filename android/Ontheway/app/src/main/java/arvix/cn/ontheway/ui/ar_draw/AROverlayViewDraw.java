@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.location.Location;
 import android.opengl.Matrix;
@@ -100,6 +101,7 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
         mBitPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mBitPaint.setFilterBitmap(true);
         mBitPaint.setDither(true);
+        mBitPaint.setShadowLayer(10F,15F,15F, Color.GRAY);
         drawXOffset = StaticMethod.dip2px(context, 0);
         drawYOffset = StaticMethod.dip2px(context, 50);
         trackViewItemRectW = StaticMethod.dip2px(context, 164);
@@ -110,6 +112,8 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
         rootView.setOnTouchListener(this);
         computeTouchDiffY = StaticMethod.getStatusBarHeight(context);
         this.radarFrameLayout = radarFrameLayout;
+        this.setLayerType(View.LAYER_TYPE_HARDWARE,null);
+
     }
 
     public void updateLocationData(double lat, double lon) {
@@ -225,6 +229,7 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
                        // StaticMethod.showToast(footPrintBean.getFootprintContent(),context);
                         Intent intent = new Intent(context,TrackDetailActivity.class);
                         intent.putExtra(StaticVar.EXTRA_TRACK_BEAN, footPrintBean);
+                      //  intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
                     }
                 }

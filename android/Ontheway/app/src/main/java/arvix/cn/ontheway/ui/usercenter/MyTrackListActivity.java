@@ -27,6 +27,7 @@ import arvix.cn.ontheway.bean.Pagination;
 import arvix.cn.ontheway.service.inter.FootPrintSearchNotify;
 import arvix.cn.ontheway.service.inter.FootPrintSearchService;
 import arvix.cn.ontheway.ui.BaseActivity;
+import arvix.cn.ontheway.ui.head.HeaderHolder;
 import arvix.cn.ontheway.ui.track.TrackCreateActivity;
 import arvix.cn.ontheway.ui.track.TrackDetailActivity;
 import arvix.cn.ontheway.ui.view.ListViewHolder;
@@ -109,6 +110,7 @@ public class MyTrackListActivity  extends BaseActivity   implements AdapterView.
         listHolder.list.setMode(PullToRefreshBase.Mode.BOTH);
         listHolder.list.setOnRefreshListener(this);
         listHolder.list.setRefreshing();
+        HeaderHolder head=new HeaderHolder();
         nicknameTv.setText(App.userInfo.getName());
         receiverUserInfoChange = StaticMethod.registerUserInfoChange(self,nicknameTv,headerIV);
     }
