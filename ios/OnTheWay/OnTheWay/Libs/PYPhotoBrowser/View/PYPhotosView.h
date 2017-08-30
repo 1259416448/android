@@ -117,6 +117,8 @@ typedef NS_ENUM(NSInteger, PYPhotosViewPageType) { // 分页类型
 
 /** 快速创建photosView对象 */
 + (instancetype)photosView;
+/** 自定义选择图片 */
++ (instancetype)initphotosViewWithImage:(UIImage*)selectImage;
 /** photos : 保存图片链接的数组 */
 + (instancetype)photosViewWithThumbnailUrls:(NSArray<NSString *> *)thumbnailUrls originalUrls:(NSArray<NSString *> *)originalUrls;
 /** images : 存储本地图片的数组 */

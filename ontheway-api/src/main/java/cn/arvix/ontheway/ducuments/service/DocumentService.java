@@ -526,4 +526,21 @@ public class DocumentService extends BaseServiceImpl<Document, Long> {
         return super.findAllWithSort(Searchable.newSearchable(params,new Sort(Sort.Direction.ASC,"dateCreated")));
     }
 
+    /**
+     * 通过parentId获取主题图片Url
+     * @param pId parentId
+     * @param systemModule 模块类型
+     * @return 路径
+     */
+    public String findThemePhotoByParentId(Long pId,SystemModule systemModule){
+        Map<String,Object> params = Maps.newHashMap();
+        params.put("parentId_eq",pId);
+        params.put("systemModule_eq",systemModule);
+        List<Document> documents = super.findAllWithNoCount(Searchable.newSearchable(params,new PageRequest(0,1),new Sort(Sort.Direction.ASC,"dateCreated"))).getContent();
+        if(documents!=null && documents.size()>0){
+            return documents.get(0).getFileUrl();
+        }
+        return null;
+    }
+
 }

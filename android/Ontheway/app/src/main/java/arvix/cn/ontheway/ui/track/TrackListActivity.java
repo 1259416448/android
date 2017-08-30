@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,8 @@ import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.service.inter.FootPrintSearchNotify;
 import arvix.cn.ontheway.service.inter.FootPrintSearchService;
 import arvix.cn.ontheway.ui.BaseActivity;
+import arvix.cn.ontheway.ui.MainActivity;
+import arvix.cn.ontheway.ui.ar_draw.ArFootPrintDrawActivity;
 import arvix.cn.ontheway.ui.ar_view.ArFootPrintActivity;
 import arvix.cn.ontheway.ui.head.HeaderHolder;
 import arvix.cn.ontheway.ui.usercenter.MyTrackDetailActivity;
@@ -72,22 +75,53 @@ public class TrackListActivity   extends BaseActivity implements AdapterView.OnI
         adapter = new TrackListAdapter(this, R.layout.track_list_item, footPrintList);
         listHolder = ListViewHolder.initList(this);
         listHolder.list.setAdapter(adapter);
-        listHolder.list.getRefreshableView().setDividerHeight(StaticMethod.dip2px(self,10));
+        listHolder.list.getRefreshableView().setDividerHeight(0);
         x.view().inject(this);
         listHolder.list.setOnItemClickListener(this);
         listHolder.list.setMode(PullToRefreshBase.Mode.BOTH);
         listHolder.list.setOnRefreshListener(this);
         HeaderHolder head=new HeaderHolder();
         head.init(self,"足迹列表");
+        head.leftBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                back();
+            }
+        });
         emptyView = LayoutInflater.from(self).inflate(R.layout.comment_empty, (ViewGroup)getWindow().getDecorView(), false);
         initData();
         initEvent();
     }
+
+    private void back(){
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+    /**
+     * 监听Back键按下事件,方法2:
+     * 注意:
+     * 返回值表示:是否能完全处理该事件
+     * 在此处返回false,所以会继续传播该事件.
+     * 在具体项目中此处的返回值视情况而定.
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            back();
+            return false;
+        }else {
+            return super.onKeyDown(keyCode, event);
+        }
+    }
+
+
     private void initEvent(){
         toMapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(self, TrackMapActivity.class);
+                //intent.setFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP);
                 startActivity(intent);
             }
         });
@@ -95,7 +129,8 @@ public class TrackListActivity   extends BaseActivity implements AdapterView.OnI
         toArBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(self, ArFootPrintActivity.class);
+                Intent intent = new Intent(self, ArFootPrintDrawActivity.class);
+               // intent.setFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP);
                 startActivity(intent);
             }
         });
@@ -137,14 +172,18 @@ public class TrackListActivity   extends BaseActivity implements AdapterView.OnI
         footPrintSearchService.search(self,footPrintSearchVo,this);
     }
 
-
-
-
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         //  MsgBean m = (MsgBean) parent.getItemAtPosition(position);
         //  UIUtils.toast(this, m.getTitle(), Toast.LENGTH_SHORT);
-        startActivity(new Intent(self,MyTrackDetailActivity.class));
+        FootPrintBean footPrintBean = adapter.getItem(i-1);
+        if(footPrintBean !=null){
+            // StaticMethod.showToast(footPrintBean.getFootprintContent(),context);
+            Intent intent = new Intent(self,TrackDetailActivity.class);
+            intent.putExtra(StaticVar.EXTRA_TRACK_BEAN, footPrintBean);
+           // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
     }
 
     /**

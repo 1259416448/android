@@ -19,6 +19,7 @@ import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.bean.FootPrintSearchVo;
 import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.ui.BaseActivity;
+import arvix.cn.ontheway.ui.MainActivity;
 import arvix.cn.ontheway.ui.ar_view.ARCamera;
 import arvix.cn.ontheway.ui.track.TrackCreateActivity;
 import arvix.cn.ontheway.ui.track.TrackListActivity;
@@ -90,8 +92,8 @@ public class ArFootPrintDrawActivity extends BaseActivity implements SensorEvent
     private TextView addressTv;
     @ViewInject(R.id.to_map_btn)
     private Button toMapBtn;
-    @ViewInject(R.id.to_ar_btn)
-    private Button toArBtn;
+    @ViewInject(R.id.to_create_btn)
+    private Button toCreateBtn;
     @ViewInject(R.id.r_100m)
     private Button r100mBtn;
     @ViewInject(R.id.r_500m)
@@ -116,6 +118,7 @@ public class ArFootPrintDrawActivity extends BaseActivity implements SensorEvent
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(logTag,"onCreate----------------------------->");
         setContentView(R.layout.activity_ar_footprint_draw);
         UIUtils.setBarStyle(self);
         x.view().inject(this);
@@ -168,6 +171,7 @@ public class ArFootPrintDrawActivity extends BaseActivity implements SensorEvent
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(self, TrackListActivity.class);
+               // intent.setFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP);
                 startActivity(intent);
             }
         });
@@ -176,25 +180,52 @@ public class ArFootPrintDrawActivity extends BaseActivity implements SensorEvent
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(self, TrackMapActivity.class);
+              //  intent.setFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP);
                 startActivity(intent);
             }
         });
 
-        toArBtn.setOnClickListener(new View.OnClickListener() {
+        toCreateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(self, TrackCreateActivity.class);
+               // intent.setFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP);
                 startActivity(intent);
             }
         });
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                back();
             }
         });
         initSearchEvent();
     }
+
+    private void back(){
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
+    /**
+     * 监听Back键按下事件,方法2:
+     * 注意:
+     * 返回值表示:是否能完全处理该事件
+     * 在此处返回false,所以会继续传播该事件.
+     * 在具体项目中此处的返回值视情况而定.
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            back();
+            return false;
+        }else {
+            return super.onKeyDown(keyCode, event);
+        }
+    }
+
+
     private void initSearchEvent(){
         r100mBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -292,6 +323,7 @@ public class ArFootPrintDrawActivity extends BaseActivity implements SensorEvent
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.i(logTag,"onDestroy-------------------------------------------->");
         sensorManager.unregisterListener(this);
         if(null!=arOverlayView){
             arOverlayView.clearData();
@@ -384,11 +416,13 @@ public class ArFootPrintDrawActivity extends BaseActivity implements SensorEvent
             float[] rotationMatrixFromVector = new float[16];
             float[] projectionMatrix = new float[16];
             float[] rotatedProjectionMatrix = new float[16];
+            /*
             String str = "";
             for(float f : sensorEvent.values){
                 str = str+","+f;
             }
             Log.i(TAG, "values----------------->:"+ str);
+           */
             SensorManager.getRotationMatrixFromVector(rotationMatrixFromVector, sensorEvent.values);
 
             if (arCamera != null) {
@@ -407,7 +441,7 @@ public class ArFootPrintDrawActivity extends BaseActivity implements SensorEvent
         }
         if (sensorEvent.sensor.getType() == Sensor.TYPE_ORIENTATION) {
             float degree = sensorEvent.values[0];// 存放了方向值 90
-            Log.i(TAG, "degree----------------->:"+degree);
+           // Log.i(TAG, "degree----------------->:"+degree);
             AROverlayViewDraw.zDegrees = degree;
         }
       //  calculateOrientation();

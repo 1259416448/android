@@ -243,6 +243,7 @@
         model.longitude = poiDetailResult.pt.longitude;
         model.typeIds = self.typeIds ;
         model.poiDetailUrl = poiDetailResult.detailUrl;
+        model.poiUid = poiDetailResult.uid;
         //执行数据保存
         static NSString *saveFetchUrl = @"/app/business/fetch/create";
         self.fetchNum ++ ;

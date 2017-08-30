@@ -18,6 +18,7 @@ import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -61,6 +62,8 @@ import arvix.cn.ontheway.service.BaiduLocationListenerService;
 import arvix.cn.ontheway.service.inter.BaiduPoiService;
 import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.ui.BaseActivity;
+import arvix.cn.ontheway.ui.MainActivity;
+import arvix.cn.ontheway.ui.ar_draw.ArFootPrintDrawActivity;
 import arvix.cn.ontheway.ui.ar_view.ArFootPrintActivity;
 import arvix.cn.ontheway.ui.view.BottomDialog;
 import arvix.cn.ontheway.utils.OnthewayApplication;
@@ -87,9 +90,10 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
     private Button toTrackListBtn;
     @ViewInject(R.id.to_ar_btn)
     private Button toArBtn;
-
-    @ViewInject(R.id.to_map_btn)
-    private Button toMapBtn;
+    @ViewInject(R.id.back_img)
+    private Button backBtn;
+    @ViewInject(R.id.create_btn)
+    private Button toCreateBtn;
     private FootPrintBean currentClickedTrack;
     private View headerClickedView;
     private HeaderClickedViewHolder headerClickedViewHolder;
@@ -183,12 +187,6 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
         });
     }
 
-    protected  void OnTouchEvent(){
-
-    }
-
-
-
     public  void updateLocation(){
         CacheService cache = OnthewayApplication.getInstahce(CacheService.class);
         Double latCache = cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LAT);
@@ -199,11 +197,33 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
             updateLocation(latCache,lonCache);
         }
     }
+    private void back(){
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+    /**
+     * 监听Back键按下事件,方法2:
+     * 注意:
+     * 返回值表示:是否能完全处理该事件
+     * 在此处返回false,所以会继续传播该事件.
+     * 在具体项目中此处的返回值视情况而定.
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            back();
+            return false;
+        }else {
+            return super.onKeyDown(keyCode, event);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_map);
+        UIUtils.setBarStyle(self);
         x.view().inject(this);
         searchKeyWord = getIntent().getStringExtra(BaiduActivity.EXTRA_KEYWORD);
         //获取地图控件引用
@@ -229,12 +249,6 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
         };
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(App.self);
         mLocalBroadcastManager.registerReceiver(mReceiver, filter);
-//        mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
-//            public boolean onMarkerClick(final Marker marker) {
-//                // TODO
-//                return true;
-//            }
-//        });
 
         rangeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -263,14 +277,15 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(self, TrackListActivity.class);
+               // intent.setFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP);
                 startActivity(intent);
             }
         });
 
-        toMapBtn.setOnClickListener(new View.OnClickListener() {
+        toCreateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(self, TrackMapActivity.class);
+                Intent intent = new Intent(self, TrackCreateActivity.class);
                 startActivity(intent);
             }
         });
@@ -278,13 +293,18 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
         toArBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(self, ArFootPrintActivity.class);
+                Intent intent = new Intent(self, ArFootPrintDrawActivity.class);
+               // intent.setFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP);
                 startActivity(intent);
             }
         });
-
         checkOverlayPermission();
-
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                back();
+            }
+        });
         //test cache
 //        new CacheDefauleTest(OnthewayApplication.cache).startTest();
     }
@@ -300,7 +320,6 @@ public class TrackMapActivity extends BaseActivity  implements BaiduMap.OnMarker
                         UIUtils.safeOpenLink(self,intent);
                     }
                 }).setNegativeButton("取消",null).show();
-
             }
         }
     }

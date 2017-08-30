@@ -19,7 +19,7 @@
         android:layout_alignParentBottom="true">
 
         <Button
-            android:id="@+id/to_ar_btn"
+            android:id="@+id/create_btn"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginBottom="30dp"
@@ -35,13 +35,13 @@
             android:background="@drawable/ar_list" />
 
         <Button
-            android:id="@+id/to_map_btn"
+            android:id="@+id/to_ar_btn"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginBottom="30dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="15dp"
-            android:background="@drawable/ar_pingmian" />
+            android:background="@drawable/ar_arditu" />
     </LinearLayout>
 
     <LinearLayout
@@ -167,6 +167,7 @@
     <Button
         android:background="@drawable/back_1"
         android:id="@+id/back_img"
+        android:layout_marginTop="24.5dp"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginLeft="15dp"

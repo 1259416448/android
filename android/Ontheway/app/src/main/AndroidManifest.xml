@@ -47,6 +47,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:name=".App"
+        android:hardwareAccelerated="true"
         android:theme="@style/Theme.AppCompat.Light">
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
