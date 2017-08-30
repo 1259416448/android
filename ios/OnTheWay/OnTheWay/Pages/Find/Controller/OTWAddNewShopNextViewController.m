@@ -63,6 +63,8 @@
     self.title = @"提交认领资料";
     [self setLeftNavigationImage:[UIImage imageNamed:@"back_2"]];
     self.view.backgroundColor = [UIColor color_f4f4f4];
+    DLog(@"formData%@",self.createShopFormModel.mj_keyValues);
+    [self reloadShopHeaderV];
     [self.shopHeaderV addSubview:self.shopNameV];
     [self.shopHeaderV addSubview:self.shopLocationV];
     [self.shopHeaderV addSubview:self.shopLocatioinContentV];
@@ -71,6 +73,31 @@
     [self.shopHeaderBGV addSubview:self.shopHeaderV];
     [self.view addSubview:self.tableV];
     [self initDataSource];
+}
+
+- (void)reloadShopHeaderV
+{
+    CGFloat X = CGRectGetMaxX(self.shopLocationV.frame) + 5;
+    CGFloat Y = CGRectGetMaxY(self.shopNameV.frame) + 10;
+    CGFloat W = SCREEN_WIDTH - 15*2 - 13 - 5;
+    CGSize addressSize=[self.createShopFormModel.address boundingRectWithSize:CGSizeMake(W, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin
+                                                 attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:14]} context:nil].size;
+    CGRect addressRect = CGRectMake(X, Y, addressSize.width, addressSize.height);
+    self.shopLocatioinContentV.frame = addressRect;
+    CGFloat shopHeaderVH = 0.f;
+    if (![self bInputIsEmpty:self.createShopFormModel.contactInfo]) {
+        shopHeaderVH = CGRectGetMaxY(self.shopTelephoneContentV.frame) + 15;
+        self.shopTelephoneV.hidden = NO;
+        self.shopTelephoneContentV.hidden = NO;
+    } else {
+        shopHeaderVH = CGRectGetMaxY(self.shopLocatioinContentV.frame) + 15;
+        self.shopTelephoneV.hidden = YES;
+        self.shopTelephoneContentV.hidden = YES;
+    }
+    self.shopHeaderV.frame = CGRectMake(0, 10, SCREEN_WIDTH, shopHeaderVH);
+    DLog(@"%f",shopHeaderVH);
+    self.shopHeaderBGV.frame = CGRectMake(0, 0, SCREEN_WIDTH, shopHeaderVH + 10*2);
+
 }
 
 - (void)initDataSource
@@ -167,9 +194,14 @@
 #pragma mark 设置分组标题内容高度
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     if (section == 0) {
-        return 145;
+        return CGRectGetHeight(self.shopHeaderBGV.frame);
     }
     return 1;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 10.f;
 }
 
 #pragma mark 返回分组数
@@ -337,8 +369,8 @@
     OTWBusinessExpand *businessExpand = [[OTWBusinessExpand alloc] init];
     self.createShopFormModel.businessExpand = businessExpand;
     [self validateFormData];
-    DLog(@"form表单数据为:%@",self.createShopFormModel.mj_keyValues);
-    NSDictionary *requestBody = [NSDictionary dictionaryWithObjectsAndKeys:self.createShopFormModel.mj_keyValues,@"business",nil];
+    NSDictionary *requestBody = [NSDictionary dictionaryWithObjectsAndKeys:self.createShopFormModel.mj_keyValues,@"business",self.createShopFormModel.certificatePhoto.mj_keyValues,@"certificatePhoto",self.createShopFormModel.businessLicensePhoto.mj_keyValues,@"businessLicensePhoto",nil];
+        DLog(@"form表单数据为:%@",requestBody.mj_keyValues);
     [OTWBusinessService createBusiness:requestBody completion:^(id result, NSError *error) {
         if (result) {
             [hud hideAnimated:YES];
@@ -445,8 +477,8 @@
 - (UIView*)shopHeaderBGV
 {
     if (!_shopHeaderBGV) {
-        _shopHeaderBGV = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 125+20)];
-        _shopHeaderBGV.backgroundColor = [UIColor color_f4f4f4];
+        _shopHeaderBGV = [[UIView alloc] init];
+        _shopHeaderBGV.backgroundColor = [UIColor clearColor];
     }
     return _shopHeaderBGV;
 }
@@ -454,7 +486,7 @@
 - (UIView*)shopHeaderV
 {
     if (!_shopHeaderV) {
-        _shopHeaderV = [[UIView alloc] initWithFrame:CGRectMake(0, 10, SCREEN_WIDTH, 125)];
+        _shopHeaderV = [[UIView alloc] init];
         _shopHeaderV.backgroundColor = [UIColor whiteColor];
     }
     return _shopHeaderV;
@@ -485,15 +517,10 @@
 - (UILabel*)shopLocatioinContentV
 {
     if (!_shopLocatioinContentV) {
-        CGFloat X = CGRectGetMaxX(self.shopLocationV.frame) + 5;
-        CGFloat Y = CGRectGetMaxY(self.shopNameV.frame) + 10;
-        CGFloat W = SCREEN_WIDTH - 15*2 - 13 - 5;
-        _shopLocatioinContentV = [[UILabel alloc] initWithFrame:CGRectMake(X, Y, W, 40)];
-        [_shopLocatioinContentV setFont:[UIFont boldSystemFontOfSize:14]];
-        _shopLocatioinContentV.textAlignment = NSTextAlignmentLeft;
+        _shopLocatioinContentV = [[UILabel alloc] init];
+        [_shopLocatioinContentV setFont:[UIFont systemFontOfSize:14]];
         _shopLocatioinContentV.textColor = [UIColor color_7d7d7d];
         _shopLocatioinContentV.numberOfLines = 0;
-        _shopLocatioinContentV.text = @"北京市朝阳区三里屯白家庄路甲2号(泰悦豪庭大厦东200米)";
     }
     return _shopLocatioinContentV;
 }
@@ -514,10 +541,9 @@
         CGFloat X = CGRectGetMaxX(self.shopLocationV.frame) + 5;
         CGFloat Y = CGRectGetMaxY(self.shopLocatioinContentV.frame) + 5;
         _shopTelephoneContentV = [[UILabel alloc] initWithFrame:CGRectMake(X, Y, 120, 20)];
-        [_shopTelephoneContentV setFont:[UIFont boldSystemFontOfSize:14]];
+        [_shopTelephoneContentV setFont:[UIFont systemFontOfSize:14]];
         _shopTelephoneContentV.textAlignment = NSTextAlignmentLeft;
         _shopTelephoneContentV.textColor = [UIColor color_7d7d7d];
-        _shopTelephoneContentV.text = @"010-3456776";
     }
     return _shopTelephoneContentV;
 }
@@ -543,7 +569,7 @@
         [_submitButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         _submitButton.backgroundColor = [UIColor color_e50834];
         _submitButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-        CGRect submitButtonRect = CGRectMake(30, 0, SCREEN_WIDTH - 30*2, 44);
+        CGRect submitButtonRect = CGRectMake(30, 50, self.view.bounds.size.width - 30*2, 44);
         _submitButton.frame = submitButtonRect;
         [_submitButton addTarget:self action:@selector(uploadPhotots) forControlEvents:UIControlEventTouchUpInside];
         _submitButton.layer.cornerRadius = 6;

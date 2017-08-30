@@ -47,6 +47,8 @@
 //商家营业执照
 @property (nonatomic,strong) UIImage *businessLicenseImage;
 
+
+
 + (instancetype) initWithDict:(NSDictionary *) dict;
 
 @end

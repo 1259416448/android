@@ -45,6 +45,8 @@
 		18BCFAAC1F4D1A7200B8E09D /* CreateShopTVCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BCFAAB1F4D1A7200B8E09D /* CreateShopTVCell.m */; };
 		18BCFAAF1F4D36B100B8E09D /* CreateShopTVTWOCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BCFAAE1F4D36B100B8E09D /* CreateShopTVTWOCell.m */; };
 		18BCFAB21F4D4E7100B8E09D /* CreateShopPicCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BCFAB11F4D4E7100B8E09D /* CreateShopPicCell.m */; };
+		B12360111F4C075F00E8FA62 /* OTWPersonalWalletDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B12360101F4C075F00E8FA62 /* OTWPersonalWalletDetailViewController.m */; };
+        B12360141F4D182900E8FA62 /* OTWPersonalWalletDetailViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B12360131F4D182900E8FA62 /* OTWPersonalWalletDetailViewCell.m */; };
 		18BCFAB81F4E7ACD00B8E09D /* CreateShopAddressCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BCFAB71F4E7ACD00B8E09D /* CreateShopAddressCell.m */; };
 		18BCFABB1F4E821200B8E09D /* OTWAddNewShopNextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BCFABA1F4E821200B8E09D /* OTWAddNewShopNextViewController.m */; };
 		18BCFABE1F50045F00B8E09D /* CreateShopCardPicCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BCFABD1F50045F00B8E09D /* CreateShopCardPicCell.m */; };
@@ -1827,6 +1829,8 @@
 				B17836EF1F428D8300FC73DC /* OTWPersonalWalletViewController.m in Sources */,
 				B1B0556A1F3058BE008274FE /* OTWShopActiveDetailsViewCellViewController.m in Sources */,
 				B181AB5F1F1F7F85009929D1 /* OTWPraiseViewTableCell.m in Sources */,
+				B1B0557E1F305BD1008274FE /* OTWFindBusinessmenModel.m in Sources */,
+				DD67B33C1F4D51B400429EFA /* OTWNotFundFootprintView.m in Sources */,
 				DDEA15E61F25CCA500056166 /* PYPhotoBrowseView.m in Sources */,
 				B1B055761F305B8A008274FE /* OTWFindBusinessmenViewCell.m in Sources */,
 				B19472B41F45916200F5DB4A /* OTWPersonalSiteHowClaimShopViewController.m in Sources */,
