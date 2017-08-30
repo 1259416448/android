@@ -88,7 +88,11 @@ public class Business extends BaseEntity<Long> {
     //商家是否展示 如果是用户自己添加的商家，需要认领通过后才会展示
     private Boolean ifShow = Boolean.FALSE;
 
+    @ApiModelProperty(hidden = true)
     private String poiDetailUrl;
+
+    @ApiModelProperty(hidden = true)
+    private String poiUid;
 
     /**
      * checkLack
@@ -192,5 +196,13 @@ public class Business extends BaseEntity<Long> {
 
     public void setPoiDetailUrl(String poiDetailUrl) {
         this.poiDetailUrl = poiDetailUrl;
+    }
+
+    public String getPoiUid() {
+        return poiUid;
+    }
+
+    public void setPoiUid(String poiUid) {
+        this.poiUid = poiUid;
     }
 }

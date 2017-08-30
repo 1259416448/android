@@ -2,11 +2,15 @@ package cn.arvix.ontheway.business.service;
 
 import cn.arvix.base.common.entity.JSONResult;
 import cn.arvix.base.common.entity.SystemModule;
+import cn.arvix.base.common.entity.search.PageRequest;
 import cn.arvix.base.common.entity.search.Searchable;
 import cn.arvix.base.common.service.impl.BaseServiceImpl;
 import cn.arvix.base.common.utils.CommonContact;
+import cn.arvix.base.common.utils.CommonErrorCode;
 import cn.arvix.base.common.utils.JsonUtil;
+import cn.arvix.ontheway.business.dto.ARSearchDTO;
 import cn.arvix.ontheway.business.dto.CreateAndClaimDTO;
+import cn.arvix.ontheway.business.dto.SolrSearchDTO;
 import cn.arvix.ontheway.business.entity.Business;
 import cn.arvix.ontheway.business.entity.BusinessExpand;
 import cn.arvix.ontheway.business.entity.BusinessStatistics;
@@ -14,12 +18,14 @@ import cn.arvix.ontheway.ducuments.service.DocumentService;
 import cn.arvix.ontheway.sys.user.entity.User;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Created by yangyang on 2017/8/15.
@@ -61,6 +67,13 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
     @Autowired
     public void setBusinessTypeContactService(BusinessTypeContactService businessTypeContactService) {
         this.businessTypeContactService = businessTypeContactService;
+    }
+
+    private BusinessSolrService businessSolrService;
+
+    @Autowired
+    public void setBusinessSolrService(BusinessSolrService businessSolrService) {
+        this.businessSolrService = businessSolrService;
     }
 
     /**
@@ -120,14 +133,13 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
     public synchronized JSONResult createFetchData(Business business) {
 
         //抓取的数据需要判断一下重复   通过名称 和 地址 完全相同代表重复，直接过滤掉
-        Map<String,Object> params = Maps.newHashMap();
-        params.put("address_eq",business.getAddress());
-        params.put("name_eq",business.getName());
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("poiUid_eq", business.getPoiUid());
 
         List<Business> list = super.findAllWithNoPageNoSort(Searchable.newSearchable(params));
 
-        if(list.size() > 0){
-            return JsonUtil.getFailure("poi数据重复",CommonContact.OPTION_ERROR);
+        if (list.size() > 0) {
+            return JsonUtil.getFailure("poi数据重复", CommonContact.OPTION_ERROR);
         }
 
         Assert.notEmpty(business.getTypeIds(), "商家类型不能为空");
@@ -146,7 +158,84 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
         super.save(business);
         businessTypeContactService.createContact(business.getId(), business.getTypeIds());
 
+        //加入solr全文检索中
+        businessSolrService.add(business);
         return JsonUtil.getSuccess(CommonContact.OPTION_SUCCESS, CommonContact.OPTION_SUCCESS, business.getId());
     }
 
+    /**
+     * 获取检索数据列表，分页获取数据
+     *
+     * @param type        检索类型 ar list map
+     * @param currentTime 初次检索时间
+     * @param number      当前页
+     * @param size        每页数量
+     * @param latitude    当前定位的纬度
+     * @param longitude   当前位置的经度
+     * @param distance    距离
+     * @param q           检索条件
+     * @param typeIds     过滤条件
+     * @return 查询结果
+     */
+    public JSONResult search(BusinessService.SearchType type, Integer number, Integer size,
+                             Double latitude, Double longitude, Double distance, Long currentTime,
+                             String q, Set<Long> typeIds) {
+        if (SearchType.ar.equals(type)) {
+            return this.searchAR(number, size, latitude, longitude, distance, currentTime, q, typeIds);
+        }
+        return null;
+    }
+
+    /**
+     * 获取AR展示分页数据
+     *
+     * @return 查询结果
+     */
+    private JSONResult searchAR(Integer number, Integer size,
+                                Double latitude, Double longitude, Double distance, Long currentTime,
+                                String q, Set<Long> typeIds) {
+        Assert.notNull(latitude, "latitude is not null");
+        Assert.notNull(longitude, "longitude is not null");
+        if (distance == null) distance = 1.0;
+        if (size == null) size = 30;
+        if (number == null) number = 0;
+        if (currentTime == null) currentTime = System.currentTimeMillis();
+        Page<ARSearchDTO> page = businessSolrService.searchAR(SolrSearchDTO
+                .getInstance(q, number, size, latitude, longitude, distance, currentTime, typeIds));
+        if(page == null){
+            return JsonUtil.getFailure("solr search failed", CommonErrorCode.AR_SEARCH_SOLR_ERROR);
+        }
+        return JsonUtil.getSuccess(CommonContact.OPTION_SUCCESS,CommonContact.OPTION_SUCCESS,page);
+    }
+
+
+    /**
+     * 导入全部数据到solr 全文检索中
+     *
+     * @return 导入结果
+     */
+    public JSONResult importDataToSolr() {
+        importDataToSolr(0, 30);
+        return JsonUtil.getSuccess(CommonContact.OPTION_SUCCESS, CommonContact.OPTION_SUCCESS);
+    }
+
+    private void importDataToSolr(int size, int number) {
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("ifShow_eq", true);
+        Searchable searchable = Searchable.newSearchable(params, new PageRequest(size, number));
+        List<Business> businessList = super.findAllWithNoCount(searchable).getContent();
+        for (Business business : businessList) {
+            businessSolrService.add(business);
+        }
+        //数据加入solr中
+        if (businessList.size() < number) { //结束查询
+            return;
+        }
+        importDataToSolr(++size, number);
+    }
+
+    //检索的几种类型
+    public enum SearchType {
+        ar, list, map
+    }
 }
