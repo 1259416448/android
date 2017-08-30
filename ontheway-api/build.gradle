@@ -48,12 +48,19 @@ dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.3.11'
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.boot:spring-boot-starter-mail')
+
+    //这里这样配置是为了解决使用内嵌tomcat启动时 会出现和shiro jar冲突问题 ，我目前没有找到解决方案
     compile('org.springframework.boot:spring-boot-starter-web') {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
     }
     providedCompile('org.springframework.boot:spring-boot-starter-jetty') {
         exclude group: 'org.eclipse.jetty.websocket'
     }
+
+    //solr 全文检索配置 直接使用目前更简单一些
+    //compile 'org.springframework.data:spring-data-solr:2.1.6.RELEASE'
+    compile group: 'org.apache.solr', name: 'solr-solrj', version: '6.3.0'
+
 
     compile("com.alibaba:fastjson:1.2.24")
     compile 'org.apache.ant:ant:1.9.4'

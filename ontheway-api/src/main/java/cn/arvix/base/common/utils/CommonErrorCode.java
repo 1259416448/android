@@ -71,4 +71,9 @@ public interface CommonErrorCode {
      */
     String BUSINESS_TYPE_HAS_CHILDREN = "000403";
 
+    /**
+     * 获取全文检索数据失败
+     */
+    String AR_SEARCH_SOLR_ERROR = "000404";
+
 }

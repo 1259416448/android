@@ -147,4 +147,13 @@ public class Checks {
         Long[] longs = new Long[longList.size()];
         return longList.toArray(longs);
     }
+
+    /**
+     * 如果为 null 将会返回null
+     * @return 返回Object的 toString
+     */
+    public static String stringValueOf(Object object){
+        if(object == null) return null;
+        return object.toString();
+    }
 }
