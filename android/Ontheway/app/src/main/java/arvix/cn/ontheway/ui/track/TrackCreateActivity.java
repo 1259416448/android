@@ -77,6 +77,7 @@ public class TrackCreateActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StaticMethod.goToLogin(self);
         fileUploadService = OnthewayApplication.getInstahce(ImageFileUploadService.class);
         setContentView(R.layout.activity_track_create);
         cache = OnthewayApplication.getInstahce(CacheService.class);
