@@ -65,7 +65,7 @@ public class AppFootprintController extends ExceptionHandlerController {
             @ApiImplicitParam(value = "每页大小", name = "size", required = true, paramType = "query"),
             @ApiImplicitParam(value = "纬度", name = "latitude", required = true, paramType = "query"),
             @ApiImplicitParam(value = "经度", name = "longitude", required = true, paramType = "query"),
-            @ApiImplicitParam(value = "范围", name = "distance", paramType = "query"),
+            @ApiImplicitParam(value = "范围", name = "searchDistance", paramType = "query"),
             @ApiImplicitParam(value = "时间", name = "time", paramType = "query"),
             @ApiImplicitParam(value = "开始分页时间", name = "currentTime", paramType = "query"),
             @ApiImplicitParam(value = "检索的半径范围", name = "distance", paramType = "query"),

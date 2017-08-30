@@ -24,4 +24,6 @@
 
 @property (nonatomic,strong) NSString *poiDetailUrl;
 
+@property (nonatomic,strong) NSString *poiUid;
+
 @end
