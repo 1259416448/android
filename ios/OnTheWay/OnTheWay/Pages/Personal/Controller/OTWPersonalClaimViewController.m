@@ -103,7 +103,7 @@
     UIView *view=[[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 5)];
     view.backgroundColor = [UIColor clearColor];
     UILabel *sectionHeaderLeft=[[UILabel alloc] initWithFrame:CGRectMake(22.5, 0, 1,5)];
-    sectionHeaderLeft.backgroundColor=[UIColor color_d5d5d5];
+    sectionHeaderLeft.backgroundColor=[UIColor redColor];
     [view addSubview:sectionHeaderLeft];
     return view;
 }

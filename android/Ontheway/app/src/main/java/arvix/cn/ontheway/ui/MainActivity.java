@@ -66,6 +66,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 //Intent intent = new Intent(self, ArFootPrintActivity.class);
                 Intent intent = new Intent(self, ArFootPrintDrawActivity.class);
                 intent.putExtra(BaiduActivity.EXTRA_KEYWORD, "美食");
+                //intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(intent);
             }
         });
@@ -116,7 +117,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             }
 
         });
-        tabRG.check(R.id.tab_faxian);
+        if(lastCheckId>0){
+            tabRG.check(lastCheckId);
+        }else{
+            tabRG.check(R.id.tab_faxian);
+        }
         tabArCenterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,7 +136,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private static int waitForResultValue = -1;
 
-    private int lastCheckId=-1;
+    private static int lastCheckId=-1;
     public void changeFrag(int checkedId) {
         Fragment targetFrag = frags.get(checkedId);
 

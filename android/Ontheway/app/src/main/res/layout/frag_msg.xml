@@ -51,11 +51,11 @@
             android:src="@drawable/arrow_right" />
     </LinearLayout>
 
+    <include layout="@layout/common_line_hr" />
     <LinearLayout
         android:id="@+id/to_new_like_line"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginTop="1dp"
         android:background="@color/white">
 
         <ImageButton
@@ -76,15 +76,17 @@
             android:layout_gravity="center" />
 
         <TextView
-            android:layout_width="25dp"
+            android:layout_width="wrap_content"
+            android:paddingLeft="6.5dp"
+            android:paddingRight="6dp"
             android:layout_height="25dp"
             android:layout_marginLeft="8dp"
             android:textColor="@color/white"
             android:background="@drawable/msg_number_bg"
-            android:text="99"
+            android:text="99+"
             android:gravity="center"
             android:layout_gravity="center"
-            android:textSize="16sp"
+            android:textSize="13sp"
             android:layout_marginRight="10dp"
             />
         <ImageButton
@@ -96,11 +98,12 @@
     </LinearLayout>
 
 
+    <include layout="@layout/common_line_hr" />
+
     <LinearLayout
         android:id="@+id/to_new_reply_line"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="1dp"
         android:background="@color/white">
 
         <ImageButton
@@ -139,12 +142,11 @@
             android:background="@color/white"
             android:src="@drawable/arrow_right" />
     </LinearLayout>
-
+    <include layout="@layout/common_line_hr" />
     <LinearLayout
         android:id="@+id/to_new_track_line"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="1dp"
         android:background="@color/white">
 
         <ImageButton

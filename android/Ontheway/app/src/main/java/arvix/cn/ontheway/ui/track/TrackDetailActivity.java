@@ -385,7 +385,7 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
                    if(footPrintBean.getComments()!=null && footPrintBean.getComments().size()>0){
                        commentBeanList.addAll(footPrintBean.getComments());
                        adapter.notifyDataSetChanged();
-                       commentNoTv.setText(commentBeanList.size()+"条评论");
+                       commentNoTv.setText(fetchBean.getFootprintCommentNum()+"条评论");
                        if(commentBeanList.size()>=10){
                            commentCanFetch = true;
                        }
@@ -439,18 +439,22 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
             pagination.setNumber(1+pagination.getNumber());
             if(totalPages < pagination.getNumber()){
                 fetch = false;
-                StaticMethod.showToast("没有更多的数据了，评论一条吧",this);
                 Log.i(logTag,"fetch---------------->is false");
-                listHolder.list.onRefreshComplete();
+                delayRefreshComplete(100);
+                StaticMethod.showToast("没有更多的数据了，评论一条吧",this);
             }
             if(fetch){
                 RequestParams requestParams = new RequestParams(ServerUrl.COMMENT_SEARCH);
                 requestParams.addQueryStringParameter("size", pagination.getSize()+"");
                 requestParams.addQueryStringParameter("footprintId", footPrintBean.getFootprintId()+"");
                 requestParams.addQueryStringParameter("number", pagination.getNumber()+"");
+                if(pagination.getCurrentTime()>0){
+                    requestParams.addQueryStringParameter("currentTime",pagination.getCurrentTime()+"");
+                }
                 x.http().get(requestParams,new org.xutils.common.Callback.CommonCallback<String>(){
                     @Override
                     public void onSuccess(String result) {
+                        Log.i(logTag,result);
                         BaseResponse<Pagination<CommentBean>> response =  JSON.parseObject(result,new TypeReference<BaseResponse<Pagination<CommentBean>>>(){});
                         if (response.getCode() == StaticVar.SUCCESS) {
                             JSONObject jsonObject = response.getBody();
@@ -464,8 +468,9 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
                                 paginationReturn.setContent(footPrintBeanList);
                             }
                             pagination = paginationReturn;
-                            commentNoTv.setText(pagination.getTotalElements()+"条评论");
-                            commentBeanList.addAll(footPrintBean.getComments());
+                           //服务器暂时没有返回total，不更新总数
+                           // commentNoTv.setText(pagination.getTotalElements()+"条评论");
+                            commentBeanList.addAll(pagination.getContent());
                             adapter.notifyDataSetChanged();
                         } else if (response.getCode() == StaticVar.ERROR) {
                             StaticMethod.showToast("获取数据失败", self);
@@ -514,11 +519,16 @@ public class TrackDetailActivity  extends BaseActivity implements AdapterView.On
     /**
      * onPullDownToRefresh will be called only when the user has Pulled from
      * the start, and released.
-     *
+     * 执行刷新操作
      * @param refreshView
      */
     @Override
     public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+        Log.i(logTag,"执行刷新操作-------------------->");
+        pagination.setNumber(-1);
+        pagination.setCurrentTime(0);
+        commentCanFetch = true;
+        commentBeanList.clear();
         fetchCommentPagination();
     }
 
