@@ -7,6 +7,7 @@
 //
 
 #import "CreateShopTVCell.h"
+#import "OTWSelectBarViewController.h"
 
 #define TFCellPadding_15 15
 #define TFCellPadding_5 5
@@ -123,6 +124,9 @@
         CGFloat rightContentVW = SCREEN_WIDTH -  CGRectGetMaxX(self.requireV.frame) - TFCellPadding_15 * 2 - 13 - 12;
         _rightContentV.frame = CGRectMake(rightContentVX, TFCellPadding_15, rightContentVW, 20);
         [self setAccessoryView:self.backImageView];
+        UITapGestureRecognizer *labelTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toChildView)];
+        [_rightContentV addGestureRecognizer:labelTapGestureRecognizer];
+        _rightContentV.userInteractionEnabled = YES;
     } else {
         CGFloat rightContentVX = CGRectGetMaxX(self.requireV.frame) + TFCellPadding_15;
         CGFloat rightContentVW = SCREEN_WIDTH -  CGRectGetMaxX(self.requireV.frame) - TFCellPadding_15 * 2;
@@ -135,6 +139,12 @@
         self.rightContentV.text = createModel.placeholder;
     }
     
+}
+
+- (void)toChildView
+{
+    OTWSelectBarViewController *addNewShopNextVC = [[OTWSelectBarViewController alloc] init];
+    [self.mainControl pushViewController:addNewShopNextVC animated:NO];
 }
 
 @end

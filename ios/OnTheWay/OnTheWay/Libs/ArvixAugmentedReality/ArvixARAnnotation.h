@@ -42,6 +42,8 @@
 
 //用户定位地址与poi的距离
 @property (nonatomic) double distanceFromUser;
+//雷达标点颜色值
+@property (nonatomic,strong) NSString *colorCode;
 //方向角
 @property (nonatomic) double azimuth;
 @property (nonatomic) BOOL active;
