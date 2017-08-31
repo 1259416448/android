@@ -9,6 +9,7 @@
 #import "OTWPersonalCashTVTableViewCell.h"
 #import "OTWPersonalCashFormModel.h"
 #import <MJExtension.h>
+#import "OTWPersonalChooseBankViewController.h"
 
 #define TFCellPadding_15 15
 #define TFCellPadding_5 5
@@ -115,6 +116,8 @@
 }
 -(void)tapActionForChooseBank{
     DLog(@"点击了选择银行卡");
+    OTWPersonalChooseBankViewController *personalWalletBankVC = [[OTWPersonalChooseBankViewController alloc] init];
+    [self.mainControl pushViewController:personalWalletBankVC animated:YES];
 }
 
 @end
