@@ -41,6 +41,7 @@
 @property(nonatomic,strong) UIButton *locationBtton_500m;
 @property(nonatomic,strong) UIButton *locationBtton_1000m;
 
+@property(nonatomic,strong) UIView *shopPopoverV;
 @property(nonatomic,strong) UIView *infoBGView;
 @property(nonatomic,strong) UILabel *footprintLabel;
 @property(nonatomic,strong) UIView *lineView;
@@ -164,6 +165,8 @@
     CGFloat locationBtton_1000mX = CGRectGetMaxX(self.refreshButton.frame) - 45 - 5 - 35;
     self.locationBtton_1000m.frame = CGRectMake(locationBtton_1000mX, locationButtonY, 45, 35);
     [self.view insertSubview:self.locationBtton_1000m aboveSubview:self.presenter];
+    
+    [self.view insertSubview:self.shopPopoverV aboveSubview:self.presenter];
     
     //附近足迹总信息
     [self.view insertSubview:self.infoBGView aboveSubview:self.presenter];
@@ -619,6 +622,15 @@
         [_locationBtton_1000m addGestureRecognizer:tapGesture_1000m];
     }
     return _locationBtton_1000m;
+}
+
+- (UIView*)shopPopoverV
+{
+    if (!_shopPopoverV) {
+        _shopPopoverV = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT - 130, SCREEN_WIDTH, 130)];
+        _shopPopoverV.backgroundColor = [UIColor whiteColor];
+    }
+    return _shopPopoverV;
 }
 
 - (UIView *)infoBGView
