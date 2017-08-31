@@ -8,6 +8,7 @@
 
 #import "OTWPersonalWalletViewController.h"
 #import "OTWPersonalWalletDetailViewController.h"
+#import "OTWPersonalCashViewController.h"
 @interface OTWPersonalWalletViewController (){
     NSNumber *num;
 }
@@ -124,7 +125,7 @@
         _cashMoneyBtn.titleLabel.textColor=[UIColor whiteColor];
         [_cashMoneyBtn.layer setMasksToBounds:YES];
         [_cashMoneyBtn.layer setCornerRadius:3.0];
-        if(num.floatValue==0.00)
+        if(num.floatValue!=0.00)
         {
             _cashMoneyBtn.backgroundColor=[UIColor color_d5d5d5];
         }else{
@@ -139,6 +140,8 @@
 
 -(void)cashMoneyBtnClick{
     DLog(@"点击了提现");
+    OTWPersonalCashViewController *personalWalletDetailVC = [[OTWPersonalCashViewController alloc] init];
+    [self.navigationController pushViewController:personalWalletDetailVC animated:YES];
 }
 -(UIButton*)walletDetailBtn{
     if(!_walletDetailBtn){
