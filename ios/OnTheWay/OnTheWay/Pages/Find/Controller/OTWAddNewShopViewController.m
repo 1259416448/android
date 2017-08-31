@@ -13,6 +13,7 @@
 #import "CreateShopTVTWOCell.h"
 #import "CreateShopPicCell.h"
 #import "CreateShopAddressCell.h"
+#import "OTWSelectBarViewController.h"
 
 #import <MJExtension.h>
 
@@ -215,6 +216,12 @@
     DLog(@"form表单数据为:%@",self.createShopFormModel.mj_keyValues);
     OTWAddNewShopNextViewController *addNewShopNextVC = [[OTWAddNewShopNextViewController alloc] init];
     [addNewShopNextVC setCreateShopFormData:self.createShopFormModel];
+    [self.navigationController pushViewController:addNewShopNextVC animated:NO];
+}
+
+- (void)toChildView
+{
+    OTWSelectBarViewController *addNewShopNextVC = [[OTWSelectBarViewController alloc] init];
     [self.navigationController pushViewController:addNewShopNextVC animated:NO];
 }
 

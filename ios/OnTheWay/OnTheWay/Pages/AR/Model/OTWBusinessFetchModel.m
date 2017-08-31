@@ -7,7 +7,13 @@
 //
 
 #import "OTWBusinessFetchModel.h"
+#import <MJExtension.h>
 
 @implementation OTWBusinessFetchModel
+
++ (id) initWithDict:(NSDictionary *)dict
+{
+    return [OTWFootprintListModel mj_objectWithKeyValues:dict];
+}
 
 @end
