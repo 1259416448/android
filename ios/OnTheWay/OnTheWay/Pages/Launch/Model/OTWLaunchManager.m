@@ -16,6 +16,7 @@
 #import "OTWPersonalViewController.h"
 #import "OTWPrintARViewController.h"
 #import "OTWPlaneMapViewController.h"
+#import "OTWARShopViewController.h"
 
 
 #import "OTWUserModel.h"
@@ -99,8 +100,8 @@
             
             UINavigationController * footprintsNav = [[UINavigationController alloc] initWithRootViewController:footprintArVC]; // 足迹Ar
             
-            OTWARViewController * arVC = [[OTWARViewController alloc] init];
-            UINavigationController * arNav = [[UINavigationController alloc] initWithRootViewController:arVC]; // AR
+            OTWARShopViewController * arShopVC = [[OTWARShopViewController alloc] init];
+            UINavigationController * arNav = [[UINavigationController alloc] initWithRootViewController:arShopVC]; // AR
             
             OTWNewsViewController *newsVC = [[OTWNewsViewController alloc] init];
             UINavigationController * newsNav = [[UINavigationController alloc] initWithRootViewController:newsVC]; // 消息

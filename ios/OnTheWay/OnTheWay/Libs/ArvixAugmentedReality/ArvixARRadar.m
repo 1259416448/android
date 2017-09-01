@@ -166,9 +166,13 @@
             rect1 = CGRectMake(pointX + 1, pointY + 1, pointWidth, pointWidth);
         }
         rect2 = rect1;
-        
+
         ArvixSpotView *spotview = [[ArvixSpotView alloc] initWithFrame:rect1];
-        spotview.backgroundColor = [UIColor redColor];
+        if (annotation.colorCode && ![annotation.colorCode isEqualToString:@""]) {
+            spotview.backgroundColor = [UIColor colorWithHexString:annotation.colorCode];
+        } else {
+            spotview.backgroundColor = [UIColor redColor];
+        }
         spotview.layer.cornerRadius = pointWidth/2;
         
         [self addSubview:spotview];

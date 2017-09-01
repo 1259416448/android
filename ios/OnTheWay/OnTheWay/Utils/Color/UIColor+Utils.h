@@ -16,6 +16,8 @@
 + (NSString *)hexValuesFromUIColor:(UIColor *)color;
 
 + (UIColor *)color_333333;
++(UIColor *)color_fafafa;
++ (UIColor *)color_60a8e0;
 + (UIColor *)color_898989;
 + (UIColor *)color_7d7d7d;
 + (UIColor *)color_bfbfbf;
