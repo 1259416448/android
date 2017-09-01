@@ -22,6 +22,7 @@ import cn.arvix.qiniu.utils.QiniuDocumentUrlUtil;
 import cn.arvix.qiniu.utils.QiniuDownloadUtil;
 import cn.arvix.qiniu.utils.QiniuResourceManagerUtil;
 import cn.arvix.qiniu.utils.QiniuUploadUtil;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.qiniu.common.QiniuException;
 import com.qiniu.storage.model.FetchRet;
@@ -93,9 +94,9 @@ public class DocumentService extends BaseServiceImpl<Document, Long> {
         User user = webContextUtils.getCheckCurrentUser();
         m.setId(null);
         m.setDownloadNo(0);
-        if(m.getNewName()==null){
+        if (m.getNewName() == null) {
             m.setNewName(m.getFileUrl());
-        }else {
+        } else {
             m.setFileUrl(m.getNewName());
         }
         m.setUser(user);
@@ -147,17 +148,18 @@ public class DocumentService extends BaseServiceImpl<Document, Long> {
 
     /**
      * 根据parentId删除数据
+     *
      * @param parentIds 数据ID
      */
-    public void deleteByParentIds(List<Long> parentIds,SystemModule systemModule){
-        Map<String,Object> params = Maps.newHashMap();
-        params.put("parentId_in",parentIds);
-        params.put("systemModule_eq",systemModule);
+    public void deleteByParentIds(List<Long> parentIds, SystemModule systemModule) {
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("parentId_in", parentIds);
+        params.put("systemModule_eq", systemModule);
         List<Document> documents = super.findAllWithNoPageNoSort(Searchable.newSearchable(params));
-        if(documents!=null&&documents.size()>0){
+        if (documents != null && documents.size() > 0) {
             String[] fileUrlStrs = new String[documents.size()];
             Long[] ids = new Long[documents.size()];
-            for (int i = 0;i<documents.size();i++){
+            for (int i = 0; i < documents.size(); i++) {
                 fileUrlStrs[i] = documents.get(i).getFileUrl();
                 ids[i] = documents.get(i).getId();
             }
@@ -515,32 +517,76 @@ public class DocumentService extends BaseServiceImpl<Document, Long> {
 
     /**
      * 通过parentId获取文件信息
-     * @param pId parentId
-     * @param systemModule 模块ID
+     *
+     * @param pId          parentId
+     * @param systemModule 模块类型
      * @return 请求结果
      */
-    public List<Document> findByParentId(Long pId, SystemModule systemModule){
-        Map<String,Object> params = Maps.newHashMap();
-        params.put("parentId_eq",pId);
-        params.put("systemModule_eq",systemModule);
-        return super.findAllWithSort(Searchable.newSearchable(params,new Sort(Sort.Direction.ASC,"dateCreated")));
+    public List<Document> findByParentId(Long pId, SystemModule systemModule) {
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("parentId_eq", pId);
+        params.put("systemModule_eq", systemModule);
+        return super.findAllWithSort(Searchable.newSearchable(params, new Sort(Sort.Direction.ASC, "dateCreated")));
+    }
+
+    /**
+     * 通过parentId获取文件信息, 可以设置获取数量
+     * 默认按时间排序
+     *
+     * @param pId          parentId
+     * @param systemModule 模块类型
+     * @param size         数量
+     * @return 文档List
+     */
+    public List<Document> findByParentIdAndSize(Long pId, SystemModule systemModule, int size) {
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("parentId_eq", pId);
+        params.put("systemModule_eq", systemModule);
+        Searchable searchable = Searchable.newSearchable(params,
+                new PageRequest(0, size),
+                new Sort(Sort.Direction.ASC, "dateCreated"));
+        return super.findAll(searchable).getContent();
     }
 
     /**
      * 通过parentId获取主题图片Url
-     * @param pId parentId
+     *
+     * @param pId          parentId
      * @param systemModule 模块类型
      * @return 路径
      */
-    public String findThemePhotoByParentId(Long pId,SystemModule systemModule){
-        Map<String,Object> params = Maps.newHashMap();
-        params.put("parentId_eq",pId);
-        params.put("systemModule_eq",systemModule);
-        List<Document> documents = super.findAllWithNoCount(Searchable.newSearchable(params,new PageRequest(0,1),new Sort(Sort.Direction.ASC,"dateCreated"))).getContent();
-        if(documents!=null && documents.size()>0){
+    public String findThemePhotoByParentId(Long pId, SystemModule systemModule) {
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("parentId_eq", pId);
+        params.put("systemModule_eq", systemModule);
+        List<Document> documents = super.findAllWithNoCount(Searchable.newSearchable(params, new PageRequest(0, 1), new Sort(Sort.Direction.ASC, "dateCreated"))).getContent();
+        if (documents != null && documents.size() > 0) {
             return documents.get(0).getFileUrl();
         }
         return null;
+    }
+
+    /**
+     * 获取文件路径，并分组后放入Map中  key = parentId
+     *
+     * @param pIds         parentIds
+     * @param systemModule 模块
+     * @return fileUrl Map
+     */
+    public Map<Long, List<String>> findFileUrlByParentIds(Collection<Long> pIds, SystemModule systemModule) {
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("parentId_in", pIds);
+        params.put("systemModule_eq", systemModule);
+        List<Document> documents = super.findAllWithNoCount(Searchable.newSearchable(params,new Sort(Sort.Direction.DESC,"dateCreated"))).getContent();
+        Map<Long, List<String>> photoListMap = Maps.newHashMap();
+        if (documents != null && documents.size() > 0) {
+            String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL);
+            for (Document document : documents) {
+                List<String> list = photoListMap.computeIfAbsent(document.getParentId(), k -> Lists.newArrayList());
+                list.add(urlFix + document.getFileUrl());
+            }
+        }
+        return photoListMap;
     }
 
 }

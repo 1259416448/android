@@ -94,6 +94,9 @@ public class Business extends BaseEntity<Long> {
     @ApiModelProperty(hidden = true)
     private String poiUid;
 
+    @NotNull(message = "ifDelete is not null")
+    private Boolean ifDelete = Boolean.FALSE;
+
     /**
      * checkLack
      */
@@ -204,5 +207,13 @@ public class Business extends BaseEntity<Long> {
 
     public void setPoiUid(String poiUid) {
         this.poiUid = poiUid;
+    }
+
+    public Boolean getIfDelete() {
+        return ifDelete;
+    }
+
+    public void setIfDelete(Boolean ifDelete) {
+        this.ifDelete = ifDelete;
     }
 }
