@@ -10,6 +10,9 @@ import cn.arvix.base.common.utils.CommonContact;
 import cn.arvix.base.common.utils.CommonErrorCode;
 import cn.arvix.base.common.utils.JsonUtil;
 import cn.arvix.base.common.utils.TimeMaker;
+import cn.arvix.ontheway.business.entity.Business;
+import cn.arvix.ontheway.business.service.BusinessService;
+import cn.arvix.ontheway.business.service.BusinessStatisticsService;
 import cn.arvix.ontheway.ducuments.entity.Document;
 import cn.arvix.ontheway.ducuments.service.DocumentService;
 import cn.arvix.ontheway.footprint.dto.CommentDetailDTO;
@@ -23,6 +26,7 @@ import cn.arvix.ontheway.sys.user.entity.User;
 import cn.arvix.ontheway.sys.user.service.UserService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.quartz.JobExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -82,6 +86,20 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
         this.commentService = commentService;
     }
 
+    private BusinessService businessService;
+
+    @Autowired
+    public void setBusinessService(BusinessService businessService) {
+        this.businessService = businessService;
+    }
+
+    private BusinessStatisticsService businessStatisticsService;
+
+    @Autowired
+    public void setBusinessStatisticsService(BusinessStatisticsService businessStatisticsService) {
+        this.businessStatisticsService = businessStatisticsService;
+    }
+
     /**
      * 创建一条足迹信息
      *
@@ -92,6 +110,14 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
     public JSONResult save(FootprintCreateDTO dto) {
         Assert.notNull(dto.getFootprint(), "footprint is not null");
         Footprint m = dto.getFootprint();
+        //如果business > 0 需要检查商家是否存在
+        if (m.getBusiness() != null && m.getBusiness() > 0) {
+            Business business = businessService.findOneWithNoCheck(m.getBusiness());
+            if (business == null || !business.getIfShow() || business.getIfDelete()) {
+                return JsonUtil.getFailure("商家信息不存在或已被删除", CommonErrorCode.BUSINESS_IS_NOT_FUND, m.getBusiness());
+            }
+            m.setIfBusinessComment(Boolean.TRUE);
+        }
         //设置当前登陆用户
         m.setUser(webContextUtils.getCheckCurrentUser());
         if (m.getBusiness() != null) {
@@ -131,6 +157,10 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
             detailDTO.setFootprintPhotoArray(footprintPhotoArray);
         }
         detailDTO.setDay(TimeMaker.getDayStr(detailDTO.getDateCreated()));
+        //商家统计数据+1
+        if (m.getIfBusinessComment()) {
+            businessStatisticsService.updateCommentNum(m.getBusiness(), 1);
+        }
         return JsonUtil.getSuccess(CommonContact.SAVE_SUCCESS, CommonContact.SAVE_SUCCESS, detailDTO);
     }
 
@@ -426,6 +456,10 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
         //异步删除统计信息、点赞记录、图片等关联信息
         footprint.setIfDelete(Boolean.TRUE);
         super.update(footprint);
+        //商家统计数据 - 1
+        if (footprint.getIfBusinessComment()) {
+            businessStatisticsService.updateCommentNum(footprint.getBusiness(), -1);
+        }
         return JsonUtil.getSuccess(CommonContact.DELETE_SUCCESS, CommonContact.DELETE_SUCCESS, id);
     }
 
@@ -527,18 +561,7 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
         List<Long> parentIds = Lists.newArrayListWithCapacity(footprints.size());
         footprints.forEach(x -> parentIds.add(x.getId()));
         //获取所有footprint的照片数据
-        Map<String, Object> params = Maps.newHashMap();
-        params.put("parentId_in", parentIds);
-        params.put("systemModule_eq", SystemModule.footprint);
-        List<Document> documents = documentService.findAllWithNoPageNoSort(Searchable.newSearchable(params));
-        Map<Long, List<String>> photoListMap = Maps.newHashMap();
-        if (documents != null && documents.size() > 0) {
-            String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL);
-            for (Document document : documents) {
-                List<String> list = photoListMap.computeIfAbsent(document.getParentId(), k -> Lists.newArrayList());
-                list.add(urlFix + document.getFileUrl());
-            }
-        }
+        Map<Long, List<String>> photoListMap = documentService.findFileUrlByParentIds(parentIds, SystemModule.footprint);
         List<Map<String, Object>> list = Lists.newArrayList();
         String currentTimeStr = TimeMaker.toDateStr(new Date(System.currentTimeMillis()));
         footprints.forEach(x -> {
@@ -561,22 +584,6 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
                 monthMap.put("monthData", Lists.newArrayList());
                 list.add(monthMap);
             }
-            //天数据
-//            List<Map<String, Object>> monthDataList = (List<Map<String, Object>>) monthMap.get("monthData");
-//            Map<String, Object> dayMap = null;
-//            for (Map<String, Object> c : monthDataList) {
-//                if (day.equals(c.get("day"))) {
-//                    dayMap = c;
-//                }
-//            }
-//            if (dayMap == null) {
-//                dayMap = Maps.newHashMap();
-//                dayMap.put("day", day);
-//                dayMap.put("dayData", Lists.newArrayList());
-//                monthDataList.add(dayMap);
-//            }
-
-            //List<FootprintDetailDTO> dayList = (List<FootprintDetailDTO>) dayMap.get("dayData");
             List<FootprintDetailDTO> dayList = (List<FootprintDetailDTO>) monthMap.get("monthData");
 
             FootprintDetailDTO detailDTO = new FootprintDetailDTO();
@@ -591,6 +598,82 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
         });
         return list;
     }
+
+    /**
+     * 获取商家的足迹点评数据，分页获取，这里不进行count计数操作
+     *
+     * @param number      当前页
+     * @param size        每页大小
+     * @param currentTime 请求时间
+     * @param businessId  商家ID
+     * @return 获取足迹信息
+     */
+    public Page searchByBusinessId(Integer number, Integer size, Long currentTime, Long businessId) {
+        if (currentTime == null) {
+            currentTime = System.currentTimeMillis();
+        }
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("business_eq", businessId);
+        params.put("dateCreated_lte", new Date(currentTime));
+        params.put("ifDelete_eq", Boolean.FALSE);
+        Searchable searchable = Searchable.newSearchable(params,
+                new PageRequest(number, size),
+                new Sort(Sort.Direction.DESC, "dateCreated"));
+        Page<Footprint> page = super.findAllWithNoCount(searchable);
+        //构建详情数据
+        if (page.getContent().size() > 0) {
+            Set<Long> footprintIdSet = Sets.newHashSetWithExpectedSize(page.getContent().size());
+            page.getContent().forEach(x -> footprintIdSet.add(x.getId()));
+            //获取统计数据
+            Map<Long, Statistics> statisticsMap = statisticsService.findByFootprintIds(footprintIdSet);
+            //获取足迹照片数据
+            Map<Long, List<String>> photoListMap = documentService.findFileUrlByParentIds(footprintIdSet, SystemModule.footprint);
+
+            User user = webContextUtils.getCurrentUser();
+
+            String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL);
+
+            Map<Long, Boolean> likeResMap = null;
+            //如果当前用户登陆，获取当前用户的点赞记录
+            if (user != null) {
+                likeResMap = likeRecordsService.findLikeByFootprintIdsAndUserId(footprintIdSet, user.getId());
+            }
+
+            List<FootprintDetailDTO> content = Lists.newArrayListWithCapacity(page.getContent().size());
+            //组装数据
+            Map<Long, Boolean> finalLikeResMap = likeResMap;
+            page.getContent().forEach(x -> {
+                FootprintDetailDTO detailDTO = new FootprintDetailDTO();
+                detailDTO.setUserId(x.getUser().getId());
+                detailDTO.setUserHeadImg(urlFix + x.getUser().getHeadImg());
+                detailDTO.setUserNickname(x.getUser().getName());
+
+                detailDTO.setDateCreated(TimeMaker.toTimeMillis(x.getDateCreated()));
+                detailDTO.setDateCreatedStr(TimeMaker.dateCreatedStr(detailDTO.getDateCreated()));
+                detailDTO.setFootprintContent(x.getContent());
+                detailDTO.setFootprintPhotoArray(photoListMap.get(x.getId()));
+
+                //目前后台没有添加视频支持
+                detailDTO.setFootprintType(Footprint.FootprintType.photo);
+
+                //评论
+                detailDTO.setFootprintCommentNum(statisticsMap.get(x.getId()).getCommentNum());
+                detailDTO.setFootprintLikeNum(statisticsMap.get(x.getId()).getLikeNum());
+                if (finalLikeResMap != null && finalLikeResMap.get(x.getId())) {
+                    detailDTO.setIfLike(Boolean.TRUE);
+                } else {
+                    detailDTO.setIfLike(Boolean.FALSE);
+                }
+                detailDTO.setFootprintId(x.getId());
+
+                content.add(detailDTO);
+            });
+            page = new PageResult<>(content, searchable.getPage(), page.getTotalElements());
+        }
+        ((PageResult) page).setCurrentTime(currentTime);
+        return page;
+    }
+
 
     /**
      * 通过足迹ID获取足迹数据

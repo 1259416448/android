@@ -25,10 +25,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Created by yangyang on 2017/7/28.
@@ -192,5 +189,27 @@ public class LikeRecordsService extends BaseServiceImpl<LikeRecords, Long> {
         }
         return JsonUtil.getSuccess(CommonContact.FETCH_SUCCESS, CommonContact.FETCH_SUCCESS, page);
     }
+
+    /**
+     * 查询用户对一些足迹的点赞情况，并把结果放入Map中 key = footprintId
+     *
+     * @param footprintIds 足迹ids
+     * @param userId       用户ID
+     * @return 查询结果 map
+     */
+    public Map<Long, Boolean> findLikeByFootprintIdsAndUserId(Collection<Long> footprintIds, Long userId) {
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("footprintId_in", footprintIds);
+        params.put("userId_eq", userId);
+        Searchable searchable = Searchable.newSearchable(params);
+        List<LikeRecords> likeRecordsList = super.findAllWithNoCount(searchable).getContent();
+        //根据查询到的数据 构建 Map
+        Map<Long, Boolean> resMap = Maps.newHashMap();
+        footprintIds.forEach(x-> resMap.put(x,likeRecordsList.stream()
+                            .filter(c->Objects.equals(c.getFootprintId(),x))
+                            .count()>0));
+        return resMap;
+    }
+
 
 }

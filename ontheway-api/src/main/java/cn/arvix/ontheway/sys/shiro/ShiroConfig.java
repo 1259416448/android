@@ -167,7 +167,9 @@ public class ShiroConfig {
                 "/app/footprint/view/**",
                 "/app/footprint/user/**",
                 "/app/business/type/all",
-                "/app/business/search"
+                "/app/business/search/**",
+                "/app/business/view/**",
+                "/app/footprint/comment/search"
         );
         return statelessAuthcFilter;
     }
