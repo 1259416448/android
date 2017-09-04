@@ -9,13 +9,18 @@ import cn.arvix.base.common.utils.CommonContact;
 import cn.arvix.base.common.utils.CommonErrorCode;
 import cn.arvix.base.common.utils.JsonUtil;
 import cn.arvix.ontheway.business.dto.ARSearchDTO;
+import cn.arvix.ontheway.business.dto.BusinessDetailDTO;
 import cn.arvix.ontheway.business.dto.CreateAndClaimDTO;
 import cn.arvix.ontheway.business.dto.SolrSearchDTO;
 import cn.arvix.ontheway.business.entity.Business;
 import cn.arvix.ontheway.business.entity.BusinessExpand;
 import cn.arvix.ontheway.business.entity.BusinessStatistics;
+import cn.arvix.ontheway.ducuments.entity.Document;
 import cn.arvix.ontheway.ducuments.service.DocumentService;
+import cn.arvix.ontheway.footprint.service.FootprintService;
+import cn.arvix.ontheway.sys.config.service.ConfigService;
 import cn.arvix.ontheway.sys.user.entity.User;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -76,6 +81,27 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
         this.businessSolrService = businessSolrService;
     }
 
+    private ConfigService configService;
+
+    @Autowired
+    public void setConfigService(ConfigService configService) {
+        this.configService = configService;
+    }
+
+    private CollectionRecordsService collectionRecordsService;
+
+    @Autowired
+    public void setCollectionRecordsService(CollectionRecordsService collectionRecordsService) {
+        this.collectionRecordsService = collectionRecordsService;
+    }
+
+    private FootprintService footprintService;
+
+    @Autowired
+    public void setFootprintService(FootprintService footprintService) {
+        this.footprintService = footprintService;
+    }
+
     /**
      * App客户端用户添加商家时调用
      * 添加商家并认领
@@ -119,6 +145,7 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
         //设置颜色代码,颜色代码会保存在 typeIds 的一级类型中
         business.setColorCode(businessTypeService.getColorCodeByTypeIds(business.getTypeIds()));
         super.save(business);
+        businessStatistics.setBusinessId(business.getId());
         businessTypeContactService.createContact(business.getId(), business.getTypeIds());
         return JsonUtil.getSuccess(CommonContact.OPTION_SUCCESS, CommonContact.OPTION_SUCCESS, business.getId());
     }
@@ -156,6 +183,7 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
         business.setColorCode(businessTypeService.getColorCodeByTypeIds(business.getTypeIds()));
         business.setIfShow(Boolean.TRUE);
         super.save(business);
+        businessStatistics.setBusinessId(business.getId());
         businessTypeContactService.createContact(business.getId(), business.getTypeIds());
 
         //加入solr全文检索中
@@ -187,6 +215,66 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
     }
 
     /**
+     * 获取商家详情信息 商家信息，商家图片信息，优惠信息，默认10条评论（足迹信息）
+     * 用户已登录zhuangtai -> 用户收藏信息、签到信息、10条评论是否点赞信息
+     *
+     * @param id 商家ID
+     * @return 商家详情
+     */
+    public JSONResult view(Long id) {
+
+        Business business = super.findOneWithNoCheck(id);
+        if (business == null || !business.getIfShow() || business.getIfDelete()) {
+            return JsonUtil.getFailure("商家信息不存在或已被删除", CommonErrorCode.BUSINESS_IS_NOT_FUND, id);
+        }
+
+        BusinessDetailDTO detailDTO = BusinessDetailDTO.getInstance();
+        //基本信息
+        detailDTO.setId(business.getId());
+        detailDTO.setName(business.getName());
+        detailDTO.setAddress(business.getAddress());
+        detailDTO.setLatitude(business.getLatitude());
+        detailDTO.setLongitude(business.getLongitude());
+        detailDTO.setContactInfo(business.getContactInfo());
+        detailDTO.setColorCode(business.getColorCode());
+        detailDTO.setWeight(business.getWeight());
+        detailDTO.setTypeIds(business.getTypeIds());
+
+        //统计信息
+        detailDTO.setCollectionNum(business.getStatistics().getCollectionNum());
+        detailDTO.setCommentNum(business.getStatistics().getCommentNum());
+        detailDTO.setBusinessPhotoNum(business.getStatistics().getBusinessPhotoNum());
+        detailDTO.setUserPhotoNum(business.getStatistics().getUserPhotoNum());
+
+        //抓取商家图片 最多3张 超过的通过相册的形式获取数据
+        List<Document> documents = documentService.findByParentIdAndSize(business.getId(), SystemModule.business, 3);
+        String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL);
+        if (documents != null && documents.size() > 0) {
+            List<String> photoUrls = Lists.newArrayListWithCapacity(documents.size());
+            documents.forEach(x -> photoUrls.add(urlFix + x.getFileUrl()));
+            detailDTO.setPhotoUrls(photoUrls);
+        }
+
+        //抓取商家优惠信息  优惠功能暂未添加
+        User user = webContextUtils.getCurrentUser();
+        //获取收藏情况
+        if (user != null && collectionRecordsService.countByUserIdAndBusinessId(user.getId(), business.getId()) > 0) {
+            detailDTO.setIfLike(Boolean.TRUE);
+        } else {
+            detailDTO.setIfLike(Boolean.FALSE);
+        }
+        //获取签到情况 功能为添加
+        detailDTO.setIfCheckIn(Boolean.FALSE); //签到功能添加后在完成此处
+        Long currentTime = System.currentTimeMillis();
+        //获取商家足迹信息
+        //noinspection unchecked
+        detailDTO.setFootprints(footprintService.searchByBusinessId(0, 10,
+                currentTime, business.getId()).getContent());
+        detailDTO.setCurrentTime(currentTime);
+        return JsonUtil.getSuccess(CommonContact.FETCH_SUCCESS, CommonContact.FETCH_SUCCESS, detailDTO);
+    }
+
+    /**
      * 获取AR展示分页数据
      *
      * @return 查询结果
@@ -202,10 +290,57 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
         if (currentTime == null) currentTime = System.currentTimeMillis();
         Page<ARSearchDTO> page = businessSolrService.searchAR(SolrSearchDTO
                 .getInstance(q, number, size, latitude, longitude, distance, currentTime, typeIds));
-        if(page == null){
+        if (page == null) {
             return JsonUtil.getFailure("solr search failed", CommonErrorCode.AR_SEARCH_SOLR_ERROR);
         }
-        return JsonUtil.getSuccess(CommonContact.OPTION_SUCCESS,CommonContact.OPTION_SUCCESS,page);
+        return JsonUtil.getSuccess(CommonContact.OPTION_SUCCESS, CommonContact.OPTION_SUCCESS, page);
+    }
+
+    /**
+     * 获取某个Business 下的 更多足迹数据 分页获取
+     *
+     * @param id          businessId
+     * @param number      当前页
+     * @param size        每页大小
+     * @param currentTime 请求时间
+     * @return 更多footprint数据
+     */
+    public JSONResult searchFootprint(Long id, Integer number, Integer size, Long currentTime) {
+
+        //验证商家是否存在和商家状态
+        Business business = super.findOneWithNoCheck(id);
+        if (business == null || !business.getIfShow() || business.getIfDelete()) {
+            return JsonUtil.getFailure("商家信息不存在或已被删除", CommonErrorCode.BUSINESS_IS_NOT_FUND, id);
+        }
+        Page page = footprintService.searchByBusinessId(number, size, currentTime, id);
+        return JsonUtil.getSuccess(CommonContact.FETCH_SUCCESS, CommonContact.FETCH_SUCCESS, page);
+    }
+
+    /**
+     * 添加、取消收藏
+     *
+     * @param id 商家ID
+     * @return 操作结果
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public JSONResult like(Long id) {
+        //验证商家是否存在和商家状态
+        Business business = super.findOneWithNoCheck(id);
+        if (business == null || !business.getIfShow() || business.getIfDelete()) {
+            return JsonUtil.getFailure("商家信息不存在或已被删除", CommonErrorCode.BUSINESS_IS_NOT_FUND, id);
+        }
+        User user = webContextUtils.getCheckCurrentUser();
+        //判断用户是否收藏
+        if (collectionRecordsService.countByUserIdAndBusinessId(user.getId(), id) > 0) {
+            //已收藏
+            collectionRecordsService.deleteByUserIdAndBusinessId(user.getId(),id);
+            businessStatisticsService.updateCollectionNum(id,-1);
+        } else {
+            //未收藏
+            collectionRecordsService.createByUserIdAndBusinessId(user.getId(),id);
+            businessStatisticsService.updateCollectionNum(id,1);
+        }
+        return JsonUtil.getSuccess(CommonContact.OPTION_SUCCESS,CommonContact.OPTION_SUCCESS,id);
     }
 
 

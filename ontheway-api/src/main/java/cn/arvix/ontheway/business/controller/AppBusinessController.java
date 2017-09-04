@@ -10,6 +10,7 @@ import com.google.common.collect.Sets;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -57,9 +58,8 @@ public class AppBusinessController extends ExceptionHandlerController {
             "q 查询参数 <br/>" +
             "typeIds 类型过滤参数，多个类型请使用 英文 分号 ',' 隔开")
     @ResponseBody
-    @GetMapping(value = "/search")
+    @GetMapping(value = "/search/{type}")
     @ApiImplicitParams(value = {
-            @ApiImplicitParam(value = "查询类型", name = "type", required = true, paramType = "query"),
             @ApiImplicitParam(value = "当前页", name = "number", required = true, paramType = "query"),
             @ApiImplicitParam(value = "每页大小", name = "size", required = true, paramType = "query"),
             @ApiImplicitParam(value = "纬度", name = "latitude", required = true, paramType = "query"),
@@ -69,7 +69,7 @@ public class AppBusinessController extends ExceptionHandlerController {
             @ApiImplicitParam(value = "查询参数", name = "q", paramType = "query"),
             @ApiImplicitParam(value = "类型过滤参数", name = "typeIds", paramType = "query")
     })
-    public JSONResult search(BusinessService.SearchType type, Integer number, Integer size,
+    public JSONResult search(@PathVariable BusinessService.SearchType type, Integer number, Integer size,
                              Double latitude, Double longitude, Double distance, Long currentTime,
                              String q, String typeIds) {
         Set<Long> typeIdSet = null;
@@ -81,5 +81,32 @@ public class AppBusinessController extends ExceptionHandlerController {
                 latitude, longitude, distance, currentTime,
                 q, typeIdSet);
     }
+
+    @GetMapping(value = "/view/{id}")
+    @ResponseBody
+    @ApiOperation(value = "获取商家详情", notes = "商家信息 优惠信息 最近10条足迹信息 如果用户登陆 能获取当用户的收藏情况、签到情况、足迹中点赞情况")
+    public JSONResult view(@PathVariable Long id) {
+        return businessService.view(id);
+    }
+
+    @ApiOperation(value = "加载更多商家足迹信息", notes = "加载更多商家足迹信息")
+    @ResponseBody
+    @GetMapping(value = "/search/{id}/footprint")
+    @ApiImplicitParams(value = {
+            @ApiImplicitParam(value = "开始分页时间", name = "currentTime", paramType = "query"),
+            @ApiImplicitParam(value = "当前页", name = "number", required = true, paramType = "query"),
+            @ApiImplicitParam(value = "每页大小", name = "size", required = true, paramType = "query")
+    })
+    public JSONResult searchFootprint(@PathVariable Long id, Integer number, Integer size, Long currentTime) {
+        return businessService.searchFootprint(id, number, size, currentTime);
+    }
+
+    @ApiOperation(value = "收藏接口",notes = "收藏状态下请求为删除 反之 收藏 id 商家ID")
+    @PostMapping(value = "/like/{id}")
+    @ResponseBody
+    public JSONResult like(@ApiParam(value = "商家ID") @PathVariable Long id){
+        return businessService.like(id);
+    }
+
 
 }

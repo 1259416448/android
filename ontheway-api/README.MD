@@ -41,6 +41,36 @@ FLUSH PRIVILEGES;
 版本：3.2.1 ，可使用高版本<br/>
 session、认证、权限、hibernate二级缓存需要使用redis，请使用默认端口，允许本机访问，目前没有添加密码。
 
+##Solr全文检索配置
+
+solr 版本使用6.3.0
+
+solr主要保存商家数据，方便搜索。
+
+基本使用可见<a href="https://www.cc520.me/article.html?c=5&index=82">https://www.cc520.me/article.html?c=5&index=82</a>
+
+###配置说明
+
+下载并解压solr后，请进入{solr_path}/server/solr/
+
+mkdir -pv ontheway_business/conf
+
+cp -r configsets/basic_configs/conf/*  ontheway_business/conf/
+
+拷贝项目中配置好的 managed-schema （在ontheway-api根目录下）,拷贝到 ontheway_business/conf/
+
+进入 /{solr_path}/bin
+
+最好是创建一个solr的用户 使用solr用户启动solr
+
+启动
+
+./solr start -force
+
+停止
+./solr stop -all
+
+
 ##API
 
 使用swagger2集成，具体API说明可见<a href="https://www.cc520.me/article.html?c=5&index=84" target="_blank">https://www.cc520.me/article.html?c=5&index=84</a>

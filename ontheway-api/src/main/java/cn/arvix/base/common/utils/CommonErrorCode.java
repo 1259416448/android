@@ -76,4 +76,10 @@ public interface CommonErrorCode {
      */
     String AR_SEARCH_SOLR_ERROR = "000404";
 
+    /**
+     * 商家数据不存在或ifShow = false
+     */
+    String BUSINESS_IS_NOT_FUND = "000405";
+
+
 }
