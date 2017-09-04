@@ -13,6 +13,6 @@ typedef void(^requestBackBlock) (id result);
 
 @interface OTWARShopViewController : ArvixARViewController
 
--(void) fetchARFootprints:(NSDictionary *) params completion:(requestBackBlock) block;
+-(void) fetchARShops:(NSDictionary *) params completion:(requestBackBlock) block;
 
 @end
