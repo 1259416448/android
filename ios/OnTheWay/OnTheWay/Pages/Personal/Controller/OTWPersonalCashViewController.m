@@ -7,7 +7,7 @@
 //
 
 #import "OTWPersonalCashViewController.h"
-
+#import "OTWPersonalCashCheckViewController.h"
 #import "OTWPersonalCashTVTableViewCell.h"
 #import "OTWPersonalCashTFPERSONALViewCell.h"
 #import "OTWPersonalCashTFViewCell.h"
@@ -254,10 +254,14 @@
 - (void)submitFormData
 {
     DLog(@"form表单数据为:%@",self.OTWPersonalCashFormModel.mj_keyValues);
+    OTWPersonalCashCheckViewController *personalCheckVC = [[OTWPersonalCashCheckViewController alloc] init];
+    [self.navigationController pushViewController:personalCheckVC animated:YES];
 }
 
 -(void)allCashClick{
     DLog(@"点击了全部提现");
+
+  
 }
 
 /*
