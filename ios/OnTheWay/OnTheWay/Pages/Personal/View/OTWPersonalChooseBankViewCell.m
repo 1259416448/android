@@ -13,7 +13,8 @@
    
 }
 
-@end@implementation OTWPersonalChooseBankViewCell
+@end
+@implementation OTWPersonalChooseBankViewCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -31,7 +32,7 @@
     
     bankName=[[UILabel alloc]init];
     bankName.text=@"招商银行";
-    bankName.textColor=[UIColor color_202020];
+    bankName.textColor=[UIColor color_979797];
     bankName.font=[UIFont systemFontOfSize:16];
     [bankName sizeToFit];
     bankName.frame=CGRectMake(bankImg.MaxX+10, 15, SCREEN_WIDTH-bankImg.MaxX-15, 20);

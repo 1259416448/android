@@ -217,6 +217,8 @@
     OTWAddNewShopNextViewController *addNewShopNextVC = [[OTWAddNewShopNextViewController alloc] init];
     [addNewShopNextVC setCreateShopFormData:self.createShopFormModel];
     [self.navigationController pushViewController:addNewShopNextVC animated:NO];
+    
+    
 }
 
 - (void)toChildView

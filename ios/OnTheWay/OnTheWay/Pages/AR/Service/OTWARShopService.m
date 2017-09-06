@@ -10,11 +10,11 @@
 
 @implementation OTWARShopService
 
-static NSString *arShopList = @"/app/business/search";
+static NSString *arShopList = @"/app/business/search/{type}";
 
 +(void)getARShopList:(NSDictionary *)params completion:(requestCompletionBlock)block responseCache:(PPHttpRequestCache)responseCache
 {
-    [OTWNetworkManager doGET:arShopList parameters:params responseCache:^(id reponseCache){
+    [OTWNetworkManager doGET:[arShopList stringByReplacingOccurrencesOfString:@"{type}" withString:params[@"type"]] parameters:params responseCache:^(id reponseCache){
         if(responseCache){
             responseCache(reponseCache);
         }

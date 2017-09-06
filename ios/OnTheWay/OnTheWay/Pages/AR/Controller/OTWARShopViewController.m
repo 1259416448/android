@@ -42,6 +42,16 @@
 @property(nonatomic,strong) UIButton *locationBtton_1000m;
 
 @property(nonatomic,strong) UIView *shopPopoverV;
+@property(nonatomic,strong) UILabel *shopTitle;
+@property(nonatomic,strong) UIImageView *gotoV;
+@property(nonatomic,strong) UILabel *gotoLabel;
+@property(nonatomic,strong) UIImageView *shopLocationIcon;
+@property(nonatomic,strong) UILabel *shopLocationContent;
+@property(nonatomic,strong) UIImageView *telePhoneIcon;
+@property(nonatomic,strong) UILabel *telePhoneNum;
+@property(nonatomic,strong) UIButton *viewShopDetail;
+
+
 @property(nonatomic,strong) UIView *infoBGView;
 @property(nonatomic,strong) UILabel *footprintLabel;
 @property(nonatomic,strong) UIView *lineView;
@@ -166,7 +176,9 @@
     self.locationBtton_1000m.frame = CGRectMake(locationBtton_1000mX, locationButtonY, 45, 35);
     [self.view insertSubview:self.locationBtton_1000m aboveSubview:self.presenter];
     
-    [self.view insertSubview:self.shopPopoverV aboveSubview:self.presenter];
+    
+    
+    
     
     //附近足迹总信息
     [self.view insertSubview:self.infoBGView aboveSubview:self.presenter];
@@ -175,6 +187,21 @@
     [self.infoBGView addSubview:self.footprintSumLabel];
     [self.infoBGView addSubview:self.addressImageView];
     [self.infoBGView addSubview:self.addressLabel];
+    [self.view insertSubview:self.shopPopoverV aboveSubview:self.presenter];
+    
+    
+    //刷新
+    OTWUITapGestureRecognizer *changeShopDetailVGesture=[[OTWUITapGestureRecognizer alloc]initWithTarget:self action:@selector(changeShopDetailV)];
+    [self.presenter addGestureRecognizer:changeShopDetailVGesture];
+    [self.shopPopoverV addSubview:self.shopTitle];
+    [self.shopPopoverV addSubview:self.gotoV];
+    [self.shopPopoverV addSubview:self.gotoLabel];
+    [self.shopPopoverV addSubview:self.shopLocationIcon];
+    [self.shopPopoverV addSubview:self.shopLocationContent];
+    [self.shopPopoverV addSubview:self.telePhoneIcon];
+    [self.shopPopoverV addSubview:self.telePhoneNum];
+    [self.shopPopoverV addSubview:self.viewShopDetail];
+
     
 }
 
@@ -342,6 +369,12 @@
     };
 }
 
+- (void)changeShopDetailV
+{
+    self.shopPopoverV.hidden = YES;
+    self.radar.hidden = NO;
+}
+
 #pragma mark 初始化足迹查询参数
 -(OTWFootprintSearchParams *)arShopSearchParams
 {
@@ -486,13 +519,36 @@
     [self.navigationController pushViewController:VC animated:YES];
 }
 
+#pragma mark 跳转到足迹详情
+-(void)showShopDetail:(OTWUITapGestureRecognizer*)gesture
+{
+    self.shopPopoverV.hidden = NO;
+    self.radar.hidden = YES;
+    OTWARCustomAnnotation *annotation = gesture.opId;
+    OTWFootprintDetailController *VC =  [[OTWFootprintDetailController alloc] init];
+    self.trackingManager.stopLocation = NO;
+    DLog(@"商家信息：%@",annotation.arShop.mj_keyValues);
+    
+    self.shopTitle.text = annotation.arShop.name;
+    self.shopLocationContent.text = annotation.arShop.address;
+    if (annotation.arShop.contactInfo && ![annotation.arShop.contactInfo isEqualToString:@""]) {
+        self.telePhoneIcon.hidden = NO;
+        self.telePhoneNum.hidden = NO;
+        self.telePhoneNum.text = annotation.arShop.contactInfo;
+    } else {
+        self.telePhoneIcon.hidden = YES;
+        self.telePhoneNum.hidden = YES;
+    }
+
+}
+
 
 #pragma mark - ArvixARDatasource
 - (ArvixARAnnotationView*)ar:(ArvixARViewController*)arViewController viewForAnnotation:(ArvixARAnnotation*)annotation
 {
     OTWARShopCustomAnnotationView *annotationView = [[OTWARShopCustomAnnotationView alloc] init];
     annotationView.frame = CGRectMake(0, 0, SCREEN_WIDTH * 0.6, 35);
-    OTWUITapGestureRecognizer *tapGesture=[[OTWUITapGestureRecognizer alloc]initWithTarget:self action:@selector(jumpToFootprintDetail:)];
+    OTWUITapGestureRecognizer *tapGesture=[[OTWUITapGestureRecognizer alloc]initWithTarget:self action:@selector(showShopDetail:)];
     tapGesture.opId = annotation;
     [annotationView addGestureRecognizer:tapGesture];
     return annotationView;
@@ -629,8 +685,109 @@
     if (!_shopPopoverV) {
         _shopPopoverV = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT - 130, SCREEN_WIDTH, 130)];
         _shopPopoverV.backgroundColor = [UIColor whiteColor];
+        _shopPopoverV.hidden = YES;
     }
     return _shopPopoverV;
+}
+
+- (UILabel*)shopTitle
+{
+    if (!_shopTitle) {
+        _shopTitle = [[UILabel alloc] init];
+        _shopTitle.textColor = [UIColor color_202020];
+        [_shopTitle setFont:[UIFont systemFontOfSize:17.0]];
+        CGFloat W = SCREEN_WIDTH - 15 - 10 - 15*2 - 7.5 - 20 - 21.5 - 10;
+        CGSize shopSize = [OTWUtils sizeWithString:@"海底捞(白家庄店)" font:[UIFont systemFontOfSize:17.0] maxSize:CGSizeMake(W, 18)];
+        _shopTitle.text = @"海底捞(白家庄店)";
+        _shopTitle.frame = CGRectMake(15, 15, W, 18);
+    }
+    return _shopTitle;
+}
+
+- (UIImageView*)gotoV
+{
+    if (!_gotoV) {
+        _gotoV = [[UIImageView alloc] init];
+        CGFloat X = SCREEN_WIDTH - 21.5 - 20;
+        _gotoV.frame = CGRectMake(X, 15, 20, 20);
+        [_gotoV setImage:[UIImage imageNamed:@"daohang"]];
+    }
+    return _gotoV;
+}
+
+- (UILabel*)gotoLabel
+{
+    if (!_gotoLabel) {
+        CGFloat X = SCREEN_WIDTH - 35 - 15;
+        _gotoLabel = [[UILabel alloc] initWithFrame:CGRectMake(X, CGRectGetMaxY(self.gotoV.frame) + 5, 35, 12)];
+        _gotoLabel.textColor = [UIColor color_979797];
+        [_gotoLabel setFont:[UIFont systemFontOfSize:11.0]];
+        _gotoLabel.textAlignment = NSTextAlignmentCenter;
+        _gotoLabel.text = @"到这去";
+    }
+    return _gotoLabel;
+}
+
+- (UIImageView*)shopLocationIcon
+{
+    if (!_shopLocationIcon) {
+        _shopLocationIcon = [[UIImageView alloc] initWithFrame:CGRectMake(15, CGRectGetMaxY(self.shopTitle.frame)+11, 10, 10)];
+        [_shopLocationIcon setImage:[UIImage imageNamed:@"dingwei"]];
+    }
+    return _shopLocationIcon;
+}
+
+- (UIButton*)viewShopDetail
+{
+    if (!_viewShopDetail) {
+        _viewShopDetail = [UIButton buttonWithType:UIButtonTypeCustom];
+        _viewShopDetail.frame = CGRectMake(0, 92, SCREEN_WIDTH, 38.5);
+        _viewShopDetail.backgroundColor = [UIColor color_f4f4f4];
+        _viewShopDetail.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        _viewShopDetail.titleLabel.font = [UIFont systemFontOfSize:13];
+        [_viewShopDetail setTitle:@"查看商户更多信息" forState:UIControlStateNormal];
+        [_viewShopDetail setTitleColor:[UIColor color_979797] forState:UIControlStateNormal];
+    }
+    return _viewShopDetail;
+}
+
+- (UILabel*)shopLocationContent
+{
+    if (!_shopLocationContent) {
+        _shopLocationContent = [[UILabel alloc] init];
+        _shopLocationContent.textColor = [UIColor color_979797];
+        [_shopLocationContent setFont:[UIFont systemFontOfSize:13.0]];
+        CGFloat X = CGRectGetMaxX(self.shopLocationIcon.frame) + 5;
+        CGFloat Y = CGRectGetMaxY(self.shopTitle.frame) + 10;
+        CGFloat W = SCREEN_WIDTH - CGRectGetMaxX(self.shopLocationIcon.frame) - 5 - 15*2 - 35 - 15;
+        CGSize shopLocationContentSize = [OTWUtils sizeWithString:@"东城区东直门内大街233号" font:[UIFont systemFontOfSize:13.0] maxSize:CGSizeMake(W, 12)];
+        _shopLocationContent.frame = CGRectMake(X, Y, W, 12);
+        _shopLocationContent.text = @"东城区东直门内大街233号";
+    }
+    return _shopLocationContent;
+}
+
+- (UIImageView*)telePhoneIcon
+{
+    if (!_telePhoneIcon) {
+        _telePhoneIcon = [[UIImageView alloc] initWithFrame:CGRectMake(15, CGRectGetMaxY(self.shopLocationIcon.frame)+7, 10, 10)];
+        [_telePhoneIcon setImage:[UIImage imageNamed:@"ar_dianhua"]];
+    }
+    return _telePhoneIcon;
+}
+
+- (UILabel*)telePhoneNum
+{
+    if (!_telePhoneNum) {
+        _telePhoneNum = [[UILabel alloc] init];
+        _telePhoneNum.textColor = [UIColor color_979797];
+        [_telePhoneNum setFont:[UIFont systemFontOfSize:13.0]];
+        CGFloat X = CGRectGetMaxX(self.telePhoneIcon.frame) + 5;
+        CGFloat Y = CGRectGetMaxY(self.shopLocationContent.frame) + 5;
+        _telePhoneNum.frame = CGRectMake(X, Y, 120, 12);
+        _telePhoneNum.text = @"010-3456776";
+    }
+    return _telePhoneNum;
 }
 
 - (UIView *)infoBGView
