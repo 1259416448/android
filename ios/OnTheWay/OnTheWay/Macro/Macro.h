@@ -15,6 +15,8 @@
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
 #define SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
 
+#define GLOBAL_PADDING 15.0
+
 #define kPictureW 750.0 //设计图纸的宽
 #define kPictureH 1334.0 //设计图纸的高
 #define kDistanceHeightRatio(r) r*SCREEN_WIDTH/kPictureH

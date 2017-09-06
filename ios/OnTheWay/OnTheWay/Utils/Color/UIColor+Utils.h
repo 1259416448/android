@@ -44,4 +44,5 @@
 + (UIColor *)color_ededed;
 + (UIColor *)color_ffc6c8;
 + (UIColor *)color_f3715a;
++ (UIColor *)color_ff5959;
 @end

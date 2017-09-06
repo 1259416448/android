@@ -11,6 +11,7 @@
 #import "OTWFindBusinessmenViewCell.h"
 #import "OTWFindViewController.h"
 #import "OTWShopDetailsController.h"
+#import "OTWBusinessDetailViewController.h"
 
 @interface OTWFindBusinessmenViewController () <UITableViewDataSource,UITableViewDelegate>{
     
@@ -136,8 +137,10 @@
 #pragma mark 点击行
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     DLog(@"我点击了：%ld",indexPath.row);
-    OTWShopDetailsController  *ShopDetailsVC = [[OTWShopDetailsController alloc] init];
-    [self.navigationController pushViewController:ShopDetailsVC animated:YES];
+    //OTWShopDetailsController  *ShopDetailsVC = [[OTWShopDetailsController alloc] init];
+    OTWBusinessDetailViewController *businessVC = [[OTWBusinessDetailViewController alloc] init];
+    [businessVC setOpData:@"110"];
+    [self.navigationController pushViewController:businessVC animated:YES];
 }
 
 #pragma mark 返回第indexPath这行对应的内容

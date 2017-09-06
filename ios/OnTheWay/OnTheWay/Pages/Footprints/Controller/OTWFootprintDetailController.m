@@ -69,6 +69,7 @@
 @property (nonatomic,strong) SDCycleScrollView *photoScrollView;
 @property (nonatomic,strong) UILabel *photoPageControllerLabel;
 @property (nonatomic,assign) BOOL wasKeyboardManagerEnabled;
+
 //没有评论显示缺省信息
 @property (nonatomic,strong) UIView *notFundCommentBGView;
 @property (nonatomic,strong) UIImageView *qiangshafaImageView;
@@ -1043,7 +1044,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
                     NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:_fid,@"footprintId", nil];
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"foorprintAlreadyDeleted" object:nil userInfo:dict];
                 }else{
-                    [self errorTips:@"服务端繁忙，请稍后再试" userInteractionEnabled:NO];
+                    [OTWUtils alertFailed:@"服务端繁忙，请稍后再试" userInteractionEnabled:NO target:self];
                 }
             }
         }else{

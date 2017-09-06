@@ -111,21 +111,18 @@
 
 - (void)netWorkErrorTips:(NSError*)error{
     DLog(@"请求失败>>>>：%@",error);
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.mode = MBProgressHUDModeText;
+    NSString *msg = @"";
     if(error.code == -1004){
-        hud.label.text =@"服务端繁忙，请稍后";
+        msg = @"服务端繁忙，请稍后";
     }else if(error.code == -1001){
-        hud.label.text =@"请求超时";
+        msg = @"请求超时";
     }else if(error.code== -1009){
-        hud.label.text =@"网络访问错误";
+        msg = @"网络访问错误";
     }else{
-        hud.label.text =@"服务端繁忙，请稍后";
+        msg = @"服务端繁忙，请稍后";
     }
-    hud.label.textColor = [UIColor whiteColor];
-    hud.bezelView.color = [[UIColor blackColor] colorWithAlphaComponent:0.7];
-    hud.bezelView.style = MBProgressHUDBackgroundStyleSolidColor;
-    [hud hideAnimated:YES afterDelay:2];
+    [OTWUtils alertFailed:msg userInteractionEnabled:NO target:self];
+    
 }
 
 - (void) errorTips:(NSString *)tips userInteractionEnabled:(BOOL)userInteractionEnabled

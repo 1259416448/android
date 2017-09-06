@@ -252,7 +252,7 @@
 -(UILabel*)shopName{
     if(!_shopName){
         _shopName=[[UILabel alloc] initWithFrame:CGRectMake(15, 15, SCREEN_WIDTH-30, 20)];
-        _shopName.font=[UIFont systemFontOfSize:16];
+        _shopName.font=[UIFont fontWithName:@"PingFangSC-Medium" size:16];
         _shopName.text=@"胡大饭馆（东直门总店）";
         _shopName.textColor=[UIColor color_202020];
     }

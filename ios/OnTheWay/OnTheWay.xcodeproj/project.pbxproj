@@ -143,6 +143,14 @@
 		DD35209A1F18715400E8D725 /* OTWCommentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DD3520991F18715400E8D725 /* OTWCommentModel.m */; };
 		DD35209D1F188FBF00E8D725 /* OTWFootprintDetailViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DD35209C1F188FBF00E8D725 /* OTWFootprintDetailViewCell.m */; };
 		DD4BD9581F50025E0047D191 /* OTWBusinessFetchModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DD4BD9571F50025E0047D191 /* OTWBusinessFetchModel.m */; };
+		DD4BD95B1F5BE9400047D191 /* OTWBusinessDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = DD4BD95A1F5BE9400047D191 /* OTWBusinessDetailView.m */; };
+		DD4BD95E1F5BF2CF0047D191 /* OTWBusinessModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DD4BD95D1F5BF2CF0047D191 /* OTWBusinessModel.m */; };
+		DD4BD9671F5D8FF80047D191 /* OTWBusinessActivityIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = DD4BD9661F5D8FF80047D191 /* OTWBusinessActivityIconView.m */; };
+		DD4BD96A1F5E56D30047D191 /* OTWBusinessActivityTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DD4BD9691F5E56D30047D191 /* OTWBusinessActivityTableViewCell.m */; };
+		DD4BD96D1F5E803D0047D191 /* OTWBusinessActivityModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DD4BD96C1F5E803D0047D191 /* OTWBusinessActivityModel.m */; };
+		DD4BD9701F5E8C030047D191 /* OTWBusinessDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DD4BD96F1F5E8C030047D191 /* OTWBusinessDetailViewController.m */; };
+		DD4BD9731F5EA4630047D191 /* OTWBusinessDetailService.m in Sources */ = {isa = PBXBuildFile; fileRef = DD4BD9721F5EA4630047D191 /* OTWBusinessDetailService.m */; };
+		DD4BD9761F5FECCB0047D191 /* OTWNotCommentView.m in Sources */ = {isa = PBXBuildFile; fileRef = DD4BD9751F5FECCB0047D191 /* OTWNotCommentView.m */; };
 		DD67B3391F4D2B7800429EFA /* UIImage+RoundedCorner.m in Sources */ = {isa = PBXBuildFile; fileRef = DD67B3381F4D2B7800429EFA /* UIImage+RoundedCorner.m */; };
 		DD67B33C1F4D51B400429EFA /* OTWNotFundFootprintView.m in Sources */ = {isa = PBXBuildFile; fileRef = DD67B33B1F4D51B400429EFA /* OTWNotFundFootprintView.m */; };
 		DD67B33F1F4EC04A00429EFA /* OTWBusinessFetchController.m in Sources */ = {isa = PBXBuildFile; fileRef = DD67B33E1F4EC04A00429EFA /* OTWBusinessFetchController.m */; };
@@ -495,6 +503,22 @@
 		DD35209C1F188FBF00E8D725 /* OTWFootprintDetailViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWFootprintDetailViewCell.m; sourceTree = "<group>"; };
 		DD4BD9561F50025E0047D191 /* OTWBusinessFetchModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWBusinessFetchModel.h; sourceTree = "<group>"; };
 		DD4BD9571F50025E0047D191 /* OTWBusinessFetchModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWBusinessFetchModel.m; sourceTree = "<group>"; };
+		DD4BD9591F5BE9400047D191 /* OTWBusinessDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWBusinessDetailView.h; sourceTree = "<group>"; };
+		DD4BD95A1F5BE9400047D191 /* OTWBusinessDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWBusinessDetailView.m; sourceTree = "<group>"; };
+		DD4BD95C1F5BF2CF0047D191 /* OTWBusinessModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWBusinessModel.h; sourceTree = "<group>"; };
+		DD4BD95D1F5BF2CF0047D191 /* OTWBusinessModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWBusinessModel.m; sourceTree = "<group>"; };
+		DD4BD9651F5D8FF80047D191 /* OTWBusinessActivityIconView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWBusinessActivityIconView.h; sourceTree = "<group>"; };
+		DD4BD9661F5D8FF80047D191 /* OTWBusinessActivityIconView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWBusinessActivityIconView.m; sourceTree = "<group>"; };
+		DD4BD9681F5E56D30047D191 /* OTWBusinessActivityTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWBusinessActivityTableViewCell.h; sourceTree = "<group>"; };
+		DD4BD9691F5E56D30047D191 /* OTWBusinessActivityTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWBusinessActivityTableViewCell.m; sourceTree = "<group>"; };
+		DD4BD96B1F5E803D0047D191 /* OTWBusinessActivityModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWBusinessActivityModel.h; sourceTree = "<group>"; };
+		DD4BD96C1F5E803D0047D191 /* OTWBusinessActivityModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWBusinessActivityModel.m; sourceTree = "<group>"; };
+		DD4BD96E1F5E8C030047D191 /* OTWBusinessDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWBusinessDetailViewController.h; sourceTree = "<group>"; };
+		DD4BD96F1F5E8C030047D191 /* OTWBusinessDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWBusinessDetailViewController.m; sourceTree = "<group>"; };
+		DD4BD9711F5EA4630047D191 /* OTWBusinessDetailService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWBusinessDetailService.h; sourceTree = "<group>"; };
+		DD4BD9721F5EA4630047D191 /* OTWBusinessDetailService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWBusinessDetailService.m; sourceTree = "<group>"; };
+		DD4BD9741F5FECCB0047D191 /* OTWNotCommentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWNotCommentView.h; sourceTree = "<group>"; };
+		DD4BD9751F5FECCB0047D191 /* OTWNotCommentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWNotCommentView.m; sourceTree = "<group>"; };
 		DD67B3371F4D2B7800429EFA /* UIImage+RoundedCorner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+RoundedCorner.h"; sourceTree = "<group>"; };
 		DD67B3381F4D2B7800429EFA /* UIImage+RoundedCorner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+RoundedCorner.m"; sourceTree = "<group>"; };
 		DD67B33A1F4D51B400429EFA /* OTWNotFundFootprintView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWNotFundFootprintView.h; sourceTree = "<group>"; };
@@ -649,6 +673,8 @@
 			children = (
 				186E12E81F57BF090077A93C /* OTWARShopService.h */,
 				186E12E91F57BF090077A93C /* OTWARShopService.m */,
+				DD4BD9711F5EA4630047D191 /* OTWBusinessDetailService.h */,
+				DD4BD9721F5EA4630047D191 /* OTWBusinessDetailService.m */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -658,6 +684,14 @@
 			children = (
 				186E12EB1F57E8240077A93C /* OTWARShopCustomAnnotationView.h */,
 				186E12EC1F57E8240077A93C /* OTWARShopCustomAnnotationView.m */,
+				DD4BD9591F5BE9400047D191 /* OTWBusinessDetailView.h */,
+				DD4BD95A1F5BE9400047D191 /* OTWBusinessDetailView.m */,
+				DD4BD9651F5D8FF80047D191 /* OTWBusinessActivityIconView.h */,
+				DD4BD9661F5D8FF80047D191 /* OTWBusinessActivityIconView.m */,
+				DD4BD9681F5E56D30047D191 /* OTWBusinessActivityTableViewCell.h */,
+				DD4BD9691F5E56D30047D191 /* OTWBusinessActivityTableViewCell.m */,
+				DD4BD9741F5FECCB0047D191 /* OTWNotCommentView.h */,
+				DD4BD9751F5FECCB0047D191 /* OTWNotCommentView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -782,6 +816,10 @@
 			children = (
 				DD4BD9561F50025E0047D191 /* OTWBusinessFetchModel.h */,
 				DD4BD9571F50025E0047D191 /* OTWBusinessFetchModel.m */,
+				DD4BD95C1F5BF2CF0047D191 /* OTWBusinessModel.h */,
+				DD4BD95D1F5BF2CF0047D191 /* OTWBusinessModel.m */,
+				DD4BD96B1F5E803D0047D191 /* OTWBusinessActivityModel.h */,
+				DD4BD96C1F5E803D0047D191 /* OTWBusinessActivityModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1016,6 +1054,8 @@
 				DD67B33E1F4EC04A00429EFA /* OTWBusinessFetchController.m */,
 				186E12E11F57ACFB0077A93C /* OTWARShopViewController.h */,
 				186E12E21F57ACFB0077A93C /* OTWARShopViewController.m */,
+				DD4BD96E1F5E8C030047D191 /* OTWBusinessDetailViewController.h */,
+				DD4BD96F1F5E8C030047D191 /* OTWBusinessDetailViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1800,6 +1840,8 @@
 				DDABAA4B1F12801E00010532 /* OTWPersonalEditNicknameController.m in Sources */,
 				1834A9921F5504B900C377F9 /* OTWBusinessService.m in Sources */,
 				DDEA15DE1F25CCA500056166 /* PYPhotosNavigationController.m in Sources */,
+				DD4BD9671F5D8FF80047D191 /* OTWBusinessActivityIconView.m in Sources */,
+				DD4BD96A1F5E56D30047D191 /* OTWBusinessActivityTableViewCell.m in Sources */,
 				DD4BD9581F50025E0047D191 /* OTWBusinessFetchModel.m in Sources */,
 				D7F6B0431F0D39160013090A /* README.md in Sources */,
 				B1B055641F2ED17D008274FE /* OTWShopActiveViewController.m in Sources */,
@@ -1864,6 +1906,7 @@
 				DDD4AB4B1F1AFC6900D42CF3 /* OTWFootprintDetailFrame.m in Sources */,
 				B12360321F55452700E8FA62 /* OTWPersonalCashTVTableViewCell.m in Sources */,
 				DDEA16121F30AF6D00056166 /* OTWPersonalFootprintFrame.m in Sources */,
+				DD4BD96D1F5E803D0047D191 /* OTWBusinessActivityModel.m in Sources */,
 				B18A43051F207BB6002C7A5A /* OTWNewCommentListViewController.m in Sources */,
 				DDC0A93A1F1F77D100A6E4DB /* OTWSystemNewsModel.m in Sources */,
 				B123601D1F53CAE600E8FA62 /* OTWPersonalHistroyPayeeViewController.m in Sources */,
@@ -1885,6 +1928,7 @@
 				1812CA881F39AEAB00510905 /* OTWPointAnnotation.m in Sources */,
 				DD86E95A1F46BA8600D49A64 /* ArvixARViewController.m in Sources */,
 				DD3520941F18670800E8D725 /* OTWFootprintDetailController.m in Sources */,
+				DD4BD9731F5EA4630047D191 /* OTWBusinessDetailService.m in Sources */,
 				DDA1AF061F4C27B200281DFC /* OTWMyInfoView.m in Sources */,
 				D7F6B05B1F0DD0280013090A /* OTWBaseViewController.m in Sources */,
 				DD86E9591F46BA8600D49A64 /* ArvixARTrackingManager.m in Sources */,
@@ -1894,6 +1938,7 @@
 				D7F6B0581F0DCF040013090A /* UIColor+Utils.m in Sources */,
 				B123602F1F5541ED00E8FA62 /* OTWPersonalCashTFViewCell.m in Sources */,
 				DD9452F31F15DE23004EDDED /* OTWFootprintListFrame.m in Sources */,
+				DD4BD9701F5E8C030047D191 /* OTWBusinessDetailViewController.m in Sources */,
 				18BCFAA01F4ADAF700B8E09D /* OTWAddNewShopViewController.m in Sources */,
 				DDEA15FE1F299DFB00056166 /* OTWDocument.m in Sources */,
 				B1A9C5A61F43F16F009EF68D /* OTWPersonalClaimModel.m in Sources */,
@@ -1907,9 +1952,11 @@
 				DDEA15DC1F25CCA500056166 /* MBProgressHUD+PYExtension.m in Sources */,
 				DD86E9571F46BA8600D49A64 /* ArvixARPresenter.m in Sources */,
 				B181AB591F1F7F33009929D1 /* OTWPraiseViewModel.m in Sources */,
+				DD4BD9761F5FECCB0047D191 /* OTWNotCommentView.m in Sources */,
 				D7F6B0461F0D39320013090A /* README.md in Sources */,
 				18B034E11F1CE42700F53461 /* OTWFindViewController.m in Sources */,
 				186E12DA1F569E440077A93C /* TwoView.m in Sources */,
+				DD4BD95E1F5BF2CF0047D191 /* OTWBusinessModel.m in Sources */,
 				DDEA15E91F25CCA500056166 /* PYPhotoView.m in Sources */,
 				DDEA15E81F25CCA500056166 /* PYPhotosView.m in Sources */,
 				B181AB5C1F1F7F56009929D1 /* OTWPraiseViewController.m in Sources */,
@@ -1929,6 +1976,7 @@
 				B12360111F4C075F00E8FA62 /* OTWPersonalWalletDetailViewController.m in Sources */,
 				189881001F4694A6003BC734 /* OTWNewsModel.m in Sources */,
 				D7F6B04C1F0DCB9D0013090A /* OTWCustomNavigationBar.m in Sources */,
+				DD4BD95B1F5BE9400047D191 /* OTWBusinessDetailView.m in Sources */,
 				DDEA15FB1F298A5A00056166 /* QiniuUploadService.m in Sources */,
 				DDEA15E11F25CCA500056166 /* PYPhotosViewController.m in Sources */,
 				186E12E01F56A0520077A93C /* OTWSelectBarViewController.m in Sources */,

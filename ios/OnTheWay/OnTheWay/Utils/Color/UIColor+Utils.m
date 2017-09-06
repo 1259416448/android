@@ -184,4 +184,7 @@
 + (UIColor *)color_f3715a{
     return [UIColor colorWithHexString:@"f3715a"];
 }
++ (UIColor *)color_ff5959{
+    return [UIColor colorWithHexString:@"ff5959"];
+}
 @end

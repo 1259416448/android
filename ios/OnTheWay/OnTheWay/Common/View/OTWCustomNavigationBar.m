@@ -68,7 +68,7 @@
     [self addSubview:self.titleLabel];
     CGFloat width = [title sizeWithFont:self.titleLabel.font].width;
     CGFloat xOff = (self.Witdh - width)/2;
-    self.titleLabel.frame = CGRectMake(xOff, 30, width, 20);
+    self.titleLabel.frame = CGRectMake(xOff, 33, width, 20);
 }
 
 - (void)setLeftImage:(UIImage *)leftImage {
@@ -77,11 +77,11 @@
     }
     [self.leftButton setImage:leftImage forState:UIControlStateNormal];
     [self addSubview:self.leftButton];
-    CGFloat wid = leftImage.size.width;
-    CGFloat hei = leftImage.size.height;
+    //CGFloat wid = leftImage.size.width;
+    //CGFloat hei = leftImage.size.height;
     
-    self.leftButton.frame = CGRectMake(0, 29, wid + 23.5 , hei + 6);
-    self.leftButton.imageEdgeInsets = UIEdgeInsetsMake(3, 13.5, 3, 10);
+    self.leftButton.frame = CGRectMake(0, 20, 15 + 10 + 10 , 44);
+    self.leftButton.imageEdgeInsets = UIEdgeInsetsMake(12, 15, 12, 10);
 }
 
 - (void)setRightImage:(UIImage *)rightImage {
@@ -144,9 +144,9 @@
 - (void)setRightView:(UIView *)rightView {
     CGFloat yOff = 20 - (rightView.Height - 44)/2;
     yOff = fmaxf(yOff, 0);
-    CGFloat xoff = self.Witdh - rightView.Witdh - 17.5;
-    xoff = fmaxf(xoff, 0);
-    rightView.frame = CGRectMake(xoff, yOff, rightView.Witdh, rightView.Height);
+    //CGFloat xoff = self.Witdh - rightView.Witdh - 17.5;
+    //xoff = fmaxf(xoff, 0);
+    rightView.frame = CGRectMake(rightView.MinX, yOff, rightView.Witdh, rightView.Height);
     [self addSubview:rightView];
 }
 
