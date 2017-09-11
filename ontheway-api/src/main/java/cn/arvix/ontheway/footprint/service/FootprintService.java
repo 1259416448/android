@@ -645,7 +645,7 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
             page.getContent().forEach(x -> {
                 FootprintDetailDTO detailDTO = new FootprintDetailDTO();
                 detailDTO.setUserId(x.getUser().getId());
-                detailDTO.setUserHeadImg(urlFix + x.getUser().getHeadImg());
+                detailDTO.setUserHeadImg(urlFix + x.getUser().getHeadImg() + "?"+CommonContact.USER_HEAD_IMG_FIX);
                 detailDTO.setUserNickname(x.getUser().getName());
 
                 detailDTO.setDateCreated(TimeMaker.toTimeMillis(x.getDateCreated()));
