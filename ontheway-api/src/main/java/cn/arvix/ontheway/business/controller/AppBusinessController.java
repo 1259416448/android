@@ -91,7 +91,7 @@ public class AppBusinessController extends ExceptionHandlerController {
 
     @ApiOperation(value = "加载更多商家足迹信息", notes = "加载更多商家足迹信息")
     @ResponseBody
-    @GetMapping(value = "/search/{id}/footprint")
+    @GetMapping(value = "/footprint/search/{id}")
     @ApiImplicitParams(value = {
             @ApiImplicitParam(value = "开始分页时间", name = "currentTime", paramType = "query"),
             @ApiImplicitParam(value = "当前页", name = "number", required = true, paramType = "query"),
