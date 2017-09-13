@@ -10,10 +10,10 @@
 
 @implementation OTWBusinessModel
 
-+ (NSDictionary *) mj_setupObjectClassInArray
++ (NSDictionary *) objectClassInArray
 {
     return @{
-             @"footprints":@"OTWFootprintDetailModel",
+             @"footprints":@"OTWFootprintListModel",
              @"activitys":@"OTWBusinessActivityModel"
              };
 }

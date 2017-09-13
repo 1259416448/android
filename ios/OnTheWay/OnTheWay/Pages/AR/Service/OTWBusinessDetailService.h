@@ -14,4 +14,20 @@ typedef void(^requestCompletionBlock)(id result, NSError *error);
 
 - (void) fetchBusinessDetail:(NSString *)opId completion:(requestCompletionBlock)block;
 
+/**
+ * businessId 商家ID
+ * currentTime 商家详情请求时返回的时间戳
+ * completion 请求完成的回调处理
+ */
+- (void) fetchBusinessFootprints:(NSString *)businessId  currentTime:(NSNumber *)currentTime completion:(requestCompletionBlock)block;
+
+/**
+ * 获取分页中的当前分页大小
+ */
+- (int) getDefaultPageSize;
+
+- (int) getDefaultPageNumber;
+
+- (void) setNumber:(int)number;
+
 @end

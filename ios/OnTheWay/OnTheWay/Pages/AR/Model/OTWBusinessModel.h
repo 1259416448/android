@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "OTWFootprintDetailModel.h"
+#import "OTWFootprintListModel.h"
 #import "OTWBusinessActivityModel.h"
 
 @interface OTWBusinessModel : NSObject
@@ -22,13 +22,13 @@
 
 @property (nonatomic,strong) NSString *contactInfo;
 
-@property (nonatomic,strong) NSArray<NSString *> *photoUrls;
+@property (nonatomic,strong) NSMutableArray<NSString *> *photoUrls;
 
 @property (nonatomic,strong) NSString *colorCode;
 
 @property (nonatomic,assign) float *weight;
 
-@property (nonatomic,strong) NSSet<NSString *> *typeIds;
+@property (nonatomic,strong) NSMutableSet<NSString *> *typeIds;
 
 @property (nonatomic,assign) BOOL ifLike;
 
@@ -44,8 +44,8 @@
 
 @property (nonatomic,assign) NSNumber *currentTime;
 
-@property (nonatomic,strong) NSArray<OTWFootprintDetailModel *> *footprints;
+@property (nonatomic,strong) NSMutableArray<OTWFootprintListModel *> *footprints;
 
-@property (nonatomic,strong) NSArray<OTWBusinessActivityModel *> *activitys;
+@property (nonatomic,strong) NSMutableArray<OTWBusinessActivityModel *> *activitys;
 
 @end

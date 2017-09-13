@@ -196,7 +196,7 @@ static NSString *photoParamsTwo = @"?imageMogr2/thumbnail/!20p";
     self.goMapView.frame = CGRectMake(goMapViewX, 0, goMapViewW , 44);
     self.goMapImageView.frame = CGRectMake(0, 12, 20, 20);
     self.goMapLabel.frame = CGRectMake(self.goMapImageView.MaxX + 10, 14.5, self.goMapLabel.Witdh, 15);
-    self.centerLine.frame = CGRectMake(SCREEN_WIDTH / 2, 0, 0.5, 44);
+    self.centerLine.frame = CGRectMake(SCREEN_WIDTH / 2, 0, 0.6, 44);
     
     CGFloat checkInViewW = 10 + self.checkInLabel.Witdh + 20  ;
     CGFloat checkInViewX = (SCREEN_WIDTH - 1) / 2 + (((SCREEN_WIDTH - 1 )/2) - checkInViewW )/2;
@@ -242,6 +242,7 @@ static NSString *photoParamsTwo = @"?imageMogr2/thumbnail/!20p";
 
 #pragma mark 点击行
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
     if(self.delegate && [self.delegate respondsToSelector:@selector(businessTableView:didSelectRowAtIndexPath:)]){
         [self.delegate businessTableView:tableView didSelectRowAtIndexPath:indexPath];
     }
@@ -339,6 +340,7 @@ static NSString *photoParamsTwo = @"?imageMogr2/thumbnail/!20p";
         _businessActivityTableView.delegate = self;
         _businessActivityTableView.dataSource = self;
         _businessActivityTableView.backgroundColor = [UIColor clearColor];
+        _businessActivityTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     }
     return _businessActivityTableView;
 }
@@ -486,8 +488,15 @@ static NSString *photoParamsTwo = @"?imageMogr2/thumbnail/!20p";
     if(!_tableViewFooterBG){
         _tableViewFooterBG = [[UIView alloc] init];
         _tableViewFooterBG.backgroundColor = [UIColor color_fbfbfb];
-        _tableViewFooterBG.layer.borderWidth = 0.5;
-        _tableViewFooterBG.layer.borderColor = [UIColor color_d5d5d5].CGColor;
+        //_tableViewFooterBG.layer.borderWidth = 0.6;
+        //_tableViewFooterBG.layer.borderColor = [UIColor color_d5d5d5].CGColor;
+        UIView *lineOne = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 0.5)];
+        lineOne.backgroundColor = [UIColor color_d5d5d5];
+        UIView *lineTwo = [[UIView alloc] initWithFrame:CGRectMake(0, 43.5, SCREEN_WIDTH, 0.5)];
+        lineTwo.backgroundColor = [UIColor color_d5d5d5];
+        [_tableViewFooterBG addSubview:lineOne];
+        [_tableViewFooterBG addSubview:lineTwo];
+        
     }
     return _tableViewFooterBG;
 }

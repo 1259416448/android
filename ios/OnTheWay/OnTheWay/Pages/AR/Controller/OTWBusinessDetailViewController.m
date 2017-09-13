@@ -12,6 +12,10 @@
 #import "OTWBusinessDetailService.h"
 #import "OTWCustomNavigationBar.h"
 #import "OTWNotCommentView.h"
+#import "OTWBusinessFootprintFrame.h"
+#import "OTWBusinessFootprintTableViewCell.h"
+#import "OTWPersonalFootprintsListController.h"
+#import "OTWUserModel.h"
 
 #import <MJExtension.h>
 
@@ -50,7 +54,7 @@
 
 @property (nonatomic,strong) OTWNotCommentView *notCommentView;
 
-@property (nonatomic,strong) NSMutableArray *footprints;
+@property (nonatomic,strong) NSMutableArray<OTWBusinessFootprintFrame *> *footprints;
 
 @end
 
@@ -148,10 +152,17 @@
                             @"http://osx4pwgde.bkt.clouddn.com/EDE74BBCCA644B7EB9DDE9DB463D66FD",
                             ];
         
-        NSArray<NSString *> *photoUrls = [NSString mj_objectArrayWithKeyValuesArray:array1];
+        NSMutableArray<NSString *> *photoUrls = [NSString mj_objectArrayWithKeyValuesArray:array1];
         self.businessModel.photoUrls = photoUrls;
         self.businessModel.businessPhotoNum = 4;
         
+        //构建足迹信息
+        if(self.businessModel.footprints && self.businessModel.footprints.count > 0 ){
+            for (OTWFootprintListModel *one in self.businessModel.footprints) {
+                OTWBusinessFootprintFrame *footprintFrame = [[OTWBusinessFootprintFrame alloc] initWithFootprint:one];
+                [self.footprints addObject:footprintFrame];
+            }
+        }
         [self buildTableView];
     }else{
         if([result[@"messageCode"] isEqualToString:@"000405"]){
@@ -171,10 +182,63 @@
 {
     //创建头部TableView
     [self.view addSubview:self.businessDetailTableView];
+    
+    //设置上拉刷新
+    self.businessDetailTableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreFootprint)];
+    
     [self.view bringSubviewToFront:self.customNavigationBar];
     //设置 tableViewHeaderBG height
     [self setTableViewHeaderBGViewFrame];
     self.businessDetailTableView.tableHeaderView = self.tableViewHeaderBG;
+}
+
+//加载更多足迹
+- (void)loadMoreFootprint
+{
+    [self.service fetchBusinessFootprints:self.opId currentTime:self.businessModel.currentTime completion:^(id result, NSError *error) {
+        if(result){
+            if([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]){
+                //请求成功，处理结果
+                NSDictionary *body = result[@"body"];
+                NSArray *content = body[@"content"];
+                if(content && content.count > 0){
+                    //构建数据
+                    for (NSDictionary *dict in content) {
+                        OTWFootprintListModel *footprintModel = [OTWFootprintListModel mj_objectWithKeyValues:dict];
+                        OTWBusinessFootprintFrame *footprintFrame = [[OTWBusinessFootprintFrame alloc] initWithFootprint:footprintModel];
+                        [self.footprints addObject:footprintFrame];
+                    }
+                    //判断是否请求结束
+                    [self.businessDetailTableView reloadData];
+                    if(content.count < self.service.getDefaultPageSize){
+                        self.businessDetailTableView.mj_footer.hidden = YES;
+                        [self.businessDetailTableView.mj_footer endRefreshingWithNoMoreData];
+                    }else{
+                        int currentPageNumber = self.service.getDefaultPageNumber;
+                        currentPageNumber ++;
+                        [self.service setNumber:currentPageNumber];
+                        [self.businessDetailTableView.mj_footer endRefreshing];
+                    }
+                } else { //无请求结果
+                    self.businessDetailTableView.mj_footer.hidden = YES;
+                    [self.businessDetailTableView.mj_footer endRefreshingWithNoMoreData];
+                    [self.businessDetailTableView reloadData];
+                }
+            }else{
+                if([result[@"messageCode"] isEqualToString:@"000405"]){
+                    [self.indicatorView stopAnimating];
+                    self.errorTipsLabel.text = @"商家信息不存在或已被删除";
+                    //发出商家删除通知
+                    NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:self.opId,@"businessId", nil];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"businessAlreadyDeleted" object:nil userInfo:dict];
+                }else{
+                    [OTWUtils alertFailed:@"服务端繁忙，请稍后再试" userInteractionEnabled:NO target:self];
+                }
+            }
+        }else{
+            [self netWorkErrorTips:error];
+        }
+    }];
 }
 
 //设置大家说标题
@@ -203,34 +267,55 @@
 
 #pragma mark 返回每组行数
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 0;
+    return self.footprints.count;
 }
 
 #pragma mark 点击行
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    //跳转到足迹详情，当前的足迹详情不能跳转商圈信息
+    OTWFootprintDetailController *VC =  [[OTWFootprintDetailController alloc] init];
+    [VC setFid:self.footprints[indexPath.row].footprintDetail.footprintId.description];
+    [self.navigationController pushViewController:VC animated:YES];
 }
 
 #pragma mark返回每行的单元格
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return nil;
+    static NSString *identifier = @"BusinessFootprintCell";
+    OTWBusinessFootprintTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    if(!cell){
+        cell = [OTWBusinessFootprintTableViewCell cellWithTableView:tableView identifier:identifier];
+        WeakSelf(self);
+        cell.block = ^(UITableViewCell *cell){
+            //然后使用indexPathForCell方法，就得到indexPath了~
+            NSIndexPath *indexPath = [tableView indexPathForCell:cell];
+            OTWBusinessFootprintFrame *footprintFrame = weakself.footprints[indexPath.row];
+            OTWPersonalFootprintsListController *personalSiteVC = [OTWPersonalFootprintsListController initWithIfMyFootprint:[[OTWUserModel shared].userId.description isEqualToString:footprintFrame.footprintDetail.userId.description]];
+            personalSiteVC.userId = footprintFrame.footprintDetail.userId.description;
+            personalSiteVC.userNickname = footprintFrame.footprintDetail.userNickname;
+            personalSiteVC.userHeaderImg = footprintFrame.footprintDetail.userHeadImg;
+            [weakself.navigationController pushViewController:personalSiteVC animated:YES];
+        };
+    }
+    [cell setData:self.footprints[indexPath.row]];
+    return cell;
 }
 
 #pragma mark 重新设置单元格高度
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    return 40;
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return self.footprints[indexPath.row].cellHeight;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 0;
+    return 0.f;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    return 0;
+    return 1.f;
 }
 
 /**
@@ -339,6 +424,7 @@
         _businessDetailTableView.backgroundColor = [UIColor clearColor];
         _businessDetailTableView.delegate = self;
         _businessDetailTableView.dataSource = self;
+        _businessDetailTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     }
     return _businessDetailTableView;
 }
