@@ -16,6 +16,8 @@
 #import "OTWBusinessFootprintTableViewCell.h"
 #import "OTWPersonalFootprintsListController.h"
 #import "OTWUserModel.h"
+#import "OTWFootprintService.h"
+#import "OTWFootprintReleaseViewController.h"
 
 #import <MJExtension.h>
 
@@ -56,6 +58,9 @@
 
 @property (nonatomic,strong) NSMutableArray<OTWBusinessFootprintFrame *> *footprints;
 
+//底部发布button
+@property(nonatomic,strong) UIButton *fabiaoButton;
+
 @end
 
 @implementation OTWBusinessDetailViewController
@@ -64,6 +69,12 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self buildUI];
+    
+    //增加通知监听
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deletedFootprint:) name:@"foorprintAlreadyDeleted" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refleshBusinessFootprint:) name:@"refleshFootprint" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addReleasedFootprint:) name:@"releasedFoorprint" object:nil];
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -86,6 +97,65 @@
     self.view.backgroundColor=[UIColor color_f4f4f4];
     
     [self.view addSubview:self.firstLoadingView];
+}
+
+/**
+ * 通知的形式更新一个商户足迹详情信息
+ * 为了防止点击详情后，足迹信息与列表中的回复数据不一致
+ */
+- (void) refleshBusinessFootprint:(NSNotification*)sender
+{
+    NSDictionary *dict = sender.userInfo;
+    if(!dict) return;
+    if(!dict[@"footprintId"]) return;
+    
+    NSString *footprintId = dict[@"footprintId"];
+    OTWFootprintListModel *footprintDetail;
+    for (OTWBusinessFootprintFrame *one in self.footprints) {
+        if([footprintId isEqualToString:one.footprintDetail.footprintId.description]){
+            footprintDetail = one.footprintDetail;
+            break;
+        }
+    }
+    
+    NSNumber *footprintLikeNum = dict[@"footprintLikeNum"];
+    NSNumber *footprintCommentNum = dict[@"footprintCommentNum"];
+    NSNumber *ifLike = dict[@"ifLike"];
+    footprintDetail.footprintLikeNum = footprintLikeNum.integerValue;
+    footprintDetail.footprintCommentNum = footprintCommentNum.integerValue;
+    footprintDetail.ifLike = ifLike.boolValue;
+    [self.businessDetailTableView reloadData];
+}
+
+/**
+ * 详情页面中发现有被删除的足迹
+ */
+- (void) deletedFootprint:(NSNotification*)sender
+{
+    NSDictionary *dict = sender.userInfo;
+    for (int i = 0; i<self.footprints.count; i++) {
+        if([self.footprints[i].footprintDetail.footprintId.description isEqualToString:dict[@"footprintId"]]){
+            [self.footprints removeObjectAtIndex:i];
+            [self.businessDetailTableView reloadData];
+            break;
+        }
+    }
+}
+
+/**
+ * 发布足迹后同步一下商家详情页
+ */
+- (void) addReleasedFootprint:(NSNotification*)sender
+{
+    OTWFootprintListModel *footprintDetail = [OTWFootprintListModel initWithDict:sender.userInfo];
+    if([footprintDetail.business.description isEqualToString:_opId]){
+        footprintDetail.userId = [NSNumber numberWithInt:[[OTWUserModel shared].userId intValue]];
+        footprintDetail.userHeadImg = [OTWUserModel shared].headImg;
+        footprintDetail.userNickname = [OTWUserModel shared].name;
+        OTWBusinessFootprintFrame *footprintFrame = [[OTWBusinessFootprintFrame alloc] initWithFootprint:footprintDetail];
+        [self.footprints insertObject:footprintFrame atIndex:0];
+        [self.businessDetailTableView reloadData];
+    }
 }
 
 /**
@@ -146,15 +216,15 @@
         NSMutableArray<OTWBusinessActivityModel *> *activitys = [OTWBusinessActivityModel mj_objectArrayWithKeyValuesArray:array];
         self.businessModel.activitys = activitys;
         
-        NSArray *array1 = @[
-                            @"http://osx4pwgde.bkt.clouddn.com/2A685CCB9BA44C2EB24B8ABDCF14FD77",
-                            @"http://osx4pwgde.bkt.clouddn.com/E9EEECD8DFD54FFEB7E013629E8C6D33",
-                            @"http://osx4pwgde.bkt.clouddn.com/EDE74BBCCA644B7EB9DDE9DB463D66FD",
-                            ];
-        
-        NSMutableArray<NSString *> *photoUrls = [NSString mj_objectArrayWithKeyValuesArray:array1];
-        self.businessModel.photoUrls = photoUrls;
-        self.businessModel.businessPhotoNum = 4;
+//        NSArray *array1 = @[
+//                            @"http://osx4pwgde.bkt.clouddn.com/2A685CCB9BA44C2EB24B8ABDCF14FD77",
+//                            @"http://osx4pwgde.bkt.clouddn.com/E9EEECD8DFD54FFEB7E013629E8C6D33",
+//                            @"http://osx4pwgde.bkt.clouddn.com/EDE74BBCCA644B7EB9DDE9DB463D66FD",
+//                            ];
+//        
+//        NSMutableArray<NSString *> *photoUrls = [NSString mj_objectArrayWithKeyValuesArray:array1];
+//        self.businessModel.photoUrls = photoUrls;
+//        self.businessModel.businessPhotoNum = 4;
         
         //构建足迹信息
         if(self.businessModel.footprints && self.businessModel.footprints.count > 0 ){
@@ -190,6 +260,8 @@
     //设置 tableViewHeaderBG height
     [self setTableViewHeaderBGViewFrame];
     self.businessDetailTableView.tableHeaderView = self.tableViewHeaderBG;
+    
+    [self.view addSubview:self.fabiaoButton];
 }
 
 //加载更多足迹
@@ -297,6 +369,16 @@
             personalSiteVC.userHeaderImg = footprintFrame.footprintDetail.userHeadImg;
             [weakself.navigationController pushViewController:personalSiteVC animated:YES];
         };
+        
+        cell.likeBlock= ^(UITableViewCell *cell){
+            NSIndexPath *indexPath = [tableView indexPathForCell:cell];
+            OTWBusinessFootprintFrame *footprintFrame = weakself.footprints[indexPath.row];
+            //设置了一个3秒内不能重复提交
+            if(footprintFrame.likeTime - [NSDate date].timeIntervalSince1970 > - 3 ) return;
+            if(footprintFrame.ifSubLike) return;
+            footprintFrame.likeTime = [NSDate date].timeIntervalSince1970;
+            [weakself likeFootprint:footprintFrame];
+        };
     }
     [cell setData:self.footprints[indexPath.row]];
     return cell;
@@ -326,6 +408,49 @@
     [self netWorkErrorTips:error];
 }
 
+/**
+ * 点赞操作
+ */
+-(void)likeFootprint:(OTWBusinessFootprintFrame *)footprintFrame
+{
+    if(!footprintFrame) return;
+    OTWFootprintListModel *footprint = footprintFrame.footprintDetail;
+    [OTWFootprintService likeFootprint:footprint.footprintId.description completion:^(id result, NSError *error) {
+        if (result) {
+            if ([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]) {
+                NSString *tips = @"取消赞";
+                if(footprint.ifLike){
+                    footprint.ifLike = NO;
+                    footprint.footprintLikeNum -- ;
+                    [OTWUtils alertSuccess:tips userInteractionEnabled:NO target:self];
+                }else{
+                    tips = @"已点赞";
+                    footprint.ifLike = YES;
+                    footprint.footprintLikeNum ++ ;
+                }
+                [self.businessDetailTableView reloadData];
+            }else{
+                //判断是否被删除
+                if([result[@"messageCode"] isEqualToString:@"000202"]){
+                    for (int i = 0; i<self.footprints.count; i++) {
+                        if([self.footprints[i].footprintDetail.footprintId.description isEqualToString:footprint.footprintId.description]){
+                            [self.footprints removeObjectAtIndex:i];
+                            [self.businessDetailTableView reloadData];
+                            break;
+                        }
+                    }
+                    [OTWUtils alertFailed:@"足迹已被删除" userInteractionEnabled:NO target:self];
+                }else{
+                    [OTWUtils alertFailed:@"服务端繁忙，请稍后再试" userInteractionEnabled:NO target:self];
+                }
+            }
+        }else{
+            [self netWorkErrorTips:error];
+        }
+        footprintFrame.ifSubLike = NO;
+    }];
+}
+
 - (void) changeCollectStauts
 {
     if(self.businessModel.ifLike){
@@ -340,6 +465,11 @@
 - (void)businessTableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     DLog(@"点击了优惠信息");
+}
+
+- (void)morePhotoClick:(OTWBusinessDetailView *)detailView businessModel:(OTWBusinessModel *)businessModel
+{
+    DLog(@"点击了更多照片，需要跳转至相册页");
 }
 
 #pragma mark - Setter Getter
@@ -464,6 +594,27 @@
     return _footprints;
 }
 
+-(UIButton*)fabiaoButton{
+    if(!_fabiaoButton){
+        _fabiaoButton=[[UIButton alloc] init];
+        _fabiaoButton.frame=CGRectMake(SCREEN_WIDTH - GLOBAL_PADDING - 69, SCREEN_HEIGHT - 69 - 12.5, 69, 69);
+        [_fabiaoButton setImage:[UIImage imageNamed:@"ar_fabiao"] forState:UIControlStateNormal];
+        [_fabiaoButton addTarget:self action:@selector(fabiaoButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _fabiaoButton;
+}
+
+/**
+ * 点击了发布足迹按钮
+ */
+-(void)fabiaoButtonClick{
+    if(![[OTWLaunchManager sharedManager] showLoginViewWithController:self completion:nil]){
+        OTWFootprintReleaseViewController *releaseVC = [[OTWFootprintReleaseViewController alloc] init];
+        [releaseVC setBusinessIdData:_opId];
+        [self.navigationController pushViewController:releaseVC animated:YES];
+    };
+}
+
 /**
  * 设置商家数据，加载数据
  */
@@ -471,6 +622,14 @@
 {
     self.opId = opId;
     [self loadBusinessData];
+}
+
+- (void) dealloc
+{
+    //处理一些通知移除操作
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"foorprintAlreadyDeleted" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"refleshFootprint" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"releasedFoorprint" object:nil];
 }
 
 @end

@@ -10,4 +10,9 @@
 
 @interface OTWFootprintReleaseViewController : OTWBaseViewController
 
+/**
+ * 设置商家ID businessId
+ */
+- (void) setBusinessIdData:(NSString *)businessId;
+
 @end

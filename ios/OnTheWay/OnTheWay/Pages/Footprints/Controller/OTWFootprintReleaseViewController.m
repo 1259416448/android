@@ -58,6 +58,8 @@
 
 @property (nonatomic,assign) BOOL ifFirstLocation;
 
+@property (nonatomic,strong) NSString *businessId;
+
 
 //需要提交的相关数据
 @property (nonatomic,copy) OTWFootprintChangeAddressArrayModel *addressModel;
@@ -325,16 +327,19 @@
     
     if(content.length == 0){
         DLog(@"输入内容为空！");
-        [self errorTips:@"请输入文字信息" userInteractionEnabled:NO];
+        [OTWUtils alertFailed:@"请输入文字信息" userInteractionEnabled:YES target:self];
         return ;
     }
     
     if(self.addressModel == nil){
         DLog(@"定位信息获取失败");
-        [self errorTips:@"定位信息获取失败，请重试" userInteractionEnabled:NO];
+        [OTWUtils alertFailed:@"发布失败，请检查您的网络是否连接" userInteractionEnabled:YES target:self];
         return ;
     }
-    NSDictionary *footprint = [NSDictionary dictionaryWithObjectsAndKeys:self.addressModel.address,@"address",[self.footprintTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]],@"content",[NSNumber numberWithDouble:self.addressModel.latitude],@"latitude",[NSNumber numberWithDouble:self.addressModel.longitude],@"longitude",nil];
+    NSMutableDictionary *footprint = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.addressModel.address,@"address",[self.footprintTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]],@"content",[NSNumber numberWithDouble:self.addressModel.latitude],@"latitude",[NSNumber numberWithDouble:self.addressModel.longitude],@"longitude",nil];
+    if(self.businessId){
+        [footprint setValue:self.businessId forKey:@"business"];
+    }
     //1、首先上传图片
     MBProgressHUD *hud = [OTWUtils alertLoading:@"" userInteractionEnabled:NO target:self];
     if(self.publishPhotosView.images.count > 0){
@@ -352,7 +357,7 @@
         }failure:^(){
             DLog(@"图片上传失败");
             [hud hideAnimated:YES];
-            [self errorTips:@"发布失败，请检查您的网络是否连接" userInteractionEnabled:YES];
+            [OTWUtils alertFailed:@"发布失败，请检查您的网络是否连接" userInteractionEnabled:YES target:self];
         }];
     }else{ //2、直接发布
         hud.label.text = @"正在发布";
@@ -370,11 +375,17 @@
             if([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]){
                 [OTWUtils alertSuccess:@"发布成功" userInteractionEnabled:YES target:self];
                 NSDictionary *dict = result[@"body"];
+                if(self.businessId){
+                    NSMutableDictionary *dictTemp = [[NSMutableDictionary alloc] init];
+                    [dictTemp addEntriesFromDictionary:dict];
+                    [dictTemp setValue:self.businessId forKey:@"business"];
+                    dict = dictTemp;
+                }
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"releasedFoorprint" object:nil userInfo:dict];
                 [self performSelector:@selector(cacelRelease) withObject:nil afterDelay:1.5f];
             }else{
                 DLog(@"message - %@  messageCode - %@",result[@"message"],result[@"messageCode"]);
-                [self errorTips:@"发布失败，请检查您的网络是否连接" userInteractionEnabled:YES];
+                [OTWUtils alertFailed:@"发布失败，请检查您的网络是否连接" userInteractionEnabled:YES target:self];
             }
         }else{
             [self netWorkErrorTips:error];
@@ -604,6 +615,12 @@
             [[UIApplication sharedApplication] openURL:url];
         }
     }
+}
+
+//设置商家ID信息
+- (void) setBusinessIdData:(NSString *)businessId
+{
+    self.businessId = businessId;
 }
 
 

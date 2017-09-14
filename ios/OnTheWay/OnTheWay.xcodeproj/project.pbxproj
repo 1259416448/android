@@ -179,6 +179,7 @@
 		DDABAA4B1F12801E00010532 /* OTWPersonalEditNicknameController.m in Sources */ = {isa = PBXBuildFile; fileRef = DDABAA4A1F12801E00010532 /* OTWPersonalEditNicknameController.m */; };
 		DDB8C29A1F1320B90091E7B0 /* OTWPersonalInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = DDB8C2991F1320B90091E7B0 /* OTWPersonalInfoController.m */; };
 		DDB8C29F1F14AF230091E7B0 /* OTWUserModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DDB8C29E1F14AF230091E7B0 /* OTWUserModel.m */; };
+		DDBBA1E71F6A968E0090B652 /* OTWBusinessARAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = DDBBA1E61F6A968E0090B652 /* OTWBusinessARAnnotation.m */; };
 		DDC0A93A1F1F77D100A6E4DB /* OTWSystemNewsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DDC0A9391F1F77D100A6E4DB /* OTWSystemNewsModel.m */; };
 		DDC0A9431F1F7B1800A6E4DB /* OTWUserFootprintList.plist in Resources */ = {isa = PBXBuildFile; fileRef = DDC0A9421F1F7B1800A6E4DB /* OTWUserFootprintList.plist */; };
 		DDC0A9461F207C3100A6E4DB /* OTWFootprintReleaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DDC0A9451F207C3100A6E4DB /* OTWFootprintReleaseViewController.m */; };
@@ -573,6 +574,8 @@
 		DDB8C2991F1320B90091E7B0 /* OTWPersonalInfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPersonalInfoController.m; sourceTree = "<group>"; };
 		DDB8C29D1F14AF0D0091E7B0 /* OTWUserModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWUserModel.h; sourceTree = "<group>"; };
 		DDB8C29E1F14AF230091E7B0 /* OTWUserModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWUserModel.m; sourceTree = "<group>"; };
+		DDBBA1E51F6A968E0090B652 /* OTWBusinessARAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWBusinessARAnnotation.h; sourceTree = "<group>"; };
+		DDBBA1E61F6A968E0090B652 /* OTWBusinessARAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWBusinessARAnnotation.m; sourceTree = "<group>"; };
 		DDC0A9381F1F77D100A6E4DB /* OTWSystemNewsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWSystemNewsModel.h; sourceTree = "<group>"; };
 		DDC0A9391F1F77D100A6E4DB /* OTWSystemNewsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWSystemNewsModel.m; sourceTree = "<group>"; };
 		DDC0A9421F1F7B1800A6E4DB /* OTWUserFootprintList.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = OTWUserFootprintList.plist; sourceTree = "<group>"; };
@@ -836,6 +839,8 @@
 				DD4BD95D1F5BF2CF0047D191 /* OTWBusinessModel.m */,
 				DD4BD96B1F5E803D0047D191 /* OTWBusinessActivityModel.h */,
 				DD4BD96C1F5E803D0047D191 /* OTWBusinessActivityModel.m */,
+				DDBBA1E51F6A968E0090B652 /* OTWBusinessARAnnotation.h */,
+				DDBBA1E61F6A968E0090B652 /* OTWBusinessARAnnotation.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1887,6 +1892,7 @@
 				B12360261F55095800E8FA62 /* OTWPersonalCashModel.m in Sources */,
 				DD86E9581F46BA8600D49A64 /* ArvixARRadar.m in Sources */,
 				18BCFAAC1F4D1A7200B8E09D /* CreateShopTVCell.m in Sources */,
+				DDBBA1E71F6A968E0090B652 /* OTWBusinessARAnnotation.m in Sources */,
 				1822EE631F20845A00E07665 /* OTWFootprintsChangeAddressModel.m in Sources */,
 				D7F6B03D1F0D39060013090A /* README.md in Sources */,
 				B123602C1F550DE800E8FA62 /* OTWPersonalCashTFPERSONALViewCell.m in Sources */,

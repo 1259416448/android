@@ -45,6 +45,7 @@ static NSString *userFootprintUrl = @"/app/footprint/user/{userId}";
             _currentTime = body[@"currentTime"];
             //处理数据
             NSArray *array = body[@"content"];
+            int count = 0;
             if(array && array.count >0){
                 int i = 0;
                 for (NSDictionary *dict in array) {
@@ -72,11 +73,12 @@ static NSString *userFootprintUrl = @"/app/footprint/user/{userId}";
                         }
                         [footprintFrame initData];
                         [monthData addObject:footprintFrame];
+                        count ++;
                     }
                     i++;
                 }
                 [viewController.tableView reloadData];
-                if(array.count < _size){ //查询的数据小于分页数据 表示已完成 这里可能会存在多请求一次数据库
+                if(count < _size){ //查询的数据小于分页数据 表示已完成 这里可能会存在多请求一次数据库
                     [viewController.tableView.mj_footer endRefreshingWithNoMoreData];
                     viewController.tableView.mj_footer.hidden = YES;
                 }else{

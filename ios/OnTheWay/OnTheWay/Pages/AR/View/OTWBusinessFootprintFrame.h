@@ -38,6 +38,10 @@
 //图片浏览信息
 @property (nonatomic,strong) PYPhotosView *photosView;
 
+@property (nonatomic,assign) long likeTime;
+
+@property (nonatomic,assign) BOOL ifSubLike;
+
 - (id) initWithFootprint:(OTWFootprintListModel *)footprint;
 
 @end

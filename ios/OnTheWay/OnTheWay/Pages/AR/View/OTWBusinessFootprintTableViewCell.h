@@ -15,6 +15,8 @@ typedef void(^ButtonClickBlock)(UITableViewCell *cell);
 
 @property (nonatomic,copy) ButtonClickBlock block;
 
+@property (nonatomic,copy) ButtonClickBlock likeBlock;
+
 + (instancetype)cellWithTableView:(UITableView *)tableView identifier:(NSString *) identifier;
 
 - (void) setData:(OTWBusinessFootprintFrame *) businessFootprintFrame;

@@ -7,7 +7,7 @@
 //
 
 #import "OTWARShopCustomAnnotationView.h"
-#import "OTWARCustomAnnotation.h"
+#import "OTWBusinessARAnnotation.h"
 #import <AFNetworking/UIImageView+AFNetworking.h>
 #import "OTWUtils.h"
 
@@ -41,7 +41,7 @@
 - (void)bindUi
 {
     if (self.annotaion) {
-        OTWARCustomAnnotation *annotation = (OTWARCustomAnnotation*)self.annotaion;
+        OTWBusinessARAnnotation *annotation = (OTWBusinessARAnnotation*)self.annotaion;
         [self setFrameByData:annotation.arShop];
     }
 }
@@ -111,7 +111,7 @@
     return _printBGView;
 }
 
--(void)setFrameByData:(OTWBusinessFetchModel*)arShop
+-(void)setFrameByData:(OTWBusinessModel*)arShop
 {
     
     CGSize shopSize = [OTWUtils sizeWithString:arShop.name font:shopNameFont maxSize:CGSizeMake(self.Witdh, 15)];

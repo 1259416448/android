@@ -43,13 +43,27 @@
 //底部点赞按钮
 @property (nonatomic,strong) UIView *likeBGView;
 
-@property (nonatomic,strong) UIView *likeBGViewWhite;
+//按钮背景图片
+@property (nonatomic,strong) UIImageView *likeBGImageView;
+
+@property (nonatomic,strong) UIImage *imageColorD5D5D5;
+
+@property (nonatomic,strong) UIImage *imageColorE50834;
+
+//按钮白色图片信息
+@property (nonatomic,strong) UIImageView *likeBGViewWhiteImageView;
 
 //点赞按钮图标
 @property (nonatomic,strong) UIImageView *likeImageView;
 
 //点赞数量
 @property (nonatomic,strong) UILabel *likeNumLabel;
+
+//+
+@property (nonatomic,strong) UILabel *plugLabel;
+
+//点击点赞按钮
+@property (nonatomic,strong) UIButton *likeButton;
 
 @end
 
@@ -86,9 +100,12 @@ static NSString *photoParamsTwo = @"?imageMogr2/thumbnail/!20p";
     [self.commentBGView addSubview:self.bottomBGView];
     [self.bottomBGView addSubview:self.replyLabel];
     [self.bottomBGView addSubview:self.likeBGView];
-    [self.likeBGView addSubview:self.likeBGViewWhite];
+    [self.likeBGView addSubview:self.likeBGImageView];
+    [self.likeBGView addSubview:self.likeBGViewWhiteImageView];
     [self.likeBGView addSubview:self.likeImageView];
     [self.likeBGView addSubview:self.likeNumLabel];
+    [self.likeBGView addSubview:self.plugLabel];
+    [self.bottomBGView addSubview:self.likeButton];
     
     [self.commentBGView addSubview:self.bottomLine];
 }
@@ -116,7 +133,7 @@ static NSString *photoParamsTwo = @"?imageMogr2/thumbnail/!20p";
         //没有图片
         self.photoBGView.hidden = YES;
         //设置回复、点赞信息 距离顶部位置
-        self.bottomBGView.frame = CGRectMake(self.commentUserHeaderImgButton.MaxX, self.contentLabel.MaxY +10 , SCREEN_WIDTH - self.commentUserHeaderImgButton.MaxX , 30);
+        self.bottomBGView.frame = CGRectMake(self.commentUserHeaderImgButton.MaxX, self.contentLabel.MaxY +10 , SCREEN_WIDTH - self.commentUserHeaderImgButton.MaxX , 40);
     }else{
         //有图片
         self.photoBGView.hidden = NO;
@@ -127,14 +144,22 @@ static NSString *photoParamsTwo = @"?imageMogr2/thumbnail/!20p";
             }
         }
         [self.photoBGView addSubview: businessFootprintFrame.photosView];
-        self.bottomBGView.frame = CGRectMake(self.commentUserHeaderImgButton.MaxX, self.photoBGView.MaxY +10 , SCREEN_WIDTH - self.commentUserHeaderImgButton.MaxX , 30);
+        self.bottomBGView.frame = CGRectMake(self.commentUserHeaderImgButton.MaxX, self.photoBGView.MaxY +10 , SCREEN_WIDTH - self.commentUserHeaderImgButton.MaxX , 40);
     }
-    self.likeBGView.frame = CGRectMake(self.bottomBGView.Witdh - GLOBAL_PADDING - 60, 0, 60, 25);
+    self.likeBGView.frame = CGRectMake(self.bottomBGView.Witdh - GLOBAL_PADDING - 60, 0, 60, 40);
     self.likeBGView.layer.cornerRadius = 12.5;
+    self.likeButton.frame = CGRectMake(self.likeBGView.MinX - 5, self.likeBGView.MinY - 5, 80, 40);
     self.replyLabel.frame = CGRectMake(0, 5, self.bottomBGView.Witdh - self.likeBGView.Witdh - GLOBAL_PADDING - 10, 15);
     //回复信息
     self.replyLabel.text =  [[NSString stringWithFormat:@"%ld",(long)businessFootprintFrame.footprintDetail.footprintCommentNum] stringByAppendingString:   @"条回复"];
     
+    if(businessFootprintFrame.footprintDetail.footprintLikeNum > 999){
+        self.likeNumLabel.text = @"999";
+        self.plugLabel.hidden = NO;
+    } else {
+        self.likeNumLabel.text = [NSString stringWithFormat:@"%ld",(long)businessFootprintFrame.footprintDetail.footprintLikeNum];
+        self.plugLabel.hidden = YES;
+    }
     [self setLikeStatus:businessFootprintFrame.footprintDetail.ifLike];
     self.bottomLine.frame = CGRectMake(0, businessFootprintFrame.cellHeight - 0.5, SCREEN_WIDTH, 0.5);
     self.frame = CGRectMake(0, 0, SCREEN_WIDTH, businessFootprintFrame.cellHeight);
@@ -143,13 +168,15 @@ static NSString *photoParamsTwo = @"?imageMogr2/thumbnail/!20p";
 - (void) setLikeStatus:(BOOL) ifLike
 {
     if(ifLike){
-        self.likeBGView.backgroundColor = [UIColor color_e50834];
+        self.likeBGImageView.image = self.imageColorE50834;
         self.likeImageView.image = [UIImage imageNamed:@"ar_zan_click"];
         self.likeNumLabel.textColor = [UIColor color_e50834];
+        self.plugLabel.textColor = [UIColor color_e50834];
     }else{
-        self.likeBGView.backgroundColor = [UIColor color_d5d5d5];
+        self.likeBGImageView.image = self.imageColorD5D5D5;
         self.likeImageView.image = [UIImage imageNamed:@"ar_zan"];
         self.likeNumLabel.textColor = [UIColor color_202020];
+        self.plugLabel.textColor = [UIColor color_202020];
     }
 }
 
@@ -229,6 +256,7 @@ static NSString *photoParamsTwo = @"?imageMogr2/thumbnail/!20p";
 {
     if(!_bottomBGView){
         _bottomBGView = [[UIView alloc] init];
+        _bottomBGView.backgroundColor = [UIColor whiteColor];
     }
     return _bottomBGView;
 }
@@ -247,20 +275,48 @@ static NSString *photoParamsTwo = @"?imageMogr2/thumbnail/!20p";
 {
     if(!_likeBGView){
         _likeBGView = [[UIView alloc] init];
-        _likeBGView.backgroundColor = [UIColor color_e50834];
+        _likeBGView.backgroundColor = [UIColor clearColor];
     }
     return _likeBGView;
 }
 
-- (UIView *) likeBGViewWhite
+- (UIImageView *) likeBGImageView
 {
-    if(!_likeBGViewWhite){
-        _likeBGViewWhite = [[UIView alloc] init];
-        _likeBGViewWhite.backgroundColor = [UIColor whiteColor];
-        _likeBGViewWhite.frame = CGRectMake(0.5, 0.5, 59, 24);
-        _likeBGViewWhite.layer.cornerRadius = 12;
+    if(!_likeBGImageView){
+        _likeBGImageView = [[UIImageView alloc] init];
+        _likeBGImageView.frame = CGRectMake(0, 0, 60, 25);
+        _likeBGImageView.layer.cornerRadius = 12.5;
+        _likeBGImageView.layer.masksToBounds = YES;
     }
-    return _likeBGViewWhite;
+    return _likeBGImageView;
+}
+
+- (UIImage *) imageColorD5D5D5
+{
+    if(!_imageColorD5D5D5){
+        _imageColorD5D5D5 = [UIImage imageWithColor:[UIColor color_d5d5d5] size:CGSizeMake(60, 25)];
+    }
+    return _imageColorD5D5D5;
+}
+
+- (UIImage *) imageColorE50834
+{
+    if(!_imageColorE50834){
+        _imageColorE50834 = [UIImage imageWithColor:[UIColor color_e50834] size:CGSizeMake(60, 25)];
+    }
+    return _imageColorE50834;
+}
+
+- (UIImageView *) likeBGViewWhiteImageView
+{
+    if(!_likeBGViewWhiteImageView){
+        _likeBGViewWhiteImageView = [[UIImageView alloc] init];
+        _likeBGViewWhiteImageView.frame = CGRectMake(0.5, 0.5, 59, 24);
+        _likeBGViewWhiteImageView.image = [UIImage imageWithColor:[UIColor whiteColor] size:CGSizeMake(59, 24)];
+        _likeBGViewWhiteImageView.layer.cornerRadius = 12;
+        _likeBGViewWhiteImageView.layer.masksToBounds = YES;
+    }
+    return _likeBGViewWhiteImageView;
 }
 
 - (UIImageView *) likeImageView
@@ -269,7 +325,6 @@ static NSString *photoParamsTwo = @"?imageMogr2/thumbnail/!20p";
         _likeImageView = [[UIImageView alloc] init];
         _likeImageView.frame = CGRectMake(11.5, 6.5, 12, 12);
         _likeImageView.image = [UIImage imageNamed:@"ar_zan"];
-        _likeImageView.frame = CGRectMake(15, 6.5, 12, 12);
     }
     return _likeImageView;
 }
@@ -278,8 +333,31 @@ static NSString *photoParamsTwo = @"?imageMogr2/thumbnail/!20p";
 {
     if(!_likeNumLabel){
         _likeNumLabel = [[UILabel alloc] init];
+        _likeNumLabel.backgroundColor = [UIColor clearColor];
+        _likeNumLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:12];
+        _likeNumLabel.frame = CGRectMake(self.likeImageView.MaxX + 5, 5.5, 59 - self.likeImageView.MaxX - 5, 14);
     }
     return _likeNumLabel;
+}
+
+- (UILabel *) plugLabel
+{
+    if(!_plugLabel){
+        _plugLabel = [[UILabel alloc] init];
+        _plugLabel.frame = CGRectMake(60 - 11, 4.5, 8 ,14);
+        _plugLabel.text = @"+";
+        _plugLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:12];
+    }
+    return _plugLabel;
+}
+
+- (UIButton *) likeButton
+{
+    if(!_likeButton){
+        _likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_likeButton addTarget:self action:@selector(likeBGTap:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _likeButton;
 }
 
 #pragma mark - button selector
@@ -287,9 +365,21 @@ static NSString *photoParamsTwo = @"?imageMogr2/thumbnail/!20p";
 - (void) userHeaderImgOrNicknameClick:(UIButton *)sender
 {
     if(self.block){
-        //首先获得Cell：button的父视图是commentBGView -> contentView，再上一层才是UITableViewCell
-        UITableViewCell *cell = (UITableViewCell *)sender.superview.superview.superview;
+        //首先获得Cell：button的父视图是commentBGView -> UITableViewCell
+        UITableViewCell *cell = (UITableViewCell *)sender.superview.superview;
         self.block(cell);
+    }
+}
+
+/**
+ * 点赞点击
+ */
+- (void) likeBGTap:(UIButton *)sender
+{
+    if(self.likeBlock){
+        //首先获得Cell：button的父视图是bottomBGView -> commentBGView -> UITableViewCell
+        UITableViewCell *cell = (UITableViewCell *) sender.superview.superview.superview;
+        self.likeBlock(cell);
     }
 }
 

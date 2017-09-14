@@ -9,7 +9,7 @@
 #import "OTWARShopViewController.h"
 #import "ArvixARConfiguration.h"
 #import "ArvixARAnnotation.h"
-#import "OTWARCustomAnnotation.h"
+#import "OTWBusinessARAnnotation.h"
 #import "ArvixARAnnotationView.h"
 #import "ArvixARViewController.h"
 #import "OTWPlaneMapViewController.h"
@@ -59,6 +59,8 @@
 @property(nonatomic,strong) UIImageView *addressImageView;
 @property(nonatomic,strong) UIImage *addressImage;
 @property(nonatomic,strong) UILabel *addressLabel;
+
+@property(nonatomic,strong) NSString *businessId;
 
 //查询对象
 @property (nonatomic,strong) OTWFootprintSearchParams *arShopSearchParams;
@@ -469,13 +471,13 @@
 }
 
 #pragma mark 组装足迹annotation
-- (NSArray*)assembleAnnotation:(NSMutableArray<OTWBusinessFetchModel*>*)arShops
+- (NSArray*)assembleAnnotation:(NSMutableArray<OTWBusinessModel*>*)arShops
 {
     double altitudeDelta = 0;
     NSMutableArray *annotations = [NSMutableArray array];
-    for (OTWBusinessFetchModel *shop in arShops) {
+    for (OTWBusinessModel *shop in arShops) {
         CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(shop.latitude, shop.longitude) altitude:altitudeDelta horizontalAccuracy:1 verticalAccuracy:1 timestamp:[NSDate date]];
-        OTWARCustomAnnotation *annotation = [[OTWARCustomAnnotation alloc] init];
+        OTWBusinessARAnnotation *annotation = [[OTWBusinessARAnnotation alloc] init];
         annotation.arShop = shop;
         annotation.location = location;
         annotation.colorCode = shop.colorCode;
@@ -509,23 +511,12 @@
     }
 }
 
-#pragma mark 跳转到足迹详情
--(void)jumpToFootprintDetail:(OTWUITapGestureRecognizer*)gesture
-{
-    OTWARCustomAnnotation *annotation = gesture.opId;
-    OTWFootprintDetailController *VC =  [[OTWFootprintDetailController alloc] init];
-    self.trackingManager.stopLocation = NO;
-    [VC setFid:annotation.footprint.footprintId.description];
-    [self.navigationController pushViewController:VC animated:YES];
-}
-
-#pragma mark 跳转到足迹详情
+#pragma mark 跳转到商家详情
 -(void)showShopDetail:(OTWUITapGestureRecognizer*)gesture
 {
     self.shopPopoverV.hidden = NO;
     self.radar.hidden = YES;
-    OTWARCustomAnnotation *annotation = gesture.opId;
-    OTWFootprintDetailController *VC =  [[OTWFootprintDetailController alloc] init];
+    OTWBusinessARAnnotation *annotation = gesture.opId;
     self.trackingManager.stopLocation = NO;
     DLog(@"商家信息：%@",annotation.arShop.mj_keyValues);
     
@@ -541,7 +532,6 @@
     }
 
 }
-
 
 #pragma mark - ArvixARDatasource
 - (ArvixARAnnotationView*)ar:(ArvixARViewController*)arViewController viewForAnnotation:(ArvixARAnnotation*)annotation
@@ -747,6 +737,7 @@
         _viewShopDetail.titleLabel.font = [UIFont systemFontOfSize:13];
         [_viewShopDetail setTitle:@"查看商户更多信息" forState:UIControlStateNormal];
         [_viewShopDetail setTitleColor:[UIColor color_979797] forState:UIControlStateNormal];
+        [_viewShopDetail addTarget:self action:@selector(viewBusinessDetail) forControlEvents:UIControlEventTouchUpInside];
     }
     return _viewShopDetail;
 }
@@ -868,6 +859,11 @@
         _geoCodeSearch.delegate = self;
     }
     return _geoCodeSearch;
+}
+
+- (void) viewBusinessDetail
+{
+    
 }
 
 - (void)arTrackingManager:(ArvixARTrackingManager *)trackingManager didUpdateUserLocation:(CLLocation *)location

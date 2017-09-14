@@ -21,6 +21,8 @@ static NSString *photoParamsTwo = @"?imageMogr2/thumbnail/!20p";
     self = [super init];
     if(self){
         self.footprintDetail = footprint;
+        self.likeTime = 0;
+        self.ifSubLike = NO;
         [self buildFrame];
     }
     return self;

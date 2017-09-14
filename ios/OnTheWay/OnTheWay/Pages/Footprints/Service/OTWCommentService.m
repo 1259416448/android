@@ -76,7 +76,7 @@ static NSString *commentDeleteUrl = @"/app/footprint/comment/delete/{id}";
                 NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:footprintId,@"footprintId", nil];
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"foorprintAlreadyDeleted" object:nil userInfo:dict];
             }else{
-                [viewController errorTips:@"服务端繁忙，请稍后再试" userInteractionEnabled:NO];
+                [OTWUtils alertFailed:@"服务端繁忙，请稍后再试" userInteractionEnabled:NO target:viewController];
             }
         }
         
@@ -96,6 +96,26 @@ static NSString *commentDeleteUrl = @"/app/footprint/comment/delete/{id}";
             int i = 0;
             for (OTWCommentFrame *commentFrame in viewController.commentFrameArray) {
                 if([commentFrame.commentModel.commentId.description isEqualToString:commentId]){
+                    
+                    //设置评论总数 - 1
+                    
+                    OTWFootprintListModel *footprintDetail = viewController.detailFrame.footprintDetailModel;
+                    
+                    footprintDetail.footprintCommentNum -- ;
+                    
+                    viewController.commentSunLabel.text = [[NSString stringWithFormat:@"%ld",(long)viewController.detailFrame.footprintDetailModel.footprintCommentNum] stringByAppendingString:@"条评论"];
+                    
+                    if(footprintDetail.business){
+                        //如果是商家评论，这里发送一下评论是否变化的通知
+                        NSDictionary *dict = @{
+                                               @"footprintId":footprintDetail.footprintId.description,
+                                               @"footprintLikeNum":[NSNumber numberWithInteger:footprintDetail.footprintLikeNum],
+                                               @"footprintCommentNum":[NSNumber numberWithInteger:footprintDetail.footprintCommentNum],
+                                               @"ifLike":[NSNumber numberWithBool:footprintDetail.ifLike]
+                                               };
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"refleshFootprint" object:nil userInfo:dict];
+                    }
+                    
                     [viewController.commentFrameArray removeObjectAtIndex:i];
                     [viewController.tableView beginUpdates];
                     [viewController.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];

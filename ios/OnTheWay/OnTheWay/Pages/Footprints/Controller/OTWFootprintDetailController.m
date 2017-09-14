@@ -29,7 +29,6 @@
 @interface OTWFootprintDetailController () <UITableViewDataSource,UITableViewDelegate,SDCycleScrollViewDelegate,UITextViewDelegate>
 
 //评论填写区域 start
-@property (nonatomic,strong) UILabel *commentSunLabel;
 @property (nonatomic,strong) UIView *likeView;
 @property (nonatomic,strong) UIImageView *likeImageView;
 @property (nonatomic,strong) UIImageView *shareImageView;
@@ -371,9 +370,35 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
                 }
                 [OTWUtils alertSuccess:tips userInteractionEnabled:NO target:self];
                 [self setlikeImageViewImage:self.detailFrame.footprintDetailModel.ifLike];
+                
+                OTWFootprintListModel *footprintDetail = self.detailFrame.footprintDetailModel;
+                
+                if(footprintDetail.business){
+                    //如果是商家评论，这里发送一下评论是否变化的通知
+                    NSDictionary *dict = @{
+                                           @"footprintId":_fid,
+                                           @"footprintLikeNum":[NSNumber numberWithInteger:footprintDetail.footprintLikeNum],
+                                           @"footprintCommentNum":[NSNumber numberWithInteger:footprintDetail.footprintCommentNum],
+                                           @"ifLike":[NSNumber numberWithBool:footprintDetail.ifLike]
+                                           };
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"refleshFootprint" object:nil userInfo:dict];
+                }
+                
                 [self refreshLikeBGView];
             }else{
-                [self errorTips:@"服务端繁忙，请稍后再试" userInteractionEnabled:NO];
+                //这里需要增加错误判断 足迹被删除的情况
+                if([result[@"messageCode"] isEqualToString:@"000202"]){
+                    [self.indicatorView stopAnimating];
+                    self.errorTipsLabel.text = @"足迹已被删除";
+                    self.firstLoadingView.hidden = NO;
+                    self.tableView.hidden = YES;
+                    self.commentBGView.hidden = YES;
+                    //发出足迹删除通知
+                    NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:footprintId,@"footprintId", nil];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"foorprintAlreadyDeleted" object:nil userInfo:dict];
+                }else{
+                    [OTWUtils alertFailed:@"服务端繁忙，请稍后再试" userInteractionEnabled:NO target:self];
+                }
             }
         }else{
             [self netWorkErrorTips:error];
@@ -998,6 +1023,20 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
                 self.commentSunLabel.text = [[NSString stringWithFormat:@"%ld",(long)self.detailFrame.footprintDetailModel.footprintCommentNum] stringByAppendingString:@"条评论"];
                 //如果沙发显示，需要隐藏一下
                 [self refreshTableViewHeader];
+                
+               OTWFootprintListModel *footprintDetail = self.detailFrame.footprintDetailModel;
+                
+                if(footprintDetail.business){
+                    //如果是商家评论，这里发送一下评论是否变化的通知
+                    NSDictionary *dict = @{
+                                           @"footprintId":_fid,
+                                           @"footprintLikeNum":[NSNumber numberWithInteger:footprintDetail.footprintLikeNum],
+                                           @"footprintCommentNum":[NSNumber numberWithInteger:footprintDetail.footprintCommentNum],
+                                           @"ifLike":[NSNumber numberWithBool:footprintDetail.ifLike]
+                                           };
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"refleshFootprint" object:nil userInfo:dict];
+                }
+                
                 [self.tableView reloadData];
             }else{
                 if([result[@"messageCode"] isEqualToString:@"000202"]){
@@ -1035,6 +1074,19 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
                     }
                 }
                 [self.detailFrame setFootprintDetailModel:footprintDetail];
+                
+                if(footprintDetail.business){
+                    
+                    //如果是商家评论，这里发送一下评论是否变化的通知
+                    NSDictionary *dict = @{
+                                           @"footprintId":_fid,
+                                           @"footprintLikeNum":[NSNumber numberWithInteger:footprintDetail.footprintLikeNum],
+                                           @"footprintCommentNum":[NSNumber numberWithInteger:footprintDetail.footprintCommentNum],
+                                           @"ifLike":[NSNumber numberWithBool:footprintDetail.ifLike]
+                                           };
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"refleshFootprint" object:nil userInfo:dict];
+                }
+                
                 [self buildTableView];
             }else{
                 if([result[@"messageCode"] isEqualToString:@"000202"]){

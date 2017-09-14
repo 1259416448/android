@@ -16,9 +16,9 @@
 
 @property (nonatomic,strong) NSString *address;
 
-@property (nonatomic,assign) double *latitude;
+@property (nonatomic,assign) double latitude;
 
-@property (nonatomic,assign) double *longitude;
+@property (nonatomic,assign) double longitude;
 
 @property (nonatomic,strong) NSString *contactInfo;
 
@@ -26,7 +26,7 @@
 
 @property (nonatomic,strong) NSString *colorCode;
 
-@property (nonatomic,assign) float *weight;
+@property (nonatomic,assign) float weight;
 
 @property (nonatomic,strong) NSMutableSet<NSString *> *typeIds;
 
@@ -41,6 +41,8 @@
 @property (nonatomic,assign) int businessPhotoNum;
 
 @property (nonatomic,assign) int userPhotoNum;
+
+@property (nonatomic,strong) NSNumber *businessId;
 
 @property (nonatomic,assign) NSNumber *currentTime;
 

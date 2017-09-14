@@ -42,6 +42,8 @@
 
 @property (nonatomic,strong) NSString *day;
 
+//商家ID
+@property (nonatomic,strong) NSNumber *business;
 //纬度
 @property (nonatomic,assign) double latitude;
 //经度
