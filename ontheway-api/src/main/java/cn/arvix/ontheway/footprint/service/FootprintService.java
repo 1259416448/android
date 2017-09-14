@@ -21,6 +21,7 @@ import cn.arvix.ontheway.footprint.dto.FootprintDetailDTO;
 import cn.arvix.ontheway.footprint.dto.FootprintSearchListDTO;
 import cn.arvix.ontheway.footprint.entity.Footprint;
 import cn.arvix.ontheway.footprint.entity.Statistics;
+import cn.arvix.ontheway.footprint.repository.FootprintRepository;
 import cn.arvix.ontheway.sys.config.service.ConfigService;
 import cn.arvix.ontheway.sys.user.entity.User;
 import cn.arvix.ontheway.sys.user.service.UserService;
@@ -43,6 +44,10 @@ import java.util.*;
  */
 @Service
 public class FootprintService extends BaseServiceImpl<Footprint, Long> {
+
+    private FootprintRepository getFootprintRepository(){
+        return (FootprintRepository) baseRepository;
+    }
 
     private DocumentService documentService;
 
@@ -686,6 +691,16 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
         params.put("id_in", footprintIds);
         return super.findAllWithNoPageNoSort(Searchable.newSearchable(params));
     }
+
+    /**
+     * 通过商家ID获取 n 张足迹图片
+     * @param businessId 商家ID
+     * @param number 抓取数量
+     */
+    public List<String> findPhotoUrlByBusinessId(Long businessId,int number){
+        return getFootprintRepository().findPhotoUrlByBusinessId(businessId,number);
+    }
+
 
     //检索的几种类型
     public enum SearchType {

@@ -28,9 +28,10 @@ public class BusinessStatistics extends BaseEntity<Long> {
 
     //用户上传的照片总数 , 这里直接获取用户评论的当前商家图片总数
     @Formula(value = "( select count(*) from agile_document agiled " +
-            "where agiled.system_module = 'business' " +
+            "where agiled.system_module = 'footprint' " +
             "and  exists ( select 1 from otw_footprint otwf " +
             "where otwf.if_business_comment = 1 " +
+            "and otwf.if_delete = 0 " +
             "and otwf.business = business_id " +
             "and otwf.id = agiled.parent_id ) )")
     private Integer userPhotoNum;

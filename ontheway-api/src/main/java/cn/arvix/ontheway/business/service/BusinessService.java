@@ -247,15 +247,30 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
         detailDTO.setUserPhotoNum(business.getStatistics().getUserPhotoNum());
 
         //抓取商家图片 最多3张 超过的通过相册的形式获取数据
-        List<Document> documents = documentService.findByParentIdAndSize(business.getId(), SystemModule.business, 3);
         String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL);
-        if (documents != null && documents.size() > 0) {
-            List<String> photoUrls = Lists.newArrayListWithCapacity(documents.size());
-            documents.forEach(x -> photoUrls.add(urlFix + x.getFileUrl()));
-            detailDTO.setPhotoUrls(photoUrls);
+        //这里，如果商家的图片信息已经等于 = 0
+        if (business.getStatistics().getBusinessPhotoNum() > 0) {
+            List<Document> documents = documentService.findByParentIdAndSize(business.getId(), SystemModule.business, 3);
+            if (documents != null && documents.size() > 0) {
+                List<String> photoUrls = Lists.newArrayListWithCapacity(documents.size());
+                documents.forEach(x -> photoUrls.add(urlFix + x.getFileUrl()));
+                detailDTO.setPhotoUrls(photoUrls);
+            }
         }
-
+        //默认需要获取3张照片，如果获取到的商家照片不满3张，剩余的获取用户照片
+        if(detailDTO.getPhotoUrls() == null || detailDTO.getPhotoUrls().size() < 3){
+            int fetchNo = detailDTO.getPhotoUrls() == null ? 3 : (3 - detailDTO.getPhotoUrls().size());
+            List<String> photoUrls = footprintService.findPhotoUrlByBusinessId(business.getId(),fetchNo);
+            if(photoUrls != null && photoUrls.size() >0){
+                if(detailDTO.getPhotoUrls() == null) detailDTO.setPhotoUrls(Lists.newArrayList());
+                photoUrls.forEach(x->detailDTO.getPhotoUrls().add(urlFix + x));
+            }
+        }
         //抓取商家优惠信息  优惠功能暂未添加
+
+
+        //抓取商家优惠洗洗
+
         User user = webContextUtils.getCurrentUser();
         //获取收藏情况
         if (user != null && collectionRecordsService.countByUserIdAndBusinessId(user.getId(), business.getId()) > 0) {
@@ -333,14 +348,14 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
         //判断用户是否收藏
         if (collectionRecordsService.countByUserIdAndBusinessId(user.getId(), id) > 0) {
             //已收藏
-            collectionRecordsService.deleteByUserIdAndBusinessId(user.getId(),id);
-            businessStatisticsService.updateCollectionNum(id,-1);
+            collectionRecordsService.deleteByUserIdAndBusinessId(user.getId(), id);
+            businessStatisticsService.updateCollectionNum(id, -1);
         } else {
             //未收藏
-            collectionRecordsService.createByUserIdAndBusinessId(user.getId(),id);
-            businessStatisticsService.updateCollectionNum(id,1);
+            collectionRecordsService.createByUserIdAndBusinessId(user.getId(), id);
+            businessStatisticsService.updateCollectionNum(id, 1);
         }
-        return JsonUtil.getSuccess(CommonContact.OPTION_SUCCESS,CommonContact.OPTION_SUCCESS,id);
+        return JsonUtil.getSuccess(CommonContact.OPTION_SUCCESS, CommonContact.OPTION_SUCCESS, id);
     }
 
 
