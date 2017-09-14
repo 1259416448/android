@@ -18,7 +18,7 @@ public class ARSearchDTO {
 
     private String contactInfo;
 
-    private Long id;
+    private Long businessId;
 
     private String colorCode;
 
@@ -76,12 +76,12 @@ public class ARSearchDTO {
         this.contactInfo = contactInfo;
     }
 
-    public Long getId() {
-        return id;
+    public Long getBusinessId() {
+        return businessId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setBusinessId(Long businessId) {
+        this.businessId = businessId;
     }
 
     public String getColorCode() {

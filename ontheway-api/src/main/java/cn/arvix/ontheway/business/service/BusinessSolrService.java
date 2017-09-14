@@ -104,7 +104,7 @@ public class BusinessSolrService extends SolrServiceImpl {
             while (iterator.hasNext()){
                 SolrDocument doc = iterator.next();
                 ARSearchDTO dto = ARSearchDTO.getInstance();
-                dto.setId(Checks.toLong(Checks.stringValueOf(doc.getFieldValue("id"))));
+                dto.setBusinessId(Checks.toLong(Checks.stringValueOf(doc.getFieldValue("id"))));
                 dto.setName(Checks.stringValueOf(doc.getFieldValue("name")));
                 dto.setAddress(Checks.stringValueOf(doc.getFieldValue("address")));
                 dto.setLatitude(Checks.toDouble(Checks.stringValueOf(doc.getFieldValue("latitude"))));
