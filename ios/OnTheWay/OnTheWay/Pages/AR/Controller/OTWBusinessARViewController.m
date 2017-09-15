@@ -6,7 +6,7 @@
 //  Copyright © 2017年 WeiHuan. All rights reserved.
 //
 
-#import "OTWARShopViewController.h"
+#import "OTWBusinessARViewController.h"
 #import "ArvixARConfiguration.h"
 #import "ArvixARAnnotation.h"
 #import "OTWBusinessARAnnotation.h"
@@ -14,20 +14,21 @@
 #import "ArvixARViewController.h"
 #import "OTWPlaneMapViewController.h"
 
-#import "OTWARShopCustomAnnotationView.h"
+#import "OTWBusinessARAnnotationView.h"
 #import "OTWFootprintSearchParams.h"
 #import "OTWFootprintsChangeAddressController.h"
 #import "OTWFootprintReleaseViewController.h"
 #import "OTWFootprintsViewController.h"
 #import "OTWARShopService.h"
-#import "OTWBusinessFetchModel.h"
 #import "OTWUITapGestureRecognizer.h"
+#import "OTWBusinessARAnnotationFrame.h"
+#import "OTWBusinessDetailViewController.h"
 
 #import <MJExtension.h>
 #import "MBProgressHUD+PYExtension.h"
 #import <BaiduMapAPI_Search/BMKGeoCodeSearch.h>
 
-@interface OTWARShopViewController ()<ArvixARDataSource,UIAlertViewDelegate,BMKGeoCodeSearchDelegate>
+@interface OTWBusinessARViewController ()<ArvixARDataSource,UIAlertViewDelegate,BMKGeoCodeSearchDelegate>
 
 
 @property(nonatomic,strong) UIButton *backButton;
@@ -74,7 +75,7 @@
 
 @end
 
-@implementation OTWARShopViewController
+@implementation OTWBusinessARViewController
 
 
 - (void)viewDidLoad {
@@ -193,7 +194,7 @@
     
     
     //刷新
-    OTWUITapGestureRecognizer *changeShopDetailVGesture=[[OTWUITapGestureRecognizer alloc]initWithTarget:self action:@selector(changeShopDetailV)];
+    OTWUITapGestureRecognizer *changeShopDetailVGesture=[[OTWUITapGestureRecognizer alloc]initWithTarget:self action:@selector(hideBusinessSimpleInfo)];
     [self.presenter addGestureRecognizer:changeShopDetailVGesture];
     [self.shopPopoverV addSubview:self.shopTitle];
     [self.shopPopoverV addSubview:self.gotoV];
@@ -255,7 +256,46 @@
 - (void)backButtonClick
 {
     self.trackingManager.stopLocation = TRUE;
+    [self hideBusinessSimpleInfo];
     [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexFind]; // 显示首页
+}
+
+/**
+ * 显示简要信息展示
+ */
+- (void)showBusinessSimpleInfo:(NSNumber *) businessId
+{
+    self.shopPopoverV.hidden = NO;
+    self.radar.hidden = YES;
+    self.businessId = businessId.description;
+    
+    for (OTWBusinessARAnnotation *annotation in self.annotations) {
+        OTWBusinessARAnnotationView *annotationView = (OTWBusinessARAnnotationView *) annotation.annotationView;
+        if([annotation.businessFrame.businessDetail.businessId isEqualToNumber:businessId]){
+            annotation.businessFrame.colorAlpha = 1;
+            annotation.businessFrame.distanceAlpha = 1;
+        }else{
+            annotation.businessFrame.colorAlpha = 0.5;
+            annotation.businessFrame.distanceAlpha = 0.5;
+        }
+        [annotationView setShopColorVBackGroup];
+    }
+}
+
+/**
+ * 隐藏简要信息展示
+ */
+- (void) hideBusinessSimpleInfo
+{
+    self.shopPopoverV.hidden = YES;
+    self.radar.hidden = NO;
+    self.businessId = nil;
+    for (OTWBusinessARAnnotation *annotation in self.annotations) {
+        OTWBusinessARAnnotationView *annotationView = (OTWBusinessARAnnotationView *) annotation.annotationView;
+        annotation.businessFrame.colorAlpha = 0.85;
+        annotation.businessFrame.distanceAlpha = 1;
+        [annotationView setShopColorVBackGroup];
+    }
 }
 
 #pragma mark 控制距离筛选按钮显示／隐藏
@@ -288,6 +328,7 @@
 #pragma mark 刷新-换一批足迹
 - (void)refreshFootprints
 {
+    [self hideBusinessSimpleInfo];
     [self hideAllButton];
     [self getArShops];
 }
@@ -295,6 +336,7 @@
 #pragma mark 根据距离筛选
 - (void)searchByDistance:(OTWUITapGestureRecognizer*)tapGesture
 {
+    [self hideBusinessSimpleInfo];
     NSMutableDictionary *condition = tapGesture.opId;
     self.arShopSearchParams.searchDistance = [condition objectForKey:@"searchParamValue"];
     self.arShopSearchParams.number = 0;
@@ -369,12 +411,6 @@
     self.onDidFailToFindLocation = ^(NSTimeInterval timeElapsed, BOOL acquiredLocationBefore) {
         [weakSelf handleLocationFailure:timeElapsed acquiredLocationBefore:acquiredLocationBefore arViewController:weakSelf];
     };
-}
-
-- (void)changeShopDetailV
-{
-    self.shopPopoverV.hidden = YES;
-    self.radar.hidden = NO;
 }
 
 #pragma mark 初始化足迹查询参数
@@ -456,7 +492,7 @@
             }
             DLog(@"商店列表:%@",result[@"body"][@"content"]);
             
-            NSMutableArray *arShopModels = [OTWBusinessFetchModel mj_objectArrayWithKeyValuesArray:result[@"body"][@"content"]];
+            NSMutableArray *arShopModels = [OTWBusinessModel mj_objectArrayWithKeyValuesArray:result[@"body"][@"content"]];
             if (arShopModels.count == 0) {
                 [self setAnnotations:@[]];
             }else{
@@ -476,9 +512,12 @@
     double altitudeDelta = 0;
     NSMutableArray *annotations = [NSMutableArray array];
     for (OTWBusinessModel *shop in arShops) {
+        
+        OTWBusinessARAnnotationFrame *businessFrame = [OTWBusinessARAnnotationFrame initWithBusinessDetail:shop];
+        
         CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(shop.latitude, shop.longitude) altitude:altitudeDelta horizontalAccuracy:1 verticalAccuracy:1 timestamp:[NSDate date]];
         OTWBusinessARAnnotation *annotation = [[OTWBusinessARAnnotation alloc] init];
-        annotation.arShop = shop;
+        annotation.businessFrame = businessFrame;
         annotation.location = location;
         annotation.colorCode = shop.colorCode;
         [annotations addObject:annotation];
@@ -514,30 +553,27 @@
 #pragma mark 跳转到商家详情
 -(void)showShopDetail:(OTWUITapGestureRecognizer*)gesture
 {
-    self.shopPopoverV.hidden = NO;
-    self.radar.hidden = YES;
     OTWBusinessARAnnotation *annotation = gesture.opId;
-    self.trackingManager.stopLocation = NO;
-    DLog(@"商家信息：%@",annotation.arShop.mj_keyValues);
-    
-    self.shopTitle.text = annotation.arShop.name;
-    self.shopLocationContent.text = annotation.arShop.address;
-    if (annotation.arShop.contactInfo && ![annotation.arShop.contactInfo isEqualToString:@""]) {
+    [self showBusinessSimpleInfo:annotation.businessFrame.businessDetail.businessId];
+    self.shopTitle.text = annotation.businessFrame.businessDetail.name;
+    self.shopLocationContent.text = annotation.businessFrame.businessDetail.address;
+    self.businessId = annotation.businessFrame.businessDetail.businessId.description;
+    if (annotation.businessFrame.businessDetail.contactInfo && ![annotation.businessFrame.businessDetail.contactInfo isEqualToString:@""]) {
         self.telePhoneIcon.hidden = NO;
         self.telePhoneNum.hidden = NO;
-        self.telePhoneNum.text = annotation.arShop.contactInfo;
+        self.telePhoneNum.text = annotation.businessFrame.businessDetail.contactInfo;
     } else {
         self.telePhoneIcon.hidden = YES;
         self.telePhoneNum.hidden = YES;
     }
-
 }
 
 #pragma mark - ArvixARDatasource
 - (ArvixARAnnotationView*)ar:(ArvixARViewController*)arViewController viewForAnnotation:(ArvixARAnnotation*)annotation
 {
-    OTWARShopCustomAnnotationView *annotationView = [[OTWARShopCustomAnnotationView alloc] init];
-    annotationView.frame = CGRectMake(0, 0, SCREEN_WIDTH * 0.6, 35);
+    OTWBusinessARAnnotationView *annotationView = [[OTWBusinessARAnnotationView alloc] init];
+    OTWBusinessARAnnotation *businessAnnotation =(OTWBusinessARAnnotation *)annotation;
+    annotationView.frame = CGRectMake(0, 0,businessAnnotation.businessFrame.annotationW, 35);
     OTWUITapGestureRecognizer *tapGesture=[[OTWUITapGestureRecognizer alloc]initWithTarget:self action:@selector(showShopDetail:)];
     tapGesture.opId = annotation;
     [annotationView addGestureRecognizer:tapGesture];
@@ -676,6 +712,10 @@
         _shopPopoverV = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT - 130, SCREEN_WIDTH, 130)];
         _shopPopoverV.backgroundColor = [UIColor whiteColor];
         _shopPopoverV.hidden = YES;
+        //设置一个上阴影
+        _shopPopoverV.layer.shadowOffset = CGSizeMake(0, -1);
+        _shopPopoverV.layer.shadowOpacity = 0.3;
+        _shopPopoverV.layer.shadowColor = [UIColor blackColor].CGColor;
     }
     return _shopPopoverV;
 }
@@ -687,7 +727,6 @@
         _shopTitle.textColor = [UIColor color_202020];
         [_shopTitle setFont:[UIFont systemFontOfSize:17.0]];
         CGFloat W = SCREEN_WIDTH - 15 - 10 - 15*2 - 7.5 - 20 - 21.5 - 10;
-        CGSize shopSize = [OTWUtils sizeWithString:@"海底捞(白家庄店)" font:[UIFont systemFontOfSize:17.0] maxSize:CGSizeMake(W, 18)];
         _shopTitle.text = @"海底捞(白家庄店)";
         _shopTitle.frame = CGRectMake(15, 15, W, 18);
     }
@@ -751,7 +790,6 @@
         CGFloat X = CGRectGetMaxX(self.shopLocationIcon.frame) + 5;
         CGFloat Y = CGRectGetMaxY(self.shopTitle.frame) + 10;
         CGFloat W = SCREEN_WIDTH - CGRectGetMaxX(self.shopLocationIcon.frame) - 5 - 15*2 - 35 - 15;
-        CGSize shopLocationContentSize = [OTWUtils sizeWithString:@"东城区东直门内大街233号" font:[UIFont systemFontOfSize:13.0] maxSize:CGSizeMake(W, 12)];
         _shopLocationContent.frame = CGRectMake(X, Y, W, 12);
         _shopLocationContent.text = @"东城区东直门内大街233号";
     }
@@ -861,9 +899,15 @@
     return _geoCodeSearch;
 }
 
+/**
+ * 跳转到商家详情页面
+ */
 - (void) viewBusinessDetail
 {
-    
+    self.trackingManager.stopLocation = YES;
+    OTWBusinessDetailViewController *businessVC = [[OTWBusinessDetailViewController alloc] init];
+    [businessVC setOpData:self.businessId];
+    [self.navigationController pushViewController:businessVC animated:YES];
 }
 
 - (void)arTrackingManager:(ArvixARTrackingManager *)trackingManager didUpdateUserLocation:(CLLocation *)location

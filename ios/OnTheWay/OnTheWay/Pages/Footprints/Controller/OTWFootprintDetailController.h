@@ -29,7 +29,7 @@
 @property (nonatomic,strong) UILabel *errorTipsLabel;
 
 @property (nonatomic,strong) UILabel *commentSunLabel;
-
+@property (nonatomic,assign) BOOL ifBusiness;
 /**
  * 传递数据，或者id等 想获取足迹详情，传入对应的id或者Model即可
  */

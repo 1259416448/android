@@ -46,6 +46,8 @@
 
 @property (nonatomic,assign) NSNumber *currentTime;
 
+@property (nonatomic,assign) double distance;
+
 @property (nonatomic,strong) NSMutableArray<OTWFootprintListModel *> *footprints;
 
 @property (nonatomic,strong) NSMutableArray<OTWBusinessActivityModel *> *activitys;

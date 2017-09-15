@@ -136,6 +136,7 @@
     for (int i = 0; i<self.footprints.count; i++) {
         if([self.footprints[i].footprintDetail.footprintId.description isEqualToString:dict[@"footprintId"]]){
             [self.footprints removeObjectAtIndex:i];
+            [self changeCommentStatus];
             [self.businessDetailTableView reloadData];
             break;
         }
@@ -147,6 +148,7 @@
  */
 - (void) addReleasedFootprint:(NSNotification*)sender
 {
+    [self changeCommentStatus];
     OTWFootprintListModel *footprintDetail = [OTWFootprintListModel initWithDict:sender.userInfo];
     if([footprintDetail.business.description isEqualToString:_opId]){
         footprintDetail.userId = [NSNumber numberWithInt:[[OTWUserModel shared].userId intValue]];
@@ -154,6 +156,7 @@
         footprintDetail.userNickname = [OTWUserModel shared].name;
         OTWBusinessFootprintFrame *footprintFrame = [[OTWBusinessFootprintFrame alloc] initWithFootprint:footprintDetail];
         [self.footprints insertObject:footprintFrame atIndex:0];
+        [self changeCommentStatus];
         [self.businessDetailTableView reloadData];
     }
 }
@@ -216,16 +219,6 @@
         NSMutableArray<OTWBusinessActivityModel *> *activitys = [OTWBusinessActivityModel mj_objectArrayWithKeyValuesArray:array];
         self.businessModel.activitys = activitys;
         
-//        NSArray *array1 = @[
-//                            @"http://osx4pwgde.bkt.clouddn.com/2A685CCB9BA44C2EB24B8ABDCF14FD77",
-//                            @"http://osx4pwgde.bkt.clouddn.com/E9EEECD8DFD54FFEB7E013629E8C6D33",
-//                            @"http://osx4pwgde.bkt.clouddn.com/EDE74BBCCA644B7EB9DDE9DB463D66FD",
-//                            ];
-//        
-//        NSMutableArray<NSString *> *photoUrls = [NSString mj_objectArrayWithKeyValuesArray:array1];
-//        self.businessModel.photoUrls = photoUrls;
-//        self.businessModel.businessPhotoNum = 4;
-        
         //构建足迹信息
         if(self.businessModel.footprints && self.businessModel.footprints.count > 0 ){
             for (OTWFootprintListModel *one in self.businessModel.footprints) {
@@ -255,6 +248,13 @@
     
     //设置上拉刷新
     self.businessDetailTableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreFootprint)];
+    
+    //判断 如果 footprints.count == 0 没有评论数据
+    
+    if(self.footprints.count < [self.service getDefaultPageSize]){
+        [self.businessDetailTableView.mj_footer endRefreshingWithNoMoreData];
+        self.businessDetailTableView.mj_footer.hidden = YES;
+    }
     
     [self.view bringSubviewToFront:self.customNavigationBar];
     //设置 tableViewHeaderBG height
@@ -347,6 +347,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     //跳转到足迹详情，当前的足迹详情不能跳转商圈信息
     OTWFootprintDetailController *VC =  [[OTWFootprintDetailController alloc] init];
+    VC.ifBusiness = YES;
     [VC setFid:self.footprints[indexPath.row].footprintDetail.footprintId.description];
     [self.navigationController pushViewController:VC animated:YES];
 }
@@ -470,6 +471,16 @@
 - (void)morePhotoClick:(OTWBusinessDetailView *)detailView businessModel:(OTWBusinessModel *)businessModel
 {
     DLog(@"点击了更多照片，需要跳转至相册页");
+}
+
+- (void)goMapClick:(OTWBusinessDetailView *)detailView businessModel:(OTWBusinessModel *)businessModel
+{
+    DLog(@"点击了到这里");
+}
+
+- (void)checkInClick:(OTWBusinessDetailView *)detailView businessModel:(OTWBusinessModel *)businessModel
+{
+    DLog(@"点击了签到按钮");
 }
 
 #pragma mark - Setter Getter

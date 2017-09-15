@@ -21,15 +21,4 @@
     return self;
 }
 
--(instancetype)initWithIdentifier:(NSString *)identifier arShop:(OTWBusinessFetchModel *)arShop location:(CLLocation *)location
-{
-    self = [super init];
-    if (self) {
-        self.arShop = arShop;
-        self.location = location;
-    }
-    
-    return self;
-}
-
 @end

@@ -49,8 +49,19 @@
     CGSize dateCreatedStrSize = [self sizeWithString:_footprintDetailModel.dateCreatedStr font:footprintDateCreatedStrFont maxSize:CGSizeMake(150, 12)];
     _dateCreatedStrW = dateCreatedStrSize.width;
     
-    CGSize nicknameSize = [self sizeWithString:_footprintDetailModel.userNickname font:userNicknameFont maxSize:CGSizeMake(SCREEN_WIDTH - padding - 45 - 15 - 10, 20)];
+    //如果是商家评论，后边会展示商圈以及查看更多
+
+    CGFloat nicknameMaxW = SCREEN_WIDTH - padding - 45 - 15 - 10;
+    
+    if(!self.ifBusiness && footprintDetailModel.business){
+        nicknameMaxW = nicknameMaxW - 10 - 16 - 5 - 52.5 - 5 - 7;
+    }
+    
+    CGSize nicknameSize = [self sizeWithString:_footprintDetailModel.userNickname font:userNicknameFont maxSize:CGSizeMake(nicknameMaxW, 20)];
     _nicknameH = nicknameSize.width;
+    
+    
+    
 }
 
 #pragma mark - 计算文字高度

@@ -448,12 +448,14 @@ static NSString *photoParamsTwo = @"?imageMogr2/thumbnail/!20p";
             i ++;
             if(i == 3) break;
         }
-        _photosView = [PYPhotosView photosViewWithThumbnailUrls:thumbnailImageUrls originalUrls:originalImageUrls];
+        _photosView = [[PYPhotosView alloc] init];
         _photosView.py_x = 0;
         _photosView.py_y = 0;
         _photosView.photoWidth = self.photoW;
         _photosView.photoHeight = self.photoH;
         _photosView.photoMargin = businessPhotoMargin;
+        _photosView.thumbnailUrls = thumbnailImageUrls;
+        _photosView.originalUrls = originalImageUrls;
         _photosView.delegate = self;
     }
     return _photosView;

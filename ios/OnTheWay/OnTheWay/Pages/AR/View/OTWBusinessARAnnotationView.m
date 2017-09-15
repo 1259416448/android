@@ -6,10 +6,8 @@
 //  Copyright © 2017年 WeiHuan. All rights reserved.
 //
 
-#import "OTWARShopCustomAnnotationView.h"
+#import "OTWBusinessARAnnotationView.h"
 #import "OTWBusinessARAnnotation.h"
-#import <AFNetworking/UIImageView+AFNetworking.h>
-#import "OTWUtils.h"
 
 #define OTWPrintArSpacing_15 15
 #define OTWPrintArSpacing_10 10
@@ -18,7 +16,7 @@
 #define OTWPrintArSpacing_3 3
 #define shopNameFont [UIFont systemFontOfSize:14.0]
 
-@interface OTWARShopCustomAnnotationView ()
+@interface OTWBusinessARAnnotationView ()
 
 @property (nonatomic,strong) UIView *printBGView;
 @property (nonatomic,strong) UIView *shopColorV;
@@ -29,7 +27,7 @@
 
 @end
 
-@implementation OTWARShopCustomAnnotationView
+@implementation OTWBusinessARAnnotationView
 
 #pragma mark - override
 
@@ -42,7 +40,7 @@
 {
     if (self.annotaion) {
         OTWBusinessARAnnotation *annotation = (OTWBusinessARAnnotation*)self.annotaion;
-        [self setFrameByData:annotation.arShop];
+        [self setFrameByData:annotation.businessFrame];
     }
 }
 
@@ -57,8 +55,8 @@
     [self addSubview:self.printBGView];
     [self.shopColorV addSubview:self.shopTitleV];
     [self.printBGView addSubview:self.shopColorV];
-    [self.distanceV addSubview:self.distanceContentV];
     [self.printBGView addSubview:self.distanceV];
+    [self.distanceV addSubview:self.distanceContentV];
     self.backgroundColor = [UIColor clearColor];
     
     if (self.annotaion != nil) {
@@ -80,7 +78,7 @@
     if (!_shopTitleV) {
         _shopTitleV = [[UILabel alloc] init];
         _shopTitleV.textColor = [UIColor whiteColor];
-        _shopTitleV.font = [UIFont systemFontOfSize:14];
+        _shopTitleV.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
     }
     return _shopTitleV;
 }
@@ -89,7 +87,6 @@
 {
     if (!_distanceV) {
         _distanceV = [[UIView alloc] init];
-        _distanceV.backgroundColor = [UIColor whiteColor];
     }
     return _distanceV;
 }
@@ -98,7 +95,7 @@
 {
     if (!_distanceContentV) {
         _distanceContentV = [[UILabel alloc] init];
-        _distanceContentV.font = [UIFont systemFontOfSize:15];
+        _distanceContentV.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:15];
     }
     return _distanceContentV;
 }
@@ -111,33 +108,38 @@
     return _printBGView;
 }
 
--(void)setFrameByData:(OTWBusinessModel*)arShop
+-(void)setFrameByData:(OTWBusinessARAnnotationFrame*)businessFrame
 {
+    self.shopTitleV.frame = CGRectMake(10, 10, businessFrame.contentW, 15);
+    self.shopTitleV.text = businessFrame.businessDetail.name;
     
-    CGSize shopSize = [OTWUtils sizeWithString:arShop.name font:shopNameFont maxSize:CGSizeMake(self.Witdh, 15)];
-    self.shopTitleV.frame = CGRectMake(10, 10, shopSize.width, shopSize.height);
-    self.shopTitleV.text = arShop.name;
-    
-    self.shopColorV.frame = CGRectMake(0, 0, CGRectGetMaxX(self.shopTitleV.frame) + 10, 35);
-    if (arShop.colorCode && ![arShop.colorCode isEqualToString:@""]) {
-        self.shopColorV.backgroundColor = [[UIColor colorWithHexString:arShop.colorCode] colorWithAlphaComponent:0.85];
+    self.shopColorV.frame = CGRectMake(0, 0, businessFrame.contentW + 10 * 2, 35);
+    if (businessFrame.businessDetail.colorCode && ![businessFrame.businessDetail.colorCode isEqualToString:@""]) {
+        self.shopColorV.backgroundColor = [[UIColor colorWithHexString:businessFrame.businessDetail.colorCode] colorWithAlphaComponent:businessFrame.colorAlpha];
     } else {
-        self.shopColorV.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.85];
+        self.shopColorV.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:businessFrame.colorAlpha];
     }
     
-    
-    self.distanceV.frame = CGRectMake(CGRectGetMaxX(self.shopColorV.frame), 0, 65, 35);
-    self.distanceContentV.frame = CGRectMake(10, 10, 45, 15);
+    self.distanceContentV.frame = CGRectMake(10, 9.5, 45, 15);
     self.distanceContentV.textAlignment = NSTextAlignmentCenter;
-    self.distanceContentV.textColor = [UIColor colorWithHexString:arShop.colorCode];
+    self.distanceContentV.textColor = [UIColor colorWithHexString:businessFrame.businessDetail.colorCode];
     self.distanceContentV.text = [NSString stringWithFormat:@"%.0fm",self.annotaion.distanceFromUser];
+    [self.distanceContentV sizeToFit];
+    self.distanceV.frame = CGRectMake(self.shopColorV.MaxX, 0, self.distanceContentV.Witdh + 20 , 35);
+    self.distanceV.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:businessFrame.distanceAlpha];
     
-    self.frame = CGRectMake(0, 0, CGRectGetMaxX(self.distanceV.frame), self.Height);
-    self.printBGView.frame = CGRectMake(0, 0, CGRectGetMaxX(self.distanceV.frame), self.Height);
+    self.printBGView.frame = CGRectMake(0, 0, self.distanceV.MaxX, self.Height);
     self.printBGView.backgroundColor = [UIColor clearColor];
     self.printBGView.layer.cornerRadius = 3;
     self.printBGView.layer.masksToBounds = YES;
     
+}
+
+- (void) setShopColorVBackGroup
+{
+    OTWBusinessARAnnotation *businessAnnotation = (OTWBusinessARAnnotation *) self.annotaion;
+    self.shopColorV.backgroundColor = [[UIColor colorWithHexString:businessAnnotation.businessFrame.businessDetail.colorCode] colorWithAlphaComponent:businessAnnotation.businessFrame.colorAlpha];
+    self.distanceV.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:businessAnnotation.businessFrame.distanceAlpha];
 }
 
 @end

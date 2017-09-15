@@ -7,12 +7,12 @@
 //
 
 #import "ArvixARAnnotation.h"
-#import "OTWBusinessModel.h"
+#import "OTWBusinessARAnnotationFrame.h"
 
 @interface OTWBusinessARAnnotation : ArvixARAnnotation
 
-@property (nonatomic,strong) OTWBusinessModel *arShop;
+@property (nonatomic,strong) OTWBusinessARAnnotationFrame *businessFrame;
 
-- (instancetype)initWithIdentifier:(NSString*)identifier arShop:(OTWBusinessModel*)arShop location:(CLLocation*)location;
+- (instancetype)initWithIdentifier:(NSString*)identifier businessFrame:(OTWBusinessARAnnotationFrame*)businessFrame location:(CLLocation*)location;
 
 @end

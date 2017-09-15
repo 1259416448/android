@@ -23,4 +23,7 @@
  */
 @property (nonatomic, assign) CGFloat cellHeight;
 
+//是否输入商家详情页进入
+@property (nonatomic, assign) BOOL ifBusiness;
+
 @end

@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "ArvixARAnnotationView.h"
 
-@interface OTWARShopCustomAnnotationView : ArvixARAnnotationView<UIGestureRecognizerDelegate>
+@interface OTWBusinessARAnnotationView : ArvixARAnnotationView<UIGestureRecognizerDelegate>
+
+- (void) setShopColorVBackGroup;
 
 @end

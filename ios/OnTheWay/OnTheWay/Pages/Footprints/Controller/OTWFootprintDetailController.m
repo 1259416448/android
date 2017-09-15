@@ -13,6 +13,7 @@
 #import "OTWCommentService.h"
 #import "OTWUserModel.h"
 #import "OTWPersonalFootprintsListController.h"
+#import "OTWBusinessDetailViewController.h"
 
 #import <SDCycleScrollView.h>
 #import <AFNetworking/UIImageView+AFNetworking.h>
@@ -91,6 +92,17 @@
 @property (nonatomic,assign) BOOL ifSubLike;
 
 @property (nonatomic,assign) long likeTime;
+
+
+//商圈信息
+@property (nonatomic,strong) UIView *businessBGView;
+
+@property (nonatomic,strong) UILabel *businessIconLabel;
+
+@property (nonatomic,strong) UILabel *businessMoreLabel;
+
+@property (nonatomic,strong) UIImageView *businessImageView;
+
 
 @end
 
@@ -310,6 +322,15 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     [self.footprintDetailBGView addSubview:self.topLine];
     [self.footprintDetailBGView addSubview:self.userHeadImgImageView];
     [self.footprintDetailBGView addSubview:self.userNicknameButton];
+    
+    //增加商圈等信息
+    if(!self.ifBusiness && self.detailFrame.footprintDetailModel.business){
+        [self.footprintDetailBGView addSubview:self.businessBGView];
+        [self.businessBGView addSubview:self.businessIconLabel];
+        [self.businessBGView addSubview:self.businessMoreLabel];
+        [self.businessBGView addSubview:self.businessImageView];
+    }
+    
     [self.footprintDetailBGView addSubview:self.footprintDateCreateLabel];
     if([[OTWUserModel shared].userId.description isEqualToString:self.detailFrame.footprintDetailModel.userId.description]){
         [self.footprintDetailBGView addSubview:self.deleteButton];
@@ -1073,6 +1094,7 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
                         [self.commentFrameArray addObject:commentFrame];
                     }
                 }
+                self.detailFrame.ifBusiness = self.ifBusiness;
                 [self.detailFrame setFootprintDetailModel:footprintDetail];
                 
                 if(footprintDetail.business){
@@ -1241,10 +1263,73 @@ static NSString *imageMogr2Params = @"?imageMogr2/thumbnail/!20p";
     return _plugsLabel;
 }
 
+- (UIView *) businessBGView
+{
+    if(!_businessBGView){
+        CGFloat w = 16 + 5 + 53.5 + 5 + 7;
+        _businessBGView = [[UIView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - w - GLOBAL_PADDING, 19.5, w, 20)];
+        _businessBGView.backgroundColor = [UIColor clearColor];
+        UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(jumpBusinessDetail)];
+        [_businessBGView addGestureRecognizer:recognizer];
+        
+    }
+    return _businessBGView;
+}
+
+- (UILabel *) businessIconLabel
+{
+    if(!_businessIconLabel){
+        _businessIconLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 16, 16)];
+        _businessIconLabel.layer.cornerRadius = 8;
+        _businessIconLabel.layer.masksToBounds = YES;
+        _businessIconLabel.textAlignment = NSTextAlignmentCenter;
+        _businessIconLabel.backgroundColor = [UIColor color_e50834];
+        _businessIconLabel.text = @"圈";
+        _businessIconLabel.textColor = [UIColor whiteColor];
+        _businessIconLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:10];
+    }
+    return _businessIconLabel;
+}
+
+- (UILabel *) businessMoreLabel
+{
+    if(!_businessMoreLabel){
+        _businessMoreLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.businessIconLabel.MaxX + 5, -1, 53.5, 18.5)];
+        _businessMoreLabel.textColor = [UIColor color_979797];
+        _businessMoreLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:13];
+        _businessMoreLabel.textAlignment = NSTextAlignmentCenter;
+        _businessMoreLabel.text = @"查看更多";
+    }
+    return _businessMoreLabel;
+}
+
+- (UIImageView *) businessImageView
+{
+    if(!_businessImageView){
+        _businessImageView = [[UIImageView alloc] initWithFrame:CGRectMake(self.businessMoreLabel.MaxX + 5, 2, 7, 12)];
+        _businessImageView.image = [UIImage imageNamed:@"arrow_right"];
+    }
+    return _businessImageView;
+}
+
+
 - (void) setFid:(NSString *)fid
 {
     _fid = fid;
     [self fetchFootprintDetailById:fid];
+}
+
+/**
+ * 跳转到商家详情页面
+ */
+- (void) jumpBusinessDetail
+{
+    NSNumber *businessId = self.detailFrame.footprintDetailModel.business;
+    if(businessId){
+        OTWBusinessDetailViewController *businessVC = [[OTWBusinessDetailViewController alloc] init];
+        [businessVC setOpData:businessId.description];
+        [self.navigationController pushViewController:businessVC animated:YES];
+    }
 }
 
 - (OTWCommentService *) commentService

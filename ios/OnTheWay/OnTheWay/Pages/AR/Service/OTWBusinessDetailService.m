@@ -75,6 +75,7 @@ static NSString *businessFootprintUrl= @"/app/business/footprint/search/{id}";
 
 - (int) getDefaultPageSize
 {
+    if(self.size == 0) self.size = 10;
     return self.size;
 }
 

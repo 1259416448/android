@@ -10,11 +10,11 @@
 
 @implementation OTWBusinessARAnnotation
 
--(instancetype)initWithIdentifier:(NSString *)identifier arShop:(OTWBusinessModel *)arShop location:(CLLocation *)location
+-(instancetype)initWithIdentifier:(NSString *)identifier businessFrame:(OTWBusinessARAnnotationFrame *)businessFrame location:(CLLocation *)location
 {
     self = [super init];
     if (self) {
-        self.arShop = arShop;
+        self.businessFrame = businessFrame;
         self.location = location;
     }
     return self;

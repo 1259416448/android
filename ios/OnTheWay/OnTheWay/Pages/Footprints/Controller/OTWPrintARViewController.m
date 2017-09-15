@@ -518,7 +518,7 @@
 {
     OTWARCustomAnnotation *annotation = gesture.opId;
     OTWFootprintDetailController *VC =  [[OTWFootprintDetailController alloc] init];
-    self.trackingManager.stopLocation = NO;
+    self.trackingManager.stopLocation = YES;
     [VC setFid:annotation.footprint.footprintId.description];
     [self.navigationController pushViewController:VC animated:YES];
 }
