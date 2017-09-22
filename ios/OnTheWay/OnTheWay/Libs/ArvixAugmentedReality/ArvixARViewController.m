@@ -222,7 +222,7 @@
     
     // Close Button
     if (self.uiOptions.closeButtonEnabled) {
-        [self addCloseButton];
+//        [self addCloseButton];
     }
     
     // Debug

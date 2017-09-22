@@ -23,12 +23,14 @@
 #import "OTWUITapGestureRecognizer.h"
 #import "OTWBusinessARAnnotationFrame.h"
 #import "OTWBusinessDetailViewController.h"
+#import "OTWBusinessARSiftTableViewCell.h"
+#import "OTWBusinessARSiftDetailTableViewCell.h"
 
 #import <MJExtension.h>
 #import "MBProgressHUD+PYExtension.h"
 #import <BaiduMapAPI_Search/BMKGeoCodeSearch.h>
 
-@interface OTWBusinessARViewController ()<ArvixARDataSource,UIAlertViewDelegate,BMKGeoCodeSearchDelegate>
+@interface OTWBusinessARViewController ()<ArvixARDataSource,UIAlertViewDelegate,BMKGeoCodeSearchDelegate,UITableViewDelegate,UITableViewDataSource>
 
 
 @property(nonatomic,strong) UIButton *backButton;
@@ -37,6 +39,16 @@
 @property(nonatomic,strong) UIButton *cameraButton;
 @property(nonatomic,strong) UIButton *arListButton;
 @property(nonatomic,strong) UIButton *planeMapButton;
+@property(nonatomic,strong) UIButton *siftButton;
+@property(nonatomic,strong) UIButton *searchButton;
+@property(nonatomic,strong) UIButton *cancelButton;
+
+@property(nonatomic,strong) UIView *siftView;
+
+@property(nonatomic,strong) UIView *searchView;
+
+@property(nonatomic,strong) UITableView *siftSortTableView;
+@property(nonatomic,strong) UITableView *siftDetailTableView;
 
 @property(nonatomic,strong) UIButton *locationBtton_100m;
 @property(nonatomic,strong) UIButton *locationBtton_500m;
@@ -72,6 +84,10 @@
 //经纬度反解码
 @property (nonatomic,strong) BMKGeoCodeSearch *geoCodeSearch;
 
+//筛选分类数据
+@property(nonatomic,strong) NSMutableArray *siftSortArr;
+@property(nonatomic,strong) NSMutableArray *siftDetailArr;
+
 
 @end
 
@@ -80,6 +96,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    _siftSortArr = @[@"全部分类",@"美食",@"酒店",@"景点",@"车站",@"停车",@"商场",@"健身"].mutableCopy;
+    _siftDetailArr = @[@"火锅",@"日本菜",@"北京菜",@"烧烤",@"川菜",@"自助餐",@"韩国料理",@"海鲜"].mutableCopy;
     [self showARViewController];
     [self buildUI];
     self.ifFirstLoadData = NO;
@@ -136,6 +154,21 @@
 {
     //返回按钮
     [self.view insertSubview:self.backButton aboveSubview:self.presenter];
+    
+    //筛选按钮
+//    [self.siftButton addGestureRecognizer:[[OTWUITapGestureRecognizer alloc]initWithTarget:self action:@selector(siftButtonClick)]];
+    [self.view insertSubview:self.siftButton aboveSubview:self.presenter];
+//    [self.view bringSubviewToFront:self.siftButton];
+    
+    //搜索按钮
+    
+    //筛选view
+
+    [self.view insertSubview:self.siftView aboveSubview:self.presenter];
+    [self.siftView addSubview:self.searchView];
+    [self.siftView addSubview:self.cancelButton];
+    [self.siftView addSubview:self.siftSortTableView];
+    [self.siftView addSubview:self.siftDetailTableView];
     
     //刷新
     OTWUITapGestureRecognizer *refreshTapGesture=[[OTWUITapGestureRecognizer alloc]initWithTarget:self action:@selector(refreshFootprints)];
@@ -206,6 +239,57 @@
     [self.shopPopoverV addSubview:self.viewShopDetail];
 
     
+}
+
+#pragma mark tableviewDelegate
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 8;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 44;
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (tableView == _siftSortTableView) {
+        static NSString *flag=@"OTWBusinessARSiftTableViewCell";
+        OTWBusinessARSiftTableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:flag];
+        if (cell==nil) {
+            cell=[[OTWBusinessARSiftTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:flag];
+        }
+        cell.titleLabel.text = _siftSortArr[indexPath.row];
+        return cell;
+    }else if (tableView == _siftDetailTableView)
+    {
+        static NSString *flag=@"OTWBusinessARSiftDetailTableViewCell";
+        OTWBusinessARSiftDetailTableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:flag];
+        if (cell==nil) {
+            cell=[[OTWBusinessARSiftDetailTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:flag];
+        }
+        cell.titleLabel.text = _siftDetailArr[indexPath.row];
+        return cell;
+    }else
+    {
+        return nil;
+    }
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (tableView == _siftSortTableView) {
+        if (indexPath.row == 0) {
+            return;
+        }
+    }else if (tableView == _siftDetailTableView)
+    {
+        
+    }else{
+    }
 }
 
 -(MBProgressHUD *) addLoadingHud
@@ -323,6 +407,31 @@
     }else{
         [self.navigationController pushViewController:[OTWLaunchManager sharedManager].footprintPlaneMapVC animated:NO];
     }
+}
+/**
+ * 筛选
+ */
+- (void)siftButtonClick
+{
+    _siftView.hidden = NO;
+    [UIView beginAnimations:nil context:nil];
+    _siftView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 416);
+    [UIView commitAnimations];
+
+}
+/**
+ * 搜索商家
+ */
+- (void)toSearchBusiness
+{
+//    _siftView.hidden = YES;
+}
+- (void)cancelButtonClick
+{
+    [UIView beginAnimations:nil context:nil];
+    _siftView.frame = CGRectMake(0, -416, SCREEN_WIDTH, 416);
+    [UIView commitAnimations];
+    _siftView.hidden = YES;
 }
 
 #pragma mark 刷新-换一批足迹
@@ -648,6 +757,93 @@
     }
     return _planeMapButton;
 }
+- (UIButton *)siftButton
+{
+    if (!_siftButton) {
+        _siftButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _siftButton.frame = CGRectMake(SCREEN_WIDTH - 50, 25, 35, 35);
+        _siftButton.backgroundColor = [UIColor clearColor];
+        [_siftButton setImage:[UIImage imageNamed:@"ar_shaixuan_1"] forState:UIControlStateNormal];
+        [_siftButton addTarget:self action:@selector(siftButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _siftButton;
+}
+
+- (UIView *)siftView
+{
+    if (!_siftView) {
+        _siftView = [[UIView alloc] initWithFrame:CGRectMake(0, -416, SCREEN_WIDTH, 416)];
+        _siftView.backgroundColor = [UIColor whiteColor];
+//        _siftView.userInteractionEnabled = YES;
+        _siftView.hidden = YES;
+    }
+    return _siftView;
+}
+
+- (UIView *)searchView
+{
+    if (!_searchView) {
+        _searchView = ({
+            UIView * View = [[UIView alloc] initWithFrame:CGRectMake(15, 25.5, SCREEN_WIDTH - 77, 33)];
+            View.backgroundColor = [UIColor color_f4f4f4];
+            View.layer.masksToBounds = YES;
+            View.layer.cornerRadius = 20;
+            UIImageView * search = [[UIImageView alloc] initWithFrame:CGRectMake(15, 9, 15, 15)];
+            search.image = [UIImage imageNamed:@"sousuo_1"];
+            [View addSubview:search];
+            UILabel * tipsLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(search.frame) + 10, 0, 150, 33)];
+            tipsLabel.backgroundColor = [UIColor clearColor];
+            tipsLabel.font = [UIFont systemFontOfSize:14];
+            tipsLabel.textColor = [UIColor color_979797];
+            tipsLabel.text = @"搜索附近的美食、商城";
+            [View addSubview:tipsLabel];
+            View.userInteractionEnabled = YES;
+            UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toSearchBusiness)];
+            [View addGestureRecognizer:tap];
+            View;
+        });
+
+    }
+    return _searchView;
+}
+
+- (UIButton *)cancelButton
+{
+    if (!_cancelButton) {
+        _cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _cancelButton.frame = CGRectMake(SCREEN_WIDTH - 35, 32, 20, 20);
+        _cancelButton.backgroundColor = [UIColor clearColor];
+        [_cancelButton setImage:[UIImage imageNamed:@"ar_guanbi"] forState:UIControlStateNormal];
+        [_cancelButton addTarget:self action:@selector(cancelButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _cancelButton;
+}
+
+- (UITableView *)siftSortTableView
+{
+    if (!_siftSortTableView) {
+        _siftSortTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, SCREEN_WIDTH * 0.32, 352) style:UITableViewStylePlain];
+        _siftSortTableView.delegate = self;
+        _siftSortTableView.dataSource = self;
+        _siftSortTableView.separatorStyle = UITableViewCellSelectionStyleNone;
+        _siftSortTableView.backgroundColor = [UIColor whiteColor];
+    }
+    return _siftSortTableView;
+}
+
+- (UITableView *)siftDetailTableView
+{
+    if (!_siftDetailTableView) {
+        _siftDetailTableView = [[UITableView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH * 0.32, 64, SCREEN_WIDTH, 352) style:UITableViewStylePlain];
+        _siftDetailTableView.delegate = self;
+        _siftDetailTableView.dataSource = self;
+        _siftDetailTableView.separatorStyle = UITableViewCellSelectionStyleNone;
+        _siftDetailTableView.backgroundColor = [UIColor color_f4f4f4];
+    }
+    return _siftDetailTableView;
+}
+
+
 
 - (UIButton*)locationBtton_100m
 {
