@@ -25,6 +25,8 @@
 #import "OTWBusinessDetailViewController.h"
 #import "OTWBusinessARSiftTableViewCell.h"
 #import "OTWBusinessARSiftDetailTableViewCell.h"
+#import "OTWBusinessSortModel.h";
+#import "OTWBusinessDetailSortModel.h"
 
 #import <MJExtension.h>
 #import "MBProgressHUD+PYExtension.h"
@@ -75,6 +77,9 @@
 
 @property(nonatomic,strong) NSString *businessId;
 
+@property(nonatomic,strong) NSIndexPath *selectedIndexPath;
+
+
 //查询对象
 @property (nonatomic,strong) OTWFootprintSearchParams *arShopSearchParams;
 @property (nonatomic,strong) NSDictionary *reponseCacheData;
@@ -96,8 +101,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    _siftSortArr = @[@"全部分类",@"美食",@"酒店",@"景点",@"车站",@"停车",@"商场",@"健身"].mutableCopy;
-    _siftDetailArr = @[@"火锅",@"日本菜",@"北京菜",@"烧烤",@"川菜",@"自助餐",@"韩国料理",@"海鲜"].mutableCopy;
+    _siftSortArr = @[].mutableCopy;
+    _siftDetailArr = @[].mutableCopy;
+    [self getbusinessSortData];
     [self showARViewController];
     [self buildUI];
     self.ifFirstLoadData = NO;
@@ -249,7 +255,21 @@
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 8;
+    if (tableView == _siftSortTableView) {
+        return _siftSortArr.count;
+    }else if (tableView == _siftDetailTableView)
+    {
+        NSInteger count = 0;
+        for (OTWBusinessSortModel * model in _siftSortArr) {
+            if (model.selected) {
+                count = model.children.count;
+            }
+        }
+        return count;
+    }else
+    {
+        return 0;
+    }
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -260,19 +280,35 @@
     if (tableView == _siftSortTableView) {
         static NSString *flag=@"OTWBusinessARSiftTableViewCell";
         OTWBusinessARSiftTableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:flag];
-        if (cell==nil) {
+        if (cell == nil) {
             cell=[[OTWBusinessARSiftTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:flag];
         }
-        cell.titleLabel.text = _siftSortArr[indexPath.row];
+        cell.selectionStyle = UITableViewCellEditingStyleNone;
+        OTWBusinessSortModel * model = _siftSortArr[indexPath.row];
+        cell.titleLabel.text = model.name;
+        if (model.selected) {
+            cell.backgroundColor = [UIColor color_f4f4f4];
+            cell.titleLabel.textColor = [UIColor colorWithHexString:model.colorCode];
+        }else
+        {
+            cell.backgroundColor = [UIColor whiteColor];
+            cell.titleLabel.textColor = [UIColor color_202020];
+        }
         return cell;
     }else if (tableView == _siftDetailTableView)
     {
         static NSString *flag=@"OTWBusinessARSiftDetailTableViewCell";
         OTWBusinessARSiftDetailTableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:flag];
-        if (cell==nil) {
+        if (cell == nil) {
             cell=[[OTWBusinessARSiftDetailTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:flag];
         }
-        cell.titleLabel.text = _siftDetailArr[indexPath.row];
+        cell.selectionStyle = UITableViewCellEditingStyleNone;
+        for (OTWBusinessSortModel * model in _siftSortArr) {
+            if (model.selected) {
+                OTWBusinessDetailSortModel * detailModel = model.children[indexPath.row];
+                cell.titleLabel.text = detailModel.name;
+            }
+        }
         return cell;
     }else
     {
@@ -282,12 +318,16 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (tableView == _siftSortTableView) {
-        if (indexPath.row == 0) {
-            return;
+        for (OTWBusinessSortModel * model in _siftSortArr) {
+            model.selected = NO;
         }
+        OTWBusinessSortModel * model = _siftSortArr[indexPath.row];
+        model.selected = YES;
+        [_siftSortTableView reloadData];
+        [_siftDetailTableView reloadData];
     }else if (tableView == _siftDetailTableView)
     {
-        
+        _siftView.hidden = YES;
     }else{
     }
 }
@@ -415,7 +455,7 @@
 {
     _siftView.hidden = NO;
     [UIView beginAnimations:nil context:nil];
-    _siftView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 416);
+    _siftView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 196);
     [UIView commitAnimations];
 
 }
@@ -429,7 +469,7 @@
 - (void)cancelButtonClick
 {
     [UIView beginAnimations:nil context:nil];
-    _siftView.frame = CGRectMake(0, -416, SCREEN_WIDTH, 416);
+    _siftView.frame = CGRectMake(0, -196, SCREEN_WIDTH, 196);
     [UIView commitAnimations];
     _siftView.hidden = YES;
 }
@@ -577,6 +617,61 @@
     } responseCache:^(id responseCache) {
         self.reponseCacheData = responseCache;
     }];
+}
+#pragma mark 获取店家分类信息
+
+- (void)getbusinessSortData
+{
+    NSString * url = @"/app/business/type/all";
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [OTWNetworkManager doGET:url parameters:nil responseCache:^(id responseCache) {
+            if([[NSString stringWithFormat:@"%@",responseCache[@"code"]] isEqualToString:@"0"]){
+                NSArray *arr = [NSArray arrayWithArray:[responseCache objectForKey:@"body"]];
+                for (NSDictionary *result in arr)
+                {
+                    OTWBusinessSortModel * model = [OTWBusinessSortModel mj_objectWithKeyValues:result];
+                    model.selected = NO;
+                    [_siftSortArr addObject:model];
+                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    OTWBusinessSortModel * model = _siftSortArr[0];
+                    model.selected = YES;
+                    [self layoutSiftView];
+                    [_siftSortTableView reloadData];
+                    [_siftDetailTableView reloadData];
+                });
+            }
+        } success:^(id responseObject) {
+            if([[NSString stringWithFormat:@"%@",responseObject[@"code"]] isEqualToString:@"0"]){
+                [_siftSortArr removeAllObjects];
+                NSArray *arr = [NSArray arrayWithArray:[responseObject objectForKey:@"body"]];
+                
+                for (NSDictionary *result in arr)
+                {
+                    OTWBusinessSortModel * model = [OTWBusinessSortModel mj_objectWithKeyValues:result];
+                    model.selected = NO;
+                    [_siftSortArr addObject:model];
+                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    OTWBusinessSortModel * model = _siftSortArr[0];
+                    model.selected = YES;
+                    [self layoutSiftView];
+                    [_siftSortTableView reloadData];
+                    [_siftDetailTableView reloadData];
+                });
+            }
+        } failure:^(NSError *error) {
+            
+        }];
+    });
+
+}
+- (void)layoutSiftView
+{
+    NSInteger num = _siftSortArr.count + 1;
+    _siftView.frame = CGRectMake(0, -(64 + 44 * num), SCREEN_WIDTH, 64 + 44 * num);
+    _siftSortTableView.frame = CGRectMake(0, 64, SCREEN_WIDTH * 0.32, 44 * num);
+    _siftDetailTableView.frame = CGRectMake(SCREEN_WIDTH * 0.32, 64, SCREEN_WIDTH, 44 * num);
 }
 
 #pragma mark 根据查询参数加载足迹数据
@@ -772,7 +867,7 @@
 - (UIView *)siftView
 {
     if (!_siftView) {
-        _siftView = [[UIView alloc] initWithFrame:CGRectMake(0, -416, SCREEN_WIDTH, 416)];
+        _siftView = [[UIView alloc] initWithFrame:CGRectMake(0, -196, SCREEN_WIDTH, 196)];
         _siftView.backgroundColor = [UIColor whiteColor];
 //        _siftView.userInteractionEnabled = YES;
         _siftView.hidden = YES;
@@ -822,11 +917,23 @@
 - (UITableView *)siftSortTableView
 {
     if (!_siftSortTableView) {
-        _siftSortTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, SCREEN_WIDTH * 0.32, 352) style:UITableViewStylePlain];
+        _siftSortTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, SCREEN_WIDTH * 0.32, 132) style:UITableViewStylePlain];
         _siftSortTableView.delegate = self;
         _siftSortTableView.dataSource = self;
         _siftSortTableView.separatorStyle = UITableViewCellSelectionStyleNone;
         _siftSortTableView.backgroundColor = [UIColor whiteColor];
+        UIView * headView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH * 0.32, 44)];
+        headView.backgroundColor = [UIColor whiteColor];
+        UILabel * label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH * 0.32, 43.5)];
+        label.text = @"全部分类";
+        label.font = [UIFont systemFontOfSize:15];
+        label.textColor = [UIColor color_202020];
+        label.textAlignment = NSTextAlignmentCenter;
+        [headView addSubview:label];
+        UIView * line = [[UIView alloc] initWithFrame:CGRectMake(0, 43.5, SCREEN_WIDTH * 0.32, 0.5)];
+        line.backgroundColor = [UIColor color_d5d5d5];
+        [headView addSubview:line];
+        _siftSortTableView.tableHeaderView = headView;
     }
     return _siftSortTableView;
 }
@@ -834,7 +941,7 @@
 - (UITableView *)siftDetailTableView
 {
     if (!_siftDetailTableView) {
-        _siftDetailTableView = [[UITableView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH * 0.32, 64, SCREEN_WIDTH, 352) style:UITableViewStylePlain];
+        _siftDetailTableView = [[UITableView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH * 0.32, 64, SCREEN_WIDTH, 132) style:UITableViewStylePlain];
         _siftDetailTableView.delegate = self;
         _siftDetailTableView.dataSource = self;
         _siftDetailTableView.separatorStyle = UITableViewCellSelectionStyleNone;

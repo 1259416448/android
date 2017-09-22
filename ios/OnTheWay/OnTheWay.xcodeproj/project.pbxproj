@@ -189,6 +189,8 @@
 		DDDAE0931F1F0D4C00981E60 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DDDAE0921F1F0D4C00981E60 /* Assets.xcassets */; };
 		DDDE14EE1F73B56C00F941E3 /* OTWBusinessARSiftTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DDDE14ED1F73B56C00F941E3 /* OTWBusinessARSiftTableViewCell.m */; };
 		DDDE14F11F73B7B700F941E3 /* OTWBusinessARSiftDetailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DDDE14F01F73B7B700F941E3 /* OTWBusinessARSiftDetailTableViewCell.m */; };
+		DDDE14F41F74B47800F941E3 /* OTWBusinessSortModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DDDE14F31F74B47800F941E3 /* OTWBusinessSortModel.m */; };
+		DDDE14F71F74B4AA00F941E3 /* OTWBusinessDetailSortModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DDDE14F61F74B4AA00F941E3 /* OTWBusinessDetailSortModel.m */; };
 		DDDFB2EB1F3AEFC000A7BAD1 /* OTWCustomAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = DDDFB2EA1F3AEFC000A7BAD1 /* OTWCustomAnnotationView.m */; };
 		DDE0B7421F3323490016E59C /* OTWCommentService.m in Sources */ = {isa = PBXBuildFile; fileRef = DDE0B7411F3323490016E59C /* OTWCommentService.m */; };
 		DDEA15B61F21A91200056166 /* OTWNewsCommentList.plist in Resources */ = {isa = PBXBuildFile; fileRef = DDEA15B51F21A91200056166 /* OTWNewsCommentList.plist */; };
@@ -593,6 +595,10 @@
 		DDDE14ED1F73B56C00F941E3 /* OTWBusinessARSiftTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWBusinessARSiftTableViewCell.m; sourceTree = "<group>"; };
 		DDDE14EF1F73B7B700F941E3 /* OTWBusinessARSiftDetailTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWBusinessARSiftDetailTableViewCell.h; sourceTree = "<group>"; };
 		DDDE14F01F73B7B700F941E3 /* OTWBusinessARSiftDetailTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWBusinessARSiftDetailTableViewCell.m; sourceTree = "<group>"; };
+		DDDE14F21F74B47800F941E3 /* OTWBusinessSortModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWBusinessSortModel.h; sourceTree = "<group>"; };
+		DDDE14F31F74B47800F941E3 /* OTWBusinessSortModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWBusinessSortModel.m; sourceTree = "<group>"; };
+		DDDE14F51F74B4AA00F941E3 /* OTWBusinessDetailSortModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWBusinessDetailSortModel.h; sourceTree = "<group>"; };
+		DDDE14F61F74B4AA00F941E3 /* OTWBusinessDetailSortModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWBusinessDetailSortModel.m; sourceTree = "<group>"; };
 		DDDFB2E91F3AEFC000A7BAD1 /* OTWCustomAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWCustomAnnotationView.h; sourceTree = "<group>"; };
 		DDDFB2EA1F3AEFC000A7BAD1 /* OTWCustomAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWCustomAnnotationView.m; sourceTree = "<group>"; };
 		DDE0B7401F3323490016E59C /* OTWCommentService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWCommentService.h; sourceTree = "<group>"; };
@@ -853,6 +859,10 @@
 				DD4BD96C1F5E803D0047D191 /* OTWBusinessActivityModel.m */,
 				DDBBA1E51F6A968E0090B652 /* OTWBusinessARAnnotation.h */,
 				DDBBA1E61F6A968E0090B652 /* OTWBusinessARAnnotation.m */,
+				DDDE14F21F74B47800F941E3 /* OTWBusinessSortModel.h */,
+				DDDE14F31F74B47800F941E3 /* OTWBusinessSortModel.m */,
+				DDDE14F51F74B4AA00F941E3 /* OTWBusinessDetailSortModel.h */,
+				DDDE14F61F74B4AA00F941E3 /* OTWBusinessDetailSortModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1873,6 +1883,7 @@
 				D7F6B07B1F0DD41F0013090A /* OTWFootprintsViewController.m in Sources */,
 				B1B055871F305C0C008274FE /* OTWPersonalCollectTableViewCell.m in Sources */,
 				DD9452EE1F15CC29004EDDED /* OTWFootprintListModel.m in Sources */,
+				DDDE14F41F74B47800F941E3 /* OTWBusinessSortModel.m in Sources */,
 				DDABAA4B1F12801E00010532 /* OTWPersonalEditNicknameController.m in Sources */,
 				1834A9921F5504B900C377F9 /* OTWBusinessService.m in Sources */,
 				DDEA15DE1F25CCA500056166 /* PYPhotosNavigationController.m in Sources */,
@@ -1984,6 +1995,7 @@
 				DDEA15FE1F299DFB00056166 /* OTWDocument.m in Sources */,
 				B1A9C5A61F43F16F009EF68D /* OTWPersonalClaimModel.m in Sources */,
 				DDA1AF031F4C253500281DFC /* OTWPersonalStatisticsModel.m in Sources */,
+				DDDE14F71F74B4AA00F941E3 /* OTWBusinessDetailSortModel.m in Sources */,
 				1822EE661F20846F00E07665 /* OTWFootprintsChangeAddressCellTableViewCell.m in Sources */,
 				DD14F2431F114436004DFE4A /* CommonContact.m in Sources */,
 				DD3520961F186E0700E8D725 /* OTWFootprintDetailModel.m in Sources */,
