@@ -207,40 +207,23 @@
             model.name = searchResult.name;
             model.address = searchResult.address;
             model.colorCode = @"e52c2c";
-            CLGeocoder *geoCoder = [[CLGeocoder alloc] init];
-            [geoCoder geocodeAddressString:searchResult.address completionHandler:^(NSArray *placemarks, NSError *error) {
-                if (error) {
-                }else {
-                    CLPlacemark *placeMark = [placemarks lastObject];
-                    model.latitude = placeMark.location.coordinate.latitude;
-                    model.longitude = placeMark.location.coordinate.longitude;
-                }
-                [arShopModels addObject:model];
-                if (arShopModels.count == poiResultList.currPoiNum) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if (arShopModels.count == 0) {
-                            [self setAnnotations:@[]];
-                        }else{
-                            NSArray *dummyAnnotations = [self assembleAnnotation:arShopModels];
-                            [self setAnnotations:dummyAnnotations];
-                        }
-                        self.footprintSumLabel.text = [NSString stringWithFormat:@"%d",poiResultList.currPoiNum];
-                    });
-                    
-                }
-            }];
+            model.latitude = searchResult.pt.latitude;
+            model.longitude = searchResult.pt.longitude;
+            [arShopModels addObject:model];
         }
-
-        
-
-
+        if (arShopModels.count == 0) {
+            [self setAnnotations:@[]];
+        }else{
+            NSArray *dummyAnnotations = [self assembleAnnotation:arShopModels];
+            [self setAnnotations:dummyAnnotations];
+        }
+        self.footprintSumLabel.text = [NSString stringWithFormat:@"%d",poiResultList.currPoiNum];
     }
     else if (error == BMK_SEARCH_AMBIGUOUS_KEYWORD){
         //当在设置城市未找到结果，但在其他城市找到结果时，回调建议检索城市列表
         // result.cityList;
         NSLog(@"起始点有歧义");
     } else {
-        NSLog(@"抱歉，未找到结果");
         [self setAnnotations:@[]];
         [MBProgressHUD py_showError:@"抱歉，未找到结果" toView:self.view];
     }
