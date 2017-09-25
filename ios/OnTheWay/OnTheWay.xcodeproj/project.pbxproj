@@ -134,6 +134,7 @@
 		D7F6B0BF1F15C09E0013090A /* OTWTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B0BE1F15C09E0013090A /* OTWTabBarController.m */; };
 		D7F6B0C61F160E590013090A /* OTWAlbumSelectHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B0C51F160E590013090A /* OTWAlbumSelectHelper.m */; };
 		D7F6B0CB1F1627000013090A /* OTWNewsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F6B0CA1F1627000013090A /* OTWNewsCell.m */; };
+		DD0BBC2E1F78986900044EFA /* OTWBusinessARPoiViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DD0BBC2D1F78986900044EFA /* OTWBusinessARPoiViewController.m */; };
 		DD14F23B1F1132FE004DFE4A /* NSString+RegexCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = DD14F23A1F1132FE004DFE4A /* NSString+RegexCategory.m */; };
 		DD14F2401F113654004DFE4A /* HmacUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = DD14F23F1F113654004DFE4A /* HmacUtils.m */; };
 		DD14F2431F114436004DFE4A /* CommonContact.m in Sources */ = {isa = PBXBuildFile; fileRef = DD14F2421F114436004DFE4A /* CommonContact.m */; };
@@ -494,6 +495,8 @@
 		D7F6B0C91F1627000013090A /* OTWNewsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWNewsCell.h; sourceTree = "<group>"; };
 		D7F6B0CA1F1627000013090A /* OTWNewsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWNewsCell.m; sourceTree = "<group>"; };
 		DD02EB7B1F125A3000841AB5 /* OTWPersonalEditNicknameController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPersonalEditNicknameController.h; sourceTree = "<group>"; };
+		DD0BBC2C1F78986900044EFA /* OTWBusinessARPoiViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWBusinessARPoiViewController.h; sourceTree = "<group>"; };
+		DD0BBC2D1F78986900044EFA /* OTWBusinessARPoiViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWBusinessARPoiViewController.m; sourceTree = "<group>"; };
 		DD14F2391F1132FE004DFE4A /* NSString+RegexCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+RegexCategory.h"; path = "NSTring/NSString+RegexCategory.h"; sourceTree = "<group>"; };
 		DD14F23A1F1132FE004DFE4A /* NSString+RegexCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+RegexCategory.m"; path = "NSTring/NSString+RegexCategory.m"; sourceTree = "<group>"; };
 		DD14F23E1F113654004DFE4A /* HmacUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HmacUtils.h; sourceTree = "<group>"; };
@@ -1095,6 +1098,8 @@
 				DD67B33E1F4EC04A00429EFA /* OTWBusinessFetchController.m */,
 				186E12E11F57ACFB0077A93C /* OTWBusinessARViewController.h */,
 				186E12E21F57ACFB0077A93C /* OTWBusinessARViewController.m */,
+				DD0BBC2C1F78986900044EFA /* OTWBusinessARPoiViewController.h */,
+				DD0BBC2D1F78986900044EFA /* OTWBusinessARPoiViewController.m */,
 				DD4BD96E1F5E8C030047D191 /* OTWBusinessDetailViewController.h */,
 				DD4BD96F1F5E8C030047D191 /* OTWBusinessDetailViewController.m */,
 			);
@@ -1968,6 +1973,7 @@
 				DDEA15E41F25CCA500056166 /* PYProgressView.m in Sources */,
 				DDDE14EE1F73B56C00F941E3 /* OTWBusinessARSiftTableViewCell.m in Sources */,
 				DDC0A94C1F2089AA00A6E4DB /* OTWFootprintsChangeAddressController.m in Sources */,
+				DD0BBC2E1F78986900044EFA /* OTWBusinessARPoiViewController.m in Sources */,
 				DDB8C29F1F14AF230091E7B0 /* OTWUserModel.m in Sources */,
 				D7F6B09A1F0F75510013090A /* OTWLaunchViewController.m in Sources */,
 				DDEA15B91F22177900056166 /* OTWUITapGestureRecognizer.m in Sources */,
@@ -2199,6 +2205,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Yi Guo (5PAA5A6DUM)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = SEMAPEJ292;
+				ENABLE_BITCODE = NO;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/OnTheWay/PrefixHeader.pch";
 				INFOPLIST_FILE = OnTheWay/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -2217,9 +2224,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = OnTheWay/OnTheWay.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Yi Guo (SEMAPEJ292)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Yi Guo (5PAA5A6DUM)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = SEMAPEJ292;
+				ENABLE_BITCODE = NO;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/OnTheWay/PrefixHeader.pch";
 				INFOPLIST_FILE = OnTheWay/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;

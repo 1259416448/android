@@ -174,9 +174,13 @@
             spotview.backgroundColor = [UIColor redColor];
         }
         spotview.layer.cornerRadius = pointWidth/2;
-        
-        [self addSubview:spotview];
-        [self.spots addObject:spotview];
+        if (pointDistance > 40) {
+            spotview.hidden = YES;
+        }else{
+            [self addSubview:spotview];
+            [self.spots addObject:spotview];
+        }
+
     }
 }
 

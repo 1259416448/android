@@ -16,7 +16,7 @@
 //#define kServerURL @"http://192.168.88.190:9100/"
 #define kServerURL @"http://106.75.52.213:9900/"
 #else
-#define kServerURL @""
+#define kServerURL @"http://106.75.52.213:9900/"
 #endif
 
 #ifdef DEBUG
