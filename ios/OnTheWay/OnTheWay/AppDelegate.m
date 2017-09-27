@@ -161,6 +161,7 @@
     [UMessage registerForRemoteNotifications];
     //开启log
     [UMessage setLogEnabled:YES];
+    
 }
 
 #pragma mark iOS10新增：处理前台收到通知的代理方法

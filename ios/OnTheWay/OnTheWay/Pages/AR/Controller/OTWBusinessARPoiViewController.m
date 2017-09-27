@@ -1,11 +1,12 @@
 //
-//  OTWARShopViewController.m
+//  OTWBusinessARPoiViewController.m
 //  OnTheWay
 //
-//  Created by apple on 2017/8/31.
+//  Created by 孔俊彦 on 2017/9/25.
 //  Copyright © 2017年 WeiHuan. All rights reserved.
 //
 
+#import "OTWBusinessARPoiViewController.h"
 #import "OTWBusinessARViewController.h"
 #import "ArvixARConfiguration.h"
 #import "ArvixARAnnotation.h"
@@ -31,9 +32,21 @@
 #import <MJExtension.h>
 #import "MBProgressHUD+PYExtension.h"
 #import <BaiduMapAPI_Search/BMKGeoCodeSearch.h>
+#import <BaiduMapAPI_Location/BMKLocationService.h>
+#import <CoreLocation/CoreLocation.h>
 
-@interface OTWBusinessARViewController ()<ArvixARDataSource,UIAlertViewDelegate,BMKGeoCodeSearchDelegate,UITableViewDelegate,UITableViewDataSource>
 
+@interface OTWBusinessARPoiViewController ()<ArvixARDataSource,UIAlertViewDelegate,BMKGeoCodeSearchDelegate,UITableViewDelegate,UITableViewDataSource,BMKPoiSearchDelegate,BMKLocationServiceDelegate>
+
+@property (nonatomic,strong) BMKPoiSearch *poiSearch;
+@property (nonatomic,strong) BMKLocationService *locService;
+
+@property (nonatomic,assign) CLLocationCoordinate2D location;
+@property (nonatomic,assign) int currentPage;
+@property (nonatomic,assign) int totalPage;
+@property (nonatomic,assign) int searchRadius;
+
+@property (nonatomic,copy) NSString *searchKeyWord;
 
 @property(nonatomic,strong) UIButton *backButton;
 @property(nonatomic,strong) UIButton *refreshButton;
@@ -93,16 +106,25 @@
 @property(nonatomic,strong) NSMutableArray *siftSortArr;
 @property(nonatomic,strong) NSMutableArray *siftDetailArr;
 
+/** 地理编码 */
+@property (nonatomic, strong) CLGeocoder *geoC;
 
 @end
 
-@implementation OTWBusinessARViewController
-
+@implementation OTWBusinessARPoiViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    _poiSearch = [[BMKPoiSearch alloc] init];
+    _poiSearch.delegate = self;
     _siftSortArr = @[].mutableCopy;
     _siftDetailArr = @[].mutableCopy;
+    _searchRadius = 1000;
+    _currentPage = 1;
+    _searchKeyWord = @"餐饮";
+    [self.locService startUserLocationService];
+
+//    [self startPoiSearch];
     [self getbusinessSortData];
     [self showARViewController];
     [self buildUI];
@@ -154,6 +176,57 @@
 {
     [super viewWillDisappear:animated];
     self.geoCodeSearch.delegate = nil;
+    self.poiSearch.delegate = nil;
+}
+- (void)startPoiSearch
+{
+    BMKNearbySearchOption *option = [[BMKNearbySearchOption alloc]init];
+    option.pageIndex = self.currentPage;
+    option.pageCapacity = 50;
+    option.location = self.location;
+    option.sortType = BMK_POI_SORT_BY_DISTANCE;
+    option.keyword = _searchKeyWord;
+    option.radius = _searchRadius;
+    BOOL flag = [self.poiSearch poiSearchNearBy:option];
+    if(flag){
+        DLog(@"周边检索发送成功");
+    }
+    else{
+        DLog(@"周边检索发送失败");
+    }
+}
+//实现PoiSearchDeleage处理回调结果
+- (void)onGetPoiResult:(BMKPoiSearch*)searcher result:(BMKPoiResult*)poiResultList errorCode:(BMKSearchErrorCode)error
+{
+    if (error == BMK_SEARCH_NO_ERROR) {
+        //在此处理正常结果
+        NSLog(@"%@",poiResultList);
+        NSMutableArray * arShopModels = @[].mutableCopy;
+        for (BMKPoiInfo * searchResult in poiResultList.poiInfoList) {
+            OTWBusinessModel * model = [[OTWBusinessModel alloc] init];
+            model.name = searchResult.name;
+            model.address = searchResult.address;
+            model.colorCode = @"e52c2c";
+            model.latitude = searchResult.pt.latitude;
+            model.longitude = searchResult.pt.longitude;
+            [arShopModels addObject:model];
+        }
+        if (arShopModels.count == 0) {
+            [self setAnnotations:@[]];
+        }else{
+            NSArray *dummyAnnotations = [self assembleAnnotation:arShopModels];
+            [self setAnnotations:dummyAnnotations];
+        }
+        self.footprintSumLabel.text = [NSString stringWithFormat:@"%d",poiResultList.currPoiNum];
+    }
+    else if (error == BMK_SEARCH_AMBIGUOUS_KEYWORD){
+        //当在设置城市未找到结果，但在其他城市找到结果时，回调建议检索城市列表
+        // result.cityList;
+        NSLog(@"起始点有歧义");
+    } else {
+        [self setAnnotations:@[]];
+        [MBProgressHUD py_showError:@"抱歉，未找到结果" toView:self.view];
+    }
 }
 
 - (void)buildUI
@@ -162,14 +235,14 @@
     [self.view insertSubview:self.backButton aboveSubview:self.presenter];
     
     //筛选按钮
-//    [self.siftButton addGestureRecognizer:[[OTWUITapGestureRecognizer alloc]initWithTarget:self action:@selector(siftButtonClick)]];
+    //    [self.siftButton addGestureRecognizer:[[OTWUITapGestureRecognizer alloc]initWithTarget:self action:@selector(siftButtonClick)]];
     [self.view insertSubview:self.siftButton aboveSubview:self.presenter];
-//    [self.view bringSubviewToFront:self.siftButton];
+    //    [self.view bringSubviewToFront:self.siftButton];
     
     //搜索按钮
     
     //筛选view
-
+    
     [self.view insertSubview:self.siftView aboveSubview:self.presenter];
     [self.siftView addSubview:self.searchView];
     [self.siftView addSubview:self.cancelButton];
@@ -243,7 +316,7 @@
     [self.shopPopoverV addSubview:self.telePhoneIcon];
     [self.shopPopoverV addSubview:self.telePhoneNum];
     [self.shopPopoverV addSubview:self.viewShopDetail];
-
+    
     
 }
 
@@ -328,6 +401,14 @@
     }else if (tableView == _siftDetailTableView)
     {
         _siftView.hidden = YES;
+        for (OTWBusinessSortModel * model in _siftSortArr) {
+            if (model.selected) {
+                OTWBusinessDetailSortModel * detailModel = model.children[indexPath.row];
+                _searchKeyWord = detailModel.name;
+                [self startPoiSearch];
+            }
+        }
+        
     }else{
     }
 }
@@ -381,6 +462,7 @@
 {
     self.trackingManager.stopLocation = TRUE;
     [self hideBusinessSimpleInfo];
+//    [self.navigationController popToRootViewControllerAnimated:YES];
     [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexFind]; // 显示首页
 }
 
@@ -457,14 +539,14 @@
     [UIView beginAnimations:nil context:nil];
     _siftView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 196);
     [UIView commitAnimations];
-
+    
 }
 /**
  * 搜索商家
  */
 - (void)toSearchBusiness
 {
-//    _siftView.hidden = YES;
+    //    _siftView.hidden = YES;
 }
 - (void)cancelButtonClick
 {
@@ -477,9 +559,11 @@
 #pragma mark 刷新-换一批足迹
 - (void)refreshFootprints
 {
+    _searchKeyWord = @"餐饮";
+    _searchRadius = 1000;
     [self hideBusinessSimpleInfo];
     [self hideAllButton];
-    [self getArShops];
+    [self startPoiSearch];
 }
 
 #pragma mark 根据距离筛选
@@ -492,15 +576,18 @@
     if([self.arShopSearchParams.searchDistance isEqualToString:@"one"]){
         self.radar.maxDistance = 100;
         self.arShopSearchParams.distance = @"0.1";
+        self.searchRadius = 100;
     }else if([self.arShopSearchParams.searchDistance isEqualToString:@"two"]){
         self.radar.maxDistance = 500;
         self.arShopSearchParams.distance = @"0.5";
+        self.searchRadius = 500;
     }else if([self.arShopSearchParams.searchDistance isEqualToString:@"three"]){
         self.radar.maxDistance = 1000;
         self.arShopSearchParams.distance = @"1";
+        self.searchRadius = 1000;
     }
     [self locationButtonClick];
-    [self getArShops];
+    [self startPoiSearch];
 }
 
 
@@ -664,7 +751,7 @@
             
         }];
     });
-
+    
 }
 - (void)layoutSiftView
 {
@@ -783,6 +870,19 @@
     [annotationView addGestureRecognizer:tapGesture];
     return annotationView;
 }
+#pragma mark - BMKLocationServiceDelegate
+
+/**
+ *用户位置更新后，会调用此函数
+ *@param userLocation 新的用户位置
+ */
+- (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation
+{
+    CLLocationCoordinate2D coordinate = userLocation.location.coordinate;
+    self.location = coordinate;
+//    [self startPoiSearch];
+    [self.locService stopUserLocationService];
+}
 
 #pragma mark 按钮初始化
 - (UIButton*)backButton
@@ -869,7 +969,7 @@
     if (!_siftView) {
         _siftView = [[UIView alloc] initWithFrame:CGRectMake(0, -196, SCREEN_WIDTH, 196)];
         _siftView.backgroundColor = [UIColor whiteColor];
-//        _siftView.userInteractionEnabled = YES;
+        //        _siftView.userInteractionEnabled = YES;
         _siftView.hidden = YES;
     }
     return _siftView;
@@ -897,7 +997,7 @@
             [View addGestureRecognizer:tap];
             View;
         });
-
+        
     }
     return _searchView;
 }
@@ -1201,16 +1301,31 @@
     }
     return _geoCodeSearch;
 }
+- (BMKLocationService *) locService
+{
+    if(!_locService){
+        _locService = [[BMKLocationService alloc] init];
+        _locService.delegate = self;
+    }
+    return _locService;
+}
+-(CLGeocoder *)geoC
+{
+    if (!_geoC) {
+        _geoC = [[CLGeocoder alloc] init];
+    }
+    return _geoC;
+}
 
 /**
  * 跳转到商家详情页面
  */
 - (void) viewBusinessDetail
 {
-    self.trackingManager.stopLocation = YES;
-    OTWBusinessDetailViewController *businessVC = [[OTWBusinessDetailViewController alloc] init];
-    [businessVC setOpData:self.businessId];
-    [self.navigationController pushViewController:businessVC animated:YES];
+//    self.trackingManager.stopLocation = YES;
+//    OTWBusinessDetailViewController *businessVC = [[OTWBusinessDetailViewController alloc] init];
+//    [businessVC setOpData:self.businessId];
+//    [self.navigationController pushViewController:businessVC animated:YES];
 }
 
 - (void)arTrackingManager:(ArvixARTrackingManager *)trackingManager didUpdateUserLocation:(CLLocation *)location
@@ -1233,9 +1348,11 @@
         self.ifFirstLoadData = YES;
         self.arShopSearchParams.latitude = location.coordinate.latitude;
         self.arShopSearchParams.longitude = location.coordinate.longitude;
+        self.location = location.coordinate;
         self.arShopSearchParams.number = 0;
         self.arShopSearchParams.currentTime = nil;
-        [self getArShops];
+        
+        [self startPoiSearch];
     }
     
 }
@@ -1263,7 +1380,8 @@
         self.arShopSearchParams.longitude = location.coordinate.longitude;
         self.arShopSearchParams.number = 0;
         self.arShopSearchParams.currentTime = nil;
-        [self getArShops];
+        self.location = location.coordinate;
+        [self startPoiSearch];
     }
     
 }
@@ -1283,5 +1401,15 @@
     }
 }
 
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
 
 @end

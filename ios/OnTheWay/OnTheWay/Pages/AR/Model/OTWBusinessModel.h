@@ -14,6 +14,8 @@
 
 @property (nonatomic,strong) NSString *name;
 
+@property (nonatomic,strong) NSString *uid;
+
 @property (nonatomic,strong) NSString *address;
 
 @property (nonatomic,assign) double latitude;

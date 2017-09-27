@@ -16,6 +16,7 @@
 #import "OTWPersonalViewController.h"
 #import "OTWPrintARViewController.h"
 #import "OTWPlaneMapViewController.h"
+#import "OTWBusinessARPoiViewController.h"
 
 #import "OTWUserModel.h"
 
@@ -98,8 +99,10 @@
             
             UINavigationController * footprintsNav = [[UINavigationController alloc] initWithRootViewController:footprintArVC]; // 足迹Ar
             
-            OTWBusinessARViewController * arBusinessVC = [[OTWBusinessARViewController alloc] init];
-            UINavigationController * arNav = [[UINavigationController alloc] initWithRootViewController:arBusinessVC]; // AR
+//            OTWBusinessARViewController * arBusinessVC = [[OTWBusinessARViewController alloc] init];
+            //POI获取的数据
+            OTWBusinessARPoiViewController * arBusinessPoiVC = [[OTWBusinessARPoiViewController alloc] init];
+            UINavigationController * arNav = [[UINavigationController alloc] initWithRootViewController:arBusinessPoiVC]; // AR
             
             OTWNewsViewController *newsVC = [[OTWNewsViewController alloc] init];
             UINavigationController * newsNav = [[UINavigationController alloc] initWithRootViewController:newsVC]; // 消息
