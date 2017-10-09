@@ -69,6 +69,7 @@ public class BusinessType extends BaseEntity<Long> {
     public Map<String, Object> toMap() {
         Map<String, Object> jsonMap = Maps.newHashMap();
         jsonMap.put("id", getId());
+        jsonMap.put("typeId", getId());
         jsonMap.put("name", name);
         jsonMap.put("weight", weight);
         jsonMap.put("ifTop", ifTop);
