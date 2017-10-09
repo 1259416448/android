@@ -10,6 +10,7 @@
 #import "OTWLaunchViewController.h"
 #import "OTWUserModel.h"
 #import "OTWUtils.h"
+//#import "BNCoreServices.h"
 
 #define UMAppKey @"598c217d8f4a9d55d80004f6"
 
@@ -25,7 +26,7 @@
     _window.rootViewController = [[OTWLaunchViewController alloc] init];
     [[OTWUserModel shared] load];
     _mapManager = [[BMKMapManager alloc]init];
-    BOOL ret = [_mapManager start:@"13I7baCnebotHFHdyywGKZtPIVkzVM6h"  generalDelegate:nil];
+    BOOL ret = [_mapManager start:@"uyQP9vycrVQwe5G3Sus9tTGNdKWmWfTG"  generalDelegate:nil];
     if (!ret) {
         DLog(@"manager start failed!");
     }
@@ -41,6 +42,8 @@
     DLog(@"当前网络状态 _isNetWork: %d",_isNetWork);
     
     [_window makeKeyAndVisible];
+//    [BNCoreServices_Instance initServices:@"uyQP9vycrVQwe5G3Sus9tTGNdKWmWfTG"];
+//    [BNCoreServices_Instance startServicesAsyn:nil fail:nil];
     return YES;
 }
 
@@ -96,7 +99,7 @@
         if(status != PPNetworkStatusNotReachable && !_isNetWork){
             DLog(@"网络状态变化，由无网络变为有网络");
             _mapManager = [[BMKMapManager alloc]init];
-            BOOL ret = [_mapManager start:@"13I7baCnebotHFHdyywGKZtPIVkzVM6h"  generalDelegate:nil];
+            BOOL ret = [_mapManager start:@"uyQP9vycrVQwe5G3Sus9tTGNdKWmWfTG"  generalDelegate:nil];
             if (!ret) {
                 DLog(@"manager start failed!");
             }

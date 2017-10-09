@@ -18,6 +18,7 @@
 #import "OTWUserModel.h"
 #import "OTWFootprintService.h"
 #import "OTWFootprintReleaseViewController.h"
+#import "OTWBusinessAlbumViewController.h"
 
 #import <MJExtension.h>
 
@@ -471,6 +472,8 @@
 - (void)morePhotoClick:(OTWBusinessDetailView *)detailView businessModel:(OTWBusinessModel *)businessModel
 {
     DLog(@"点击了更多照片，需要跳转至相册页");
+    OTWBusinessAlbumViewController * album = [[OTWBusinessAlbumViewController alloc] init];
+    [self.navigationController pushViewController:album animated:YES];
 }
 
 - (void)goMapClick:(OTWBusinessDetailView *)detailView businessModel:(OTWBusinessModel *)businessModel

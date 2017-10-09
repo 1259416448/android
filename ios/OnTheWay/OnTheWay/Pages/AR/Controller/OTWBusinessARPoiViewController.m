@@ -34,7 +34,7 @@
 #import <BaiduMapAPI_Search/BMKGeoCodeSearch.h>
 #import <BaiduMapAPI_Location/BMKLocationService.h>
 #import <CoreLocation/CoreLocation.h>
-
+//#import "BNCoreServices.h"
 
 @interface OTWBusinessARPoiViewController ()<ArvixARDataSource,UIAlertViewDelegate,BMKGeoCodeSearchDelegate,UITableViewDelegate,UITableViewDataSource,BMKPoiSearchDelegate,BMKLocationServiceDelegate>
 
@@ -72,6 +72,7 @@
 @property(nonatomic,strong) UIView *shopPopoverV;
 @property(nonatomic,strong) UILabel *shopTitle;
 @property(nonatomic,strong) UIImageView *gotoV;
+@property(nonatomic,strong) UIImageView *gotoVTouchView;
 @property(nonatomic,strong) UILabel *gotoLabel;
 @property(nonatomic,strong) UIImageView *shopLocationIcon;
 @property(nonatomic,strong) UILabel *shopLocationContent;
@@ -90,7 +91,12 @@
 
 @property(nonatomic,strong) NSString *businessId;
 
+@property (nonatomic,assign) double businessLatitude;
+@property (nonatomic,assign) double businessLongitude;
+
 @property(nonatomic,strong) NSIndexPath *selectedIndexPath;
+
+@property (nonatomic,strong) MBProgressHUD *hud;
 
 
 //查询对象
@@ -120,15 +126,16 @@
     _siftSortArr = @[].mutableCopy;
     _siftDetailArr = @[].mutableCopy;
     _searchRadius = 1000;
-    _currentPage = 1;
+    _currentPage = 0;
     _searchKeyWord = @"餐饮";
     [self.locService startUserLocationService];
-
-//    [self startPoiSearch];
+    
+    //    [self startPoiSearch];
     [self getbusinessSortData];
     [self showARViewController];
     [self buildUI];
     self.ifFirstLoadData = NO;
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -162,6 +169,7 @@
     //当前方法一定不能省略
     [super viewWillAppear:animated];
     self.geoCodeSearch.delegate = self;
+    _poiSearch.delegate = self;
     [self hideAllButton];
     [self.navigationController setNavigationBarHidden:YES];
     [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
@@ -180,6 +188,8 @@
 }
 - (void)startPoiSearch
 {
+    _hud = [self addLoadingHud];
+    
     BMKNearbySearchOption *option = [[BMKNearbySearchOption alloc]init];
     option.pageIndex = self.currentPage;
     option.pageCapacity = 50;
@@ -199,6 +209,8 @@
 - (void)onGetPoiResult:(BMKPoiSearch*)searcher result:(BMKPoiResult*)poiResultList errorCode:(BMKSearchErrorCode)error
 {
     if (error == BMK_SEARCH_NO_ERROR) {
+        [_hud hideAnimated:YES];
+        
         //在此处理正常结果
         NSLog(@"%@",poiResultList);
         NSMutableArray * arShopModels = @[].mutableCopy;
@@ -209,23 +221,33 @@
             model.colorCode = @"e52c2c";
             model.latitude = searchResult.pt.latitude;
             model.longitude = searchResult.pt.longitude;
+            model.uid = searchResult.uid;
             [arShopModels addObject:model];
         }
+        self.totalPage = poiResultList.pageNum;
         if (arShopModels.count == 0) {
             [self setAnnotations:@[]];
         }else{
             NSArray *dummyAnnotations = [self assembleAnnotation:arShopModels];
             [self setAnnotations:dummyAnnotations];
         }
-        self.footprintSumLabel.text = [NSString stringWithFormat:@"%d",poiResultList.currPoiNum];
+        if (poiResultList.totalPoiNum > 100) {
+            self.footprintSumLabel.text = @"99+";
+        }else{
+            self.footprintSumLabel.text = [NSString stringWithFormat:@"%d",poiResultList.totalPoiNum];
+        }
     }
     else if (error == BMK_SEARCH_AMBIGUOUS_KEYWORD){
         //当在设置城市未找到结果，但在其他城市找到结果时，回调建议检索城市列表
         // result.cityList;
+        [_hud hideAnimated:YES];
         NSLog(@"起始点有歧义");
     } else {
+        [_hud hideAnimated:YES];
         [self setAnnotations:@[]];
-        [MBProgressHUD py_showError:@"抱歉，未找到结果" toView:self.view];
+        //        [MBProgressHUD py_showError:@"抱歉，未找到结果" toView:self.view];
+        [self MBProgressHUDErrorTips:@"抱歉，未找到结果"];
+        self.footprintSumLabel.text = @"0";
     }
 }
 
@@ -310,6 +332,7 @@
     [self.presenter addGestureRecognizer:changeShopDetailVGesture];
     [self.shopPopoverV addSubview:self.shopTitle];
     [self.shopPopoverV addSubview:self.gotoV];
+    [self.shopPopoverV addSubview:self.gotoVTouchView];
     [self.shopPopoverV addSubview:self.gotoLabel];
     [self.shopPopoverV addSubview:self.shopLocationIcon];
     [self.shopPopoverV addSubview:self.shopLocationContent];
@@ -380,6 +403,12 @@
             if (model.selected) {
                 OTWBusinessDetailSortModel * detailModel = model.children[indexPath.row];
                 cell.titleLabel.text = detailModel.name;
+                if (detailModel.selected) {
+                    cell.selectedImg.hidden = NO;
+                }else
+                {
+                    cell.selectedImg.hidden = YES;
+                }
             }
         }
         return cell;
@@ -400,14 +429,33 @@
         [_siftDetailTableView reloadData];
     }else if (tableView == _siftDetailTableView)
     {
-        _siftView.hidden = YES;
+        _currentPage = 0;
+        for (OTWBusinessSortModel * models in _siftSortArr) {
+            for (OTWBusinessDetailSortModel * result in models.children) {
+                result.selected = NO;
+            }
+        }
         for (OTWBusinessSortModel * model in _siftSortArr) {
             if (model.selected) {
-                OTWBusinessDetailSortModel * detailModel = model.children[indexPath.row];
-                _searchKeyWord = detailModel.name;
+                if (indexPath.row == 0) {
+                    _searchKeyWord = model.name;
+                    OTWBusinessDetailSortModel * detailModel = model.children[0];
+                    detailModel.selected = !detailModel.selected;
+                    for (OTWBusinessDetailSortModel * result in model.children) {
+                        result.selected = detailModel.selected;
+                    }
+                    
+                }else{
+                    OTWBusinessDetailSortModel * detailModel = model.children[indexPath.row];
+                    _searchKeyWord = detailModel.name;
+                    detailModel.selected = YES;
+                }
                 [self startPoiSearch];
             }
         }
+        [_siftSortTableView reloadData];
+        [_siftDetailTableView reloadData];
+        _siftView.hidden = YES;
         
     }else{
     }
@@ -462,24 +510,26 @@
 {
     self.trackingManager.stopLocation = TRUE;
     [self hideBusinessSimpleInfo];
-//    [self.navigationController popToRootViewControllerAnimated:YES];
+    //    [self.navigationController popToRootViewControllerAnimated:YES];
     [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexFind]; // 显示首页
 }
 
 /**
  * 显示简要信息展示
  */
-- (void)showBusinessSimpleInfo:(NSNumber *) businessId
+- (void)showBusinessSimpleInfo:(NSString *) uid
 {
     self.shopPopoverV.hidden = NO;
     self.radar.hidden = YES;
-    self.businessId = businessId.description;
+    //    self.businessId = uid.description;
     
     for (OTWBusinessARAnnotation *annotation in self.annotations) {
         OTWBusinessARAnnotationView *annotationView = (OTWBusinessARAnnotationView *) annotation.annotationView;
-        if([annotation.businessFrame.businessDetail.businessId isEqualToNumber:businessId]){
+        if([annotation.businessFrame.businessDetail.uid isEqualToString:uid]){
             annotation.businessFrame.colorAlpha = 1;
             annotation.businessFrame.distanceAlpha = 1;
+            _businessLatitude = annotation.location.coordinate.latitude;
+            _businessLongitude = annotation.location.coordinate.longitude;
         }else{
             annotation.businessFrame.colorAlpha = 0.5;
             annotation.businessFrame.distanceAlpha = 0.5;
@@ -537,7 +587,7 @@
 {
     _siftView.hidden = NO;
     [UIView beginAnimations:nil context:nil];
-    _siftView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 196);
+    _siftView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 415);
     [UIView commitAnimations];
     
 }
@@ -551,7 +601,7 @@
 - (void)cancelButtonClick
 {
     [UIView beginAnimations:nil context:nil];
-    _siftView.frame = CGRectMake(0, -196, SCREEN_WIDTH, 196);
+    _siftView.frame = CGRectMake(0, -415, SCREEN_WIDTH, 415);
     [UIView commitAnimations];
     _siftView.hidden = YES;
 }
@@ -559,8 +609,14 @@
 #pragma mark 刷新-换一批足迹
 - (void)refreshFootprints
 {
+    if (_currentPage == _totalPage) {
+        [self errorTips:@"已经是最后一批信息，再次点击会循环展示" userInteractionEnabled:NO];
+        _currentPage = 1;
+        return;
+    }
     _searchKeyWord = @"餐饮";
     _searchRadius = 1000;
+    _currentPage++;
     [self hideBusinessSimpleInfo];
     [self hideAllButton];
     [self startPoiSearch];
@@ -577,14 +633,17 @@
         self.radar.maxDistance = 100;
         self.arShopSearchParams.distance = @"0.1";
         self.searchRadius = 100;
+        self.presenter.maxDistance = 100;
     }else if([self.arShopSearchParams.searchDistance isEqualToString:@"two"]){
         self.radar.maxDistance = 500;
         self.arShopSearchParams.distance = @"0.5";
         self.searchRadius = 500;
+        self.presenter.maxDistance = 500;
     }else if([self.arShopSearchParams.searchDistance isEqualToString:@"three"]){
         self.radar.maxDistance = 1000;
         self.arShopSearchParams.distance = @"1";
         self.searchRadius = 1000;
+        self.presenter.maxDistance = 1000;
     }
     [self locationButtonClick];
     [self startPoiSearch];
@@ -616,6 +675,70 @@
     OTWFootprintReleaseViewController *footprintReleaseVC = [[OTWFootprintReleaseViewController alloc] init];
     [self.navigationController pushViewController:footprintReleaseVC animated:YES];
 }
+#pragma mark 路径导航
+- (void)TouchgotoVView
+{
+//    NSMutableArray *nodesArray = [[NSMutableArray alloc] initWithCapacity: 2];
+//    
+//    //起点
+//    BNRoutePlanNode *startNode = [[BNRoutePlanNode alloc] init];
+//    startNode.pos = [[BNPosition alloc] init];
+//    startNode.pos.x = self.location.longitude;
+//    startNode.pos.y = self.location.latitude;
+//    startNode.pos.eType = BNCoordinate_BaiduMapSDK;
+//    [nodesArray addObject:startNode];
+//    
+//    //终点
+//    BNRoutePlanNode *endNode = [[BNRoutePlanNode alloc] init];
+//    endNode.pos = [[BNPosition alloc] init];
+//    endNode.pos.x = _businessLongitude;
+//    endNode.pos.y = _businessLatitude;
+//    endNode.pos.eType = BNCoordinate_BaiduMapSDK;
+//    [nodesArray addObject:endNode];
+//    
+//    // 发起算路
+//    [BNCoreServices_RoutePlan  startNaviRoutePlan: BNRoutePlanMode_Recommend naviNodes:nodesArray time:nil delegete:self    userInfo:nil];
+}
+////算路成功回调
+//-(void)routePlanDidFinished:(NSDictionary *)userInfo
+//{
+//    NSLog(@"算路成功");
+//    
+//    //路径规划成功，开始导航
+//    [BNCoreServices_UI showPage:BNaviUI_NormalNavi delegate:self extParams:nil];
+//}
+//
+////算路失败回调
+//- (void)routePlanDidFailedWithError:(NSError *)error andUserInfo:(NSDictionary *)userInfo
+//{
+//    NSLog(@"算路失败");
+//    NSString * tipsString = @"";
+//    switch ([error code]%10000)
+//    {
+//        case BNAVI_ROUTEPLAN_ERROR_LOCATIONFAILED:
+//            tipsString = @"暂时无法获取您的位置,请稍后重试";
+//            break;
+//        case BNAVI_ROUTEPLAN_ERROR_ROUTEPLANFAILED:
+//            tipsString = @"无法发起导航";
+//            break;
+//        case BNAVI_ROUTEPLAN_ERROR_LOCATIONSERVICECLOSED:
+//            tipsString = @"定位服务未开启,请到系统设置中打开定位服务。";
+//            break;
+//        case BNAVI_ROUTEPLAN_ERROR_NODESTOONEAR:
+//            tipsString = @"起终点距离起终点太近";
+//            break;
+//        default:
+//            NSLog(@"算路失败");
+//            tipsString = @"算路失败";
+//            break;
+//    }
+//    [MBProgressHUD py_showError:tipsString toView:self.view];
+//}
+//
+////算路取消
+//-(void)routePlanDidUserCanceled:(NSDictionary*)userInfo {
+//    NSLog(@"算路取消");
+//}
 
 - (void)showARViewController
 {
@@ -629,7 +752,7 @@
     self.presenter.distanceOffsetMode = DistanceOffsetModeManual;
     self.presenter.distanceOffsetMultiplier = 0.1; // Pixels per meter
     self.presenter.distanceOffsetMinThreshold = 500;
-    self.presenter.maxDistance = 3000;
+    self.presenter.maxDistance = 1000;
     self.presenter.maxVisibleAnnotations = 100;
     self.presenter.verticalStackingEnabled = true;
     self.trackingManager.userDistanceFilter = 30;
@@ -720,13 +843,7 @@
                     model.selected = NO;
                     [_siftSortArr addObject:model];
                 }
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    OTWBusinessSortModel * model = _siftSortArr[0];
-                    model.selected = YES;
-                    [self layoutSiftView];
-                    [_siftSortTableView reloadData];
-                    [_siftDetailTableView reloadData];
-                });
+                [self reloadTableView];
             }
         } success:^(id responseObject) {
             if([[NSString stringWithFormat:@"%@",responseObject[@"code"]] isEqualToString:@"0"]){
@@ -739,13 +856,7 @@
                     model.selected = NO;
                     [_siftSortArr addObject:model];
                 }
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    OTWBusinessSortModel * model = _siftSortArr[0];
-                    model.selected = YES;
-                    [self layoutSiftView];
-                    [_siftSortTableView reloadData];
-                    [_siftDetailTableView reloadData];
-                });
+                [self reloadTableView];
             }
         } failure:^(NSError *error) {
             
@@ -753,13 +864,28 @@
     });
     
 }
-- (void)layoutSiftView
+- (void)reloadTableView
 {
-    NSInteger num = _siftSortArr.count + 1;
-    _siftView.frame = CGRectMake(0, -(64 + 44 * num), SCREEN_WIDTH, 64 + 44 * num);
-    _siftSortTableView.frame = CGRectMake(0, 64, SCREEN_WIDTH * 0.32, 44 * num);
-    _siftDetailTableView.frame = CGRectMake(SCREEN_WIDTH * 0.32, 64, SCREEN_WIDTH, 44 * num);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        OTWBusinessSortModel * model = _siftSortArr[0];
+        model.selected = YES;
+        for (OTWBusinessSortModel * result in _siftSortArr) {
+            OTWBusinessDetailSortModel * resultModel = [[OTWBusinessDetailSortModel alloc] init];
+            resultModel.name = @"全部";
+            resultModel.selected = NO;
+            [result.children insertObject:resultModel atIndex:0];
+        }
+        [_siftSortTableView reloadData];
+        [_siftDetailTableView reloadData];
+    });
 }
+//- (void)layoutSiftView
+//{
+//    NSInteger num = _siftSortArr.count + 1;
+//    _siftView.frame = CGRectMake(0, -(64 + 44 * num), SCREEN_WIDTH, 64 + 44 * num);
+//    _siftSortTableView.frame = CGRectMake(0, 64, SCREEN_WIDTH * 0.32, 44 * num);
+//    _siftDetailTableView.frame = CGRectMake(SCREEN_WIDTH * 0.32, 64, SCREEN_WIDTH * 0.68, 44 * num);
+//}
 
 #pragma mark 根据查询参数加载足迹数据
 - (void)getArShops
@@ -845,7 +971,7 @@
 -(void)showShopDetail:(OTWUITapGestureRecognizer*)gesture
 {
     OTWBusinessARAnnotation *annotation = gesture.opId;
-    [self showBusinessSimpleInfo:annotation.businessFrame.businessDetail.businessId];
+    [self showBusinessSimpleInfo:annotation.businessFrame.businessDetail.uid];
     self.shopTitle.text = annotation.businessFrame.businessDetail.name;
     self.shopLocationContent.text = annotation.businessFrame.businessDetail.address;
     self.businessId = annotation.businessFrame.businessDetail.businessId.description;
@@ -876,13 +1002,13 @@
  *用户位置更新后，会调用此函数
  *@param userLocation 新的用户位置
  */
-- (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation
-{
-    CLLocationCoordinate2D coordinate = userLocation.location.coordinate;
-    self.location = coordinate;
-//    [self startPoiSearch];
-    [self.locService stopUserLocationService];
-}
+//- (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation
+//{
+//    CLLocationCoordinate2D coordinate = userLocation.location.coordinate;
+//    self.location = coordinate;
+////    [self startPoiSearch];
+//    [self.locService stopUserLocationService];
+//}
 
 #pragma mark 按钮初始化
 - (UIButton*)backButton
@@ -967,7 +1093,7 @@
 - (UIView *)siftView
 {
     if (!_siftView) {
-        _siftView = [[UIView alloc] initWithFrame:CGRectMake(0, -196, SCREEN_WIDTH, 196)];
+        _siftView = [[UIView alloc] initWithFrame:CGRectMake(0, -415, SCREEN_WIDTH, 415)];
         _siftView.backgroundColor = [UIColor whiteColor];
         //        _siftView.userInteractionEnabled = YES;
         _siftView.hidden = YES;
@@ -1006,7 +1132,7 @@
 {
     if (!_cancelButton) {
         _cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        _cancelButton.frame = CGRectMake(SCREEN_WIDTH - 35, 32, 20, 20);
+        _cancelButton.frame = CGRectMake(SCREEN_WIDTH - 50, 20, 50, 40);
         _cancelButton.backgroundColor = [UIColor clearColor];
         [_cancelButton setImage:[UIImage imageNamed:@"ar_guanbi"] forState:UIControlStateNormal];
         [_cancelButton addTarget:self action:@selector(cancelButtonClick) forControlEvents:UIControlEventTouchUpInside];
@@ -1017,7 +1143,7 @@
 - (UITableView *)siftSortTableView
 {
     if (!_siftSortTableView) {
-        _siftSortTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, SCREEN_WIDTH * 0.32, 132) style:UITableViewStylePlain];
+        _siftSortTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, SCREEN_WIDTH * 0.32, 351) style:UITableViewStylePlain];
         _siftSortTableView.delegate = self;
         _siftSortTableView.dataSource = self;
         _siftSortTableView.separatorStyle = UITableViewCellSelectionStyleNone;
@@ -1041,7 +1167,7 @@
 - (UITableView *)siftDetailTableView
 {
     if (!_siftDetailTableView) {
-        _siftDetailTableView = [[UITableView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH * 0.32, 64, SCREEN_WIDTH, 132) style:UITableViewStylePlain];
+        _siftDetailTableView = [[UITableView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH * 0.32, 64, SCREEN_WIDTH * 0.68, 351) style:UITableViewStylePlain];
         _siftDetailTableView.delegate = self;
         _siftDetailTableView.dataSource = self;
         _siftDetailTableView.separatorStyle = UITableViewCellSelectionStyleNone;
@@ -1145,6 +1271,18 @@
         [_gotoV setImage:[UIImage imageNamed:@"daohang"]];
     }
     return _gotoV;
+}
+- (UIImageView*)gotoVTouchView
+{
+    if (!_gotoVTouchView) {
+        _gotoVTouchView = [[UIImageView alloc] init];
+        _gotoVTouchView.frame = CGRectMake(SCREEN_WIDTH - 21.5 - 40, 0, 61.5, 50);
+        _gotoVTouchView.backgroundColor = [UIColor clearColor];
+        UITapGestureRecognizer * gotov = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(TouchgotoVView)];
+        _gotoVTouchView.userInteractionEnabled = YES;
+        [_gotoVTouchView addGestureRecognizer:gotov];
+    }
+    return _gotoVTouchView;
 }
 
 - (UILabel*)gotoLabel
@@ -1322,10 +1460,10 @@
  */
 - (void) viewBusinessDetail
 {
-//    self.trackingManager.stopLocation = YES;
-//    OTWBusinessDetailViewController *businessVC = [[OTWBusinessDetailViewController alloc] init];
-//    [businessVC setOpData:self.businessId];
-//    [self.navigationController pushViewController:businessVC animated:YES];
+    //    self.trackingManager.stopLocation = YES;
+    //    OTWBusinessDetailViewController *businessVC = [[OTWBusinessDetailViewController alloc] init];
+    //    [businessVC setOpData:self.businessId];
+    //    [self.navigationController pushViewController:businessVC animated:YES];
 }
 
 - (void)arTrackingManager:(ArvixARTrackingManager *)trackingManager didUpdateUserLocation:(CLLocation *)location
@@ -1401,15 +1539,25 @@
     }
 }
 
+- (void)MBProgressHUDErrorTips:(NSString *)error{
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.mode = MBProgressHUDModeText;
+    hud.label.text = error;
+    hud.label.textColor = [UIColor whiteColor];
+    hud.bezelView.color = [[UIColor blackColor] colorWithAlphaComponent:0.7];
+    hud.bezelView.style = MBProgressHUDBackgroundStyleSolidColor;
+    [hud hideAnimated:YES afterDelay:2];
+}
+
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end

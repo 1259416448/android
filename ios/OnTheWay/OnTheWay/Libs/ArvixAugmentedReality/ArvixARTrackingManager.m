@@ -50,7 +50,7 @@
         _userDistanceFilter = 15;
         _minimumHeadingAccuracy = 120;
         _allowCompassCalibration = false;
-        _minimumLocationHorizontalAccuracy = 500;
+        _minimumLocationHorizontalAccuracy = 2000;
         _minimumLocationAge = 30;
         
         // init private property
