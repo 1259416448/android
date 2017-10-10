@@ -210,6 +210,9 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
                              String q, Set<Long> typeIds) {
         if (SearchType.ar.equals(type)) {
             return this.searchAR(number, size, latitude, longitude, distance, currentTime, q, typeIds);
+        } else if (SearchType.list.equals(type)) {
+            //这里直接调用AR数据获取，距离默认前端传入1000km即可
+            return this.searchAR(number, size, latitude, longitude, distance, currentTime, q, typeIds);
         }
         return null;
     }
@@ -258,12 +261,12 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
             }
         }
         //默认需要获取3张照片，如果获取到的商家照片不满3张，剩余的获取用户照片
-        if(detailDTO.getPhotoUrls() == null || detailDTO.getPhotoUrls().size() < 3){
+        if (detailDTO.getPhotoUrls() == null || detailDTO.getPhotoUrls().size() < 3) {
             int fetchNo = detailDTO.getPhotoUrls() == null ? 3 : (3 - detailDTO.getPhotoUrls().size());
-            List<String> photoUrls = footprintService.findPhotoUrlByBusinessId(business.getId(),fetchNo);
-            if(photoUrls != null && photoUrls.size() >0){
-                if(detailDTO.getPhotoUrls() == null) detailDTO.setPhotoUrls(Lists.newArrayList());
-                photoUrls.forEach(x->detailDTO.getPhotoUrls().add(urlFix + x));
+            List<String> photoUrls = footprintService.findPhotoUrlByBusinessId(business.getId(), fetchNo);
+            if (photoUrls != null && photoUrls.size() > 0) {
+                if (detailDTO.getPhotoUrls() == null) detailDTO.setPhotoUrls(Lists.newArrayList());
+                photoUrls.forEach(x -> detailDTO.getPhotoUrls().add(urlFix + x));
             }
         }
         //抓取商家优惠信息  优惠功能暂未添加
