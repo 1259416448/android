@@ -103,9 +103,10 @@
     }
     
     //距离
-    CGRect distanceLabelRect = CGRectMake(SCREEN_WIDTH-15-40, 15, 40, 12);
+    CGRect distanceLabelRect = CGRectMake(SCREEN_WIDTH-15-100, 15, 100, 12);
     distanceLabel.textAlignment = NSTextAlignmentRight;
-    distanceLabel.text=status. BusinessmenDistance;
+    NSInteger distance = (NSInteger)(status.BusinessmenDistance.doubleValue * 1000);
+    distanceLabel.text = [NSString stringWithFormat:@"%ldm",distance];
     distanceLabel.frame=distanceLabelRect;
     
     //地址图标
@@ -114,9 +115,9 @@
     addressImageBoxView.frame=CGRectMake(15,44, 8, 10);
     [addressImageView addSubview:addressImageBoxView];
     
-    //行走世间
+    //行走时间
     CGRect needTimeLabelRect=CGRectMake( SCREEN_WIDTH-15-80, 43,80,12);
-    needTimeLabel.text=status. BusinessmenNeedTime;
+    needTimeLabel.text = [NSString stringWithFormat:@"步行约%d分钟",(int)(distance / 7.5)];
     needTimeLabel.textAlignment = NSTextAlignmentRight;
     needTimeLabel.frame=needTimeLabelRect;
     

@@ -13,7 +13,8 @@
 #import "OTWCustomNavigationBar.h"
 #import "OTWUserModel.h"
 #import "OTWLaunchManager.h"
-
+#import "ImprovePersonInfoViewController.h"
+//#import "CHBaseAlertView.h"
 
 
 
@@ -45,7 +46,7 @@
 @property (nonatomic,strong) UIView *topView;
 @property (nonatomic,assign) CGFloat photoH;
 @property (nonatomic,strong) UIImageView *topBgImg;
-@property (nonatomic,strong) UIView *headerView;
+@property (nonatomic,strong) UIImageView *headerView;
 @property (nonatomic,strong) UILabel *wellcomeText;
 @property (nonatomic,strong) UIView *inputView;
 @property (nonatomic,strong) UIView *inputPhoneView;
@@ -53,6 +54,8 @@
 @property (nonatomic,strong) UIView *loginBtnView;
 @property (nonatomic,strong) UIImageView *loginBtnImg;
 @property (nonatomic,strong) UIImageView *messageTipsImg;
+@property (nonatomic,strong) UIButton *waitLoginBtn;
+
 @end
 
 @implementation OTWLoginViewController
@@ -190,6 +193,9 @@
     //右边线
     [self.view addSubview:self.underLineRightView];
     
+    //稍后登录
+    [self.view addSubview:self.waitLoginBtn];
+    
     //微信登陆
     //[self.view addSubview:self.wechatLoginButton];
     
@@ -273,11 +279,17 @@
                 [OTWUserModel shared].headImg = result[@"body"][@"headImg"];
                 [OTWUserModel shared].name = result[@"body"][@"name"];
                 [[OTWUserModel shared] dump];
-                //登陆成功
+//                ImprovePersonInfoViewController * personInfo = [[ImprovePersonInfoViewController alloc] init];
+//                [self.presentingViewController presentViewController:personInfo animated:YES completion:nil];
+//                登陆成功
                 if(self.requiredLogin){
                     [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexPersonal];
                 }
                 [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+//                [CHBaseAlertView shareBaseAlertViewWithTitleArray:@[@"温馨提示"] messageArray:@[@"完善信息会让更多的小伙伴发现你哦~快去完善你的个人资料吧~"] buttonTitleArrray:@[@{@"color":[UIColor color_202020],@"title":@"稍后完善"},@{@"color":[UIColor blueColor],@"title":@"确定"}] clickBlock:^(NSInteger index) {
+//                    
+//                }];
+                
                 //[[NSNotificationCenter defaultCenter] postNotificationName:@"loginSuccess" object:self];
             }else{
                 [self.loginButton setTitle:@"登陆" forState:UIControlStateNormal];
@@ -295,7 +307,6 @@
         }
     }];
 }
-
 #pragma mark - Private methods codeSentButtonClick
 - (void)codeSentButtonClick{
     DLog(@"发送验证码");
@@ -377,6 +388,11 @@
     });
     dispatch_resume(_timer);
 }
+//稍后登录
+- (void)waitLoginBtnClick
+{
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+}
 
 
 #pragma mark - UITextFieldDelegate
@@ -422,10 +438,11 @@
     return _topBgImg;
 }
 
--(UIView*)headerView{
+-(UIImageView*)headerView{
     if(!_headerView){
-        _headerView=[[UIView alloc]initWithFrame:CGRectMake((SCREEN_WIDTH-75)/2,(self.photoH-70-20-24)/2-(5*self.photoH)/265 , 70, 70)];
+        _headerView=[[UIImageView alloc]initWithFrame:CGRectMake((SCREEN_WIDTH-75)/2,(self.photoH-70-20-24)/2-(5*self.photoH)/265 , 70, 70)];
         _headerView.backgroundColor=[UIColor whiteColor];
+        _headerView.image = [UIImage imageNamed:@"logo"];
         _headerView.layer.cornerRadius=70/2;
         _headerView.layer.masksToBounds = YES;
         
@@ -672,6 +689,17 @@
         _loginButton.layer.cornerRadius = 20;
     }
     return _loginButton;
+}
+- (UIButton *)waitLoginBtn
+{
+    if (!_waitLoginBtn) {
+        _waitLoginBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_loginBtnView.frame) + 9, SCREEN_WIDTH, 12)];
+        _waitLoginBtn.titleLabel.font = [UIFont systemFontOfSize:12];
+        [_waitLoginBtn setTitleColor:[UIColor color_c4c4c4] forState:UIControlStateNormal];
+        [_waitLoginBtn setTitle:@"稍后登录" forState:UIControlStateNormal];
+        [_waitLoginBtn addTarget:self action:@selector(waitLoginBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _waitLoginBtn;
 }
 
 //-(UIView*)underLineLeftView{

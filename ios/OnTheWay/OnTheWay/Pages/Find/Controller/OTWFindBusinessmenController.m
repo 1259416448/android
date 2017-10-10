@@ -12,6 +12,11 @@
 #import "OTWFindViewController.h"
 #import "OTWShopDetailsController.h"
 #import "OTWBusinessDetailViewController.h"
+#import "OTWFootprintSearchParams.h"
+#import <MJExtension.h>
+#import "OTWARShopService.h"
+#import "OTWBusinessModel.h"
+
 
 @interface OTWFindBusinessmenViewController () <UITableViewDataSource,UITableViewDelegate>{
     
@@ -20,6 +25,9 @@
 }
 @property (nonatomic,strong) UIView * ARdituImageView;
 @property (nonatomic,strong) UIView * fabuImageView;
+@property (nonatomic,strong) OTWFootprintSearchParams *arShopSearchParams;
+@property (nonatomic,strong) NSDictionary *reponseCacheData;
+
 //@property (nonatomic,strong) UIView * pingmianImageView;
 @end
 
@@ -28,10 +36,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
+    _status = [[NSMutableArray alloc] init];
     [self buildUI];
     //初始化数据
-    [self initData];
+//    [self initData];
+    [self getShopsList];
     //创建一个分组样式的UITableView
     _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     
@@ -44,7 +53,16 @@
   // _tableView.separatorColor= [UIColor color_d5d5d5];
     
    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;//将边框去掉
-
+    
+    _tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        self.arShopSearchParams.number = 0;
+        [self getShopsList];
+    }];
+    
+    _tableView.mj_footer = [MJRefreshBackFooter footerWithRefreshingBlock:^{
+        self.arShopSearchParams.number++;
+        [self getShopsList];
+    }];
     [self.view addSubview:_tableView];
     
     [self.view addSubview:self.ARdituImageView];
@@ -97,7 +115,78 @@
 //    NSArray *dictArray = [NSArray arrayWithContentsOfFile:fullPath];
 //    _status = [NSMutableArray arrayWithArray:dictArray];
 }
-
+- (void)getShopsList
+{
+    [self fetchARShops:self.arShopSearchParams.mj_keyValues completion:^(id result) {
+        
+        if([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]){
+            NSArray *arr = [NSArray arrayWithArray:[[result objectForKey:@"body"] objectForKey:@"content"]];
+            if (self.arShopSearchParams.number == 0) {
+                [_status removeAllObjects];
+            }else{
+            }
+            for (NSDictionary * dic in arr) {
+                FindBusinessmenModel *model = [FindBusinessmenModel statusWithDictionary:dic];
+                [_status addObject:model];
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_tableView.mj_header endRefreshing];
+                [_tableView.mj_footer endRefreshing];
+                [_tableView reloadData];
+            });
+            
+        }else{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_tableView.mj_header endRefreshing];
+                [_tableView.mj_footer endRefreshing];
+                [self errorTips:@"服务端繁忙，请稍后再试" userInteractionEnabled:YES];
+            });
+        }
+    }];
+}
+-(void)fetchARShops:(NSDictionary *)params completion:(requestBackBlock)block
+{
+    MBProgressHUD *hud = [self addLoadingHud];
+    DLog(@"查询参数：%@",params);
+    [OTWARShopService getARShopList:params completion:^(id result, NSError *error) {
+        
+        [hud hideAnimated:YES];
+        
+        if (result) {
+            if([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]){
+                if (block) {
+                    self.arShopSearchParams.currentTime = result[@"currentTime"];
+                    block(result);
+                }
+            }else{
+                if(self.reponseCacheData){
+                    if (block) {
+                        block(self.reponseCacheData);
+                    }
+                }
+            }
+        } else {
+            if(self.reponseCacheData){
+                if (block) {
+                    block(self.reponseCacheData);
+                }
+            }
+            [self netWorkErrorTips:error];
+//            self.ifFirstLoadData = NO;
+        }
+    } responseCache:^(id responseCache) {
+        self.reponseCacheData = responseCache;
+    }];
+}
+-(MBProgressHUD *) addLoadingHud
+{
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.bezelView.color = [[UIColor blackColor] colorWithAlphaComponent:0.7];
+    hud.bezelView.style = MBProgressHUDBackgroundStyleSolidColor;
+    hud.activityIndicatorColor = [UIColor whiteColor];
+    hud.userInteractionEnabled = NO;
+    return hud;
+}
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -107,7 +196,7 @@
 -(void)buildUI
 {
     //设置标题
-    self.title = @"1234个商家";
+//    self.title = @"1234个商家";
     [self setLeftNavigationImage:[UIImage imageNamed:@"back_2"]];
     //大背景
     self.view.backgroundColor=[UIColor color_f4f4f4];
@@ -122,7 +211,18 @@
 #pragma mark - 代理方法
 #pragma mark 设置分组标题内容高度
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    return 10;
+    return 36.5;
+}
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView * headView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 36.5)];
+    headView.backgroundColor = [UIColor color_f4f4f4];
+    UILabel * all = [[UILabel alloc] initWithFrame:CGRectMake(15, 15, 100, 12)];
+    all.textColor = [UIColor color_979797];
+    all.text = @"全部";
+    all.font = [UIFont systemFontOfSize:12];
+    [headView addSubview:all];
+    return headView;
 }
 
 #pragma mark 返回分组数
@@ -196,6 +296,30 @@
     }
     return _fabuImageView;
 }
+#pragma mark 初始化商家list查询参数
+-(OTWFootprintSearchParams *)arShopSearchParams
+{
+    if (!_arShopSearchParams) {
+        _arShopSearchParams = [[OTWFootprintSearchParams alloc] init];
+        //列表查询
+        _arShopSearchParams.type = @"ar";
+        //默认搜索半径为1公里
+        _arShopSearchParams.searchDistance = @"three";
+        //默认当前页为 0
+        _arShopSearchParams.number = 0;
+        //默认每页大小为 15
+        _arShopSearchParams.size = 30;
+        //默认不是最后一页
+        _arShopSearchParams.isLastPage = NO;
+        //默认是第一页
+        _arShopSearchParams.isFirstPage = YES;
+        
+        _arShopSearchParams.latitude = _latitude;
+        _arShopSearchParams.longitude = _longitude;
+    }
+    
+    return _arShopSearchParams;
+}
 
 //-(UIView*)pingmianImageView{
 //    if(!_pingmianImageView){
@@ -212,6 +336,7 @@
 
 -(void)ARdituClick{
     DLog(@"我点击了ARdituClick");
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(void)fubuClick{

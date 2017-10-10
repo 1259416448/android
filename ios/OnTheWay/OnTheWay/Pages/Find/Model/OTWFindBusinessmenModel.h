@@ -11,7 +11,7 @@
  @interface FindBusinessmenModel : NSObject
  @property (nonatomic, copy) NSString *BusinessmenName; // 名称
  @property (nonatomic, copy) NSString *BusinessmenNeedTime; // 所需时间
- @property (nonatomic, copy) NSString *BusinessmenDistance; // 距离
+ @property (nonatomic, copy) NSNumber *BusinessmenDistance; // 距离
  @property (nonatomic, copy) NSString *BusinessmenAddress; // 地址
  @property (nonatomic, copy) NSMutableArray *coupons;//优惠券列表
 

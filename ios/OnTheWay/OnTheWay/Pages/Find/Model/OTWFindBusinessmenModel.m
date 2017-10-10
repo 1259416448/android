@@ -13,10 +13,10 @@
 #pragma mark 根据字典初始化对象
 -(FindBusinessmenModel *)initWithDictionary:(NSDictionary *)dic{
     if(self=[super init]){
-        self.BusinessmenName=dic[@"BusinessmenName"] ;
-        self.BusinessmenNeedTime=dic[@"BusinessmenNeedTime"];
-        self.BusinessmenDistance=dic[@"BusinessmenDistance"];
-        self.BusinessmenAddress=dic[@"BusinessmenAddress"];
+        self.BusinessmenName=dic[@"name"] ;
+        self.BusinessmenNeedTime=@"步行约八分钟";
+        self.BusinessmenDistance=dic[@"distance"];
+        self.BusinessmenAddress=dic[@"address"];
         self.coupons=dic[@"coupons"];
     }
     return self;

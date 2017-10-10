@@ -115,6 +115,9 @@
 + (UIColor *)color_eff1ee {
     return [UIColor colorWithHexString:@"eff1ee"];
 }
++ (UIColor *)color_EFEFf4 {
+    return [UIColor colorWithHexString:@"EFEFf4"];
+}
 + (UIColor *)color_ffe8e3 {
     return [UIColor colorWithHexString:@"ffe8e3"];
 }

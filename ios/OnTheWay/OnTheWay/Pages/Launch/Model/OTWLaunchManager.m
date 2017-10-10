@@ -99,10 +99,10 @@
             
             UINavigationController * footprintsNav = [[UINavigationController alloc] initWithRootViewController:footprintArVC]; // 足迹Ar
             
-//            OTWBusinessARViewController * arBusinessVC = [[OTWBusinessARViewController alloc] init];
+            OTWBusinessARViewController * arBusinessVC = [[OTWBusinessARViewController alloc] init];
             //POI获取的数据
-            OTWBusinessARPoiViewController * arBusinessPoiVC = [[OTWBusinessARPoiViewController alloc] init];
-            UINavigationController * arNav = [[UINavigationController alloc] initWithRootViewController:arBusinessPoiVC]; // AR
+//            OTWBusinessARPoiViewController * arBusinessPoiVC = [[OTWBusinessARPoiViewController alloc] init];
+            UINavigationController * arNav = [[UINavigationController alloc] initWithRootViewController:arBusinessVC]; // AR
             
             OTWNewsViewController *newsVC = [[OTWNewsViewController alloc] init];
             UINavigationController * newsNav = [[UINavigationController alloc] initWithRootViewController:newsVC]; // 消息
@@ -130,6 +130,14 @@
     }
     return _footprintVC;
 }
+- (OTWFindBusinessmenViewController *)FindBusinessmenVC
+{
+    if (!_FindBusinessmenVC) {
+        _FindBusinessmenVC = [[OTWFindBusinessmenViewController alloc] init];
+    }
+    return _FindBusinessmenVC;
+}
+
 
 - (OTWPlaneMapViewController *) footprintPlaneMapVC
 {

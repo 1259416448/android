@@ -508,14 +508,16 @@
 #pragma mark 跳转至足迹列表页面
 - (void)toFootprintListView
 {
+    [OTWLaunchManager sharedManager].FindBusinessmenVC.latitude = self.arShopSearchParams.latitude;
+    [OTWLaunchManager sharedManager].FindBusinessmenVC.longitude = self.arShopSearchParams.longitude;
     //获取当前push View
     NSArray *viewController = self.navigationController.viewControllers;
     //检查 footprintVC 是否在 队列中
-    NSUInteger index = [viewController indexOfObject:[OTWLaunchManager sharedManager].footprintVC];
+    NSUInteger index = [viewController indexOfObject:[OTWLaunchManager sharedManager].FindBusinessmenVC];
     if(index != NSNotFound){ //存在
-        [self.navigationController popToViewController:[OTWLaunchManager sharedManager].footprintVC animated:NO];
+        [self.navigationController popToViewController:[OTWLaunchManager sharedManager].FindBusinessmenVC animated:NO];
     }else{ //不存在
-        [self.navigationController pushViewController:[OTWLaunchManager sharedManager].footprintVC animated:NO];
+        [self.navigationController pushViewController:[OTWLaunchManager sharedManager].FindBusinessmenVC animated:NO];
     }
 }
 

@@ -240,6 +240,8 @@
 		DDECE4E41F6B96820058F8BB /* OTWBusinessARAnnotationFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = DDECE4E31F6B96820058F8BB /* OTWBusinessARAnnotationFrame.m */; };
 		DDF1DDB91F7F7BA300D3358C /* OTWBusinessAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF1DDB81F7F7BA300D3358C /* OTWBusinessAlbumViewController.m */; };
 		DDF4A0FE1F4AACBE00996F6F /* CommonAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF4A0FD1F4AACBE00996F6F /* CommonAlert.m */; };
+		DDF5AA791F8B6F9700AFF6F9 /* ImprovePersonInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AA781F8B6F9700AFF6F9 /* ImprovePersonInfoViewController.m */; };
+		DDF5AA7F1F8B77B100AFF6F9 /* CHBaseAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AA7E1F8B77B100AFF6F9 /* CHBaseAlertView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -698,6 +700,10 @@
 		DDF1DDB81F7F7BA300D3358C /* OTWBusinessAlbumViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWBusinessAlbumViewController.m; sourceTree = "<group>"; };
 		DDF4A0FC1F4AACBE00996F6F /* CommonAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonAlert.h; sourceTree = "<group>"; };
 		DDF4A0FD1F4AACBE00996F6F /* CommonAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonAlert.m; sourceTree = "<group>"; };
+		DDF5AA771F8B6F9700AFF6F9 /* ImprovePersonInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImprovePersonInfoViewController.h; sourceTree = "<group>"; };
+		DDF5AA781F8B6F9700AFF6F9 /* ImprovePersonInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImprovePersonInfoViewController.m; sourceTree = "<group>"; };
+		DDF5AA7D1F8B77B100AFF6F9 /* CHBaseAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CHBaseAlertView.h; path = OnTheWay/Pages/Login/CHBaseAlertView.h; sourceTree = SOURCE_ROOT; };
+		DDF5AA7E1F8B77B100AFF6F9 /* CHBaseAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CHBaseAlertView.m; path = OnTheWay/Pages/Login/CHBaseAlertView.m; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1079,6 +1085,7 @@
 		D7F6B03E1F0D390D0013090A /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				DDF5AACC1F8B79DB00AFF6F9 /* Tools */,
 				DD86E9401F46BA8600D49A64 /* ArvixAugmentedReality */,
 				DDEA15F41F2708B400056166 /* BaiduMap */,
 				DDEA15EA1F25D28E00056166 /* FLAnimatedImage */,
@@ -1193,8 +1200,8 @@
 		D7F6B0641F0DD3690013090A /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				18B034C41F171BC100F53461 /* OTWFindBusinessmenController.m */,
 				18B034C31F171BA900F53461 /* OTWFindBusinessmenController.h */,
+				18B034C41F171BC100F53461 /* OTWFindBusinessmenController.m */,
 				18B034DF1F1CE42700F53461 /* OTWFindViewController.h */,
 				18B034E01F1CE42700F53461 /* OTWFindViewController.m */,
 				18B034E21F1CE6B300F53461 /* OTWShopDetailsController.h */,
@@ -1432,6 +1439,8 @@
 			children = (
 				D7F6B0B41F10AA2D0013090A /* OTWLoginViewController.h */,
 				D7F6B0B51F10AA2D0013090A /* OTWLoginViewController.m */,
+				DDF5AA771F8B6F9700AFF6F9 /* ImprovePersonInfoViewController.h */,
+				DDF5AA781F8B6F9700AFF6F9 /* ImprovePersonInfoViewController.m */,
 				D7F6B0AE1F1089130013090A /* Service */,
 				D7F6B0AA1F1089130013090A /* Controller */,
 				D7F6B0AD1F1089130013090A /* Model */,
@@ -1502,6 +1511,8 @@
 		D7F6B0AF1F1089130013090A /* View */ = {
 			isa = PBXGroup;
 			children = (
+				DDF5AA7D1F8B77B100AFF6F9 /* CHBaseAlertView.h */,
+				DDF5AA7E1F8B77B100AFF6F9 /* CHBaseAlertView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1721,6 +1732,13 @@
 				DDEA16151F319D3300056166 /* OTWPersonalFootprintService.m */,
 			);
 			path = Service;
+			sourceTree = "<group>";
+		};
+		DDF5AACC1F8B79DB00AFF6F9 /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Tools;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2005,6 +2023,7 @@
 				189880FD1F4599AD003BC734 /* OTWSystemNewsDetailController.m in Sources */,
 				1843A7D91F2737D600A285A3 /* OTWPersonalClaimViewController.m in Sources */,
 				DD86E95B1F46BA8600D49A64 /* ArvixCameraView.m in Sources */,
+				DDF5AA7F1F8B77B100AFF6F9 /* CHBaseAlertView.m in Sources */,
 				186E12D81F569E440077A93C /* OneCollectionViewCell.m in Sources */,
 				B18A43101F2088C2002C7A5A /* OTWNewsCommentTableCell.m in Sources */,
 				D7F6B0B31F1089400013090A /* OTWLoginService.m in Sources */,
@@ -2113,6 +2132,7 @@
 				DDEA15E11F25CCA500056166 /* PYPhotosViewController.m in Sources */,
 				186E12E01F56A0520077A93C /* OTWSelectBarViewController.m in Sources */,
 				18BCFAB21F4D4E7100B8E09D /* CreateShopPicCell.m in Sources */,
+				DDF5AA791F8B6F9700AFF6F9 /* ImprovePersonInfoViewController.m in Sources */,
 				B13ADA231F1C5660008E889C /* OTWSystemNewsCellFrame.m in Sources */,
 				B17836E91F414EB400FC73DC /* findSearchViewCell.m in Sources */,
 				B1B055791F305B8A008274FE /* OTWShopDetailsViewCell.m in Sources */,
