@@ -26,6 +26,8 @@
 @property (nonatomic,copy) NSString *distance;
 //时间
 @property (nonatomic,copy) NSString *time;
+//查询类型
+@property (nonatomic,copy) NSString *typeIds;
 //当前查询时间点
 @property (nonatomic,strong) NSNumber *currentTime;
 //是否是最后一页

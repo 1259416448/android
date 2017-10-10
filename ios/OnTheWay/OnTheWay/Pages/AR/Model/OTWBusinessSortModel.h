@@ -15,7 +15,7 @@
 
 @property (nonatomic,strong) NSString *colorCode;
 
-@property (nonatomic,assign) NSNumber * sortId;
+@property (nonatomic,assign) NSNumber * typeId;
 
 @property (nonatomic,assign) BOOL selected;
 
