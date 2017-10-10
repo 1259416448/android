@@ -160,9 +160,9 @@ public class BusinessTypeService extends BaseServiceImpl<BusinessType, Long> {
         Map<String, Object> params = Maps.newHashMap();
         params.put("id_in", ids);
         List<BusinessType> businessTypeList = super.findAllWithNoPageNoSort(Searchable.newSearchable(params));
-        if(businessTypeList.size()>0){
+        if (businessTypeList.size() > 0) {
             List<String> array = Lists.newArrayListWithCapacity(businessTypeList.size());
-            businessTypeList.forEach(x->array.add(x.getName()));
+            businessTypeList.forEach(x -> array.add(x.getName()));
             return array;
         }
         return null;
