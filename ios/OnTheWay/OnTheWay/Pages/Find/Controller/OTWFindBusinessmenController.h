@@ -16,6 +16,10 @@
 
 @property (nonatomic,assign) BOOL isFromAR;
 
+//商家分类ID
+@property (nonatomic,strong) NSNumber * typeId;
+
+
 
 @end
 

@@ -12,7 +12,7 @@
 #pragma mark 根据字典初始化对象
 -(OTWFindStatus *)initWithDictionary:(NSDictionary *)dic{
     if(self=[super init]){
-        self.Id=[dic[@"Id"] longLongValue];
+        self.typeId = dic[@"typeId"];
         self.FindTpyeBackgroundImageUrl=dic[@"iconStr"];
         self.FindTpyeName=dic[@"name"];
         self.FindTpyeContentList=dic[@"children"];

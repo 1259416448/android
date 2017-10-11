@@ -9,7 +9,7 @@
 
 @interface OTWFindStatus : NSObject
 
-@property (nonatomic,assign) long long Id;// 模块的id
+@property (nonatomic,strong) NSNumber * typeId;// 模块的id
 @property (nonatomic,copy) NSString *FindTpyeBackgroundImageUrl;//背景图片
 @property (nonatomic,copy) NSString *FindTpyeName;//模块名称
 @property (nonatomic,copy) NSMutableArray *FindTpyeContentList;//模块内容list

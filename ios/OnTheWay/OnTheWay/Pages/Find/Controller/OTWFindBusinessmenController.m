@@ -17,9 +17,11 @@
 #import "OTWARShopService.h"
 #import "OTWBusinessModel.h"
 #import "OTWFootprintReleaseViewController.h"
+#import <CoreLocation/CoreLocation.h>
+#import <BaiduMapAPI_Search/BMKGeoCodeSearch.h>
+#import <BaiduMapAPI_Location/BMKLocationService.h>
 
-
-@interface OTWFindBusinessmenViewController () <UITableViewDataSource,UITableViewDelegate>{
+@interface OTWFindBusinessmenViewController () <UITableViewDataSource,UITableViewDelegate,BMKLocationServiceDelegate>{
     
     UITableView *_tableView;
     NSMutableArray *_status;
@@ -28,6 +30,9 @@
 @property (nonatomic,strong) UIView * fabuImageView;
 @property (nonatomic,strong) OTWFootprintSearchParams *arShopSearchParams;
 @property (nonatomic,strong) NSDictionary *reponseCacheData;
+@property (nonatomic,assign) CLLocationCoordinate2D location;
+@property (nonatomic,strong) BMKLocationService *locService;
+
 
 //@property (nonatomic,strong) UIView * pingmianImageView;
 @end
@@ -39,11 +44,10 @@
     // Do any additional setup after loading the view.
     _status = [[NSMutableArray alloc] init];
     [self buildUI];
-    //初始化数据
+    [self.locService startUserLocationService];
     if (_isFromAR) {
-        [self getShopsList];
     }else{
-        [self initData];
+        self.arShopSearchParams.typeIds = [NSString stringWithFormat:@"%@",_typeId];
     }
     //创建一个分组样式的UITableView
     _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
@@ -125,6 +129,9 @@
         
         if([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]){
             NSArray *arr = [NSArray arrayWithArray:[[result objectForKey:@"body"] objectForKey:@"content"]];
+            if (arr.count == 0) {
+                [self MBProgressHUDErrorTips:@"抱歉，未找到结果"];
+            }
             if (self.arShopSearchParams.number == 0) {
                 [_status removeAllObjects];
             }else{
@@ -317,12 +324,17 @@
         _arShopSearchParams.isLastPage = NO;
         //默认是第一页
         _arShopSearchParams.isFirstPage = YES;
-        
-        _arShopSearchParams.latitude = _latitude;
-        _arShopSearchParams.longitude = _longitude;
     }
     
     return _arShopSearchParams;
+}
+- (BMKLocationService *) locService
+{
+    if(!_locService){
+        _locService = [[BMKLocationService alloc] init];
+        _locService.delegate = self;
+    }
+    return _locService;
 }
 
 //-(UIView*)pingmianImageView{
@@ -337,16 +349,45 @@
 //    }
 //    return _pingmianImageView;
 //}
+#pragma mark - BMKLocationServiceDelegate
+
+/**
+ *用户位置更新后，会调用此函数
+ *@param userLocation 新的用户位置
+ */
+- (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation
+{
+    CLLocationCoordinate2D coordinate = userLocation.location.coordinate;
+    self.location = coordinate;
+    self.arShopSearchParams.latitude = coordinate.latitude;
+    self.arShopSearchParams.longitude = coordinate.longitude;
+    [self getShopsList];
+    [self.locService stopUserLocationService];
+}
 
 -(void)ARdituClick{
     DLog(@"我点击了ARdituClick");
-    [self.navigationController popViewControllerAnimated:YES];
+    if (_isFromAR) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }else{
+        [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexAR];
+    }
 }
 
 -(void)fubuClick{
    DLog(@"我点击了fubuClick");
     OTWFootprintReleaseViewController * FootprintRelease = [[OTWFootprintReleaseViewController alloc] init];
     [self.navigationController pushViewController:FootprintRelease animated:YES];
+}
+
+- (void)MBProgressHUDErrorTips:(NSString *)error{
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.mode = MBProgressHUDModeText;
+    hud.label.text = error;
+    hud.label.textColor = [UIColor whiteColor];
+    hud.bezelView.color = [[UIColor blackColor] colorWithAlphaComponent:0.7];
+    hud.bezelView.style = MBProgressHUDBackgroundStyleSolidColor;
+    [hud hideAnimated:YES afterDelay:2];
 }
 //-(void)pingmianClick{
 //    DLog(@"我点击了pingmianClick");

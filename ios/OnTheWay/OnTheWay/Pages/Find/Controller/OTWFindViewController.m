@@ -164,6 +164,8 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     DLog(@"我点击了：%ld",indexPath.row);
     OTWFindBusinessmenViewController *FindBusinessmenVC = [[OTWFindBusinessmenViewController alloc] init];
+    OTWFindStatus *status=_status[indexPath.row];
+    FindBusinessmenVC.typeId = status.typeId;
     [self.navigationController pushViewController:FindBusinessmenVC animated:YES];
     
 }
