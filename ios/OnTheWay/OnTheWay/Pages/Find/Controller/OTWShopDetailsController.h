@@ -12,5 +12,7 @@
 @interface OTWShopDetailsController : OTWBaseViewController
 
 @property (assign,nonatomic) CGFloat height;
+@property (strong,nonatomic) NSNumber * shopId;
+
 
 @end

@@ -32,7 +32,7 @@
 #import "MBProgressHUD+PYExtension.h"
 #import <BaiduMapAPI_Search/BMKGeoCodeSearch.h>
 
-@interface OTWBusinessARViewController ()<ArvixARDataSource,UIAlertViewDelegate,BMKGeoCodeSearchDelegate,UITableViewDelegate,UITableViewDataSource>
+@interface OTWBusinessARViewController ()<ArvixARDataSource,UIAlertViewDelegate,BMKGeoCodeSearchDelegate,UITableViewDelegate,UITableViewDataSource,UIGestureRecognizerDelegate>
 
 
 @property(nonatomic,strong) UIButton *backButton;
@@ -307,6 +307,12 @@
             if (model.selected) {
                 OTWBusinessDetailSortModel * detailModel = model.children[indexPath.row];
                 cell.titleLabel.text = detailModel.name;
+                if (detailModel.selected) {
+                    cell.selectedImg.hidden = NO;
+                }else
+                {
+                    cell.selectedImg.hidden = YES;
+                }
             }
         }
         return cell;
@@ -327,10 +333,49 @@
         [_siftDetailTableView reloadData];
     }else if (tableView == _siftDetailTableView)
     {
+        self.arShopSearchParams.number = 0;
+        for (OTWBusinessSortModel * models in _siftSortArr) {
+            for (OTWBusinessDetailSortModel * result in models.children) {
+                result.selected = NO;
+            }
+        }
+        for (OTWBusinessSortModel * model in _siftSortArr) {
+            if (model.selected) {
+                if (indexPath.row == 0) {
+                    self.arShopSearchParams.typeIds = [NSString stringWithFormat:@"%@",model.typeId];
+                    OTWBusinessDetailSortModel * detailModel = model.children[0];
+                    detailModel.selected = !detailModel.selected;
+                    for (OTWBusinessDetailSortModel * result in model.children) {
+                        result.selected = detailModel.selected;
+                    }
+                    
+                }else{
+                    OTWBusinessDetailSortModel * detailModel = model.children[indexPath.row];
+                    self.arShopSearchParams.typeIds = [NSString stringWithFormat:@"%@,%@",model.typeId,detailModel.typeId];
+                    detailModel.selected = YES;
+                }
+//                [self startPoiSearch];
+                [self getArShops];
+            }
+        }
+        [_siftSortTableView reloadData];
+        [_siftDetailTableView reloadData];
         _siftView.hidden = YES;
     }else{
     }
 }
+#pragma mark - UIGestureRecognizerDelegate
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    // 输出点击的view的类名
+    NSLog(@"%@", NSStringFromClass([touch.view class]));
+    
+    // 若为UITableViewCellContentView（即点击了tableViewCell），则不截获Touch事件
+    if ([NSStringFromClass([touch.view class]) isEqualToString:@"UITableViewCellContentView"]) {
+        return NO;
+    }
+    return  YES;
+} 
 
 -(MBProgressHUD *) addLoadingHud
 {
@@ -440,13 +485,13 @@
 
 - (void)planeMapButtonClick
 {
-    NSArray *viewControllers = self.navigationController.viewControllers;
-    NSUInteger index = [viewControllers indexOfObject:[OTWLaunchManager sharedManager].footprintPlaneMapVC];
-    if(index != NSNotFound){
-        [self.navigationController popToViewController:[OTWLaunchManager sharedManager].footprintPlaneMapVC animated:NO];
-    }else{
-        [self.navigationController pushViewController:[OTWLaunchManager sharedManager].footprintPlaneMapVC animated:NO];
-    }
+//    NSArray *viewControllers = self.navigationController.viewControllers;
+//    NSUInteger index = [viewControllers indexOfObject:[OTWLaunchManager sharedManager].footprintPlaneMapVC];
+//    if(index != NSNotFound){
+//        [self.navigationController popToViewController:[OTWLaunchManager sharedManager].footprintPlaneMapVC animated:NO];
+//    }else{
+//        [self.navigationController pushViewController:[OTWLaunchManager sharedManager].footprintPlaneMapVC animated:NO];
+//    }
 }
 /**
  * 筛选
@@ -455,7 +500,7 @@
 {
     _siftView.hidden = NO;
     [UIView beginAnimations:nil context:nil];
-    _siftView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 196);
+    _siftView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 415);
     [UIView commitAnimations];
 
 }
@@ -469,7 +514,7 @@
 - (void)cancelButtonClick
 {
     [UIView beginAnimations:nil context:nil];
-    _siftView.frame = CGRectMake(0, -196, SCREEN_WIDTH, 196);
+    _siftView.frame = CGRectMake(0, -415, SCREEN_WIDTH, 415);
     [UIView commitAnimations];
     _siftView.hidden = YES;
 }
@@ -505,11 +550,12 @@
 
 
 
-#pragma mark 跳转至足迹列表页面
+#pragma mark 跳转至商家列表页面
 - (void)toFootprintListView
 {
     [OTWLaunchManager sharedManager].FindBusinessmenVC.latitude = self.arShopSearchParams.latitude;
     [OTWLaunchManager sharedManager].FindBusinessmenVC.longitude = self.arShopSearchParams.longitude;
+    [OTWLaunchManager sharedManager].FindBusinessmenVC.isFromAR = YES;
     //获取当前push View
     NSArray *viewController = self.navigationController.viewControllers;
     //检查 footprintVC 是否在 队列中
@@ -635,13 +681,7 @@
                     model.selected = NO;
                     [_siftSortArr addObject:model];
                 }
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    OTWBusinessSortModel * model = _siftSortArr[0];
-                    model.selected = YES;
-                    [self layoutSiftView];
-                    [_siftSortTableView reloadData];
-                    [_siftDetailTableView reloadData];
-                });
+                [self reloadTableView];
             }
         } success:^(id responseObject) {
             if([[NSString stringWithFormat:@"%@",responseObject[@"code"]] isEqualToString:@"0"]){
@@ -654,26 +694,28 @@
                     model.selected = NO;
                     [_siftSortArr addObject:model];
                 }
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    OTWBusinessSortModel * model = _siftSortArr[0];
-                    model.selected = YES;
-                    [self layoutSiftView];
-                    [_siftSortTableView reloadData];
-                    [_siftDetailTableView reloadData];
-                });
+                [self reloadTableView];
             }
         } failure:^(NSError *error) {
             
         }];
     });
-
+    
 }
-- (void)layoutSiftView
+- (void)reloadTableView
 {
-    NSInteger num = _siftSortArr.count + 1;
-    _siftView.frame = CGRectMake(0, -(64 + 44 * num), SCREEN_WIDTH, 64 + 44 * num);
-    _siftSortTableView.frame = CGRectMake(0, 64, SCREEN_WIDTH * 0.32, 44 * num);
-    _siftDetailTableView.frame = CGRectMake(SCREEN_WIDTH * 0.32, 64, SCREEN_WIDTH, 44 * num);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        OTWBusinessSortModel * model = _siftSortArr[0];
+        model.selected = YES;
+        for (OTWBusinessSortModel * result in _siftSortArr) {
+            OTWBusinessDetailSortModel * resultModel = [[OTWBusinessDetailSortModel alloc] init];
+            resultModel.name = @"全部";
+            resultModel.selected = NO;
+            [result.children insertObject:resultModel atIndex:0];
+        }
+        [_siftSortTableView reloadData];
+        [_siftDetailTableView reloadData];
+    });
 }
 
 #pragma mark 根据查询参数加载足迹数据
@@ -700,16 +742,31 @@
             
             NSMutableArray *arShopModels = [OTWBusinessModel mj_objectArrayWithKeyValuesArray:result[@"body"][@"content"]];
             if (arShopModels.count == 0) {
+                [self MBProgressHUDErrorTips:@"抱歉，未找到结果"];
                 [self setAnnotations:@[]];
             }else{
                 NSArray *dummyAnnotations = [self assembleAnnotation:arShopModels];
                 [self setAnnotations:dummyAnnotations];
             }
-            self.footprintSumLabel.text = [NSString stringWithFormat:@"%@",result[@"body"][@"totalElements"]];
+            NSNumber * shopsNum = result[@"body"][@"totalElements"];
+            if (shopsNum.integerValue > 100) {
+                self.footprintSumLabel.text = @"99+";
+            }else{
+                self.footprintSumLabel.text = [NSString stringWithFormat:@"%@",shopsNum];
+            }
         }else{
             [self errorTips:@"服务端繁忙，请稍后再试" userInteractionEnabled:YES];
         }
     }];
+}
+- (void)MBProgressHUDErrorTips:(NSString *)error{
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.mode = MBProgressHUDModeText;
+    hud.label.text = error;
+    hud.label.textColor = [UIColor whiteColor];
+    hud.bezelView.color = [[UIColor blackColor] colorWithAlphaComponent:0.7];
+    hud.bezelView.style = MBProgressHUDBackgroundStyleSolidColor;
+    [hud hideAnimated:YES afterDelay:2];
 }
 
 #pragma mark 组装足迹annotation
@@ -869,9 +926,9 @@
 - (UIView *)siftView
 {
     if (!_siftView) {
-        _siftView = [[UIView alloc] initWithFrame:CGRectMake(0, -196, SCREEN_WIDTH, 196)];
+        _siftView = [[UIView alloc] initWithFrame:CGRectMake(0, -415, SCREEN_WIDTH, 415)];
         _siftView.backgroundColor = [UIColor whiteColor];
-//        _siftView.userInteractionEnabled = YES;
+        //        _siftView.userInteractionEnabled = YES;
         _siftView.hidden = YES;
     }
     return _siftView;
@@ -894,9 +951,10 @@
             tipsLabel.textColor = [UIColor color_979797];
             tipsLabel.text = @"搜索附近的美食、商城";
             [View addSubview:tipsLabel];
-            View.userInteractionEnabled = YES;
+            tipsLabel.userInteractionEnabled = YES;
             UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toSearchBusiness)];
-            [View addGestureRecognizer:tap];
+            tap.delegate = self;
+            [tipsLabel addGestureRecognizer:tap];
             View;
         });
 
@@ -919,7 +977,7 @@
 - (UITableView *)siftSortTableView
 {
     if (!_siftSortTableView) {
-        _siftSortTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, SCREEN_WIDTH * 0.32, 132) style:UITableViewStylePlain];
+        _siftSortTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, SCREEN_WIDTH * 0.32, 351) style:UITableViewStylePlain];
         _siftSortTableView.delegate = self;
         _siftSortTableView.dataSource = self;
         _siftSortTableView.separatorStyle = UITableViewCellSelectionStyleNone;
@@ -943,7 +1001,7 @@
 - (UITableView *)siftDetailTableView
 {
     if (!_siftDetailTableView) {
-        _siftDetailTableView = [[UITableView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH * 0.32, 64, SCREEN_WIDTH, 132) style:UITableViewStylePlain];
+        _siftDetailTableView = [[UITableView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH * 0.32, 64, SCREEN_WIDTH * 0.68, 351) style:UITableViewStylePlain];
         _siftDetailTableView.delegate = self;
         _siftDetailTableView.dataSource = self;
         _siftDetailTableView.separatorStyle = UITableViewCellSelectionStyleNone;
@@ -951,8 +1009,6 @@
     }
     return _siftDetailTableView;
 }
-
-
 
 - (UIButton*)locationBtton_100m
 {

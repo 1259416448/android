@@ -14,5 +14,8 @@
 //经度
 @property (nonatomic,assign) double longitude;
 
+@property (nonatomic,assign) BOOL isFromAR;
+
+
 @end
 

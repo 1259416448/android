@@ -16,6 +16,7 @@
 #import <MJExtension.h>
 #import "OTWARShopService.h"
 #import "OTWBusinessModel.h"
+#import "OTWFootprintReleaseViewController.h"
 
 
 @interface OTWFindBusinessmenViewController () <UITableViewDataSource,UITableViewDelegate>{
@@ -39,8 +40,11 @@
     _status = [[NSMutableArray alloc] init];
     [self buildUI];
     //初始化数据
-//    [self initData];
-    [self getShopsList];
+    if (_isFromAR) {
+        [self getShopsList];
+    }else{
+        [self initData];
+    }
     //创建一个分组样式的UITableView
     _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     
@@ -341,6 +345,8 @@
 
 -(void)fubuClick{
    DLog(@"我点击了fubuClick");
+    OTWFootprintReleaseViewController * FootprintRelease = [[OTWFootprintReleaseViewController alloc] init];
+    [self.navigationController pushViewController:FootprintRelease animated:YES];
 }
 //-(void)pingmianClick{
 //    DLog(@"我点击了pingmianClick");

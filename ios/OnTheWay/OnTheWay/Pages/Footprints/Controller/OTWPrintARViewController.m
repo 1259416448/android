@@ -466,7 +466,12 @@
                 NSArray *dummyAnnotations = [self assembleAnnotation:footprintModels];
                 [self setAnnotations:dummyAnnotations];
             }
-            self.footprintSumLabel.text = [NSString stringWithFormat:@"%@",result[@"body"][@"totalElements"]];
+            NSNumber * shopsNum = result[@"body"][@"totalElements"];
+            if (shopsNum.integerValue > 100) {
+                self.footprintSumLabel.text = @"99+";
+            }else{
+                self.footprintSumLabel.text = [NSString stringWithFormat:@"%@",shopsNum];
+            }
         }else{
             [self errorTips:@"服务端繁忙，请稍后再试" userInteractionEnabled:YES];
         }
