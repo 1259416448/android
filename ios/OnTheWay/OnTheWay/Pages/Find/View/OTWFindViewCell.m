@@ -76,14 +76,14 @@
         //显示图标的名称
         UILabel  *iconName=[[UILabel alloc] init];
         iconName.frame=CGRectMake( 0, 38, 40,15);
-        iconName.text=status.FindTpyeContentList[i][0];
+        iconName.text=[status.FindTpyeContentList[i] objectForKey:@"name"];
         iconName.textAlignment = NSTextAlignmentCenter;//剧中显示
         iconName.textColor=[UIColor whiteColor];
         iconName.font=[UIFont systemFontOfSize:12];
         
         //显示图标
         UIImageView *iconImageView = [[UIImageView alloc]init];
-        iconImageView.image=[UIImage imageNamed:status.FindTpyeContentList[i][1]];
+        iconImageView.image=[UIImage imageNamed:[status.FindTpyeContentList[i] objectForKey:@"iconStr"]];
         iconImageView.frame=CGRectMake(2.5, 0, FindTableViewFindTypeListWeight, FindTableViewFindTypeListWeight);
         UIView *iconBox=[[UIView alloc] init];
         

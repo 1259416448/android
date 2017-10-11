@@ -168,6 +168,7 @@
 #pragma mark - collectBtnClick 点击了收藏
 - (void) collectBtnClick{
     DLog(@"点击了收藏");
+    _collectBtn.selected = !_collectBtn.selected;
 }
 
 /**
@@ -535,6 +536,7 @@
         _collectBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         _collectBtn.frame = CGRectMake(0, 0, 40, 44);
         [_collectBtn setImage:[UIImage imageNamed:@"ar_shoucang"] forState:UIControlStateNormal];
+        [_collectBtn setImage:[UIImage imageNamed:@"ar_shoucang_click"] forState:UIControlStateSelected];
         _collectBtn.imageEdgeInsets = UIEdgeInsetsMake(12,10,12,10);
         [_collectBtn addTarget:self action:@selector(collectBtnClick) forControlEvents:UIControlEventTouchUpInside];
     }

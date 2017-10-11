@@ -13,9 +13,9 @@
 -(OTWFindStatus *)initWithDictionary:(NSDictionary *)dic{
     if(self=[super init]){
         self.Id=[dic[@"Id"] longLongValue];
-        self.FindTpyeBackgroundImageUrl=dic[@"FindTpyeBackgroundImageUrl"];
-        self.FindTpyeName=dic[@"FindTpyeName"];
-        self.FindTpyeContentList=dic[@"FindTpyeContentList"];
+        self.FindTpyeBackgroundImageUrl=dic[@"iconStr"];
+        self.FindTpyeName=dic[@"name"];
+        self.FindTpyeContentList=dic[@"children"];
     }
     return self;
 }

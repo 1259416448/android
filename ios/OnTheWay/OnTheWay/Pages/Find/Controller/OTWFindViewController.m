@@ -19,6 +19,7 @@
     NSMutableArray *_status;
 }
 @property (nonatomic,strong) UIView *SearchBar;
+
 @end
 
 @implementation OTWFindViewController
@@ -26,10 +27,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
+    _status = [[NSMutableArray alloc] init];
+
     //初始化数据
-    [self initData];
-    
+//    [self initData];
+    [self getbusinessSortData];
     [self buildUI];
 }
 
@@ -63,6 +65,46 @@
     //    [_status addObject:@[@"2",@"wodeshoucang",@"商店"]];
     //    [_status addObject:@[@"3",@"faxianshangjia",@"文娱"]];
     //    [_status addObject:@[@"3",@"wodekaquan",@"交通"]];
+}
+- (void)getbusinessSortData
+{
+    NSString * url = @"/app/business/type/all";
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [OTWNetworkManager doGET:url parameters:nil responseCache:^(id responseCache) {
+            if([[NSString stringWithFormat:@"%@",responseCache[@"code"]] isEqualToString:@"0"]){
+                NSArray *arr = [NSArray arrayWithArray:[responseCache objectForKey:@"body"]];
+                for (NSDictionary *result in arr)
+                {
+                    if ([[result objectForKey:@"ifTop"] boolValue]) {
+                        OTWFindStatus *model = [OTWFindStatus statusWithDictionary:result];
+                        [_status addObject:model];
+                    }
+                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [_tableView reloadData];
+                });
+            }
+        } success:^(id responseObject) {
+            if([[NSString stringWithFormat:@"%@",responseObject[@"code"]] isEqualToString:@"0"]){
+                [_status removeAllObjects];
+                NSArray *arr = [NSArray arrayWithArray:[responseObject objectForKey:@"body"]];
+                
+                for (NSDictionary *result in arr)
+                {
+                    if ([[result objectForKey:@"ifTop"] boolValue]) {
+                        OTWFindStatus *model = [OTWFindStatus statusWithDictionary:result];
+                        [_status addObject:model];
+                    }
+                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [_tableView reloadData];
+                });
+            }
+        } failure:^(NSError *error) {
+            
+        }];
+    });
+    
 }
 
 - (void)didReceiveMemoryWarning {
