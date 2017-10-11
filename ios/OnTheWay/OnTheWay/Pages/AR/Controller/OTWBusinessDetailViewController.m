@@ -169,6 +169,13 @@
 - (void) collectBtnClick{
     DLog(@"点击了收藏");
     _collectBtn.selected = !_collectBtn.selected;
+    NSString * tips = @"";
+    if (_collectBtn.selected) {
+        tips = @"收藏成功";
+    }else{
+        tips = @"取消收藏";
+    }
+    [ALiProgressHUD showImage:[UIImage imageNamed:@"ar_chenggongtishi"] status:tips];
 }
 
 /**

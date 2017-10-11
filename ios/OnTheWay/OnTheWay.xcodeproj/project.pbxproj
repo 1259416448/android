@@ -242,6 +242,21 @@
 		DDF4A0FE1F4AACBE00996F6F /* CommonAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF4A0FD1F4AACBE00996F6F /* CommonAlert.m */; };
 		DDF5AA791F8B6F9700AFF6F9 /* ImprovePersonInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AA781F8B6F9700AFF6F9 /* ImprovePersonInfoViewController.m */; };
 		DDF5AA7F1F8B77B100AFF6F9 /* CHBaseAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AA7E1F8B77B100AFF6F9 /* CHBaseAlertView.m */; };
+		DDF5AAFD1F8E1BEB00AFF6F9 /* ALiProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AAE61F8E1BEB00AFF6F9 /* ALiProgressHUD.m */; };
+		DDF5AAFE1F8E1BEB00AFF6F9 /* HUD_error@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DDF5AAE81F8E1BEB00AFF6F9 /* HUD_error@2x.png */; };
+		DDF5AAFF1F8E1BEB00AFF6F9 /* HUD_error@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = DDF5AAE91F8E1BEB00AFF6F9 /* HUD_error@3x.png */; };
+		DDF5AB001F8E1BEB00AFF6F9 /* HUD_info@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DDF5AAEA1F8E1BEB00AFF6F9 /* HUD_info@2x.png */; };
+		DDF5AB011F8E1BEB00AFF6F9 /* HUD_info@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = DDF5AAEB1F8E1BEB00AFF6F9 /* HUD_info@3x.png */; };
+		DDF5AB021F8E1BEB00AFF6F9 /* HUD_success@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DDF5AAEC1F8E1BEB00AFF6F9 /* HUD_success@2x.png */; };
+		DDF5AB031F8E1BEB00AFF6F9 /* HUD_success@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = DDF5AAED1F8E1BEB00AFF6F9 /* HUD_success@3x.png */; };
+		DDF5AB041F8E1BEB00AFF6F9 /* NSObject+ALiHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AAEF1F8E1BEB00AFF6F9 /* NSObject+ALiHUD.m */; };
+		DDF5AB051F8E1BEB00AFF6F9 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = DDF5AAF11F8E1BEB00AFF6F9 /* LICENSE.txt */; };
+		DDF5AB061F8E1BEB00AFF6F9 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AAF21F8E1BEB00AFF6F9 /* README.md */; };
+		DDF5AB071F8E1BEB00AFF6F9 /* SVIndefiniteAnimatedView.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AAF51F8E1BEB00AFF6F9 /* SVIndefiniteAnimatedView.m */; };
+		DDF5AB081F8E1BEB00AFF6F9 /* SVProgressAnimatedView.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AAF71F8E1BEB00AFF6F9 /* SVProgressAnimatedView.m */; };
+		DDF5AB091F8E1BEB00AFF6F9 /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DDF5AAF81F8E1BEB00AFF6F9 /* SVProgressHUD.bundle */; };
+		DDF5AB0A1F8E1BEB00AFF6F9 /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AAFA1F8E1BEB00AFF6F9 /* SVProgressHUD.m */; };
+		DDF5AB0B1F8E1BEB00AFF6F9 /* SVRadialGradientLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AAFC1F8E1BEB00AFF6F9 /* SVRadialGradientLayer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -704,6 +719,27 @@
 		DDF5AA781F8B6F9700AFF6F9 /* ImprovePersonInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImprovePersonInfoViewController.m; sourceTree = "<group>"; };
 		DDF5AA7D1F8B77B100AFF6F9 /* CHBaseAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CHBaseAlertView.h; path = OnTheWay/Pages/Login/CHBaseAlertView.h; sourceTree = SOURCE_ROOT; };
 		DDF5AA7E1F8B77B100AFF6F9 /* CHBaseAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CHBaseAlertView.m; path = OnTheWay/Pages/Login/CHBaseAlertView.m; sourceTree = SOURCE_ROOT; };
+		DDF5AAE51F8E1BEB00AFF6F9 /* ALiProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALiProgressHUD.h; sourceTree = "<group>"; };
+		DDF5AAE61F8E1BEB00AFF6F9 /* ALiProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALiProgressHUD.m; sourceTree = "<group>"; };
+		DDF5AAE81F8E1BEB00AFF6F9 /* HUD_error@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "HUD_error@2x.png"; sourceTree = "<group>"; };
+		DDF5AAE91F8E1BEB00AFF6F9 /* HUD_error@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "HUD_error@3x.png"; sourceTree = "<group>"; };
+		DDF5AAEA1F8E1BEB00AFF6F9 /* HUD_info@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "HUD_info@2x.png"; sourceTree = "<group>"; };
+		DDF5AAEB1F8E1BEB00AFF6F9 /* HUD_info@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "HUD_info@3x.png"; sourceTree = "<group>"; };
+		DDF5AAEC1F8E1BEB00AFF6F9 /* HUD_success@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "HUD_success@2x.png"; sourceTree = "<group>"; };
+		DDF5AAED1F8E1BEB00AFF6F9 /* HUD_success@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "HUD_success@3x.png"; sourceTree = "<group>"; };
+		DDF5AAEE1F8E1BEB00AFF6F9 /* NSObject+ALiHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+ALiHUD.h"; sourceTree = "<group>"; };
+		DDF5AAEF1F8E1BEB00AFF6F9 /* NSObject+ALiHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+ALiHUD.m"; sourceTree = "<group>"; };
+		DDF5AAF11F8E1BEB00AFF6F9 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
+		DDF5AAF21F8E1BEB00AFF6F9 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		DDF5AAF41F8E1BEB00AFF6F9 /* SVIndefiniteAnimatedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVIndefiniteAnimatedView.h; sourceTree = "<group>"; };
+		DDF5AAF51F8E1BEB00AFF6F9 /* SVIndefiniteAnimatedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVIndefiniteAnimatedView.m; sourceTree = "<group>"; };
+		DDF5AAF61F8E1BEB00AFF6F9 /* SVProgressAnimatedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressAnimatedView.h; sourceTree = "<group>"; };
+		DDF5AAF71F8E1BEB00AFF6F9 /* SVProgressAnimatedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressAnimatedView.m; sourceTree = "<group>"; };
+		DDF5AAF81F8E1BEB00AFF6F9 /* SVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SVProgressHUD.bundle; sourceTree = "<group>"; };
+		DDF5AAF91F8E1BEB00AFF6F9 /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressHUD.h; sourceTree = "<group>"; };
+		DDF5AAFA1F8E1BEB00AFF6F9 /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
+		DDF5AAFB1F8E1BEB00AFF6F9 /* SVRadialGradientLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVRadialGradientLayer.h; sourceTree = "<group>"; };
+		DDF5AAFC1F8E1BEB00AFF6F9 /* SVRadialGradientLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVRadialGradientLayer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1085,6 +1121,7 @@
 		D7F6B03E1F0D390D0013090A /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				DDF5AAE41F8E1BEB00AFF6F9 /* ALiHUD */,
 				DDF5AACC1F8B79DB00AFF6F9 /* Tools */,
 				DD86E9401F46BA8600D49A64 /* ArvixAugmentedReality */,
 				DDEA15F41F2708B400056166 /* BaiduMap */,
@@ -1741,6 +1778,58 @@
 			name = Tools;
 			sourceTree = "<group>";
 		};
+		DDF5AAE41F8E1BEB00AFF6F9 /* ALiHUD */ = {
+			isa = PBXGroup;
+			children = (
+				DDF5AAE51F8E1BEB00AFF6F9 /* ALiProgressHUD.h */,
+				DDF5AAE61F8E1BEB00AFF6F9 /* ALiProgressHUD.m */,
+				DDF5AAE71F8E1BEB00AFF6F9 /* images */,
+				DDF5AAEE1F8E1BEB00AFF6F9 /* NSObject+ALiHUD.h */,
+				DDF5AAEF1F8E1BEB00AFF6F9 /* NSObject+ALiHUD.m */,
+				DDF5AAF01F8E1BEB00AFF6F9 /* SVProgressHUD */,
+			);
+			path = ALiHUD;
+			sourceTree = "<group>";
+		};
+		DDF5AAE71F8E1BEB00AFF6F9 /* images */ = {
+			isa = PBXGroup;
+			children = (
+				DDF5AAE81F8E1BEB00AFF6F9 /* HUD_error@2x.png */,
+				DDF5AAE91F8E1BEB00AFF6F9 /* HUD_error@3x.png */,
+				DDF5AAEA1F8E1BEB00AFF6F9 /* HUD_info@2x.png */,
+				DDF5AAEB1F8E1BEB00AFF6F9 /* HUD_info@3x.png */,
+				DDF5AAEC1F8E1BEB00AFF6F9 /* HUD_success@2x.png */,
+				DDF5AAED1F8E1BEB00AFF6F9 /* HUD_success@3x.png */,
+			);
+			path = images;
+			sourceTree = "<group>";
+		};
+		DDF5AAF01F8E1BEB00AFF6F9 /* SVProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				DDF5AAF11F8E1BEB00AFF6F9 /* LICENSE.txt */,
+				DDF5AAF21F8E1BEB00AFF6F9 /* README.md */,
+				DDF5AAF31F8E1BEB00AFF6F9 /* SVProgressHUD */,
+			);
+			path = SVProgressHUD;
+			sourceTree = "<group>";
+		};
+		DDF5AAF31F8E1BEB00AFF6F9 /* SVProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				DDF5AAF41F8E1BEB00AFF6F9 /* SVIndefiniteAnimatedView.h */,
+				DDF5AAF51F8E1BEB00AFF6F9 /* SVIndefiniteAnimatedView.m */,
+				DDF5AAF61F8E1BEB00AFF6F9 /* SVProgressAnimatedView.h */,
+				DDF5AAF71F8E1BEB00AFF6F9 /* SVProgressAnimatedView.m */,
+				DDF5AAF81F8E1BEB00AFF6F9 /* SVProgressHUD.bundle */,
+				DDF5AAF91F8E1BEB00AFF6F9 /* SVProgressHUD.h */,
+				DDF5AAFA1F8E1BEB00AFF6F9 /* SVProgressHUD.m */,
+				DDF5AAFB1F8E1BEB00AFF6F9 /* SVRadialGradientLayer.h */,
+				DDF5AAFC1F8E1BEB00AFF6F9 /* SVRadialGradientLayer.m */,
+			);
+			path = SVProgressHUD;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1856,19 +1945,27 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DDF5AB021F8E1BEB00AFF6F9 /* HUD_success@2x.png in Resources */,
 				1822EE681F20903100E07665 /* OTWFindprintChangeAddress.plist in Resources */,
 				B18A430A1F20829E002C7A5A /* OTWPraise.plist in Resources */,
 				DDEA15B61F21A91200056166 /* OTWNewsCommentList.plist in Resources */,
 				DDDAE08F1F1CFA5B00981E60 /* OTWFootprintDetail.plist in Resources */,
 				D7F6B0041F0D32FB0013090A /* LaunchScreen.storyboard in Resources */,
+				DDF5AB031F8E1BEB00AFF6F9 /* HUD_success@3x.png in Resources */,
+				DDF5AB091F8E1BEB00AFF6F9 /* SVProgressHUD.bundle in Resources */,
+				DDF5AAFF1F8E1BEB00AFF6F9 /* HUD_error@3x.png in Resources */,
+				DDF5AB051F8E1BEB00AFF6F9 /* LICENSE.txt in Resources */,
 				DD86E95F1F46DDCF00D49A64 /* ar_leida@2x.png in Resources */,
 				18B034CD1F171ED300F53461 /* OTWFindBusinessmen.plist in Resources */,
+				DDF5AB011F8E1BEB00AFF6F9 /* HUD_info@3x.png in Resources */,
+				DDF5AB001F8E1BEB00AFF6F9 /* HUD_info@2x.png in Resources */,
 				B13ADA281F1C9932008E889C /* OTWSystemNews.plist in Resources */,
 				DDC0A9431F1F7B1800A6E4DB /* OTWUserFootprintList.plist in Resources */,
 				DDDAE0931F1F0D4C00981E60 /* Assets.xcassets in Resources */,
 				DD9452F51F160CD7004EDDED /* OTWFootprintList.plist in Resources */,
 				DD86E9601F46DDCF00D49A64 /* ar_leida@3x.png in Resources */,
 				DDEA15E51F25CCA500056166 /* PYPhotosView.bundle in Resources */,
+				DDF5AAFE1F8E1BEB00AFF6F9 /* HUD_error@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1959,6 +2056,7 @@
 				B17836E01F3C329D00FC73DC /* OTWSearchShopListViewController.m in Sources */,
 				18BCFAA61F4BCF2000B8E09D /* CreateShopTFCell.m in Sources */,
 				DD67B33F1F4EC04A00429EFA /* OTWBusinessFetchController.m in Sources */,
+				DDF5AB0A1F8E1BEB00AFF6F9 /* SVProgressHUD.m in Sources */,
 				182FDFD11F332274003AF0F4 /* OTWARCustomAnnotation.m in Sources */,
 				DD14F2451F11CB5F004DFE4A /* GCTokenManager.m in Sources */,
 				DDEA15DF1F25CCA500056166 /* PYPhotosPreviewController.m in Sources */,
@@ -1985,6 +2083,7 @@
 				DDEA15DE1F25CCA500056166 /* PYPhotosNavigationController.m in Sources */,
 				DD4BD9671F5D8FF80047D191 /* OTWBusinessActivityIconView.m in Sources */,
 				DD4BD96A1F5E56D30047D191 /* OTWBusinessActivityTableViewCell.m in Sources */,
+				DDF5AAFD1F8E1BEB00AFF6F9 /* ALiProgressHUD.m in Sources */,
 				DD4BD9581F50025E0047D191 /* OTWBusinessFetchModel.m in Sources */,
 				D7F6B0431F0D39160013090A /* README.md in Sources */,
 				B1B055641F2ED17D008274FE /* OTWShopActiveViewController.m in Sources */,
@@ -2035,6 +2134,7 @@
 				D7F6B0371F0D38EA0013090A /* README.md in Sources */,
 				18BCFAB81F4E7ACD00B8E09D /* CreateShopAddressCell.m in Sources */,
 				DD86E9551F46BA8600D49A64 /* ArvixARConfiguration.m in Sources */,
+				DDF5AB0B1F8E1BEB00AFF6F9 /* SVRadialGradientLayer.m in Sources */,
 				B1FE42331F2B08FE00D7D5D9 /* OTWPersonalFindViewController.m in Sources */,
 				1843A7D31F26E5FD00A285A3 /* OTWNewFootprintsControllerViewController.m in Sources */,
 				DD35209D1F188FBF00E8D725 /* OTWFootprintDetailViewCell.m in Sources */,
@@ -2067,6 +2167,7 @@
 				DDC0A94C1F2089AA00A6E4DB /* OTWFootprintsChangeAddressController.m in Sources */,
 				DD0BBC2E1F78986900044EFA /* OTWBusinessARPoiViewController.m in Sources */,
 				DDB8C29F1F14AF230091E7B0 /* OTWUserModel.m in Sources */,
+				DDF5AB041F8E1BEB00AFF6F9 /* NSObject+ALiHUD.m in Sources */,
 				D7F6B09A1F0F75510013090A /* OTWLaunchViewController.m in Sources */,
 				DDEA15B91F22177900056166 /* OTWUITapGestureRecognizer.m in Sources */,
 				B12360141F4D182900E8FA62 /* OTWPersonalWalletDetailViewCell.m in Sources */,
@@ -2093,6 +2194,7 @@
 				DDEA15FE1F299DFB00056166 /* OTWDocument.m in Sources */,
 				B1A9C5A61F43F16F009EF68D /* OTWPersonalClaimModel.m in Sources */,
 				DDA1AF031F4C253500281DFC /* OTWPersonalStatisticsModel.m in Sources */,
+				DDF5AB071F8E1BEB00AFF6F9 /* SVIndefiniteAnimatedView.m in Sources */,
 				DDDE14F71F74B4AA00F941E3 /* OTWBusinessDetailSortModel.m in Sources */,
 				1822EE661F20846F00E07665 /* OTWFootprintsChangeAddressCellTableViewCell.m in Sources */,
 				DD14F2431F114436004DFE4A /* CommonContact.m in Sources */,
@@ -2110,6 +2212,7 @@
 				DD4BD95E1F5BF2CF0047D191 /* OTWBusinessModel.m in Sources */,
 				DDEA15E91F25CCA500056166 /* PYPhotoView.m in Sources */,
 				DDEA15E81F25CCA500056166 /* PYPhotosView.m in Sources */,
+				DDF5AB061F8E1BEB00AFF6F9 /* README.md in Sources */,
 				B181AB5C1F1F7F56009929D1 /* OTWPraiseViewController.m in Sources */,
 				DD86E9541F46BA8600D49A64 /* ArvixARAnnotationView.m in Sources */,
 				D7F6AFF61F0D32FB0013090A /* main.m in Sources */,
@@ -2149,6 +2252,7 @@
 				DDF1DDB91F7F7BA300D3358C /* OTWBusinessAlbumViewController.m in Sources */,
 				DD67B33C1F4D51B400429EFA /* OTWNotFundFootprintView.m in Sources */,
 				DDEA15E61F25CCA500056166 /* PYPhotoBrowseView.m in Sources */,
+				DDF5AB081F8E1BEB00AFF6F9 /* SVProgressAnimatedView.m in Sources */,
 				B1B055761F305B8A008274FE /* OTWFindBusinessmenViewCell.m in Sources */,
 				B19472B41F45916200F5DB4A /* OTWPersonalSiteHowClaimShopViewController.m in Sources */,
 				1843A7DF1F2837B100A285A3 /* OTWPersonalCollectController.m in Sources */,
