@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -380,7 +381,7 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
         if (size < 0 || size > 30) size = 15;
         User user = webContextUtils.getCheckCurrentUser();
         Map<String, Object> params = Maps.newHashMap();
-        params.put("userId", user.getId());
+        params.put("userId_eq", user.getId());
         Searchable searchable = Searchable.newSearchable(params, new PageRequest(number, size),
                 new Sort(Sort.Direction.DESC, "dateCreated"));
         Page<CollectionRecords> page = collectionRecordsService.findAllWithNoCount(searchable);
@@ -407,6 +408,54 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
                 content.add(dto);
             });
             page = new PageResult<>(content, searchable.getPage(), 0);
+        }
+        return JsonUtil.getSuccess(CommonContact.FETCH_SUCCESS, CommonContact.FETCH_SUCCESS, page);
+    }
+
+    /**
+     * 获取某个相加的用户相册
+     *
+     * @param businessId  商家ID
+     * @param number      当前页
+     * @param size        每页大小
+     * @param currentTime 请求时间 防止获取重复数据
+     * @return 商家相册分页数据
+     */
+    public JSONResult userPhotos(Long businessId, int number, int size, Long currentTime) {
+        if (number < 0) number = 0;
+        if (size < 0 || size > 50) size = 16;
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("ifDelete", false);
+        params.put("ifBusinessComment", true);
+        params.put("businessId", businessId);
+        params.put("systemModule_eq", SystemModule.footprint);
+        if (currentTime == null) {
+            currentTime = System.currentTimeMillis();
+        }
+        params.put("dateCreated_lte", new Date(currentTime));
+        params.put(CommonContact.BUSINESS_USER_PHOTOS, Boolean.TRUE);
+        Searchable searchable = Searchable.newSearchable(params, new PageRequest(number, size),
+                new Sort(Sort.Direction.DESC, "dateCreated"));
+        Page<Document> page = documentService.findAllWithNoCount(searchable);
+
+        //获取用户信息
+        if (page.getContent().size() > 0) {
+            List<BusinessPhotoDTO> content = Lists.newArrayListWithCapacity(page.getContent().size());
+
+            String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL);
+
+            page.getContent().forEach(x -> {
+                BusinessPhotoDTO dto = BusinessPhotoDTO.getInstance();
+                dto.setDateCreated(TimeMaker.toTimeMillis(x.getDateCreated()));
+                dto.setDateCreatedStr(TimeMaker.toFormatStr(x.getDateCreated(), "yyyy.MM.dd"));
+                dto.setPhotoId(x.getId());
+                dto.setPhotoUrl(urlFix + x.getFileUrl());
+                dto.setUserId(x.getUser().getId());
+                dto.setUserNickname(x.getUser().getName());
+                content.add(dto);
+            });
+            page = new PageResult<>(content, searchable.getPage(), 0);
+            ((PageResult) page).setCurrentTime(currentTime);
         }
         return JsonUtil.getSuccess(CommonContact.FETCH_SUCCESS, CommonContact.FETCH_SUCCESS, page);
     }

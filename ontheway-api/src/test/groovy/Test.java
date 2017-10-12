@@ -20,7 +20,7 @@ public class Test {
 
     @org.junit.Test
     public void mobileDigest() {
-        System.out.println(HmacSHA256Utils.digest(CommonContact.HMAC256_KEY, "mobile:18402847183"));
+        System.out.println(HmacSHA256Utils.digest(CommonContact.HMAC256_KEY, "mobile:18580128658"));
     }
 
     @org.junit.Test

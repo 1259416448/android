@@ -167,4 +167,7 @@ public interface CommonContact {
     //航美短信内容
     String HMSMS_CONTENT = "hmsms_content";
 
+    //商家的用户图集搜索标识
+    String BUSINESS_USER_PHOTOS = "businessUserPhotos";
+
 }
