@@ -242,6 +242,7 @@
 		DDF4A0FE1F4AACBE00996F6F /* CommonAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF4A0FD1F4AACBE00996F6F /* CommonAlert.m */; };
 		DDF5AA791F8B6F9700AFF6F9 /* ImprovePersonInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AA781F8B6F9700AFF6F9 /* ImprovePersonInfoViewController.m */; };
 		DDF5AA7F1F8B77B100AFF6F9 /* CHBaseAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AA7E1F8B77B100AFF6F9 /* CHBaseAlertView.m */; };
+		DDF5AB0E1F8F528000AFF6F9 /* OTWPersonCollectionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB0D1F8F528000AFF6F9 /* OTWPersonCollectionModel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -704,6 +705,8 @@
 		DDF5AA781F8B6F9700AFF6F9 /* ImprovePersonInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImprovePersonInfoViewController.m; sourceTree = "<group>"; };
 		DDF5AA7D1F8B77B100AFF6F9 /* CHBaseAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CHBaseAlertView.h; path = OnTheWay/Pages/Login/CHBaseAlertView.h; sourceTree = SOURCE_ROOT; };
 		DDF5AA7E1F8B77B100AFF6F9 /* CHBaseAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CHBaseAlertView.m; path = OnTheWay/Pages/Login/CHBaseAlertView.m; sourceTree = SOURCE_ROOT; };
+		DDF5AB0C1F8F528000AFF6F9 /* OTWPersonCollectionModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPersonCollectionModel.h; sourceTree = "<group>"; };
+		DDF5AB0D1F8F528000AFF6F9 /* OTWPersonCollectionModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPersonCollectionModel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1409,6 +1412,8 @@
 				B12360251F55095800E8FA62 /* OTWPersonalCashModel.m */,
 				B12360271F55097400E8FA62 /* OTWPersonalCashFormModel.h */,
 				B12360281F55097400E8FA62 /* OTWPersonalCashFormModel.m */,
+				DDF5AB0C1F8F528000AFF6F9 /* OTWPersonCollectionModel.h */,
+				DDF5AB0D1F8F528000AFF6F9 /* OTWPersonCollectionModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2041,6 +2046,7 @@
 				B12360351F57DE8A00E8FA62 /* OTWPersonalChooseBankViewController.m in Sources */,
 				B1B055771F305B8A008274FE /* OTWFindViewCell.m in Sources */,
 				18B034E41F1CE6B300F53461 /* OTWShopDetailsController.m in Sources */,
+				DDF5AB0E1F8F528000AFF6F9 /* OTWPersonCollectionModel.m in Sources */,
 				B17836E31F3C32EE00FC73DC /* OTWSearchShopListViewCell.m in Sources */,
 				DD4BD97F1F614AFC0047D191 /* OTWBusinessFootprintTableViewCell.m in Sources */,
 				DDB8C29A1F1320B90091E7B0 /* OTWPersonalInfoController.m in Sources */,
