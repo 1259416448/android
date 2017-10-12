@@ -137,12 +137,6 @@
                                                        cellForRowAtIndexPath:indexPath];
     return cell.frame.size.height;
 }
-- (void)getCollectionData
-{
-    NSString * url = @"/app/business/like";
-    NSDictionary * Parameter = @{@"id":_shopId};
-    
-}
 
 -(void)initData{
     _status = [[NSMutableArray alloc] init];

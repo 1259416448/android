@@ -70,7 +70,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self buildUI];
-    
+//    [self getCollectionData];
     //增加通知监听
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deletedFootprint:) name:@"foorprintAlreadyDeleted" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refleshBusinessFootprint:) name:@"refleshFootprint" object:nil];
@@ -168,14 +168,7 @@
 #pragma mark - collectBtnClick 点击了收藏
 - (void) collectBtnClick{
     DLog(@"点击了收藏");
-    _collectBtn.selected = !_collectBtn.selected;
-    NSString * tips = @"";
-    if (_collectBtn.selected) {
-        tips = @"收藏成功";
-    }else{
-        tips = @"取消收藏";
-    }
-    [ALiProgressHUD showImage:[UIImage imageNamed:@"ar_chenggongtishi"] status:tips];
+    [self getCollectionData];
 }
 
 /**
@@ -184,6 +177,32 @@
 #pragma mark - shareBtnClick 点击了分享
 - (void) shareBtnClick {
     DLog(@"点击了分享");
+}
+- (void)getCollectionData
+{
+    NSString * url = [NSString stringWithFormat:@"%@%@",@"/app/business/like/",_opId];
+    NSDictionary * Parameter = @{@"id":[NSNumber numberWithInteger:[_opId integerValue]]};
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [OTWNetworkManager doPOST:url parameters:Parameter success:^(id responseObject) {
+            if([[NSString stringWithFormat:@"%@",responseObject[@"code"]] isEqualToString:@"0"]){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    _collectBtn.selected = !_collectBtn.selected;
+                    NSString * tips = @"";
+                    if (_collectBtn.selected) {
+                        tips = @"收藏成功";
+                    }else{
+                        tips = @"取消收藏";
+                    }
+                    [OTWUtils alertSuccess:tips userInteractionEnabled:YES target:self];
+                });
+            }
+        } failure:^(NSError *error) {
+            NSLog(@"fail");
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [OTWUtils alertFailed:@"网络异常" userInteractionEnabled:YES target:self];
+            });
+        }];
+    });
 }
 
 /**
@@ -252,6 +271,8 @@
 //数据加载成功后构建UI界面
 - (void) buildTableView
 {
+    //收藏按钮状态
+    _collectBtn.selected = _businessModel.ifLike;
     //创建头部TableView
     [self.view addSubview:self.businessDetailTableView];
     
