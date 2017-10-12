@@ -184,6 +184,7 @@
 }
 -(void)cancelBtnClick{
     DLog(@"点击了取消");
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 /*
