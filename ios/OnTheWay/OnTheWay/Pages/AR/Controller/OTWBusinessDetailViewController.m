@@ -297,7 +297,7 @@
                     }else{
                         int currentPageNumber = self.service.getDefaultPageNumber;
                         currentPageNumber ++;
-                        [self.service setNumber:currentPageNumber];
+                        [self.service  setNumber:currentPageNumber];
                         [self.businessDetailTableView.mj_footer endRefreshing];
                     }
                 } else { //无请求结果

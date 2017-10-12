@@ -61,7 +61,7 @@
 - (UITableView*)tableView
 {
     if (!_tableView) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, self.navigationHeight, self.view.width, self.view.height-self.navigationHeight) style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, self.navigationHeight + 1, self.view.width, self.view.height-self.navigationHeight) style:UITableViewStylePlain];
         _tableView.scrollEnabled = NO;
         _tableView.separatorColor = [UIColor color_f4f4f4];
         _tableView.backgroundColor = [UIColor clearColor];
