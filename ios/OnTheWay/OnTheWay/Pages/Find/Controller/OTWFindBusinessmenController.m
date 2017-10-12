@@ -17,6 +17,10 @@
 #import "OTWARShopService.h"
 #import "OTWBusinessModel.h"
 #import "OTWFootprintReleaseViewController.h"
+#import "OTWBusinessARSiftTableViewCell.h"
+#import "OTWBusinessARSiftDetailTableViewCell.h"
+#import "OTWBusinessSortModel.h"
+#import "OTWBusinessDetailSortModel.h"
 #import <CoreLocation/CoreLocation.h>
 #import <BaiduMapAPI_Search/BMKGeoCodeSearch.h>
 #import <BaiduMapAPI_Location/BMKLocationService.h>
@@ -32,6 +36,21 @@
 @property (nonatomic,strong) NSDictionary *reponseCacheData;
 @property (nonatomic,assign) CLLocationCoordinate2D location;
 @property (nonatomic,strong) BMKLocationService *locService;
+//筛选按钮
+@property(nonatomic,strong) UIButton *siftButton;
+@property(nonatomic,strong) UIButton *searchButton;
+@property(nonatomic,strong) UIButton *cancelButton;
+
+@property(nonatomic,strong) UIView *siftView;
+
+@property(nonatomic,strong) UIView *searchView;
+
+@property(nonatomic,strong) UITableView *siftSortTableView;
+@property(nonatomic,strong) UITableView *siftDetailTableView;
+
+@property(nonatomic,strong) UIButton *cameraButton;
+@property(nonatomic,strong) UIButton *arButton;
+@property(nonatomic,strong) UIButton *planeMapButton;
 
 
 //@property (nonatomic,strong) UIView * pingmianImageView;
@@ -39,11 +58,19 @@
 
 @implementation OTWFindBusinessmenViewController
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _siftSortArr = @[].mutableCopy;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     _status = [[NSMutableArray alloc] init];
-    [self buildUI];
     [self.locService startUserLocationService];
     if (_isFromAR) {
     }else{
@@ -67,7 +94,7 @@
         [self getShopsList];
     }];
     
-    _tableView.mj_footer = [MJRefreshBackFooter footerWithRefreshingBlock:^{
+    _tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
         self.arShopSearchParams.number++;
         [self getShopsList];
     }];
@@ -76,6 +103,9 @@
     [self.view addSubview:self.ARdituImageView];
     
     [self.view addSubview:self.fabuImageView];
+    [self buildUI];
+    //获取商家分类信息
+    [self getbusinessSortData];
     
     //[self.view addSubview:self.pingmianImageView];
     
@@ -209,31 +239,75 @@
     //设置标题
 //    self.title = @"1234个商家";
     [self setLeftNavigationImage:[UIImage imageNamed:@"back_2"]];
+//    [self setRightNavigationImage:[UIImage imageNamed:@"ar_shaixuan_2"]];
+    [self setCustomNavigationRightView:self.siftButton];
     //大背景
     self.view.backgroundColor=[UIColor color_f4f4f4];
+    
+    //筛选view
+//    [self.view addSubview:self.siftButton];
+//    [self.view addSubview:self.siftView];
+    [self.view insertSubview:self.siftView aboveSubview:_tableView];
+    [self.siftView addSubview:self.searchView];
+    [self.siftView addSubview:self.cancelButton];
+    [self.siftView addSubview:self.siftSortTableView];
+    [self.siftView addSubview:self.siftDetailTableView];
+    
+    [self.view addSubview:self.cameraButton];
+    [self.view addSubview:self.arButton];
+    [self.view addSubview:self.planeMapButton];
 
 }
 
 #pragma mark 这一组里面有多少行
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return _status.count;
+    if (tableView == _siftSortTableView) {
+        return _siftSortArr.count;
+    }else if (tableView == _siftDetailTableView)
+    {
+        NSInteger count = 0;
+        for (OTWBusinessSortModel * model in _siftSortArr) {
+            if (model.selected) {
+                count = model.children.count;
+            }
+        }
+        return count;
+    }else
+    {
+        return _status.count;
+    }
 }
 
 #pragma mark - 代理方法
 #pragma mark 设置分组标题内容高度
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    return 36.5;
+    if (tableView == _tableView) {
+        return 36.5;
+    }else
+    {
+        return 0.01;
+    }
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 0.01;
 }
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    UIView * headView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 36.5)];
-    headView.backgroundColor = [UIColor color_f4f4f4];
-    UILabel * all = [[UILabel alloc] initWithFrame:CGRectMake(15, 15, 100, 12)];
-    all.textColor = [UIColor color_979797];
-    all.text = @"全部";
-    all.font = [UIFont systemFontOfSize:12];
-    [headView addSubview:all];
-    return headView;
+    if (tableView == _tableView) {
+        UIView * headView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 36.5)];
+        headView.backgroundColor = [UIColor color_f4f4f4];
+        UILabel * all = [[UILabel alloc] initWithFrame:CGRectMake(15, 15, 100, 12)];
+        all.textColor = [UIColor color_979797];
+        all.text = @"全部";
+        all.font = [UIFont systemFontOfSize:12];
+        [headView addSubview:all];
+        return headView;
+    }else
+    {
+        return nil;
+    }
+
 }
 
 #pragma mark 返回分组数
@@ -243,36 +317,200 @@
 
 #pragma mark 设置每行高度（每行高度可以不一样）
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 70;
+    if (tableView == _tableView) {
+        return 70;
+    }else
+    {
+        return 44;
+    }
 }
 #pragma mark 点击行
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     DLog(@"我点击了：%ld",indexPath.row);
-    //OTWShopDetailsController  *ShopDetailsVC = [[OTWShopDetailsController alloc] init];
-    OTWBusinessDetailViewController *businessVC = [[OTWBusinessDetailViewController alloc] init];
-    [businessVC setOpData:@"110"];
-    [self.navigationController pushViewController:businessVC animated:YES];
+    if (tableView == _siftSortTableView) {
+        for (OTWBusinessSortModel * model in _siftSortArr) {
+            model.selected = NO;
+        }
+        OTWBusinessSortModel * model = _siftSortArr[indexPath.row];
+        model.selected = YES;
+        [_siftSortTableView reloadData];
+        [_siftDetailTableView reloadData];
+    }else if (tableView == _siftDetailTableView)
+    {
+        self.arShopSearchParams.number = 0;
+        for (OTWBusinessSortModel * models in _siftSortArr) {
+            for (OTWBusinessDetailSortModel * result in models.children) {
+                result.selected = NO;
+            }
+        }
+        for (OTWBusinessSortModel * model in _siftSortArr) {
+            if (model.selected) {
+                if (indexPath.row == 0) {
+                    self.arShopSearchParams.typeIds = [NSString stringWithFormat:@"%@",model.typeId];
+                    OTWBusinessDetailSortModel * detailModel = model.children[0];
+                    detailModel.selected = !detailModel.selected;
+                    for (OTWBusinessDetailSortModel * result in model.children) {
+                        result.selected = detailModel.selected;
+                    }
+                    
+                }else{
+                    OTWBusinessDetailSortModel * detailModel = model.children[indexPath.row];
+                    self.arShopSearchParams.typeIds = [NSString stringWithFormat:@"%@,%@",model.typeId,detailModel.typeId];
+                    detailModel.selected = YES;
+                }
+                //                [self startPoiSearch];
+                [self getShopsList];
+            }
+        }
+        [_siftSortTableView reloadData];
+        [_siftDetailTableView reloadData];
+        _siftView.hidden = YES;
+    }else{
+        OTWBusinessDetailViewController *businessVC = [[OTWBusinessDetailViewController alloc] init];
+        [businessVC setOpData:@"110"];
+        [self.navigationController pushViewController:businessVC animated:YES];
+    }
+
 }
 
 #pragma mark 返回第indexPath这行对应的内容
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *cellIdentifier=@"UITableViewCellIdentifierKey1";
-    OTWFindBusinessmenViewCell *cell;
-    cell=[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    if(!cell){
-        cell=[[OTWFindBusinessmenViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-        //cell.contentView.backgroundColor = [UIColor clearColor];
-        cell.backgroundColor = [UIColor whiteColor];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    if (tableView == _siftSortTableView) {
+        static NSString *flag=@"OTWBusinessARSiftTableViewCell";
+        OTWBusinessARSiftTableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:flag];
+        if (cell == nil) {
+            cell=[[OTWBusinessARSiftTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:flag];
+        }
+        cell.selectionStyle = UITableViewCellEditingStyleNone;
+        OTWBusinessSortModel * model = _siftSortArr[indexPath.row];
+        cell.titleLabel.text = model.name;
+        if (model.selected) {
+            cell.backgroundColor = [UIColor color_f4f4f4];
+            cell.titleLabel.textColor = [UIColor colorWithHexString:model.colorCode];
+        }else
+        {
+            cell.backgroundColor = [UIColor whiteColor];
+            cell.titleLabel.textColor = [UIColor color_202020];
+        }
+        return cell;
+    }else if (tableView == _siftDetailTableView)
+    {
+        static NSString *flag=@"OTWBusinessARSiftDetailTableViewCell";
+        OTWBusinessARSiftDetailTableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:flag];
+        if (cell == nil) {
+            cell=[[OTWBusinessARSiftDetailTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:flag];
+        }
+        cell.selectionStyle = UITableViewCellEditingStyleNone;
+        for (OTWBusinessSortModel * model in _siftSortArr) {
+            if (model.selected) {
+                OTWBusinessDetailSortModel * detailModel = model.children[indexPath.row];
+                cell.titleLabel.text = detailModel.name;
+                if (detailModel.selected) {
+                    cell.selectedImg.hidden = NO;
+                }else
+                {
+                    cell.selectedImg.hidden = YES;
+                }
+            }
+        }
+        return cell;
+    }else
+    {
+        static NSString *cellIdentifier=@"UITableViewCellIdentifierKey1";
+        OTWFindBusinessmenViewCell *cell;
+        cell=[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        if(!cell){
+            cell=[[OTWFindBusinessmenViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+            //cell.contentView.backgroundColor = [UIColor clearColor];
+            cell.backgroundColor = [UIColor whiteColor];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        }
+        //在此模块，以便重新布局
+        FindBusinessmenModel *status=_status[indexPath.row];
+        cell.status=status;
+        return cell;
     }
-    //在此模块，以便重新布局
-    FindBusinessmenModel *status=_status[indexPath.row];
-    cell.status=status;
-    return cell;
+
 
 }
+#pragma mark 获取店家分类信息
 
+- (void)getbusinessSortData
+{
+    NSString * url = @"/app/business/type/all";
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [OTWNetworkManager doGET:url parameters:nil responseCache:^(id responseCache) {
+            if([[NSString stringWithFormat:@"%@",responseCache[@"code"]] isEqualToString:@"0"]){
+                NSArray *arr = [NSArray arrayWithArray:[responseCache objectForKey:@"body"]];
+                for (NSDictionary *result in arr)
+                {
+                    OTWBusinessSortModel * model = [OTWBusinessSortModel mj_objectWithKeyValues:result];
+                    model.selected = NO;
+                    [_siftSortArr addObject:model];
+                }
+                [self reloadTableView];
+            }
+        } success:^(id responseObject) {
+            if([[NSString stringWithFormat:@"%@",responseObject[@"code"]] isEqualToString:@"0"]){
+                [_siftSortArr removeAllObjects];
+                NSArray *arr = [NSArray arrayWithArray:[responseObject objectForKey:@"body"]];
+                
+                for (NSDictionary *result in arr)
+                {
+                    OTWBusinessSortModel * model = [OTWBusinessSortModel mj_objectWithKeyValues:result];
+                    model.selected = NO;
+                    [_siftSortArr addObject:model];
+                }
+                [self reloadTableView];
+            }
+        } failure:^(NSError *error) {
+            
+        }];
+    });
+    
+}
+- (void)reloadTableView
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        OTWBusinessSortModel * model = _siftSortArr[0];
+        model.selected = YES;
+        for (OTWBusinessSortModel * result in _siftSortArr) {
+            OTWBusinessDetailSortModel * resultModel = [[OTWBusinessDetailSortModel alloc] init];
+            resultModel.name = @"全部";
+            resultModel.selected = NO;
+            [result.children insertObject:resultModel atIndex:0];
+        }
+        [_siftSortTableView reloadData];
+        [_siftDetailTableView reloadData];
+    });
+}
+
+/**
+ * 筛选
+ */
+- (void)siftButtonClick
+{
+    _siftView.hidden = NO;
+    [UIView beginAnimations:nil context:nil];
+    _siftView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 415);
+    [UIView commitAnimations];
+    
+}
+/**
+ * 搜索商家
+ */
+- (void)toSearchBusiness
+{
+    //    _siftView.hidden = YES;
+}
+- (void)cancelButtonClick
+{
+    [UIView beginAnimations:nil context:nil];
+    _siftView.frame = CGRectMake(0, -415, SCREEN_WIDTH, 415);
+    [UIView commitAnimations];
+    _siftView.hidden = YES;
+}
 
 /*
  #pragma mark - Navigation
@@ -284,29 +522,173 @@
  }
  */
 
--(UIView*)ARdituImageView{
-    if(!_ARdituImageView){
-        _ARdituImageView = [[UIControl alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-15-50, SCREEN_HEIGHT-30-49, 50, 50)] ;
-        _ARdituImageView.backgroundColor = [UIColor clearColor];
-        [(UIControl *)_ARdituImageView addTarget:self action:@selector(ARdituClick) forControlEvents:UIControlEventTouchUpInside];
-        UIImageView *imgARditu=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
-        imgARditu.image=[UIImage imageNamed:@"ar_ARditu"];
-        [_ARdituImageView addSubview:imgARditu];
+//-(UIView*)ARdituImageView{
+//    if(!_ARdituImageView){
+//        _ARdituImageView = [[UIControl alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-15-50, SCREEN_HEIGHT-30-49, 50, 50)] ;
+//        _ARdituImageView.backgroundColor = [UIColor clearColor];
+//        [(UIControl *)_ARdituImageView addTarget:self action:@selector(ARdituClick) forControlEvents:UIControlEventTouchUpInside];
+//        UIImageView *imgARditu=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+//        imgARditu.image=[UIImage imageNamed:@"ar_ARditu"];
+//        [_ARdituImageView addSubview:imgARditu];
+//    }
+//    return _ARdituImageView;
+//}
+//
+//-(UIView*)fabuImageView{
+//    if(!_fabuImageView){
+//        _fabuImageView = [[UIControl alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-15-50-50-15, SCREEN_HEIGHT-30-49, 50, 50)] ;
+//        _fabuImageView.backgroundColor = [UIColor clearColor];
+//        [(UIControl *)_fabuImageView addTarget:self action:@selector(fubuClick) forControlEvents:UIControlEventTouchUpInside];
+//        UIImageView *imgfabu=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+//        imgfabu.image=[UIImage imageNamed:@"ar_fabu"];
+//        [_fabuImageView addSubview:imgfabu];
+//    }
+//    return _fabuImageView;
+//}
+
+- (UIButton*)cameraButton
+{
+    if (!_cameraButton) {
+        _cameraButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _cameraButton.backgroundColor = [UIColor clearColor];
+        CGFloat cameraButtonX = SCREEN_WIDTH - 50*3 - 15 - 7*2;
+        CGFloat cameraButtonY = SCREEN_HEIGHT - 15*2 - 50;
+        self.cameraButton.frame = CGRectMake(cameraButtonX, cameraButtonY, 50, 50);
+        [_cameraButton setImage:[UIImage imageNamed:@"ar_fabu"] forState:UIControlStateNormal];
+        [_cameraButton addTarget:self action:@selector(fubuClick) forControlEvents:UIControlEventTouchUpInside];
     }
-    return _ARdituImageView;
+    return _cameraButton;
+}
+- (UIButton*)arButton
+{
+    if (!_arButton) {
+        _arButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _arButton.backgroundColor = [UIColor clearColor];
+        CGFloat arListButtonX = CGRectGetMaxX(self.cameraButton.frame) + 7;
+        _arButton.frame = CGRectMake(arListButtonX, self.cameraButton.MinY, 50, 50);
+        [_arButton setImage:[UIImage imageNamed:@"ar_ARditu"] forState:UIControlStateNormal];
+        [_arButton addTarget:self action:@selector(ARdituClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _arButton;
 }
 
--(UIView*)fabuImageView{
-    if(!_fabuImageView){
-        _fabuImageView = [[UIControl alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-15-50-50-15, SCREEN_HEIGHT-30-49, 50, 50)] ;
-        _fabuImageView.backgroundColor = [UIColor clearColor];
-        [(UIControl *)_fabuImageView addTarget:self action:@selector(fubuClick) forControlEvents:UIControlEventTouchUpInside];
-        UIImageView *imgfabu=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
-        imgfabu.image=[UIImage imageNamed:@"ar_fabu"];
-        [_fabuImageView addSubview:imgfabu];
+- (UIButton*)planeMapButton
+{
+    if (!_planeMapButton) {
+        _planeMapButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _planeMapButton.backgroundColor = [UIColor clearColor];
+        CGFloat planeMapButtonX = CGRectGetMaxX(self.arButton.frame) + 7;
+        self.planeMapButton.frame = CGRectMake(planeMapButtonX, self.cameraButton.MinY, 50, 50);
+        [_planeMapButton setImage:[UIImage imageNamed:@"ar_pingmian"] forState:UIControlStateNormal];
+        [_planeMapButton addTarget:self action:@selector(planeMapButtonClick) forControlEvents:UIControlEventTouchUpInside];
     }
-    return _fabuImageView;
+    return _planeMapButton;
 }
+
+- (UIButton *)siftButton
+{
+    if (!_siftButton) {
+        _siftButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _siftButton.frame = CGRectMake(SCREEN_WIDTH - 52, 22, 52, 40);
+        _siftButton.backgroundColor = [UIColor clearColor];
+        [_siftButton setImage:[UIImage imageNamed:@"ar_shaixuan_2"] forState:UIControlStateNormal];
+        [_siftButton addTarget:self action:@selector(siftButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _siftButton;
+}
+- (UIView *)siftView
+{
+    if (!_siftView) {
+        _siftView = [[UIView alloc] initWithFrame:CGRectMake(0, -415, SCREEN_WIDTH, 415)];
+        _siftView.backgroundColor = [UIColor whiteColor];
+        //        _siftView.userInteractionEnabled = YES;
+        _siftView.hidden = YES;
+    }
+    return _siftView;
+}
+
+- (UIView *)searchView
+{
+    if (!_searchView) {
+        _searchView = ({
+            UIView * View = [[UIView alloc] initWithFrame:CGRectMake(15, 25.5, SCREEN_WIDTH - 77, 33)];
+            View.backgroundColor = [UIColor color_f4f4f4];
+            View.layer.masksToBounds = YES;
+            View.layer.cornerRadius = 15;
+            UIImageView * search = [[UIImageView alloc] initWithFrame:CGRectMake(15, 9, 15, 15)];
+            search.image = [UIImage imageNamed:@"sousuo_1"];
+            [View addSubview:search];
+            UILabel * tipsLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(search.frame) + 10, 0, 150, 33)];
+            tipsLabel.backgroundColor = [UIColor clearColor];
+            tipsLabel.font = [UIFont systemFontOfSize:14];
+            tipsLabel.textColor = [UIColor color_979797];
+            tipsLabel.text = @"搜索附近的美食、商城";
+            [View addSubview:tipsLabel];
+            tipsLabel.userInteractionEnabled = YES;
+            UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toSearchBusiness)];
+            [tipsLabel addGestureRecognizer:tap];
+            View;
+        });
+        
+    }
+    return _searchView;
+}
+
+- (UIButton *)cancelButton
+{
+    if (!_cancelButton) {
+        _cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _cancelButton.frame = CGRectMake(SCREEN_WIDTH - 35, 32, 20, 20);
+        _cancelButton.backgroundColor = [UIColor clearColor];
+        [_cancelButton setImage:[UIImage imageNamed:@"ar_guanbi"] forState:UIControlStateNormal];
+        [_cancelButton addTarget:self action:@selector(cancelButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _cancelButton;
+}
+
+- (UITableView *)siftSortTableView
+{
+    if (!_siftSortTableView) {
+        _siftSortTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, SCREEN_WIDTH * 0.32, 351) style:UITableViewStylePlain];
+        _siftSortTableView.delegate = self;
+        _siftSortTableView.dataSource = self;
+        _siftSortTableView.separatorStyle = UITableViewCellSelectionStyleNone;
+        _siftSortTableView.backgroundColor = [UIColor whiteColor];
+        UIView * headView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH * 0.32, 44)];
+        headView.backgroundColor = [UIColor whiteColor];
+        UILabel * label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH * 0.32, 43.5)];
+        label.text = @"全部分类";
+        label.font = [UIFont systemFontOfSize:15];
+        label.textColor = [UIColor color_202020];
+        label.textAlignment = NSTextAlignmentCenter;
+        [headView addSubview:label];
+        UIView * line = [[UIView alloc] initWithFrame:CGRectMake(0, 43.5, SCREEN_WIDTH * 0.32, 0.5)];
+        line.backgroundColor = [UIColor color_d5d5d5];
+        [headView addSubview:line];
+        _siftSortTableView.tableHeaderView = headView;
+    }
+    return _siftSortTableView;
+}
+
+- (UITableView *)siftDetailTableView
+{
+    if (!_siftDetailTableView) {
+        _siftDetailTableView = [[UITableView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH * 0.32, 64, SCREEN_WIDTH * 0.68, 351) style:UITableViewStylePlain];
+        _siftDetailTableView.delegate = self;
+        _siftDetailTableView.dataSource = self;
+        _siftDetailTableView.separatorStyle = UITableViewCellSelectionStyleNone;
+        _siftDetailTableView.backgroundColor = [UIColor color_f4f4f4];
+    }
+    return _siftDetailTableView;
+}
+//- (NSMutableArray *)siftSortArr
+//{
+//    if (!_siftSortArr) {
+//        _siftSortArr = @[].mutableCopy;
+//    }
+//    return _siftSortArr;
+//}
+
 #pragma mark 初始化商家list查询参数
 -(OTWFootprintSearchParams *)arShopSearchParams
 {
@@ -368,7 +750,7 @@
 -(void)ARdituClick{
     DLog(@"我点击了ARdituClick");
     if (_isFromAR) {
-        [self.navigationController popViewControllerAnimated:YES];
+        [self.navigationController popViewControllerAnimated:NO];
     }else{
         [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexAR];
     }
@@ -377,9 +759,16 @@
 -(void)fubuClick{
    DLog(@"我点击了fubuClick");
     OTWFootprintReleaseViewController * FootprintRelease = [[OTWFootprintReleaseViewController alloc] init];
-    [self.navigationController pushViewController:FootprintRelease animated:YES];
+    [self.navigationController pushViewController:FootprintRelease animated:NO];
 }
-
+- (void)planeMapButtonClick
+{
+    
+}
+- (void)leftNavigaionButtonClicked
+{
+    [self.navigationController popViewControllerAnimated:NO];
+}
 - (void)MBProgressHUDErrorTips:(NSString *)error{
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.mode = MBProgressHUDModeText;

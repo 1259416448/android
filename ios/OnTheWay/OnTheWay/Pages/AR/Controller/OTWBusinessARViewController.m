@@ -162,7 +162,6 @@
     [self.view insertSubview:self.backButton aboveSubview:self.presenter];
     
     //筛选按钮
-//    [self.siftButton addGestureRecognizer:[[OTWUITapGestureRecognizer alloc]initWithTarget:self action:@selector(siftButtonClick)]];
     [self.view insertSubview:self.siftButton aboveSubview:self.presenter];
 //    [self.view bringSubviewToFront:self.siftButton];
     
@@ -556,6 +555,7 @@
     [OTWLaunchManager sharedManager].FindBusinessmenVC.latitude = self.arShopSearchParams.latitude;
     [OTWLaunchManager sharedManager].FindBusinessmenVC.longitude = self.arShopSearchParams.longitude;
     [OTWLaunchManager sharedManager].FindBusinessmenVC.isFromAR = YES;
+
     //获取当前push View
     NSArray *viewController = self.navigationController.viewControllers;
     //检查 footprintVC 是否在 队列中
