@@ -404,8 +404,20 @@ public class DataInitService implements ApplicationContextAware {
         if (configService.checkMapName(CommonContact.SMS_CODE_TTL_TIME)) {
             config = new Config();
             config.setMapName(CommonContact.SMS_CODE_TTL_TIME)
-                    .setMapValue("15-MINUTES")
+                    .setMapValue("30-MINUTES")
                     .setDescription("短信验证码有效时间")
+                    .setValueType(ConfigValueType.String)
+                    .setEditable(true)
+                    .setCreater("init");
+            configService.save(config);
+            configList.add(config);
+        }
+
+        if (configService.checkMapName(CommonContact.HMSMS_CONTENT)) {
+            config = new Config();
+            config.setMapName(CommonContact.HMSMS_CONTENT)
+                    .setMapValue("#code# 为您的验证码，有效期为#time#分钟。请勿向任何单位和个人泄露该验证码。感谢您的使用，祝您生活愉快！")
+                    .setDescription("短信验证码内容")
                     .setValueType(ConfigValueType.String)
                     .setEditable(true)
                     .setCreater("init");

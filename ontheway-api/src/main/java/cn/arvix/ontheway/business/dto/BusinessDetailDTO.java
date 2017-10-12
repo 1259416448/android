@@ -11,7 +11,7 @@ import java.util.Set;
  */
 public class BusinessDetailDTO {
 
-    private Long id;
+    private Long businessId;
 
     private String name;
 
@@ -64,16 +64,16 @@ public class BusinessDetailDTO {
      */
     private List<FootprintDetailDTO> footprints;
 
-    public static BusinessDetailDTO getInstance(){
+    public static BusinessDetailDTO getInstance() {
         return new BusinessDetailDTO();
     }
 
-    public Long getId() {
-        return id;
+    public Long getBusinessId() {
+        return businessId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setBusinessId(Long businessId) {
+        this.businessId = businessId;
     }
 
     public String getName() {
