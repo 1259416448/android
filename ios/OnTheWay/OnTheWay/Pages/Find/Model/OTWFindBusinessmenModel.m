@@ -18,6 +18,7 @@
         self.BusinessmenDistance=dic[@"distance"];
         self.BusinessmenAddress=dic[@"address"];
         self.coupons=dic[@"coupons"];
+        self.businessId = dic[@"businessId"];
     }
     return self;
 }

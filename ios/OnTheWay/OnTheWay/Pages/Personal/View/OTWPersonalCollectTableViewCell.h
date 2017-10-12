@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OTWPersonCollectionModel.h"
 
 @interface OTWPersonalCollectTableViewCell : UITableViewCell
+
+@property (nonatomic, strong) OTWPersonCollectionModel * model;
 
 @end

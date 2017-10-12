@@ -367,7 +367,8 @@
         _siftView.hidden = YES;
     }else{
         OTWBusinessDetailViewController *businessVC = [[OTWBusinessDetailViewController alloc] init];
-        [businessVC setOpData:@"110"];
+        FindBusinessmenModel *status=_status[indexPath.row];
+        [businessVC setOpData:[NSString stringWithFormat:@"%@",status.businessId]];
         [self.navigationController pushViewController:businessVC animated:YES];
     }
 

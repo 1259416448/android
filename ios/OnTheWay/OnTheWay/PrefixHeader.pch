@@ -27,6 +27,5 @@
 #import <AFNetworking/UIImageView+AFNetworking.h>
 #import <MBProgressHUD.h>
 #import "OTWUtils.h"
-#import "SVProgressHUD.h"
-#import "ALiProgressHUD.h"
+#import <MJExtension.h>
 #endif /* PrefixHeader_pch */
