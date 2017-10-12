@@ -223,6 +223,8 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
                             Map<String, Object> params, String urlFix) {
         if (size == null) size = 15;
         Searchable searchable = Searchable.newSearchable(params, new PageRequest(number, size));
+        //设置默认搜索范围 1km
+        searchable.addSearchParam("distance",1.0);
         //new Sort(Sort.Direction.ASC,"distance")
         //.and(new Sort(Sort.Direction.DESC,"dateCreated")));
         Page<Footprint> page = super.findAllWithNoCount(searchable);

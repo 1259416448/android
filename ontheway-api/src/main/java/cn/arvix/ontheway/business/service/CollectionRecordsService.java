@@ -32,7 +32,7 @@ public class CollectionRecordsService extends BaseServiceImpl<CollectionRecords,
     public Long countByUserIdAndBusinessId(Long userId, Long businessId) {
         Map<String, Object> params = Maps.newHashMap();
         params.put("userId_eq", userId);
-        params.put("businessId", businessId);
+        params.put("businessId_eq", businessId);
         return super.count(Searchable.newSearchable(params));
     }
 

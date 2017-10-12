@@ -1,6 +1,7 @@
 package cn.arvix.ontheway.business.service;
 
 import cn.arvix.base.common.entity.JSONResult;
+import cn.arvix.base.common.entity.PageResult;
 import cn.arvix.base.common.entity.SystemModule;
 import cn.arvix.base.common.entity.search.PageRequest;
 import cn.arvix.base.common.entity.search.Searchable;
@@ -8,13 +9,13 @@ import cn.arvix.base.common.service.impl.BaseServiceImpl;
 import cn.arvix.base.common.utils.CommonContact;
 import cn.arvix.base.common.utils.CommonErrorCode;
 import cn.arvix.base.common.utils.JsonUtil;
-import cn.arvix.ontheway.business.dto.ARSearchDTO;
-import cn.arvix.ontheway.business.dto.BusinessDetailDTO;
-import cn.arvix.ontheway.business.dto.CreateAndClaimDTO;
-import cn.arvix.ontheway.business.dto.SolrSearchDTO;
+import cn.arvix.base.common.utils.TimeMaker;
+import cn.arvix.ontheway.business.dto.*;
 import cn.arvix.ontheway.business.entity.Business;
 import cn.arvix.ontheway.business.entity.BusinessExpand;
 import cn.arvix.ontheway.business.entity.BusinessStatistics;
+import cn.arvix.ontheway.business.entity.CollectionRecords;
+import cn.arvix.ontheway.business.repository.BusinessRepository;
 import cn.arvix.ontheway.ducuments.entity.Document;
 import cn.arvix.ontheway.ducuments.service.DocumentService;
 import cn.arvix.ontheway.footprint.service.FootprintService;
@@ -22,8 +23,10 @@ import cn.arvix.ontheway.sys.config.service.ConfigService;
 import cn.arvix.ontheway.sys.user.entity.User;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -100,6 +103,10 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
     @Autowired
     public void setFootprintService(FootprintService footprintService) {
         this.footprintService = footprintService;
+    }
+
+    private BusinessRepository getBusinessRepository() {
+        return (BusinessRepository) baseRepository;
     }
 
     /**
@@ -233,7 +240,7 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
 
         BusinessDetailDTO detailDTO = BusinessDetailDTO.getInstance();
         //基本信息
-        detailDTO.setId(business.getId());
+        detailDTO.setBusinessId(business.getId());
         detailDTO.setName(business.getName());
         detailDTO.setAddress(business.getAddress());
         detailDTO.setLatitude(business.getLatitude());
@@ -361,6 +368,48 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
         return JsonUtil.getSuccess(CommonContact.OPTION_SUCCESS, CommonContact.OPTION_SUCCESS, id);
     }
 
+    /**
+     * 获取用户收藏列表，分页获取
+     *
+     * @param number 当前页
+     * @param size   每页大小 默认15
+     * @return 用户收藏数据列表
+     */
+    public JSONResult userLike(int number, int size) {
+        if (number < 0) number = 0;
+        if (size < 0 || size > 30) size = 15;
+        User user = webContextUtils.getCheckCurrentUser();
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("userId", user.getId());
+        Searchable searchable = Searchable.newSearchable(params, new PageRequest(number, size),
+                new Sort(Sort.Direction.DESC, "dateCreated"));
+        Page<CollectionRecords> page = collectionRecordsService.findAllWithNoCount(searchable);
+        if (page.getContent().size() > 0) {
+            Set<Long> businessIdSet = Sets.newHashSet();
+            page.getContent().forEach(x -> businessIdSet.add(x.getBusinessId()));
+            //获取通过商家ID数据
+            List<Business> businessList = getBusinessRepository().findInId(businessIdSet);
+            Map<Long, Business> businessMap = Maps.newHashMap();
+            businessList.forEach(x -> businessMap.put(x.getId(), x));
+            //构建dto
+            List<UserCollectionSearchDTO> content = Lists.newArrayListWithCapacity(page.getContent().size());
+            page.getContent().forEach(x -> {
+                UserCollectionSearchDTO dto = UserCollectionSearchDTO.getInstance();
+                Business business = businessMap.get(x.getBusinessId());
+                dto.setBusinessId(business.getId());
+                dto.setName(business.getName());
+                dto.setAddress(business.getAddress());
+                dto.setLatitude(business.getLatitude());
+                dto.setLongitude(business.getLongitude());
+                dto.setDateCreated(TimeMaker.toTimeMillis(x.getDateCreated()));
+                dto.setDateCreatedStr(TimeMaker.toFormatStr(x.getDateCreated(), "yyyy.MM.dd"));
+                dto.setCollectionId(x.getId());
+                content.add(dto);
+            });
+            page = new PageResult<>(content, searchable.getPage(), 0);
+        }
+        return JsonUtil.getSuccess(CommonContact.FETCH_SUCCESS, CommonContact.FETCH_SUCCESS, page);
+    }
 
     /**
      * 导入全部数据到solr 全文检索中

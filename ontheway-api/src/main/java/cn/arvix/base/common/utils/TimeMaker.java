@@ -622,20 +622,19 @@ public class TimeMaker {
         Long currentTime = System.currentTimeMillis();
         Long diffTime = currentTime - time;
         String str = "";
-        if(diffTime < 1000){
+        if (diffTime < 1000) {
             str = "刚刚";
-        }else if (diffTime < ONE_MINUIT) {
+        } else if (diffTime < ONE_MINUIT) {
             str = diffTime / 1000 + "秒前";
         } else if (diffTime < ONE_HOUR) {
             str = diffTime / ONE_MINUIT + "分钟前";
         } else if (diffTime < ONE_DAY) {
             str = diffTime / ONE_HOUR + "小时前";
-        } else if (diffTime < ONE_MONTH) {
-            str = diffTime / ONE_DAY + "天前";
-        } else if (diffTime < ONE_YEAR) {
-            str = diffTime / ONE_MONTH + "月前";
+        } else if (diffTime < ONE_YEAR) { // 09年01日 时间
+            str = TimeMaker.toFormatStr(time, "MM月dd日 HH:mm");
         } else {
-            str = diffTime / ONE_YEAR + "年前";
+            str = TimeMaker.toFormatStr(time, "yyyy年MM月dd日 HH:mm");
+            ;
         }
         return str;
     }

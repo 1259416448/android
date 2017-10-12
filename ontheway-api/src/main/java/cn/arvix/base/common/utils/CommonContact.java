@@ -164,4 +164,7 @@ public interface CommonContact {
     //HMAC256 消息摘要计算key
     String HMAC256_KEY = "15f30b0eb8804aa09408611bafeb34b5";
 
+    //航美短信内容
+    String HMSMS_CONTENT = "hmsms_content";
+
 }

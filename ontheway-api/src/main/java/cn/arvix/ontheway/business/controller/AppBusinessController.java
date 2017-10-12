@@ -101,12 +101,21 @@ public class AppBusinessController extends ExceptionHandlerController {
         return businessService.searchFootprint(id, number, size, currentTime);
     }
 
-    @ApiOperation(value = "收藏接口",notes = "收藏状态下请求为删除 反之 收藏 id 商家ID")
+    @ApiOperation(value = "收藏接口", notes = "收藏状态下请求为删除 反之 收藏 id 商家ID")
     @PostMapping(value = "/like/{id}")
     @ResponseBody
-    public JSONResult like(@ApiParam(value = "商家ID") @PathVariable Long id){
+    public JSONResult like(@ApiParam(value = "商家ID") @PathVariable Long id) {
         return businessService.like(id);
     }
 
-
+    @ApiOperation(value = "用户收藏列表", notes = "分页获取用户收藏数据")
+    @ApiImplicitParams(value = {
+            @ApiImplicitParam(value = "当前页", name = "number", required = true, paramType = "query"),
+            @ApiImplicitParam(value = "每页大小", name = "size", required = true, paramType = "query")
+    })
+    @ResponseBody
+    @GetMapping(value = "/user/likes")
+    public JSONResult userLike(int number, int size) {
+        return businessService.userLike(number, size);
+    }
 }

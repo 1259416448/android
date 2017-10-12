@@ -65,7 +65,7 @@ public class UserService extends BaseServiceImpl<User, Long> {
     private SMSService smsService;
 
     @Autowired
-    public void setSmsService(@Qualifier("juHeSMSServiceImpl") SMSService smsService) {
+    public void setSmsService(@Qualifier("hmSMSServiceImpl") SMSService smsService) {
         this.smsService = smsService;
     }
 
@@ -563,25 +563,25 @@ public class UserService extends BaseServiceImpl<User, Long> {
             }
         }
         Map<String, Object> map = Maps.newHashMap();
-        Map<String, Object> params = Maps.newHashMap();
         map.put("mobile", mobile);
-        params.put("#minute#", configService.getConfigString(CommonContact.SMS_CODE_TTL_TIME).split("-")[0]);
-        params.put("#code#", getSixNumberCode());
-        map.put("tpl_id", configService.getConfigString(CommonContact.JU_HE_LOGIN_CODE_TPL_ID));
-        map.put("tpl_map", params);
+
+        String smsContent = configService.getConfigString(CommonContact.HMSMS_CONTENT);
+        String code = getSixNumberCode();
+        String[] timeInfo = configService.getConfigString(CommonContact.SMS_CODE_TTL_TIME).split("-");
+        smsContent = smsContent.replace("#code#", code).replace("#time#", timeInfo[0]);
+
         Boolean opt = Boolean.TRUE;
         //只有在非测试情况下才发送短信
         if (!webContextUtils.ifTest()) {
-            opt = smsService.sendMessage(null, map);
+            opt = smsService.sendMessage(smsContent, map);
         }
         if (opt) {
             //记录redis
             smsDTO = new SmsDTO();
             smsDTO.setMobile(mobile);
-            smsDTO.setCode(params.get("#code#").toString());
+            smsDTO.setCode(code);
             smsDTO.setTime(System.currentTimeMillis());
-            String[] time = configService.getConfigString(CommonContact.SMS_CODE_TTL_TIME).split("-");
-            bucket.set(smsDTO, Long.valueOf(time[0]), TimeUnit.valueOf(time[1]));
+            bucket.set(smsDTO, Long.valueOf(timeInfo[0]), TimeUnit.valueOf(timeInfo[1]));
             return JsonUtil.getSuccess(MessageUtils.message(CommonContact.OPTION_SUCCESS), CommonContact.OPTION_SUCCESS);
         } else {
             return JsonUtil.getSuccess(MessageUtils.message("短信验证码发送错误"), CommonErrorCode.SMS_CODE_SENT_ERROR);
