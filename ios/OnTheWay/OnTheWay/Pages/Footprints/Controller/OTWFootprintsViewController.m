@@ -310,13 +310,13 @@
 
 -(void)planeMapButtonClick
 {
-    NSArray *viewControllers = self.navigationController.viewControllers;
-    NSUInteger index = [viewControllers indexOfObject:[OTWLaunchManager sharedManager].footprintPlaneMapVC];
-    if(index != NSNotFound){
-        [self.navigationController popToViewController:[OTWLaunchManager sharedManager].footprintPlaneMapVC animated:NO];
-    }else{
-        [self.navigationController pushViewController:[OTWLaunchManager sharedManager].footprintPlaneMapVC animated:NO];
-    }
+//    NSArray *viewControllers = self.navigationController.viewControllers;
+//    NSUInteger index = [viewControllers indexOfObject:[OTWLaunchManager sharedManager].footprintPlaneMapVC];
+//    if(index != NSNotFound){
+//        [self.navigationController popToViewController:[OTWLaunchManager sharedManager].footprintPlaneMapVC animated:NO];
+//    }else{
+//        [self.navigationController pushViewController:[OTWLaunchManager sharedManager].footprintPlaneMapVC animated:NO];
+//    }
 }
 
 -(void)loadMoreFootprints:(BOOL)reflesh

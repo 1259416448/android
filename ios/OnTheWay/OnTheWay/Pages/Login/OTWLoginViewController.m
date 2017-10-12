@@ -285,10 +285,7 @@
                 if(self.requiredLogin){
                     [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexPersonal];
                 }
-                [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
-//                [CHBaseAlertView shareBaseAlertViewWithTitleArray:@[@"温馨提示"] messageArray:@[@"完善信息会让更多的小伙伴发现你哦~快去完善你的个人资料吧~"] buttonTitleArrray:@[@{@"color":[UIColor color_202020],@"title":@"稍后完善"},@{@"color":[UIColor blueColor],@"title":@"确定"}] clickBlock:^(NSInteger index) {
-//                    
-//                }];
+                [self dismissViewControllerAnimated:YES completion:nil];
                 
                 //[[NSNotificationCenter defaultCenter] postNotificationName:@"loginSuccess" object:self];
             }else{
