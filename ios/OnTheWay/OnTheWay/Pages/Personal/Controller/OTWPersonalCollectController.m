@@ -88,6 +88,7 @@
            if([[NSString stringWithFormat:@"%@",responseCache[@"code"]] isEqualToString:@"0"]){
                NSArray * arr = [[responseCache objectForKey:@"body"] objectForKey:@"content"];
                if (_pageNum == 0) {
+                   [_status removeAllObjects];
                    for (NSDictionary * result in arr) {
                        OTWPersonCollectionModel * model = [OTWPersonCollectionModel mj_objectWithKeyValues:result];
                        [_status addObject: model];

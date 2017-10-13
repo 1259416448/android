@@ -113,13 +113,14 @@
     collectTime.text = model.dateCreatedStr;
     shopName.text = model.name;    [shopName sizeToFit];
     [shopName sizeToFit];
-    if((shopName .frame.size.width+_tableViewLabelArray.count*20+30+60)>SCREEN_WIDTH){
-        CGRect shopNameRect=CGRectMake(15, 15,SCREEN_WIDTH-_tableViewLabelArray.count*20-30-60,18);
-        shopName.frame=shopNameRect;
-    }else{
-        CGRect shopNameRect=CGRectMake(15, 15,shopName.frame.size.width,18);
-        shopName.frame=shopNameRect;
-    }
+//    if((shopName .frame.size.width+_tableViewLabelArray.count*20+30+60)>SCREEN_WIDTH){
+//        CGRect shopNameRect=CGRectMake(15, 15,SCREEN_WIDTH-_tableViewLabelArray.count*20-30-60,18);
+//        shopName.frame=shopNameRect;
+//    }else{
+//        CGRect shopNameRect=CGRectMake(15, 15,shopName.frame.size.width,18);
+//        shopName.frame=shopNameRect;
+//    }
+    shopName.frame = CGRectMake(15, 15,SCREEN_WIDTH - 110,18);
     CGRect shopQuanViewRec=CGRectMake(shopName.frame.size.width+15,15,_tableViewLabelArray.count*20,15);
     shopQuanView.frame=shopQuanViewRec;
     shopAddress.text = model.address;

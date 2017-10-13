@@ -24,6 +24,17 @@
     // Do any additional setup after loading the view.
     [self buildUI];
 }
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
+    [self.searchTF becomeFirstResponder];
+}
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [[OTWLaunchManager sharedManager].mainTabController showTabBarWithAnimation:YES];
+}
 - (void)buildUI
 {
     [self.customNavigationBar addSubview:self.searchTF];

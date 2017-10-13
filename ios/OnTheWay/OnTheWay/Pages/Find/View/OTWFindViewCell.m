@@ -50,7 +50,7 @@
     _FindTpyeContentList=[[UIView alloc]init];
     
     //_text.lineBreakMode=NSLineBreakByWordWrapping;
-    [self.contentView addSubview:_FindTpyeContentList];
+//    [self.contentView addSubview:_FindTpyeContentList];
 }
 
 #pragma mark 设置模块
