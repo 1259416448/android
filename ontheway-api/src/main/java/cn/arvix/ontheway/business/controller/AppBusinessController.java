@@ -118,4 +118,18 @@ public class AppBusinessController extends ExceptionHandlerController {
     public JSONResult userLike(int number, int size) {
         return businessService.userLike(number, size);
     }
+
+    @ApiOperation(value = "商家的用户相册", notes = "用户相册数据，用户相册数据来至用户发布的足迹 " +
+            "按dateCreated desc 顺序排列 id 商家ID，分页获取数据")
+    @ResponseBody
+    @GetMapping(value = "/user/photos/{id}")
+    @ApiImplicitParams(value = {
+            @ApiImplicitParam(value = "开始分页时间", name = "currentTime", paramType = "query"),
+            @ApiImplicitParam(value = "当前页", name = "number", required = true, paramType = "query"),
+            @ApiImplicitParam(value = "每页大小", name = "size", required = true, paramType = "query")
+    })
+    public JSONResult userPhotos(@PathVariable Long id, int number, int size, Long currentTime) {
+        return businessService.userPhotos(id, number, size, currentTime);
+    }
+
 }
