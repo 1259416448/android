@@ -249,6 +249,7 @@
 		DDF5AB2B1F90887600AFF6F9 /* SDBrowserImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB251F90887600AFF6F9 /* SDBrowserImageView.m */; };
 		DDF5AB2C1F90887600AFF6F9 /* SDPhotoBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB271F90887600AFF6F9 /* SDPhotoBrowser.m */; };
 		DDF5AB2D1F90887600AFF6F9 /* SDWaitingView.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB2A1F90887600AFF6F9 /* SDWaitingView.m */; };
+		DDF5AB301F909FFE00AFF6F9 /* OTWBusinessListSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB2F1F909FFE00AFF6F9 /* OTWBusinessListSearchViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -726,6 +727,8 @@
 		DDF5AB281F90887600AFF6F9 /* SDPhotoBrowserConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDPhotoBrowserConfig.h; sourceTree = "<group>"; };
 		DDF5AB291F90887600AFF6F9 /* SDWaitingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDWaitingView.h; sourceTree = "<group>"; };
 		DDF5AB2A1F90887600AFF6F9 /* SDWaitingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDWaitingView.m; sourceTree = "<group>"; };
+		DDF5AB2E1F909FFE00AFF6F9 /* OTWBusinessListSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWBusinessListSearchViewController.h; sourceTree = "<group>"; };
+		DDF5AB2F1F909FFE00AFF6F9 /* OTWBusinessListSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWBusinessListSearchViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1243,6 +1246,8 @@
 				B17836DF1F3C329D00FC73DC /* OTWSearchShopListViewController.m */,
 				B17836E41F413AA700FC73DC /* findSearchViewController.h */,
 				B17836E51F413AA800FC73DC /* findSearchViewController.m */,
+				DDF5AB2E1F909FFE00AFF6F9 /* OTWBusinessListSearchViewController.h */,
+				DDF5AB2F1F909FFE00AFF6F9 /* OTWBusinessListSearchViewController.m */,
 				18BCFA9E1F4ADAF700B8E09D /* OTWAddNewShopViewController.h */,
 				18BCFA9F1F4ADAF700B8E09D /* OTWAddNewShopViewController.m */,
 				18BCFAB91F4E821200B8E09D /* OTWAddNewShopNextViewController.h */,
@@ -2188,6 +2193,7 @@
 				B13ADA231F1C5660008E889C /* OTWSystemNewsCellFrame.m in Sources */,
 				B17836E91F414EB400FC73DC /* findSearchViewCell.m in Sources */,
 				B1B055791F305B8A008274FE /* OTWShopDetailsViewCell.m in Sources */,
+				DDF5AB301F909FFE00AFF6F9 /* OTWBusinessListSearchViewController.m in Sources */,
 				B17836EC1F4179AE00FC73DC /* OTWPersonalUserFeedbackViewController.m in Sources */,
 				DDEA15E01F25CCA500056166 /* PYPhotosReaderController.m in Sources */,
 				DDEA160F1F30A0DF00056166 /* OTWPersonalFootprintTableViewCell.m in Sources */,

@@ -12,6 +12,7 @@
 #import "OTWFootprintsViewController.h"
 #import "OTWPlaneMapViewController.h"
 #import "OTWFindBusinessmenController.h"
+#import "OTWBusinessARViewController.h"
 
 
 typedef enum : NSUInteger {
@@ -29,6 +30,7 @@ typedef enum : NSUInteger {
 @property (nonatomic,strong) OTWFootprintsViewController * _Nullable footprintVC;
 @property (nonatomic,strong) OTWPlaneMapViewController * _Nullable footprintPlaneMapVC;
 @property (nonatomic,strong) OTWFindBusinessmenViewController * _Nullable FindBusinessmenVC;
+@property (nonatomic,strong) OTWBusinessARViewController * _Nullable BusinessARVC;
 
 
 + (instancetype _Nullable )sharedManager;

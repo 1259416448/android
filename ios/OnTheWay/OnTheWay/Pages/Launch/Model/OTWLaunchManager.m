@@ -146,5 +146,12 @@
     }
     return _footprintPlaneMapVC;
 }
+- (OTWBusinessARViewController *)BusinessARVC
+{
+    if (!_BusinessARVC) {
+        _BusinessARVC = [[OTWBusinessARViewController alloc] init];
+    }
+    return _BusinessARVC;
+}
 
 @end

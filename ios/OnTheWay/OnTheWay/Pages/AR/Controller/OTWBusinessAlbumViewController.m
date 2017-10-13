@@ -24,7 +24,6 @@
 @property (nonatomic,strong) OTWBusinessAlbumParameter *Parameter;
 @property (nonatomic,strong) NSMutableArray *userAlbumArr;
 @property (nonatomic,strong) NSMutableArray *businessAlbumArr;
-@property (nonatomic,assign) NSInteger pageNum;
 @property (nonatomic,strong) UIView *noResultView;
 @property (nonatomic,strong) UIImageView *noResultImage;
 
@@ -38,7 +37,6 @@
     // Do any additional setup after loading the view.
     _userAlbumArr = @[].mutableCopy;
     _businessAlbumArr = @[].mutableCopy;
-    _pageNum = 0;
     [self buildUi];
     [self loadUserPhotos];
 }
@@ -155,22 +153,22 @@
        [OTWNetworkManager doGET:url parameters:self.Parameter.mj_keyValues responseCache:^(id responseCache) {
            if([[NSString stringWithFormat:@"%@",responseCache[@"code"]] isEqualToString:@"0"]){
                NSArray * arr = [[responseCache objectForKey:@"body"] objectForKey:@"content"];
-               if (_pageNum == 0) {
+               if (_Parameter.number == 0) {
                    for (NSDictionary * result in arr) {
                        OTWBusinessAlbumModel * model = [OTWBusinessAlbumModel mj_objectWithKeyValues:result];
                        [_userAlbumArr addObject: model];
                    }
                    dispatch_async(dispatch_get_main_queue(), ^{
                        [_rightCollectionView reloadData];
-//                       [tableView.mj_header endRefreshing];
-//                       [tableView.mj_footer endRefreshing];
+                       [_rightCollectionView.mj_header endRefreshing];
+                       [_rightCollectionView.mj_footer endRefreshing];
                    });
                }
            }
        } success:^(id responseObject) {
            if([[NSString stringWithFormat:@"%@",responseObject[@"code"]] isEqualToString:@"0"]){
                self.Parameter.currentTime = responseObject[@"body"][@"currentTime"];
-               if (_pageNum == 0) {
+               if (_Parameter.number == 0) {
                    [_userAlbumArr removeAllObjects];
                }
                NSArray * arr = [[responseObject objectForKey:@"body"] objectForKey:@"content"];
@@ -179,12 +177,12 @@
                    [_userAlbumArr addObject: model];
                }
                dispatch_async(dispatch_get_main_queue(), ^{
-                   if (_pageNum == 0 && arr.count == 0) {
+                   if (_Parameter.number == 0 && arr.count == 0) {
 //                       [self.view addSubview:self.noResultView];
                    }
                    [_rightCollectionView reloadData];
-//                   [tableView.mj_header endRefreshing];
-//                   [tableView.mj_footer endRefreshing];
+                   [_rightCollectionView.mj_header endRefreshing];
+                   [_rightCollectionView.mj_footer endRefreshing];
                });
            }
            
@@ -301,7 +299,15 @@
         _rightCollectionView.backgroundColor = [UIColor clearColor];
         _rightCollectionView.showsHorizontalScrollIndicator = NO;
         _rightCollectionView.showsVerticalScrollIndicator = NO;
-        _rightCollectionView.bounces = NO;
+//        _rightCollectionView.bounces = NO;
+        _rightCollectionView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+            _Parameter.number = 0;
+            [self loadUserPhotos];
+        }];
+        _rightCollectionView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
+            _Parameter.number++;
+            [self loadUserPhotos];
+        }];
     }
     return _rightCollectionView;
 }

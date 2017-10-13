@@ -21,11 +21,13 @@
 #import "OTWBusinessARSiftDetailTableViewCell.h"
 #import "OTWBusinessSortModel.h"
 #import "OTWBusinessDetailSortModel.h"
+#import "OTWBusinessListSearchViewController.h"
+#import "OTWCustomNavigationBar.h"
 #import <CoreLocation/CoreLocation.h>
 #import <BaiduMapAPI_Search/BMKGeoCodeSearch.h>
 #import <BaiduMapAPI_Location/BMKLocationService.h>
 
-@interface OTWFindBusinessmenViewController () <UITableViewDataSource,UITableViewDelegate,BMKLocationServiceDelegate>{
+@interface OTWFindBusinessmenViewController () <UITableViewDataSource,UITableViewDelegate,BMKLocationServiceDelegate,OTWBusinessListSearchViewControllerDelegate>{
     
     UITableView *_tableView;
     NSMutableArray *_status;
@@ -38,7 +40,9 @@
 @property (nonatomic,strong) BMKLocationService *locService;
 //筛选按钮
 @property(nonatomic,strong) UIButton *siftButton;
+//搜索按钮
 @property(nonatomic,strong) UIButton *searchButton;
+
 @property(nonatomic,strong) UIButton *cancelButton;
 
 @property(nonatomic,strong) UIView *siftView;
@@ -91,6 +95,7 @@
     
     _tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
         self.arShopSearchParams.number = 0;
+        _arShopSearchParams.q = nil;
         [self getShopsList];
     }];
     
@@ -239,6 +244,7 @@
     //设置标题
 //    self.title = @"1234个商家";
     [self setLeftNavigationImage:[UIImage imageNamed:@"back_2"]];
+    [self.customNavigationBar addSubview:self.searchButton];
 //    [self setRightNavigationImage:[UIImage imageNamed:@"ar_shaixuan_2"]];
     [self setCustomNavigationRightView:self.siftButton];
     //大背景
@@ -501,10 +507,35 @@
 /**
  * 搜索商家
  */
-- (void)toSearchBusiness
+- (void)searchButtonClick
 {
-    //    _siftView.hidden = YES;
+    OTWBusinessListSearchViewController *findSearchVC = [[OTWBusinessListSearchViewController alloc] init];
+    findSearchVC.delegate = self;
+    [self.navigationController pushViewController:findSearchVC animated:NO];
 }
+#pragma mark OTWBusinessListSearchViewControllerDelegate
+
+- (void)searchWithStr:(NSString *)searchText
+{
+    _arShopSearchParams.type = @"list";
+    //默认搜索半径为1公里
+    _arShopSearchParams.searchDistance = @"three";
+    //默认当前页为 0
+    _arShopSearchParams.number = 0;
+    //默认每页大小为 15
+    _arShopSearchParams.size = 30;
+    //默认不是最后一页
+    _arShopSearchParams.isLastPage = NO;
+    //默认是第一页
+    _arShopSearchParams.isFirstPage = YES;
+    
+    _arShopSearchParams.currentTime = nil;
+    
+    _arShopSearchParams.q = searchText;
+    
+    [self getShopsList];
+}
+
 - (void)cancelButtonClick
 {
     [UIView beginAnimations:nil context:nil];
@@ -597,6 +628,19 @@
     }
     return _siftButton;
 }
+
+- (UIButton *)searchButton
+{
+    if (!_searchButton) {
+        _searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _searchButton.frame = CGRectMake(SCREEN_WIDTH - 52 - 36, 22, 36, 40);
+        _searchButton.backgroundColor = [UIColor clearColor];
+        [_searchButton setImage:[UIImage imageNamed:@"ar_sousuo_3"] forState:UIControlStateNormal];
+        [_searchButton addTarget:self action:@selector(searchButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _searchButton;
+}
+
 - (UIView *)siftView
 {
     if (!_siftView) {
@@ -696,7 +740,7 @@
     if (!_arShopSearchParams) {
         _arShopSearchParams = [[OTWFootprintSearchParams alloc] init];
         //列表查询
-        _arShopSearchParams.type = @"ar";
+        _arShopSearchParams.type = @"list";
         //默认搜索半径为1公里
         _arShopSearchParams.searchDistance = @"three";
         //默认当前页为 0

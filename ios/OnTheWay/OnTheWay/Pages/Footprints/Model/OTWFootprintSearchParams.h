@@ -12,6 +12,8 @@
 
 //查询类型
 @property (nonatomic,strong) NSString *type;
+//查询参数
+@property (nonatomic,strong) NSString *q;
 //搜索雷达半径
 @property (nonatomic,strong) NSString *searchDistance;
 //当前页数

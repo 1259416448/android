@@ -13,8 +13,9 @@
 #import "OTWFindBusinessmenController.h"
 #import "CHCustomSearchBar.h"
 #import "findSearchViewController.h"
+#import "OTWBusinessListSearchViewController.h"
 
-@interface OTWFindViewController ()<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>{
+@interface OTWFindViewController ()<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate,OTWBusinessListSearchViewControllerDelegate>{
     UITableView *_tableView;
     NSMutableArray *_status;
 }
@@ -225,9 +226,17 @@
 
 -(void)tapActionForSearch{
     
-    findSearchViewController *findSearchVC = [[findSearchViewController alloc] init];
+    OTWBusinessListSearchViewController *findSearchVC = [[OTWBusinessListSearchViewController alloc] init];
+    findSearchVC.delegate = self;
+    findSearchVC.isFromFind = YES;
     [self.navigationController pushViewController:findSearchVC animated:NO];
 
+}
+#pragma mark OTWBusinessListSearchViewControllerDelegate
+
+- (void)searchWithStr:(NSString *)searchText
+{
+    
 }
 
 @end

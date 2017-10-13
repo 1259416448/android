@@ -7,6 +7,7 @@
 //
 
 #import "OTWBusinessARViewController.h"
+#import "OTWCustomNavigationBar.h"
 #import "ArvixARConfiguration.h"
 #import "ArvixARAnnotation.h"
 #import "OTWBusinessARAnnotation.h"
@@ -27,12 +28,13 @@
 #import "OTWBusinessARSiftDetailTableViewCell.h"
 #import "OTWBusinessSortModel.h"
 #import "OTWBusinessDetailSortModel.h"
+#import "OTWBusinessListSearchViewController.h"
 
 #import <MJExtension.h>
 #import "MBProgressHUD+PYExtension.h"
 #import <BaiduMapAPI_Search/BMKGeoCodeSearch.h>
 
-@interface OTWBusinessARViewController ()<ArvixARDataSource,UIAlertViewDelegate,BMKGeoCodeSearchDelegate,UITableViewDelegate,UITableViewDataSource,UIGestureRecognizerDelegate>
+@interface OTWBusinessARViewController ()<ArvixARDataSource,UIAlertViewDelegate,BMKGeoCodeSearchDelegate,UITableViewDelegate,UITableViewDataSource,UIGestureRecognizerDelegate,OTWBusinessListSearchViewControllerDelegate>
 
 
 @property(nonatomic,strong) UIButton *backButton;
@@ -163,6 +165,9 @@
     
     //筛选按钮
     [self.view insertSubview:self.siftButton aboveSubview:self.presenter];
+    //搜索按钮
+    [self.view insertSubview:self.searchButton aboveSubview:self.presenter];
+
 //    [self.view bringSubviewToFront:self.siftButton];
     
     //搜索按钮
@@ -332,6 +337,7 @@
         [_siftDetailTableView reloadData];
     }else if (tableView == _siftDetailTableView)
     {
+        self.arShopSearchParams.q = nil;
         self.arShopSearchParams.number = 0;
         for (OTWBusinessSortModel * models in _siftSortArr) {
             for (OTWBusinessDetailSortModel * result in models.children) {
@@ -425,7 +431,11 @@
 {
     self.trackingManager.stopLocation = TRUE;
     [self hideBusinessSimpleInfo];
-    [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexFind]; // 显示首页
+    if (_isFromFind) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }else{
+        [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexFind]; // 显示首页
+    }
 }
 
 /**
@@ -506,10 +516,36 @@
 /**
  * 搜索商家
  */
-- (void)toSearchBusiness
+- (void)searchButtonClick
 {
-//    _siftView.hidden = YES;
+    OTWBusinessListSearchViewController *findSearchVC = [[OTWBusinessListSearchViewController alloc] init];
+    findSearchVC.delegate = self;
+    findSearchVC.isFromAR = YES;
+    [self.navigationController pushViewController:findSearchVC animated:NO];
 }
+#pragma mark OTWBusinessListSearchViewControllerDelegate
+
+- (void)searchWithStr:(NSString *)searchText
+{
+    _arShopSearchParams.type = @"ar";
+    //默认搜索半径为1公里
+    _arShopSearchParams.searchDistance = @"three";
+    //默认当前页为 0
+    _arShopSearchParams.number = 0;
+    //默认每页大小为 15
+    _arShopSearchParams.size = 30;
+    //默认不是最后一页
+    _arShopSearchParams.isLastPage = NO;
+    //默认是第一页
+    _arShopSearchParams.isFirstPage = YES;
+    
+    _arShopSearchParams.currentTime = nil;
+    
+    _arShopSearchParams.q = searchText;
+    
+    [self getArShops];
+}
+
 - (void)cancelButtonClick
 {
     [UIView beginAnimations:nil context:nil];
@@ -521,6 +557,7 @@
 #pragma mark 刷新-换一批足迹
 - (void)refreshFootprints
 {
+    self.arShopSearchParams.q = nil;
     [self hideBusinessSimpleInfo];
     [self hideAllButton];
     [self getArShops];
@@ -627,6 +664,8 @@
         _arShopSearchParams.isLastPage = NO;
         //默认是第一页
         _arShopSearchParams.isFirstPage = YES;
+        
+        _arShopSearchParams.q = self.searchText;
     }
     
     return _arShopSearchParams;
@@ -921,6 +960,17 @@
         [_siftButton addTarget:self action:@selector(siftButtonClick) forControlEvents:UIControlEventTouchUpInside];
     }
     return _siftButton;
+}
+- (UIButton *)searchButton
+{
+    if (!_searchButton) {
+        _searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _searchButton.frame = CGRectMake(SCREEN_WIDTH - 100, 25, 35, 35);
+        _searchButton.backgroundColor = [UIColor clearColor];
+        [_searchButton setImage:[UIImage imageNamed:@"ar_sousuo_2"] forState:UIControlStateNormal];
+        [_searchButton addTarget:self action:@selector(searchButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _searchButton;
 }
 
 - (UIView *)siftView

@@ -15,4 +15,9 @@ typedef void(^requestBackBlock) (id result);
 
 -(void) fetchARShops:(NSDictionary *) params completion:(requestBackBlock) block;
 
+@property (nonatomic, copy)NSString * searchText;
+
+@property (nonatomic, assign) BOOL isFromFind;
+
+
 @end

@@ -16,7 +16,7 @@
 
 #import "OTWSearchShopListViewController.h"
 
-@interface findSearchViewController ()<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>{
+@interface findSearchViewController ()<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate,UITextFieldDelegate>{
     UITableView *_tableView;
 }
 
@@ -58,7 +58,7 @@
     
     _tableView.backgroundColor = [UIColor clearColor];
     
-    [self.view addSubview:_tableView];
+//    [self.view addSubview:_tableView];
 
 }
 #pragma mark - 数据源方法
@@ -185,6 +185,12 @@
 -(void)cancelBtnClick{
     DLog(@"点击了取消");
     [self.navigationController popViewControllerAnimated:YES];
+}
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    NSLog(@"点击了搜索");
+    return YES;
 }
 
 /*
