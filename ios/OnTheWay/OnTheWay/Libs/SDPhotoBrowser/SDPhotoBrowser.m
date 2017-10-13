@@ -172,10 +172,9 @@
     
     [LSActionSheet showWithTitle:@"" destructiveTitle:@"" otherTitles:@[@"保存图片"] block:^(int index) {
         if (index == 1) {
-            [self saveImage];
         }
         else if (index == 0) {
-            
+            [self saveImage];
         }
     }];
     
@@ -543,7 +542,7 @@
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     if (self.currentImageIndex+1>=self.imageCount) {
         if (scrollView.contentOffset.x>  (self.currentImageIndex*(SCREEN_WIDTH+20) + 20)) {
-            [OTWUtils alertFailed:@"没有更多了哦" userInteractionEnabled:NO target:nil];
+//            [OTWUtils alertFailed:@"没有更多了哦" userInteractionEnabled:NO target:nil];
         }
     }
     
