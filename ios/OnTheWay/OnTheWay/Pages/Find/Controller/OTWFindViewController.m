@@ -15,7 +15,7 @@
 #import "findSearchViewController.h"
 #import "OTWBusinessListSearchViewController.h"
 
-@interface OTWFindViewController ()<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate,OTWBusinessListSearchViewControllerDelegate>{
+@interface OTWFindViewController ()<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate,OTWBusinessListSearchViewControllerDelegate,OTWFindViewCellDelegate>{
     UITableView *_tableView;
     NSMutableArray *_status;
 }
@@ -166,7 +166,7 @@
     DLog(@"我点击了：%ld",indexPath.row);
     OTWFindBusinessmenViewController *FindBusinessmenVC = [[OTWFindBusinessmenViewController alloc] init];
     OTWFindStatus *status=_status[indexPath.row];
-    FindBusinessmenVC.typeId = status.typeId;
+    FindBusinessmenVC.typeId = [NSString stringWithFormat:@"%@",status.typeId];
     [self.navigationController pushViewController:FindBusinessmenVC animated:YES];
     
 }
@@ -182,6 +182,8 @@
         cell.contentView.backgroundColor = [UIColor clearColor];
         cell.backgroundColor = [UIColor clearColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.delegate = self;
+        cell.indexPath = indexPath;
         //在此模块，以便重新布局
         OTWFindStatus *status=_status[indexPath.row];
         cell.status=status;
@@ -232,11 +234,20 @@
     [self.navigationController pushViewController:findSearchVC animated:NO];
 
 }
+#pragma mark OTWFindViewCellDelegate
+
+- (void)selectedWithTypeId:(NSNumber *)typeId andIndexpath:(NSIndexPath *)indexpath
+{
+    OTWFindBusinessmenViewController *FindBusinessmenVC = [[OTWFindBusinessmenViewController alloc] init];
+    OTWFindStatus *status=_status[indexpath.row];
+    FindBusinessmenVC.typeId = [NSString stringWithFormat:@"%@,%@",status.typeId,typeId];
+    [self.navigationController pushViewController:FindBusinessmenVC animated:YES];
+}
 #pragma mark OTWBusinessListSearchViewControllerDelegate
 
 - (void)searchWithStr:(NSString *)searchText
 {
-    
+
 }
 
 @end

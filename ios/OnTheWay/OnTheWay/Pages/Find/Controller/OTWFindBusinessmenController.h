@@ -17,7 +17,7 @@
 @property (nonatomic,assign) BOOL isFromAR;
 
 //商家分类ID
-@property (nonatomic,strong) NSNumber * typeId;
+@property (nonatomic,strong) NSString * typeId;
 
 //筛选分类数据
 @property(nonatomic,strong) NSMutableArray *siftSortArr;

@@ -82,20 +82,28 @@
         iconName.font=[UIFont systemFontOfSize:12];
         
         //显示图标
-        UIImageView *iconImageView = [[UIImageView alloc]init];
-        iconImageView.image=[UIImage imageNamed:[status.FindTpyeContentList[i] objectForKey:@"iconStr"]];
-        iconImageView.frame=CGRectMake(2.5, 0, FindTableViewFindTypeListWeight, FindTableViewFindTypeListWeight);
+        UIButton *btn = [[UIButton alloc]init];
+//        iconImageView.image=[UIImage imageNamed:[status.FindTpyeContentList[i] objectForKey:@"iconStr"]];
+        [btn setImage:[UIImage imageNamed:[status.FindTpyeContentList[i] objectForKey:@"iconStr"]] forState:UIControlStateNormal];
+        btn.tag = [status.typeId integerValue];
+        [btn addTarget:self action:@selector(buttonActin:) forControlEvents:UIControlEventTouchUpInside];
+        btn.frame=CGRectMake(2.5, 0, FindTableViewFindTypeListWeight, FindTableViewFindTypeListWeight);
         UIView *iconBox=[[UIView alloc] init];
-        
         //设置图标模块的view
         iconBox.frame=CGRectMake(_FindTpyeName.Witdh-(status.FindTpyeContentList.count-i)*(FindTableViewFindTypeListWeight+15)+10, 38, 40, 55);
         
         [_FindTpyeName addSubview:iconBox];
         [iconBox addSubview:iconName];
-        [iconBox addSubview:iconImageView];
+        [iconBox addSubview:btn];
 
     }
     
+}
+- (void)buttonActin:(UIButton *)btn
+{
+    if (_delegate && [_delegate respondsToSelector:@selector(selectedWithTypeId:andIndexpath:)]) {
+        [_delegate selectedWithTypeId: [NSNumber numberWithInteger:btn.tag] andIndexpath:_indexPath];
+    }
 }
 @end
 
