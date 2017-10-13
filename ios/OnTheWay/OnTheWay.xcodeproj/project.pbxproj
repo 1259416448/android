@@ -246,10 +246,18 @@
 		DDF5AB111F8F724400AFF6F9 /* OTWBusinessAlbumModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB101F8F724400AFF6F9 /* OTWBusinessAlbumModel.m */; };
 		DDF5AB141F905D8400AFF6F9 /* OTWAlbumCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB131F905D8400AFF6F9 /* OTWAlbumCollectionViewCell.m */; };
 		DDF5AB171F905FE100AFF6F9 /* OTWBusinessAlbumParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB161F905FE100AFF6F9 /* OTWBusinessAlbumParameter.m */; };
-		DDF5AB2B1F90887600AFF6F9 /* SDBrowserImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB251F90887600AFF6F9 /* SDBrowserImageView.m */; };
-		DDF5AB2C1F90887600AFF6F9 /* SDPhotoBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB271F90887600AFF6F9 /* SDPhotoBrowser.m */; };
-		DDF5AB2D1F90887600AFF6F9 /* SDWaitingView.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB2A1F90887600AFF6F9 /* SDWaitingView.m */; };
 		DDF5AB301F909FFE00AFF6F9 /* OTWBusinessListSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB2F1F909FFE00AFF6F9 /* OTWBusinessListSearchViewController.m */; };
+		DDF5AB391F90C70600AFF6F9 /* SDBrowserImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB331F90C70600AFF6F9 /* SDBrowserImageView.m */; };
+		DDF5AB3A1F90C70600AFF6F9 /* SDPhotoBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB351F90C70600AFF6F9 /* SDPhotoBrowser.m */; };
+		DDF5AB3E1F90C7B400AFF6F9 /* UIViewExt.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB3D1F90C7B400AFF6F9 /* UIViewExt.m */; };
+		DDF5AB411F90C88700AFF6F9 /* UIImage+CHTailort.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB401F90C88700AFF6F9 /* UIImage+CHTailort.m */; };
+		DDF5AB451F90C8D800AFF6F9 /* LSActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB441F90C8D800AFF6F9 /* LSActionSheet.m */; };
+		DDF5AB551F90CC3700AFF6F9 /* HYBImageClipedManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB4C1F90CC3700AFF6F9 /* HYBImageClipedManager.m */; };
+		DDF5AB561F90CC3700AFF6F9 /* UIButton+HYBImageCliped.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB4E1F90CC3700AFF6F9 /* UIButton+HYBImageCliped.m */; };
+		DDF5AB571F90CC3800AFF6F9 /* UIImage+HYBImageCliped.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB4F1F90CC3700AFF6F9 /* UIImage+HYBImageCliped.m */; };
+		DDF5AB581F90CC3800AFF6F9 /* UIImageView+HYBImageCliped.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB521F90CC3700AFF6F9 /* UIImageView+HYBImageCliped.m */; };
+		DDF5AB591F90CC3800AFF6F9 /* UIView+HYBImageCliped.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB541F90CC3700AFF6F9 /* UIView+HYBImageCliped.m */; };
+		DDF5AB5B1F90CF8F00AFF6F9 /* SDWaitingView.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB5A1F90CF8F00AFF6F9 /* SDWaitingView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -720,15 +728,32 @@
 		DDF5AB131F905D8400AFF6F9 /* OTWAlbumCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWAlbumCollectionViewCell.m; sourceTree = "<group>"; };
 		DDF5AB151F905FE100AFF6F9 /* OTWBusinessAlbumParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWBusinessAlbumParameter.h; sourceTree = "<group>"; };
 		DDF5AB161F905FE100AFF6F9 /* OTWBusinessAlbumParameter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWBusinessAlbumParameter.m; sourceTree = "<group>"; };
-		DDF5AB241F90887600AFF6F9 /* SDBrowserImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDBrowserImageView.h; sourceTree = "<group>"; };
-		DDF5AB251F90887600AFF6F9 /* SDBrowserImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDBrowserImageView.m; sourceTree = "<group>"; };
-		DDF5AB261F90887600AFF6F9 /* SDPhotoBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDPhotoBrowser.h; sourceTree = "<group>"; };
-		DDF5AB271F90887600AFF6F9 /* SDPhotoBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDPhotoBrowser.m; sourceTree = "<group>"; };
-		DDF5AB281F90887600AFF6F9 /* SDPhotoBrowserConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDPhotoBrowserConfig.h; sourceTree = "<group>"; };
-		DDF5AB291F90887600AFF6F9 /* SDWaitingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDWaitingView.h; sourceTree = "<group>"; };
-		DDF5AB2A1F90887600AFF6F9 /* SDWaitingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDWaitingView.m; sourceTree = "<group>"; };
 		DDF5AB2E1F909FFE00AFF6F9 /* OTWBusinessListSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWBusinessListSearchViewController.h; sourceTree = "<group>"; };
 		DDF5AB2F1F909FFE00AFF6F9 /* OTWBusinessListSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWBusinessListSearchViewController.m; sourceTree = "<group>"; };
+		DDF5AB321F90C70600AFF6F9 /* SDBrowserImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDBrowserImageView.h; sourceTree = "<group>"; };
+		DDF5AB331F90C70600AFF6F9 /* SDBrowserImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDBrowserImageView.m; sourceTree = "<group>"; };
+		DDF5AB341F90C70600AFF6F9 /* SDPhotoBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDPhotoBrowser.h; sourceTree = "<group>"; };
+		DDF5AB351F90C70600AFF6F9 /* SDPhotoBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDPhotoBrowser.m; sourceTree = "<group>"; };
+		DDF5AB361F90C70600AFF6F9 /* SDPhotoBrowserConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDPhotoBrowserConfig.h; sourceTree = "<group>"; };
+		DDF5AB371F90C70600AFF6F9 /* SDWaitingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDWaitingView.h; sourceTree = "<group>"; };
+		DDF5AB3C1F90C7B400AFF6F9 /* UIViewExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewExt.h; sourceTree = "<group>"; };
+		DDF5AB3D1F90C7B400AFF6F9 /* UIViewExt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewExt.m; sourceTree = "<group>"; };
+		DDF5AB3F1F90C88700AFF6F9 /* UIImage+CHTailort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+CHTailort.h"; sourceTree = "<group>"; };
+		DDF5AB401F90C88700AFF6F9 /* UIImage+CHTailort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+CHTailort.m"; sourceTree = "<group>"; };
+		DDF5AB431F90C8D800AFF6F9 /* LSActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSActionSheet.h; sourceTree = "<group>"; };
+		DDF5AB441F90C8D800AFF6F9 /* LSActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSActionSheet.m; sourceTree = "<group>"; };
+		DDF5AB4A1F90CC3700AFF6F9 /* HYBImageCliped.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYBImageCliped.h; sourceTree = "<group>"; };
+		DDF5AB4B1F90CC3700AFF6F9 /* HYBImageClipedManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYBImageClipedManager.h; sourceTree = "<group>"; };
+		DDF5AB4C1F90CC3700AFF6F9 /* HYBImageClipedManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HYBImageClipedManager.m; sourceTree = "<group>"; };
+		DDF5AB4D1F90CC3700AFF6F9 /* UIButton+HYBImageCliped.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+HYBImageCliped.h"; sourceTree = "<group>"; };
+		DDF5AB4E1F90CC3700AFF6F9 /* UIButton+HYBImageCliped.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+HYBImageCliped.m"; sourceTree = "<group>"; };
+		DDF5AB4F1F90CC3700AFF6F9 /* UIImage+HYBImageCliped.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+HYBImageCliped.m"; sourceTree = "<group>"; };
+		DDF5AB501F90CC3700AFF6F9 /* UIImage+HYBmageCliped.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+HYBmageCliped.h"; sourceTree = "<group>"; };
+		DDF5AB511F90CC3700AFF6F9 /* UIImageView+HYBImageCliped.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+HYBImageCliped.h"; sourceTree = "<group>"; };
+		DDF5AB521F90CC3700AFF6F9 /* UIImageView+HYBImageCliped.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+HYBImageCliped.m"; sourceTree = "<group>"; };
+		DDF5AB531F90CC3700AFF6F9 /* UIView+HYBImageCliped.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+HYBImageCliped.h"; sourceTree = "<group>"; };
+		DDF5AB541F90CC3700AFF6F9 /* UIView+HYBImageCliped.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+HYBImageCliped.m"; sourceTree = "<group>"; };
+		DDF5AB5A1F90CF8F00AFF6F9 /* SDWaitingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDWaitingView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1116,7 +1141,7 @@
 		D7F6B03E1F0D390D0013090A /* Libs */ = {
 			isa = PBXGroup;
 			children = (
-				DDF5AB231F90887600AFF6F9 /* SDPhotoBrowser */,
+				DDF5AB311F90C70600AFF6F9 /* SDPhotoBrowser */,
 				DDF5AACC1F8B79DB00AFF6F9 /* Tools */,
 				DD86E9401F46BA8600D49A64 /* ArvixAugmentedReality */,
 				DDEA15F41F2708B400056166 /* BaiduMap */,
@@ -1773,22 +1798,55 @@
 		DDF5AACC1F8B79DB00AFF6F9 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				DDF5AB491F90CC3700AFF6F9 /* HYBImageCliped */,
+				DDF5AB421F90C8D800AFF6F9 /* LSActionSheet */,
+				DDF5AB3C1F90C7B400AFF6F9 /* UIViewExt.h */,
+				DDF5AB3D1F90C7B400AFF6F9 /* UIViewExt.m */,
+				DDF5AB3F1F90C88700AFF6F9 /* UIImage+CHTailort.h */,
+				DDF5AB401F90C88700AFF6F9 /* UIImage+CHTailort.m */,
 			);
 			name = Tools;
 			sourceTree = "<group>";
 		};
-		DDF5AB231F90887600AFF6F9 /* SDPhotoBrowser */ = {
+		DDF5AB311F90C70600AFF6F9 /* SDPhotoBrowser */ = {
 			isa = PBXGroup;
 			children = (
-				DDF5AB241F90887600AFF6F9 /* SDBrowserImageView.h */,
-				DDF5AB251F90887600AFF6F9 /* SDBrowserImageView.m */,
-				DDF5AB261F90887600AFF6F9 /* SDPhotoBrowser.h */,
-				DDF5AB271F90887600AFF6F9 /* SDPhotoBrowser.m */,
-				DDF5AB281F90887600AFF6F9 /* SDPhotoBrowserConfig.h */,
-				DDF5AB291F90887600AFF6F9 /* SDWaitingView.h */,
-				DDF5AB2A1F90887600AFF6F9 /* SDWaitingView.m */,
+				DDF5AB321F90C70600AFF6F9 /* SDBrowserImageView.h */,
+				DDF5AB331F90C70600AFF6F9 /* SDBrowserImageView.m */,
+				DDF5AB341F90C70600AFF6F9 /* SDPhotoBrowser.h */,
+				DDF5AB351F90C70600AFF6F9 /* SDPhotoBrowser.m */,
+				DDF5AB361F90C70600AFF6F9 /* SDPhotoBrowserConfig.h */,
+				DDF5AB371F90C70600AFF6F9 /* SDWaitingView.h */,
+				DDF5AB5A1F90CF8F00AFF6F9 /* SDWaitingView.m */,
 			);
 			path = SDPhotoBrowser;
+			sourceTree = "<group>";
+		};
+		DDF5AB421F90C8D800AFF6F9 /* LSActionSheet */ = {
+			isa = PBXGroup;
+			children = (
+				DDF5AB431F90C8D800AFF6F9 /* LSActionSheet.h */,
+				DDF5AB441F90C8D800AFF6F9 /* LSActionSheet.m */,
+			);
+			path = LSActionSheet;
+			sourceTree = "<group>";
+		};
+		DDF5AB491F90CC3700AFF6F9 /* HYBImageCliped */ = {
+			isa = PBXGroup;
+			children = (
+				DDF5AB4A1F90CC3700AFF6F9 /* HYBImageCliped.h */,
+				DDF5AB4B1F90CC3700AFF6F9 /* HYBImageClipedManager.h */,
+				DDF5AB4C1F90CC3700AFF6F9 /* HYBImageClipedManager.m */,
+				DDF5AB4D1F90CC3700AFF6F9 /* UIButton+HYBImageCliped.h */,
+				DDF5AB4E1F90CC3700AFF6F9 /* UIButton+HYBImageCliped.m */,
+				DDF5AB4F1F90CC3700AFF6F9 /* UIImage+HYBImageCliped.m */,
+				DDF5AB501F90CC3700AFF6F9 /* UIImage+HYBmageCliped.h */,
+				DDF5AB511F90CC3700AFF6F9 /* UIImageView+HYBImageCliped.h */,
+				DDF5AB521F90CC3700AFF6F9 /* UIImageView+HYBImageCliped.m */,
+				DDF5AB531F90CC3700AFF6F9 /* UIView+HYBImageCliped.h */,
+				DDF5AB541F90CC3700AFF6F9 /* UIView+HYBImageCliped.m */,
+			);
+			path = HYBImageCliped;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2016,6 +2074,7 @@
 				B123603B1F5CEC8F00E8FA62 /* OTWPersonalCashCheckViewController.m in Sources */,
 				1843A7D61F26E67800A285A3 /* OTWNewFootprintsTableViewCell.m in Sources */,
 				B18A43081F207D14002C7A5A /* OTWNewsCommentModel.m in Sources */,
+				DDF5AB3E1F90C7B400AFF6F9 /* UIViewExt.m in Sources */,
 				D7F6AFF91F0D32FB0013090A /* AppDelegate.m in Sources */,
 				18BCFA9A1F4A802100B8E09D /* OTWNoSystemNewViewController.m in Sources */,
 				18B034BC1F14A42800F53461 /* OTWPersonalViewController.m in Sources */,
@@ -2041,6 +2100,7 @@
 				B1B055641F2ED17D008274FE /* OTWShopActiveViewController.m in Sources */,
 				DDEA160C1F29DED300056166 /* OTWFootprintService.m in Sources */,
 				1822EE6E1F20E11C00E07665 /* CHCustomSearchBar.m in Sources */,
+				DDF5AB451F90C8D800AFF6F9 /* LSActionSheet.m in Sources */,
 				D7F6B09D1F0F75770013090A /* OTWLaunchManager.m in Sources */,
 				DDEA15E71F25CCA500056166 /* PYPhotoCell.m in Sources */,
 				D7F6B0BC1F14E9E00013090A /* OTWCustomTabBarItem.m in Sources */,
@@ -2059,11 +2119,12 @@
 				186E12E31F57ACFB0077A93C /* OTWBusinessARViewController.m in Sources */,
 				189881061F46C80D003BC734 /* OTWNewsSearchParams.m in Sources */,
 				B12360261F55095800E8FA62 /* OTWPersonalCashModel.m in Sources */,
+				DDF5AB3A1F90C70600AFF6F9 /* SDPhotoBrowser.m in Sources */,
+				DDF5AB571F90CC3800AFF6F9 /* UIImage+HYBImageCliped.m in Sources */,
 				DD86E9581F46BA8600D49A64 /* ArvixARRadar.m in Sources */,
 				18BCFAAC1F4D1A7200B8E09D /* CreateShopTVCell.m in Sources */,
 				DDF5AB141F905D8400AFF6F9 /* OTWAlbumCollectionViewCell.m in Sources */,
 				DDBBA1E71F6A968E0090B652 /* OTWBusinessARAnnotation.m in Sources */,
-				DDF5AB2D1F90887600AFF6F9 /* SDWaitingView.m in Sources */,
 				1822EE631F20845A00E07665 /* OTWFootprintsChangeAddressModel.m in Sources */,
 				D7F6B03D1F0D39060013090A /* README.md in Sources */,
 				B123602C1F550DE800E8FA62 /* OTWPersonalCashTFPERSONALViewCell.m in Sources */,
@@ -2083,7 +2144,9 @@
 				DD14F2401F113654004DFE4A /* HmacUtils.m in Sources */,
 				DDEA16011F29B35F00056166 /* QiniuUploadHelper.m in Sources */,
 				B12360231F53EF7900E8FA62 /* OTWPersonalCashViewController.m in Sources */,
+				DDF5AB411F90C88700AFF6F9 /* UIImage+CHTailort.m in Sources */,
 				18BCFAA91F4C000500B8E09D /* CreateShopFormModel.m in Sources */,
+				DDF5AB581F90CC3800AFF6F9 /* UIImageView+HYBImageCliped.m in Sources */,
 				186E12ED1F57E8240077A93C /* OTWBusinessARAnnotationView.m in Sources */,
 				D7F6B0371F0D38EA0013090A /* README.md in Sources */,
 				18BCFAB81F4E7ACD00B8E09D /* CreateShopAddressCell.m in Sources */,
@@ -2105,6 +2168,7 @@
 				B183D9B11F2722BD00CF3E1F /* BottomSheetDemoViewController.m in Sources */,
 				D7F6B0A91F1081850013090A /* OTWNetworkManager.m in Sources */,
 				DDD4AB4B1F1AFC6900D42CF3 /* OTWFootprintDetailFrame.m in Sources */,
+				DDF5AB391F90C70600AFF6F9 /* SDBrowserImageView.m in Sources */,
 				B12360321F55452700E8FA62 /* OTWPersonalCashTVTableViewCell.m in Sources */,
 				DDEA16121F30AF6D00056166 /* OTWPersonalFootprintFrame.m in Sources */,
 				DD4BD96D1F5E803D0047D191 /* OTWBusinessActivityModel.m in Sources */,
@@ -2113,16 +2177,18 @@
 				B123601D1F53CAE600E8FA62 /* OTWPersonalHistroyPayeeViewController.m in Sources */,
 				D7F6B0B91F14E5C60013090A /* OTWCustomTabBar.m in Sources */,
 				18BCFAAF1F4D36B100B8E09D /* CreateShopTVTWOCell.m in Sources */,
-				DDF5AB2C1F90887600AFF6F9 /* SDPhotoBrowser.m in Sources */,
 				1802494C1F41773A004B0CDE /* OTWUtils.m in Sources */,
 				1834A98E1F55045700C377F9 /* OTWFindBusinessmenModel.m in Sources */,
 				D7F6B0B61F10AA2D0013090A /* OTWLoginViewController.m in Sources */,
+				DDF5AB591F90CC3800AFF6F9 /* UIView+HYBImageCliped.m in Sources */,
 				DDEA15E41F25CCA500056166 /* PYProgressView.m in Sources */,
 				DDDE14EE1F73B56C00F941E3 /* OTWBusinessARSiftTableViewCell.m in Sources */,
 				DDC0A94C1F2089AA00A6E4DB /* OTWFootprintsChangeAddressController.m in Sources */,
+				DDF5AB551F90CC3700AFF6F9 /* HYBImageClipedManager.m in Sources */,
 				DD0BBC2E1F78986900044EFA /* OTWBusinessARPoiViewController.m in Sources */,
 				DDB8C29F1F14AF230091E7B0 /* OTWUserModel.m in Sources */,
 				D7F6B09A1F0F75510013090A /* OTWLaunchViewController.m in Sources */,
+				DDF5AB561F90CC3700AFF6F9 /* UIButton+HYBImageCliped.m in Sources */,
 				DDEA15B91F22177900056166 /* OTWUITapGestureRecognizer.m in Sources */,
 				B12360141F4D182900E8FA62 /* OTWPersonalWalletDetailViewCell.m in Sources */,
 				DD35209A1F18715400E8D725 /* OTWCommentModel.m in Sources */,
@@ -2143,6 +2209,7 @@
 				D7F6B0581F0DCF040013090A /* UIColor+Utils.m in Sources */,
 				DDECE4E41F6B96820058F8BB /* OTWBusinessARAnnotationFrame.m in Sources */,
 				B123602F1F5541ED00E8FA62 /* OTWPersonalCashTFViewCell.m in Sources */,
+				DDF5AB5B1F90CF8F00AFF6F9 /* SDWaitingView.m in Sources */,
 				DD9452F31F15DE23004EDDED /* OTWFootprintListFrame.m in Sources */,
 				DD4BD9701F5E8C030047D191 /* OTWBusinessDetailViewController.m in Sources */,
 				18BCFAA01F4ADAF700B8E09D /* OTWAddNewShopViewController.m in Sources */,
@@ -2188,7 +2255,6 @@
 				DDEA15E11F25CCA500056166 /* PYPhotosViewController.m in Sources */,
 				186E12E01F56A0520077A93C /* OTWSelectBarViewController.m in Sources */,
 				18BCFAB21F4D4E7100B8E09D /* CreateShopPicCell.m in Sources */,
-				DDF5AB2B1F90887600AFF6F9 /* SDBrowserImageView.m in Sources */,
 				DDF5AA791F8B6F9700AFF6F9 /* ImprovePersonInfoViewController.m in Sources */,
 				B13ADA231F1C5660008E889C /* OTWSystemNewsCellFrame.m in Sources */,
 				B17836E91F414EB400FC73DC /* findSearchViewCell.m in Sources */,

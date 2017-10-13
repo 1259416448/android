@@ -17,7 +17,7 @@
 #import "UIColor+Utils.h"
 #import "UIImage+Color.h"
 #import "UIImage+RoundedCorner.h"
-
+#import "UIViewExt.h"
 #import "OTWBaseViewController.h"
 #import "OTWNetworkManager.h"
 #import "OTWLaunchManager.h"

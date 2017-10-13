@@ -248,7 +248,8 @@
     [self.shopPopoverV addSubview:self.telePhoneNum];
     [self.shopPopoverV addSubview:self.viewShopDetail];
 
-    
+    [self.view bringSubviewToFront:self.siftView];
+
 }
 
 #pragma mark tableviewDelegate
@@ -518,6 +519,7 @@
  */
 - (void)searchButtonClick
 {
+    [self cancelButtonClick];
     OTWBusinessListSearchViewController *findSearchVC = [[OTWBusinessListSearchViewController alloc] init];
     findSearchVC.delegate = self;
     findSearchVC.isFromAR = YES;
@@ -612,7 +614,7 @@
         return ;
     }
     OTWFootprintReleaseViewController *footprintReleaseVC = [[OTWFootprintReleaseViewController alloc] init];
-    [self.navigationController pushViewController:footprintReleaseVC animated:YES];
+    [self.navigationController pushViewController:footprintReleaseVC animated:NO];
 }
 
 - (void)showARViewController
@@ -1002,7 +1004,7 @@
             tipsLabel.text = @"搜索附近的美食、商城";
             [View addSubview:tipsLabel];
             tipsLabel.userInteractionEnabled = YES;
-            UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toSearchBusiness)];
+            UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(searchButtonClick)];
             tap.delegate = self;
             [tipsLabel addGestureRecognizer:tap];
             View;

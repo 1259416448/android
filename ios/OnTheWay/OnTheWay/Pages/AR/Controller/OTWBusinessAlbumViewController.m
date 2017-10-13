@@ -132,8 +132,8 @@
     if (collectionView == _rightCollectionView) {
         SDPhotoBrowser *photoBrowser = [[SDPhotoBrowser alloc] init];
         photoBrowser.delegate = self;
-        photoBrowser.sourceImagesContainerView = _rightCollectionView;
-//        photoBrowser.isAnimate = NO;
+        photoBrowser.sourceImagesContainerView = collectionView;
+        photoBrowser.isAnimate = NO;
         photoBrowser.currentImageIndex = (int)indexPath.row;
         photoBrowser.imageCount = _userAlbumArr.count;
         [photoBrowser show];

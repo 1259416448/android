@@ -10,8 +10,6 @@
 #import "UIImageView+WebCache.h"
 #import "SDPhotoBrowserConfig.h"
 
-static const CGFloat kBrowserImageViewWidth = 320;
-
 @implementation SDBrowserImageView
 {
     __weak SDWaitingView *_waitingView;
@@ -74,14 +72,13 @@ static const CGFloat kBrowserImageViewWidth = 320;
 
         CGFloat imageViewH = self.bounds.size.width * (imageSize.height / imageSize.width);
 
-        _scrollImageView.bounds = CGRectMake(0, 0, kBrowserImageViewWidth, imageViewH);
+        _scrollImageView.bounds = CGRectMake(0, 0, _scroll.frame.size.width, imageViewH);
         _scrollImageView.center = CGPointMake(_scroll.frame.size.width * 0.5, _scrollImageView.frame.size.height * 0.5);
         _scroll.contentSize = CGSizeMake(0, _scrollImageView.bounds.size.height);
         
     } else {
         if (_scroll) [_scroll removeFromSuperview]; // 防止旋转时适配的scrollView的影响
     }
-    
     
 }
 
@@ -94,10 +91,17 @@ static const CGFloat kBrowserImageViewWidth = 320;
 
 }
 
+- (void)setScorllViewBackgroundColor:(UIColor *)scorllViewBackgroundColor
+{
+    _scorllViewBackgroundColor = scorllViewBackgroundColor;
+    
+    _zoomingScroolView.backgroundColor = _scorllViewBackgroundColor;
+}
+
 - (void)setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder
 {
     SDWaitingView *waiting = [[SDWaitingView alloc] init];
-    waiting.bounds = CGRectMake(0, 0, 100, 100);
+    waiting.bounds = CGRectMake(0, 0, 44,44);
     waiting.mode = SDWaitingViewProgressMode;
     _waitingView = waiting;
     [self addSubview:waiting];
@@ -113,17 +117,26 @@ static const CGFloat kBrowserImageViewWidth = 320;
         
         
         if (error) {
-            UILabel *label = [[UILabel alloc] init];
-            label.bounds = CGRectMake(0, 0, 160, 30);
-            label.center = CGPointMake(imageViewWeak.bounds.size.width * 0.5, imageViewWeak.bounds.size.height * 0.5);
-            label.text = @"图片加载失败";
-            label.font = [UIFont systemFontOfSize:16];
-            label.textColor = [UIColor whiteColor];
-            label.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
-            label.layer.cornerRadius = 5;
-            label.clipsToBounds = YES;
-            label.textAlignment = NSTextAlignmentCenter;
-            [imageViewWeak addSubview:label];
+            
+            if ([[url absoluteString] containsString:@"http"]) {
+                UILabel *label = [[UILabel alloc] init];
+                label.bounds = CGRectMake(0, 0, 160, 30);
+                label.center = CGPointMake(imageViewWeak.bounds.size.width * 0.5, imageViewWeak.bounds.size.height * 0.5);
+                label.text = @"图片加载失败";
+                label.font = [UIFont systemFontOfSize:16];
+                label.textColor = [UIColor whiteColor];
+                label.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
+                label.layer.cornerRadius = 5;
+                label.clipsToBounds = YES;
+                label.textAlignment = NSTextAlignmentCenter;
+                [imageViewWeak addSubview:label];
+            }
+            else {
+                _scrollImageView.image = [UIImage imageWithContentsOfFile:[url absoluteString]];
+                [_scrollImageView setNeedsDisplay];
+            }
+            
+           
         } else {
             _scrollImageView.image = image;
             [_scrollImageView setNeedsDisplay];
@@ -174,11 +187,15 @@ static const CGFloat kBrowserImageViewWidth = 320;
     }
 }
 
-- (void)doubleTapTOZommWithScale:(CGFloat)scale
+- (void)doubleTapToZommWithScale:(CGFloat)scale
 {
     [self prepareForImageViewScaling];
-    [UIView animateWithDuration:0.8 animations:^{
+    [UIView animateWithDuration:0.5 animations:^{
         [self zoomWithScale:scale];
+    } completion:^(BOOL finished) {
+        if (scale == 1) {
+            [self clear];
+        }
     }];
 }
 

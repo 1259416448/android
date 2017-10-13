@@ -16,11 +16,13 @@
 @property (nonatomic, assign, readonly) BOOL isScaled;
 @property (nonatomic, assign) BOOL hasLoadedImage;
 
+@property (nonatomic, strong) UIColor *scorllViewBackgroundColor;
+
 - (void)eliminateScale; // 清除缩放
 
 - (void)setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder;
 
-- (void)doubleTapTOZommWithScale:(CGFloat)scale;
+- (void)doubleTapToZommWithScale:(CGFloat)scale;
 
 - (void)clear;
 
