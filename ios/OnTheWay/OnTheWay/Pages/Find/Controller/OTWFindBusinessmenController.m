@@ -176,8 +176,12 @@
                 [_status addObject:model];
             }
             dispatch_async(dispatch_get_main_queue(), ^{
+                if (arr.count == 0 || arr.count < self.arShopSearchParams.size) {
+                    [_tableView.mj_footer endRefreshingWithNoMoreData];
+                }else{
+                    [_tableView.mj_footer endRefreshing];
+                }
                 [_tableView.mj_header endRefreshing];
-                [_tableView.mj_footer endRefreshing];
                 [_tableView reloadData];
             });
             

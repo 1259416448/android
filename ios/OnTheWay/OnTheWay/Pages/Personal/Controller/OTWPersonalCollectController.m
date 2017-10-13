@@ -113,9 +113,13 @@
                    if (_pageNum == 0 && arr.count == 0) {
                        [self.view addSubview:self.noResultView];
                    }
+                   if (arr.count == 0 || arr.count < 15) {
+                       [tableView.mj_footer endRefreshingWithNoMoreData];
+                   }else{
+                       [tableView.mj_footer endRefreshing];
+                   }
                    [tableView reloadData];
                    [tableView.mj_header endRefreshing];
-                   [tableView.mj_footer endRefreshing];
                });
            }
        } failure:^(NSError *error) {

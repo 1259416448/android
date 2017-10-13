@@ -181,8 +181,12 @@
 //                       [self.view addSubview:self.noResultView];
                    }
                    [_rightCollectionView reloadData];
+                   if (arr.count == 0 || arr.count < self.Parameter.size) {
+                       [_rightCollectionView.mj_footer endRefreshingWithNoMoreData];
+                   }else{
+                       [_rightCollectionView.mj_footer endRefreshing];
+                   }
                    [_rightCollectionView.mj_header endRefreshing];
-                   [_rightCollectionView.mj_footer endRefreshing];
                });
            }
            
