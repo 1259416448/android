@@ -84,4 +84,8 @@
 //通过三色值获取颜色对象
 #define rgb(r,g,b,a) [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:a]
 
+//裁剪相册尺寸
+#define AlbumImageSize @"?imageView2/1/w/200/h/200"
+#define FriendsHeadImageSize @"?imageView2/1/w/100/h/100"
+
 #endif /* Macro_h */

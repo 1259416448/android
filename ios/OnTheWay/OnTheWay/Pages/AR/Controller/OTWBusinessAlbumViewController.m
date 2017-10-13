@@ -7,8 +7,12 @@
 //
 
 #import "OTWBusinessAlbumViewController.h"
+#import "OTWBusinessAlbumModel.h"
+#import "OTWAlbumCollectionViewCell.h"
+#import "OTWBusinessAlbumParameter.h"
+#import "SDPhotoBrowser.h"
 
-@interface OTWBusinessAlbumViewController ()<UIScrollViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource>
+@interface OTWBusinessAlbumViewController ()<UIScrollViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource,SDPhotoBrowserDelegate>
 
 @property (nonatomic,strong) UIView *sortView;
 @property (nonatomic,strong) UIView *slipLine;
@@ -17,6 +21,12 @@
 @property (nonatomic,strong) UIScrollView *backScrollView;
 @property (nonatomic,strong) UICollectionView *leftCollectionView;
 @property (nonatomic,strong) UICollectionView *rightCollectionView;
+@property (nonatomic,strong) OTWBusinessAlbumParameter *Parameter;
+@property (nonatomic,strong) NSMutableArray *userAlbumArr;
+@property (nonatomic,strong) NSMutableArray *businessAlbumArr;
+@property (nonatomic,assign) NSInteger pageNum;
+@property (nonatomic,strong) UIView *noResultView;
+@property (nonatomic,strong) UIImageView *noResultImage;
 
 
 @end
@@ -26,8 +36,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-
+    _userAlbumArr = @[].mutableCopy;
+    _businessAlbumArr = @[].mutableCopy;
+    _pageNum = 0;
     [self buildUi];
+    [self loadUserPhotos];
 }
 - (void)buildUi
 {
@@ -35,14 +48,18 @@
     [self setLeftNavigationImage:[UIImage imageNamed:@"back_2"]];
     self.view.backgroundColor = [UIColor color_f4f4f4];
     
+    //商家相册暂不显示
     [self.sortView addSubview:self.leftBtn];
     [self.sortView addSubview:self.rightBtn];
     [self.sortView addSubview:self.slipLine];
     [self.view addSubview:self.sortView];
     [self.backScrollView addSubview:self.leftCollectionView];
+    [self.backScrollView addSubview:self.noResultView];
+
     [self.backScrollView addSubview:self.rightCollectionView];
     [self.view addSubview:self.backScrollView];
-    
+//    [self.backScrollView setContentOffset:CGPointMake(SCREEN_WIDTH , 0) animated:YES];
+    [self click:self.rightBtn];
     
 }
 - (void)click:(UIButton *)button
@@ -58,7 +75,6 @@
     }
     else
     {
-        
         _leftBtn.selected = NO;
         _rightBtn.selected = YES;
         [UIView beginAnimations:nil context:nil];
@@ -70,7 +86,11 @@
 #pragma mark collectionviewDelegate
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return 20;
+    if (collectionView == _rightCollectionView) {
+        return _userAlbumArr.count;
+    }else{
+        return _businessAlbumArr.count;
+    }
 }
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return 1;
@@ -79,15 +99,14 @@
 -(UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (collectionView == _leftCollectionView) {
-        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"UICollectionViewCell"forIndexPath:indexPath];
-        cell.backgroundColor = [UIColor grayColor];
+        OTWAlbumCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"UICollectionViewCell"forIndexPath:indexPath];
         return cell;
     }else if (collectionView == _rightCollectionView)
     {
-        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"RightUICollectionViewCell"forIndexPath:indexPath];
-        cell.backgroundColor = [UIColor redColor];
+        OTWAlbumCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"RightUICollectionViewCell"forIndexPath:indexPath];
+        OTWBusinessAlbumModel * model = _userAlbumArr[indexPath.row];
+        [cell.photo sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",model.photoUrl,AlbumImageSize]]];
         return cell;
-        
     }else{
         return nil;
     }
@@ -112,12 +131,82 @@
 //点击方法
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (collectionView == _rightCollectionView) {
+        SDPhotoBrowser *photoBrowser = [[SDPhotoBrowser alloc] init];
+        photoBrowser.delegate = self;
+        photoBrowser.sourceImagesContainerView = _rightCollectionView;
+//        photoBrowser.isAnimate = NO;
+        photoBrowser.currentImageIndex = (int)indexPath.row;
+        photoBrowser.imageCount = _userAlbumArr.count;
+        [photoBrowser show];
+    }else{
+    }
 }
 
 //每个cell是否能点击
 -(BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     return YES;
+}
+- (void)loadUserPhotos
+{
+    NSString * url = [NSString stringWithFormat:@"%@%@",@"/app/business/user/photos/",_shopId];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+       [OTWNetworkManager doGET:url parameters:self.Parameter.mj_keyValues responseCache:^(id responseCache) {
+           if([[NSString stringWithFormat:@"%@",responseCache[@"code"]] isEqualToString:@"0"]){
+               NSArray * arr = [[responseCache objectForKey:@"body"] objectForKey:@"content"];
+               if (_pageNum == 0) {
+                   for (NSDictionary * result in arr) {
+                       OTWBusinessAlbumModel * model = [OTWBusinessAlbumModel mj_objectWithKeyValues:result];
+                       [_userAlbumArr addObject: model];
+                   }
+                   dispatch_async(dispatch_get_main_queue(), ^{
+                       [_rightCollectionView reloadData];
+//                       [tableView.mj_header endRefreshing];
+//                       [tableView.mj_footer endRefreshing];
+                   });
+               }
+           }
+       } success:^(id responseObject) {
+           if([[NSString stringWithFormat:@"%@",responseObject[@"code"]] isEqualToString:@"0"]){
+               self.Parameter.currentTime = responseObject[@"body"][@"currentTime"];
+               if (_pageNum == 0) {
+                   [_userAlbumArr removeAllObjects];
+               }
+               NSArray * arr = [[responseObject objectForKey:@"body"] objectForKey:@"content"];
+               for (NSDictionary * result in arr) {
+                   OTWBusinessAlbumModel * model = [OTWBusinessAlbumModel mj_objectWithKeyValues:result];
+                   [_userAlbumArr addObject: model];
+               }
+               dispatch_async(dispatch_get_main_queue(), ^{
+                   if (_pageNum == 0 && arr.count == 0) {
+//                       [self.view addSubview:self.noResultView];
+                   }
+                   [_rightCollectionView reloadData];
+//                   [tableView.mj_header endRefreshing];
+//                   [tableView.mj_footer endRefreshing];
+               });
+           }
+           
+       } failure:^(NSError *error) {
+           
+       }];
+    });
+}
+#pragma mark - SDPhotoBrowserDelegate
+
+- (NSURL *)photoBrowser:(SDPhotoBrowser *)browser highQualityImageURLForIndex:(NSInteger)index
+{
+    NSString *urlString = @"";
+    OTWBusinessAlbumModel * model = _userAlbumArr[index];
+    urlString = model.photoUrl;
+    return [NSURL URLWithString:urlString];
+}
+- (UIImage *)photoBrowser:(SDPhotoBrowser *)browser placeholderImageForIndex:(NSInteger)index
+{
+    OTWAlbumCollectionViewCell *cell = (OTWAlbumCollectionViewCell *)[_rightCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
+    
+    return cell.photo.image;
 }
 
 -(UIView*)sortView
@@ -187,7 +276,7 @@
         layout.minimumLineSpacing = 10;
         layout.minimumInteritemSpacing = 10;
         _leftCollectionView=[[UICollectionView alloc]initWithFrame:CGRectMake(15, 10, SCREEN_WIDTH - 30, SCREEN_HEIGHT - 119) collectionViewLayout:layout];
-        [_leftCollectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"UICollectionViewCell"];
+        [_leftCollectionView registerClass:[OTWAlbumCollectionViewCell class] forCellWithReuseIdentifier:@"UICollectionViewCell"];
         _leftCollectionView.delegate=self;
         _leftCollectionView.dataSource=self;
         _leftCollectionView.backgroundColor = [UIColor clearColor];
@@ -205,7 +294,7 @@
         layout.minimumLineSpacing = 10;
         layout.minimumInteritemSpacing = 10;
         _rightCollectionView=[[UICollectionView alloc]initWithFrame:CGRectMake(15 + SCREEN_WIDTH, 10, SCREEN_WIDTH - 30, SCREEN_HEIGHT - 119) collectionViewLayout:layout];
-        [_rightCollectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"RightUICollectionViewCell"];
+        [_rightCollectionView registerClass:[OTWAlbumCollectionViewCell class] forCellWithReuseIdentifier:@"RightUICollectionViewCell"];
 
         _rightCollectionView.delegate=self;
         _rightCollectionView.dataSource=self;
@@ -215,6 +304,35 @@
         _rightCollectionView.bounces = NO;
     }
     return _rightCollectionView;
+}
+-(UIView *)noResultView{
+    if(!_noResultView){
+        _noResultView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT-self.navigationHeight)];
+        _noResultView.backgroundColor=[UIColor whiteColor];
+        [_noResultView addSubview:self.noResultImage];
+    }
+    
+    return _noResultView;
+}
+-(UIImageView *)noResultImage{
+    if(!_noResultImage){
+        _noResultImage=[[UIImageView alloc]init];
+        _noResultImage.frame=CGRectMake((SCREEN_WIDTH-151)/2, (SCREEN_HEIGHT - 110) / 2 - 65, 151, 109);
+        _noResultImage.image=[UIImage imageNamed:@"qx_wushangjia"];
+    }
+    return _noResultImage;
+}
+
+- (OTWBusinessAlbumParameter *)Parameter
+{
+    if (!_Parameter) {
+        _Parameter = [[OTWBusinessAlbumParameter alloc] init];
+        _Parameter.number = 0;
+        _Parameter.size = 20;
+        _Parameter.shopId = _shopId;
+        _Parameter.currentTime = nil;
+    }
+    return _Parameter;
 }
 
 - (void)didReceiveMemoryWarning {

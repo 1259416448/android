@@ -243,6 +243,12 @@
 		DDF5AA791F8B6F9700AFF6F9 /* ImprovePersonInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AA781F8B6F9700AFF6F9 /* ImprovePersonInfoViewController.m */; };
 		DDF5AA7F1F8B77B100AFF6F9 /* CHBaseAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AA7E1F8B77B100AFF6F9 /* CHBaseAlertView.m */; };
 		DDF5AB0E1F8F528000AFF6F9 /* OTWPersonCollectionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB0D1F8F528000AFF6F9 /* OTWPersonCollectionModel.m */; };
+		DDF5AB111F8F724400AFF6F9 /* OTWBusinessAlbumModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB101F8F724400AFF6F9 /* OTWBusinessAlbumModel.m */; };
+		DDF5AB141F905D8400AFF6F9 /* OTWAlbumCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB131F905D8400AFF6F9 /* OTWAlbumCollectionViewCell.m */; };
+		DDF5AB171F905FE100AFF6F9 /* OTWBusinessAlbumParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB161F905FE100AFF6F9 /* OTWBusinessAlbumParameter.m */; };
+		DDF5AB2B1F90887600AFF6F9 /* SDBrowserImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB251F90887600AFF6F9 /* SDBrowserImageView.m */; };
+		DDF5AB2C1F90887600AFF6F9 /* SDPhotoBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB271F90887600AFF6F9 /* SDPhotoBrowser.m */; };
+		DDF5AB2D1F90887600AFF6F9 /* SDWaitingView.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF5AB2A1F90887600AFF6F9 /* SDWaitingView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -707,6 +713,19 @@
 		DDF5AA7E1F8B77B100AFF6F9 /* CHBaseAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CHBaseAlertView.m; path = OnTheWay/Pages/Login/CHBaseAlertView.m; sourceTree = SOURCE_ROOT; };
 		DDF5AB0C1F8F528000AFF6F9 /* OTWPersonCollectionModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPersonCollectionModel.h; sourceTree = "<group>"; };
 		DDF5AB0D1F8F528000AFF6F9 /* OTWPersonCollectionModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPersonCollectionModel.m; sourceTree = "<group>"; };
+		DDF5AB0F1F8F724400AFF6F9 /* OTWBusinessAlbumModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWBusinessAlbumModel.h; sourceTree = "<group>"; };
+		DDF5AB101F8F724400AFF6F9 /* OTWBusinessAlbumModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWBusinessAlbumModel.m; sourceTree = "<group>"; };
+		DDF5AB121F905D8400AFF6F9 /* OTWAlbumCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWAlbumCollectionViewCell.h; sourceTree = "<group>"; };
+		DDF5AB131F905D8400AFF6F9 /* OTWAlbumCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWAlbumCollectionViewCell.m; sourceTree = "<group>"; };
+		DDF5AB151F905FE100AFF6F9 /* OTWBusinessAlbumParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWBusinessAlbumParameter.h; sourceTree = "<group>"; };
+		DDF5AB161F905FE100AFF6F9 /* OTWBusinessAlbumParameter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWBusinessAlbumParameter.m; sourceTree = "<group>"; };
+		DDF5AB241F90887600AFF6F9 /* SDBrowserImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDBrowserImageView.h; sourceTree = "<group>"; };
+		DDF5AB251F90887600AFF6F9 /* SDBrowserImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDBrowserImageView.m; sourceTree = "<group>"; };
+		DDF5AB261F90887600AFF6F9 /* SDPhotoBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDPhotoBrowser.h; sourceTree = "<group>"; };
+		DDF5AB271F90887600AFF6F9 /* SDPhotoBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDPhotoBrowser.m; sourceTree = "<group>"; };
+		DDF5AB281F90887600AFF6F9 /* SDPhotoBrowserConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDPhotoBrowserConfig.h; sourceTree = "<group>"; };
+		DDF5AB291F90887600AFF6F9 /* SDWaitingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDWaitingView.h; sourceTree = "<group>"; };
+		DDF5AB2A1F90887600AFF6F9 /* SDWaitingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDWaitingView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -795,6 +814,8 @@
 				DDDE14ED1F73B56C00F941E3 /* OTWBusinessARSiftTableViewCell.m */,
 				DDDE14EF1F73B7B700F941E3 /* OTWBusinessARSiftDetailTableViewCell.h */,
 				DDDE14F01F73B7B700F941E3 /* OTWBusinessARSiftDetailTableViewCell.m */,
+				DDF5AB121F905D8400AFF6F9 /* OTWAlbumCollectionViewCell.h */,
+				DDF5AB131F905D8400AFF6F9 /* OTWAlbumCollectionViewCell.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -946,6 +967,10 @@
 				DDDE14F31F74B47800F941E3 /* OTWBusinessSortModel.m */,
 				DDDE14F51F74B4AA00F941E3 /* OTWBusinessDetailSortModel.h */,
 				DDDE14F61F74B4AA00F941E3 /* OTWBusinessDetailSortModel.m */,
+				DDF5AB0F1F8F724400AFF6F9 /* OTWBusinessAlbumModel.h */,
+				DDF5AB101F8F724400AFF6F9 /* OTWBusinessAlbumModel.m */,
+				DDF5AB151F905FE100AFF6F9 /* OTWBusinessAlbumParameter.h */,
+				DDF5AB161F905FE100AFF6F9 /* OTWBusinessAlbumParameter.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1088,6 +1113,7 @@
 		D7F6B03E1F0D390D0013090A /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				DDF5AB231F90887600AFF6F9 /* SDPhotoBrowser */,
 				DDF5AACC1F8B79DB00AFF6F9 /* Tools */,
 				DD86E9401F46BA8600D49A64 /* ArvixAugmentedReality */,
 				DDEA15F41F2708B400056166 /* BaiduMap */,
@@ -1746,6 +1772,20 @@
 			name = Tools;
 			sourceTree = "<group>";
 		};
+		DDF5AB231F90887600AFF6F9 /* SDPhotoBrowser */ = {
+			isa = PBXGroup;
+			children = (
+				DDF5AB241F90887600AFF6F9 /* SDBrowserImageView.h */,
+				DDF5AB251F90887600AFF6F9 /* SDBrowserImageView.m */,
+				DDF5AB261F90887600AFF6F9 /* SDPhotoBrowser.h */,
+				DDF5AB271F90887600AFF6F9 /* SDPhotoBrowser.m */,
+				DDF5AB281F90887600AFF6F9 /* SDPhotoBrowserConfig.h */,
+				DDF5AB291F90887600AFF6F9 /* SDWaitingView.h */,
+				DDF5AB2A1F90887600AFF6F9 /* SDWaitingView.m */,
+			);
+			path = SDPhotoBrowser;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1989,6 +2029,7 @@
 				1834A9921F5504B900C377F9 /* OTWBusinessService.m in Sources */,
 				DDEA15DE1F25CCA500056166 /* PYPhotosNavigationController.m in Sources */,
 				DD4BD9671F5D8FF80047D191 /* OTWBusinessActivityIconView.m in Sources */,
+				DDF5AB171F905FE100AFF6F9 /* OTWBusinessAlbumParameter.m in Sources */,
 				DD4BD96A1F5E56D30047D191 /* OTWBusinessActivityTableViewCell.m in Sources */,
 				DD4BD9581F50025E0047D191 /* OTWBusinessFetchModel.m in Sources */,
 				D7F6B0431F0D39160013090A /* README.md in Sources */,
@@ -2015,7 +2056,9 @@
 				B12360261F55095800E8FA62 /* OTWPersonalCashModel.m in Sources */,
 				DD86E9581F46BA8600D49A64 /* ArvixARRadar.m in Sources */,
 				18BCFAAC1F4D1A7200B8E09D /* CreateShopTVCell.m in Sources */,
+				DDF5AB141F905D8400AFF6F9 /* OTWAlbumCollectionViewCell.m in Sources */,
 				DDBBA1E71F6A968E0090B652 /* OTWBusinessARAnnotation.m in Sources */,
+				DDF5AB2D1F90887600AFF6F9 /* SDWaitingView.m in Sources */,
 				1822EE631F20845A00E07665 /* OTWFootprintsChangeAddressModel.m in Sources */,
 				D7F6B03D1F0D39060013090A /* README.md in Sources */,
 				B123602C1F550DE800E8FA62 /* OTWPersonalCashTFPERSONALViewCell.m in Sources */,
@@ -2065,6 +2108,7 @@
 				B123601D1F53CAE600E8FA62 /* OTWPersonalHistroyPayeeViewController.m in Sources */,
 				D7F6B0B91F14E5C60013090A /* OTWCustomTabBar.m in Sources */,
 				18BCFAAF1F4D36B100B8E09D /* CreateShopTVTWOCell.m in Sources */,
+				DDF5AB2C1F90887600AFF6F9 /* SDPhotoBrowser.m in Sources */,
 				1802494C1F41773A004B0CDE /* OTWUtils.m in Sources */,
 				1834A98E1F55045700C377F9 /* OTWFindBusinessmenModel.m in Sources */,
 				D7F6B0B61F10AA2D0013090A /* OTWLoginViewController.m in Sources */,
@@ -2081,6 +2125,7 @@
 				D7F6B0CB1F1627000013090A /* OTWNewsCell.m in Sources */,
 				B183D9981F221D9900CF3E1F /* OTWPrintARViewController.m in Sources */,
 				1812CA881F39AEAB00510905 /* OTWPointAnnotation.m in Sources */,
+				DDF5AB111F8F724400AFF6F9 /* OTWBusinessAlbumModel.m in Sources */,
 				DD86E95A1F46BA8600D49A64 /* ArvixARViewController.m in Sources */,
 				DD3520941F18670800E8D725 /* OTWFootprintDetailController.m in Sources */,
 				DD4BD9731F5EA4630047D191 /* OTWBusinessDetailService.m in Sources */,
@@ -2138,6 +2183,7 @@
 				DDEA15E11F25CCA500056166 /* PYPhotosViewController.m in Sources */,
 				186E12E01F56A0520077A93C /* OTWSelectBarViewController.m in Sources */,
 				18BCFAB21F4D4E7100B8E09D /* CreateShopPicCell.m in Sources */,
+				DDF5AB2B1F90887600AFF6F9 /* SDBrowserImageView.m in Sources */,
 				DDF5AA791F8B6F9700AFF6F9 /* ImprovePersonInfoViewController.m in Sources */,
 				B13ADA231F1C5660008E889C /* OTWSystemNewsCellFrame.m in Sources */,
 				B17836E91F414EB400FC73DC /* findSearchViewCell.m in Sources */,

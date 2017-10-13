@@ -110,6 +110,9 @@
                    [_status addObject: model];
                }
                dispatch_async(dispatch_get_main_queue(), ^{
+                   if (_pageNum == 0 && arr.count == 0) {
+                       [self.view addSubview:self.noResultView];
+                   }
                    [tableView reloadData];
                    [tableView.mj_header endRefreshing];
                    [tableView.mj_footer endRefreshing];

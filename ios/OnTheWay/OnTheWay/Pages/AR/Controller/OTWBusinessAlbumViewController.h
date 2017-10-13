@@ -10,4 +10,7 @@
 
 @interface OTWBusinessAlbumViewController : OTWBaseViewController
 
+@property (strong,nonatomic) NSNumber * shopId;
+
+
 @end

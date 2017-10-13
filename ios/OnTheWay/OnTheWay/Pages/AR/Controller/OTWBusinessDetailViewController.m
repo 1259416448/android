@@ -502,6 +502,7 @@
 {
     DLog(@"点击了更多照片，需要跳转至相册页");
     OTWBusinessAlbumViewController * album = [[OTWBusinessAlbumViewController alloc] init];
+    album.shopId = [NSNumber numberWithInteger:[_opId integerValue]];
     [self.navigationController pushViewController:album animated:YES];
 }
 
