@@ -64,7 +64,7 @@
     [self.customNavigationBar addSubview:self.searchTF];
     [self.customNavigationBar addSubview:self.cancelBtn];
     //大背景
-    self.view.backgroundColor=[UIColor whiteColor];
+    self.view.backgroundColor = [UIColor whiteColor];
     
     [self.view addSubview:self.tableView];
 }
@@ -121,6 +121,7 @@
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _tableView.backgroundColor = [UIColor whiteColor];
         [_tableView registerClass:[TagViewCell class] forCellReuseIdentifier:NSStringFromClass(TagViewCell.class)];
     }
     return _tableView;
