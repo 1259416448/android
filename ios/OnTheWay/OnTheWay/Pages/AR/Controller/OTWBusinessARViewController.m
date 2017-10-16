@@ -156,6 +156,10 @@
         [self initCLLocationManager];
         return ;
     }
+    if (_isFromFind) {
+        self.arShopSearchParams.q = _searchText;
+        [self getArShops];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated

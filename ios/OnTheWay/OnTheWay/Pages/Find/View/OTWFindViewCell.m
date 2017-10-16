@@ -85,14 +85,14 @@
         UIButton *btn = [[UIButton alloc]init];
 //        iconImageView.image=[UIImage imageNamed:[status.FindTpyeContentList[i] objectForKey:@"iconStr"]];
         [btn setImage:[UIImage imageNamed:[status.FindTpyeContentList[i] objectForKey:@"iconStr"]] forState:UIControlStateNormal];
-        btn.tag = [status.typeId integerValue];
+        btn.tag = [[status.FindTpyeContentList[i] objectForKey:@"id"] integerValue];
         [btn addTarget:self action:@selector(buttonActin:) forControlEvents:UIControlEventTouchUpInside];
         btn.frame=CGRectMake(2.5, 0, FindTableViewFindTypeListWeight, FindTableViewFindTypeListWeight);
         UIView *iconBox=[[UIView alloc] init];
         //设置图标模块的view
-        iconBox.frame=CGRectMake(_FindTpyeName.Witdh-(status.FindTpyeContentList.count-i)*(FindTableViewFindTypeListWeight+15)+10, 38, 40, 55);
-        
-        [_FindTpyeName addSubview:iconBox];
+        iconBox.frame=CGRectMake(SCREEN_WIDTH - 30 - (status.FindTpyeContentList.count - i) * (FindTableViewFindTypeListWeight + 15) + 10, 67, 40, 55);
+    
+        [self addSubview:iconBox];
         [iconBox addSubview:iconName];
         [iconBox addSubview:btn];
 

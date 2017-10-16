@@ -19,5 +19,8 @@ typedef void(^requestBackBlock) (id result);
 
 @property (nonatomic, assign) BOOL isFromFind;
 
+@property (nonatomic, assign) BOOL isFromSearch;
+
+
 
 @end

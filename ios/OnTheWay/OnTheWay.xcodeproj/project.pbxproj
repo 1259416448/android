@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1802494C1F41773A004B0CDE /* OTWUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1802494B1F41773A004B0CDE /* OTWUtils.m */; };
+		1804F40D1F94813000EB1BCF /* SQButtonTagView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1804F40A1F94813000EB1BCF /* SQButtonTagView.m */; };
+		1804F40E1F94813000EB1BCF /* TagViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1804F40C1F94813000EB1BCF /* TagViewCell.m */; };
 		1812CA881F39AEAB00510905 /* OTWPointAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1812CA871F39AEAB00510905 /* OTWPointAnnotation.m */; };
 		1822EE631F20845A00E07665 /* OTWFootprintsChangeAddressModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1822EE621F20845A00E07665 /* OTWFootprintsChangeAddressModel.m */; };
 		1822EE661F20846F00E07665 /* OTWFootprintsChangeAddressCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1822EE651F20846F00E07665 /* OTWFootprintsChangeAddressCellTableViewCell.m */; };
@@ -281,6 +283,10 @@
 		180249491F4151A9004B0CDE /* OnTheWay.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OnTheWay.entitlements; sourceTree = "<group>"; };
 		1802494A1F41773A004B0CDE /* OTWUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWUtils.h; sourceTree = "<group>"; };
 		1802494B1F41773A004B0CDE /* OTWUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWUtils.m; sourceTree = "<group>"; };
+		1804F4091F94812F00EB1BCF /* SQButtonTagView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQButtonTagView.h; sourceTree = "<group>"; };
+		1804F40A1F94813000EB1BCF /* SQButtonTagView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQButtonTagView.m; sourceTree = "<group>"; };
+		1804F40B1F94813000EB1BCF /* TagViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagViewCell.h; sourceTree = "<group>"; };
+		1804F40C1F94813000EB1BCF /* TagViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagViewCell.m; sourceTree = "<group>"; };
 		1812CA861F39AEAB00510905 /* OTWPointAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPointAnnotation.h; sourceTree = "<group>"; };
 		1812CA871F39AEAB00510905 /* OTWPointAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPointAnnotation.m; sourceTree = "<group>"; };
 		1822EE611F20845A00E07665 /* OTWFootprintsChangeAddressModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWFootprintsChangeAddressModel.h; sourceTree = "<group>"; };
@@ -1798,6 +1804,10 @@
 		DDF5AACC1F8B79DB00AFF6F9 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				1804F4091F94812F00EB1BCF /* SQButtonTagView.h */,
+				1804F40A1F94813000EB1BCF /* SQButtonTagView.m */,
+				1804F40B1F94813000EB1BCF /* TagViewCell.h */,
+				1804F40C1F94813000EB1BCF /* TagViewCell.m */,
 				DDF5AB491F90CC3700AFF6F9 /* HYBImageCliped */,
 				DDF5AB421F90C8D800AFF6F9 /* LSActionSheet */,
 				DDF5AB3C1F90C7B400AFF6F9 /* UIViewExt.h */,
@@ -2117,6 +2127,7 @@
 				DDEA15F31F25D2A100056166 /* FLAnimatedImageView+WebCache.m in Sources */,
 				B1A2B5C71F2987B300EAABE0 /* OTWPersonalSiteGanderViewController.m in Sources */,
 				186E12E31F57ACFB0077A93C /* OTWBusinessARViewController.m in Sources */,
+				1804F40E1F94813000EB1BCF /* TagViewCell.m in Sources */,
 				189881061F46C80D003BC734 /* OTWNewsSearchParams.m in Sources */,
 				B12360261F55095800E8FA62 /* OTWPersonalCashModel.m in Sources */,
 				DDF5AB3A1F90C70600AFF6F9 /* SDPhotoBrowser.m in Sources */,
@@ -2211,6 +2222,7 @@
 				B123602F1F5541ED00E8FA62 /* OTWPersonalCashTFViewCell.m in Sources */,
 				DDF5AB5B1F90CF8F00AFF6F9 /* SDWaitingView.m in Sources */,
 				DD9452F31F15DE23004EDDED /* OTWFootprintListFrame.m in Sources */,
+				1804F40D1F94813000EB1BCF /* SQButtonTagView.m in Sources */,
 				DD4BD9701F5E8C030047D191 /* OTWBusinessDetailViewController.m in Sources */,
 				18BCFAA01F4ADAF700B8E09D /* OTWAddNewShopViewController.m in Sources */,
 				DDEA15FE1F299DFB00056166 /* OTWDocument.m in Sources */,
