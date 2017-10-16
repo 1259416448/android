@@ -19,6 +19,8 @@
 #import "OTWFootprintService.h"
 #import "OTWFootprintReleaseViewController.h"
 #import "OTWBusinessAlbumViewController.h"
+//#import "BNCoreServices.h"
+
 
 #import <MJExtension.h>
 
@@ -505,11 +507,72 @@
     album.shopId = [NSNumber numberWithInteger:[_opId integerValue]];
     [self.navigationController pushViewController:album animated:YES];
 }
-
-- (void)goMapClick:(OTWBusinessDetailView *)detailView businessModel:(OTWBusinessModel *)businessModel
-{
-    DLog(@"点击了到这里");
-}
+#pragma mark 导航
+//- (void)goMapClick:(OTWBusinessDetailView *)detailView businessModel:(OTWBusinessModel *)businessModel
+//{
+//    DLog(@"点击了到这里");
+//    
+//    NSMutableArray *nodesArray = [[NSMutableArray alloc] initWithCapacity: 2];
+//    
+//    //起点
+//    BNRoutePlanNode *startNode = [[BNRoutePlanNode alloc] init];
+//    startNode.pos = [[BNPosition alloc] init];
+//    startNode.pos.x = _longitude;
+//    startNode.pos.y = _latitude;
+//    startNode.pos.eType = BNCoordinate_BaiduMapSDK;
+//    [nodesArray addObject:startNode];
+//    
+//    //终点
+//    BNRoutePlanNode *endNode = [[BNRoutePlanNode alloc] init];
+//    endNode.pos = [[BNPosition alloc] init];
+//    endNode.pos.x = businessModel.longitude;
+//    endNode.pos.y = businessModel.latitude;
+//    endNode.pos.eType = BNCoordinate_BaiduMapSDK;
+//    [nodesArray addObject:endNode];
+//    
+//    // 发起算路
+//    [BNCoreServices_RoutePlan  startNaviRoutePlan: BNRoutePlanMode_Recommend naviNodes:nodesArray time:nil delegete:self    userInfo:nil];
+//}
+////算路成功回调
+//-(void)routePlanDidFinished:(NSDictionary *)userInfo
+//{
+//    NSLog(@"算路成功");
+//    
+//    //路径规划成功，开始导航
+//    [BNCoreServices_UI showPage:BNaviUI_NormalNavi delegate:self extParams:nil];
+//}
+//
+////算路失败回调
+//- (void)routePlanDidFailedWithError:(NSError *)error andUserInfo:(NSDictionary *)userInfo
+//{
+//    NSLog(@"算路失败");
+//    NSString * tipsString = @"";
+//    switch ([error code]%10000)
+//    {
+//        case BNAVI_ROUTEPLAN_ERROR_LOCATIONFAILED:
+//            tipsString = @"暂时无法获取您的位置,请稍后重试";
+//            break;
+//        case BNAVI_ROUTEPLAN_ERROR_ROUTEPLANFAILED:
+//            tipsString = @"无法发起导航";
+//            break;
+//        case BNAVI_ROUTEPLAN_ERROR_LOCATIONSERVICECLOSED:
+//            tipsString = @"定位服务未开启,请到系统设置中打开定位服务。";
+//            break;
+//        case BNAVI_ROUTEPLAN_ERROR_NODESTOONEAR:
+//            tipsString = @"起终点距离起终点太近";
+//            break;
+//        default:
+//            NSLog(@"算路失败");
+//            tipsString = @"算路失败";
+//            break;
+//    }
+//    [MBProgressHUD py_showError:tipsString toView:self.view];
+//}
+//
+////算路取消
+//-(void)routePlanDidUserCanceled:(NSDictionary*)userInfo {
+//    NSLog(@"算路取消");
+//}
 
 - (void)checkInClick:(OTWBusinessDetailView *)detailView businessModel:(OTWBusinessModel *)businessModel
 {
