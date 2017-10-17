@@ -114,37 +114,37 @@
 #pragma mark 设置视图
 - (void)setPraiseModel:(OTWPraiseViewModel *) praise
 {
-    CGFloat userImageX = 15,userImageY = 15;
-    CGRect userImageRect = CGRectMake(userImageX, userImageY, OTWPraiseUserImageWidth, OTWPraiseUserImageHeight);
-    [_userImage setImageWithURL:[NSURL URLWithString:praise.profile_image]];
-    _userImage.frame = userImageRect;
-    _userImage.layer.cornerRadius = _userImage.Witdh/2.0;
-    _userImage.layer.masksToBounds = YES;
-    
-    CGFloat usernameX = CGRectGetMaxX(_userImage.frame) + OTWStatusTableViewCellControlSpacing;
-    CGFloat usernameY = 17.5;
-    CGSize usernameSize=[praise.username sizeWithAttributes:@{NSFontAttributeName: OTWPraiseUserNameFont}];
-    CGRect usernameRect = CGRectMake(usernameX, usernameY, usernameSize.width, usernameSize.height);
-    _username.text = praise.username;
-    _username.frame = usernameRect;
-    
-    CGSize timeSize = [praise.time sizeWithAttributes:@{NSFontAttributeName:OTWPraiseTimeFont}];
-    CGFloat timeX = usernameX;
-    CGFloat timeY = CGRectGetMaxY(_username.frame) + 3;
-    CGRect timeRect = CGRectMake(timeX, timeY, timeSize.width, timeSize.height);
-    _time.text = praise.time;
-    _time.frame = timeRect;
-    
-    CGFloat contentX = timeX;
-    CGFloat contentY = CGRectGetMaxY(_time.frame) + OTWStatusTableViewCellControlSpacing;
-    CGFloat conteneW = SCREEN_WIDTH - OTWTableViewPadding*2;
-    CGSize contentSize=[praise.content boundingRectWithSize:CGSizeMake(conteneW, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin
-                                              attributes:@{NSFontAttributeName: OTWPraiseUserNameFont} context:nil].size;
-    CGRect contentRect = CGRectMake(contentX, contentY, conteneW, contentSize.height);
-    _content.text = praise.content;
-    _content.frame = contentRect;
-    
-    _height = 84 + 15;
+//    CGFloat userImageX = 15,userImageY = 15;
+//    CGRect userImageRect = CGRectMake(userImageX, userImageY, OTWPraiseUserImageWidth, OTWPraiseUserImageHeight);
+//    [_userImage setImageWithURL:[NSURL URLWithString:praise.profile_image]];
+//    _userImage.frame = userImageRect;
+//    _userImage.layer.cornerRadius = _userImage.Witdh/2.0;
+//    _userImage.layer.masksToBounds = YES;
+//    
+//    CGFloat usernameX = CGRectGetMaxX(_userImage.frame) + OTWStatusTableViewCellControlSpacing;
+//    CGFloat usernameY = 17.5;
+//    CGSize usernameSize=[praise.username sizeWithAttributes:@{NSFontAttributeName: OTWPraiseUserNameFont}];
+//    CGRect usernameRect = CGRectMake(usernameX, usernameY, usernameSize.width, usernameSize.height);
+//    _username.text = praise.username;
+//    _username.frame = usernameRect;
+//    
+//    CGSize timeSize = [praise.time sizeWithAttributes:@{NSFontAttributeName:OTWPraiseTimeFont}];
+//    CGFloat timeX = usernameX;
+//    CGFloat timeY = CGRectGetMaxY(_username.frame) + 3;
+//    CGRect timeRect = CGRectMake(timeX, timeY, timeSize.width, timeSize.height);
+//    _time.text = praise.time;
+//    _time.frame = timeRect;
+//    
+//    CGFloat contentX = timeX;
+//    CGFloat contentY = CGRectGetMaxY(_time.frame) + OTWStatusTableViewCellControlSpacing;
+//    CGFloat conteneW = SCREEN_WIDTH - OTWTableViewPadding*2;
+//    CGSize contentSize=[praise.content boundingRectWithSize:CGSizeMake(conteneW, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin
+//                                              attributes:@{NSFontAttributeName: OTWPraiseUserNameFont} context:nil].size;
+//    CGRect contentRect = CGRectMake(contentX, contentY, conteneW, contentSize.height);
+//    _content.text = praise.content;
+//    _content.frame = contentRect;
+//    
+//    _height = 84 + 15;
 }
 
 @end

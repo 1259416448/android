@@ -10,6 +10,7 @@
 		1802494C1F41773A004B0CDE /* OTWUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1802494B1F41773A004B0CDE /* OTWUtils.m */; };
 		1804F40D1F94813000EB1BCF /* SQButtonTagView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1804F40A1F94813000EB1BCF /* SQButtonTagView.m */; };
 		1804F40E1F94813000EB1BCF /* TagViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1804F40C1F94813000EB1BCF /* TagViewCell.m */; };
+		1804F4111F95DE6C00EB1BCF /* OTWPraiseParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1804F4101F95DE6C00EB1BCF /* OTWPraiseParameter.m */; };
 		1812CA881F39AEAB00510905 /* OTWPointAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1812CA871F39AEAB00510905 /* OTWPointAnnotation.m */; };
 		1822EE631F20845A00E07665 /* OTWFootprintsChangeAddressModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1822EE621F20845A00E07665 /* OTWFootprintsChangeAddressModel.m */; };
 		1822EE661F20846F00E07665 /* OTWFootprintsChangeAddressCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1822EE651F20846F00E07665 /* OTWFootprintsChangeAddressCellTableViewCell.m */; };
@@ -287,6 +288,8 @@
 		1804F40A1F94813000EB1BCF /* SQButtonTagView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQButtonTagView.m; sourceTree = "<group>"; };
 		1804F40B1F94813000EB1BCF /* TagViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagViewCell.h; sourceTree = "<group>"; };
 		1804F40C1F94813000EB1BCF /* TagViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagViewCell.m; sourceTree = "<group>"; };
+		1804F40F1F95DE6C00EB1BCF /* OTWPraiseParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPraiseParameter.h; sourceTree = "<group>"; };
+		1804F4101F95DE6C00EB1BCF /* OTWPraiseParameter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPraiseParameter.m; sourceTree = "<group>"; };
 		1812CA861F39AEAB00510905 /* OTWPointAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPointAnnotation.h; sourceTree = "<group>"; };
 		1812CA871F39AEAB00510905 /* OTWPointAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPointAnnotation.m; sourceTree = "<group>"; };
 		1822EE611F20845A00E07665 /* OTWFootprintsChangeAddressModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWFootprintsChangeAddressModel.h; sourceTree = "<group>"; };
@@ -1385,8 +1388,8 @@
 				D7F6B0771F0DD3F90013090A /* OTWNewsViewController.m */,
 				B13ADA1B1F1B21D4008E889C /* OTWSystemNewsViewController.h */,
 				B13ADA1C1F1B23DA008E889C /* OTWSystemNewsViewController.m */,
-				B181AB5A1F1F7F56009929D1 /* OTWPraiseViewController.m */,
 				B181AB5B1F1F7F56009929D1 /* OTWPraiseViewController.h */,
+				B181AB5A1F1F7F56009929D1 /* OTWPraiseViewController.m */,
 				B18A43031F207BB6002C7A5A /* OTWNewCommentListViewController.h */,
 				B18A43041F207BB6002C7A5A /* OTWNewCommentListViewController.m */,
 				1843A7D11F26E5FD00A285A3 /* OTWNewFootprintsControllerViewController.h */,
@@ -1602,6 +1605,8 @@
 				DDC0A9391F1F77D100A6E4DB /* OTWSystemNewsModel.m */,
 				B181AB571F1F7F33009929D1 /* OTWPraiseViewModel.h */,
 				B181AB581F1F7F33009929D1 /* OTWPraiseViewModel.m */,
+				1804F40F1F95DE6C00EB1BCF /* OTWPraiseParameter.h */,
+				1804F4101F95DE6C00EB1BCF /* OTWPraiseParameter.m */,
 				B18A43061F207D14002C7A5A /* OTWNewsCommentModel.h */,
 				B18A43071F207D14002C7A5A /* OTWNewsCommentModel.m */,
 				B18A430B1F208515002C7A5A /* OTWNewsToOtherCommentModel.h */,
@@ -2186,6 +2191,7 @@
 				B18A43051F207BB6002C7A5A /* OTWNewCommentListViewController.m in Sources */,
 				DDC0A93A1F1F77D100A6E4DB /* OTWSystemNewsModel.m in Sources */,
 				B123601D1F53CAE600E8FA62 /* OTWPersonalHistroyPayeeViewController.m in Sources */,
+				1804F4111F95DE6C00EB1BCF /* OTWPraiseParameter.m in Sources */,
 				D7F6B0B91F14E5C60013090A /* OTWCustomTabBar.m in Sources */,
 				18BCFAAF1F4D36B100B8E09D /* CreateShopTVTWOCell.m in Sources */,
 				1802494C1F41773A004B0CDE /* OTWUtils.m in Sources */,

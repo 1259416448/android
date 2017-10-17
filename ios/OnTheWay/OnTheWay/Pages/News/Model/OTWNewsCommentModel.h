@@ -20,8 +20,13 @@
 @property (nonatomic,copy) NSString *commentContent;
 //足迹内容
 @property (nonatomic,strong) NSString *footprintContent;
+//commentId
+@property (nonatomic, strong) NSNumber *commentId;
+//userId
+@property (nonatomic, strong) NSNumber *userId;
 
--(OTWNewsCommentModel *) initWithDictionary: (NSDictionary *)dic;
+
+//-(OTWNewsCommentModel *) initWithDictionary: (NSDictionary *)dic;
 
 +(OTWNewsCommentModel *) commentModelWithDictionary : (NSDictionary *)dic;
 
