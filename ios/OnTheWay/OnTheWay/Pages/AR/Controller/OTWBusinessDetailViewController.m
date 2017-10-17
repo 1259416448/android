@@ -508,8 +508,8 @@
     [self.navigationController pushViewController:album animated:YES];
 }
 #pragma mark 导航
-//- (void)goMapClick:(OTWBusinessDetailView *)detailView businessModel:(OTWBusinessModel *)businessModel
-//{
+- (void)goMapClick:(OTWBusinessDetailView *)detailView businessModel:(OTWBusinessModel *)businessModel
+{
 //    DLog(@"点击了到这里");
 //    
 //    NSMutableArray *nodesArray = [[NSMutableArray alloc] initWithCapacity: 2];
@@ -532,7 +532,7 @@
 //    
 //    // 发起算路
 //    [BNCoreServices_RoutePlan  startNaviRoutePlan: BNRoutePlanMode_Recommend naviNodes:nodesArray time:nil delegete:self    userInfo:nil];
-//}
+}
 ////算路成功回调
 //-(void)routePlanDidFinished:(NSDictionary *)userInfo
 //{

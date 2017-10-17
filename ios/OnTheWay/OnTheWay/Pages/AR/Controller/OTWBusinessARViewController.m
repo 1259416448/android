@@ -816,8 +816,8 @@
 
 
 #pragma mark 路径导航
-//- (void)TouchgotoVView
-//{
+- (void)TouchgotoVView
+{
 //        NSMutableArray *nodesArray = [[NSMutableArray alloc] initWithCapacity: 2];
 //    
 //        //起点
@@ -838,7 +838,7 @@
 //    
 //        // 发起算路
 //        [BNCoreServices_RoutePlan  startNaviRoutePlan: BNRoutePlanMode_Recommend naviNodes:nodesArray time:nil delegete:self    userInfo:nil];
-//}
+}
 ////算路成功回调
 //-(void)routePlanDidFinished:(NSDictionary *)userInfo
 //{
