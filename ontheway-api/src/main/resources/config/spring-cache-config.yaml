@@ -25,5 +25,8 @@ agile-user-remind-cache:
 otw-new-message-count-cache:
   ttl: 7200000
   maxIdleTime: 3600000
+auto-fetch-info:
+  ttl: 0
+  maxIdleTime: 0
 
 

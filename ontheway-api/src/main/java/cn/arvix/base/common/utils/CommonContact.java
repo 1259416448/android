@@ -170,4 +170,7 @@ public interface CommonContact {
     //商家的用户图集搜索标识
     String BUSINESS_USER_PHOTOS = "businessUserPhotos";
 
+    //百度地图AK
+    String BAIDU_MAP_AK = "OS7n8khfGx4sUa07yZt0DG1DIKmOhI3q";
+
 }

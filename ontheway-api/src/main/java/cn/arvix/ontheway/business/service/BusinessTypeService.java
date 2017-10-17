@@ -167,4 +167,27 @@ public class BusinessTypeService extends BaseServiceImpl<BusinessType, Long> {
         }
         return null;
     }
+
+    /**
+     * 根据获取类型ID获取类型名称
+     *
+     * @return 类型名称数组
+     */
+    public String findTypeByTypeIds_(Set<Long> ids) {
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("id_in", ids);
+        List<BusinessType> businessTypeList = super.findAllWithNoPageNoSort(Searchable.newSearchable(params));
+        if (businessTypeList.size() > 0) {
+            if (businessTypeList.size() == 2) {
+                if (businessTypeList.get(0).getParentId() == null) {
+                    return businessTypeList.get(1).getName();
+                } else {
+                    return businessTypeList.get(0).getName();
+                }
+            } else {
+                return businessTypeList.get(0).getName();
+            }
+        }
+        return null;
+    }
 }
