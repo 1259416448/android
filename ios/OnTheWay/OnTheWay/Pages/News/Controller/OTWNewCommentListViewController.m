@@ -127,12 +127,20 @@
     if (!cell) {
         cell = [[OTWNewsCommentTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
+    cell.selectionStyle = UITableViewCellSeparatorStyleNone;
     cell.commentModel = self.commentArr[indexPath.row];
     [self.commentTableCells addObject:cell];
     return cell;
 }
 
 #pragma mark 代理方法
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    OTWNewsCommentModel * model = self.commentArr[indexPath.row];
+    OTWFootprintDetailController *VC =  [[OTWFootprintDetailController alloc] init];
+    [VC setFid:[NSString stringWithFormat:@"%@",model.commentId]];
+    [self.navigationController pushViewController:VC animated:YES];
+}
 #pragma mark 重新设置单元格高度
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
