@@ -29,6 +29,7 @@
 #import "OTWBusinessSortModel.h"
 #import "OTWBusinessDetailSortModel.h"
 #import "OTWBusinessListSearchViewController.h"
+//#import "BNCoreServices.h"
 
 #import <MJExtension.h>
 #import "MBProgressHUD+PYExtension.h"
@@ -61,6 +62,7 @@
 @property(nonatomic,strong) UIView *shopPopoverV;
 @property(nonatomic,strong) UILabel *shopTitle;
 @property(nonatomic,strong) UIImageView *gotoV;
+@property(nonatomic,strong) UIImageView *gotoVTouchView;
 @property(nonatomic,strong) UILabel *gotoLabel;
 @property(nonatomic,strong) UIImageView *shopLocationIcon;
 @property(nonatomic,strong) UILabel *shopLocationContent;
@@ -95,6 +97,10 @@
 @property(nonatomic,strong) NSMutableArray *siftSortArr;
 @property(nonatomic,strong) NSMutableArray *siftDetailArr;
 
+@property (nonatomic,assign) CLLocationCoordinate2D location;
+
+@property (nonatomic,assign) double businessLatitude;
+@property (nonatomic,assign) double businessLongitude;
 
 @end
 
@@ -149,6 +155,10 @@
     if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
         [self initCLLocationManager];
         return ;
+    }
+    if (_isFromFind) {
+        self.arShopSearchParams.q = _searchText;
+        [self getArShops];
     }
 }
 
@@ -241,6 +251,7 @@
     [self.presenter addGestureRecognizer:changeShopDetailVGesture];
     [self.shopPopoverV addSubview:self.shopTitle];
     [self.shopPopoverV addSubview:self.gotoV];
+    [self.shopPopoverV addSubview:self.gotoVTouchView];
     [self.shopPopoverV addSubview:self.gotoLabel];
     [self.shopPopoverV addSubview:self.shopLocationIcon];
     [self.shopPopoverV addSubview:self.shopLocationContent];
@@ -453,6 +464,8 @@
         if([annotation.businessFrame.businessDetail.businessId isEqualToNumber:businessId]){
             annotation.businessFrame.colorAlpha = 1;
             annotation.businessFrame.distanceAlpha = 1;
+            _businessLatitude = annotation.location.coordinate.latitude;
+            _businessLongitude = annotation.location.coordinate.longitude;
         }else{
             annotation.businessFrame.colorAlpha = 0.5;
             annotation.businessFrame.distanceAlpha = 0.5;
@@ -800,6 +813,73 @@
         }
     }];
 }
+
+
+#pragma mark 路径导航
+- (void)TouchgotoVView
+{
+//        NSMutableArray *nodesArray = [[NSMutableArray alloc] initWithCapacity: 2];
+//    
+//        //起点
+//        BNRoutePlanNode *startNode = [[BNRoutePlanNode alloc] init];
+//        startNode.pos = [[BNPosition alloc] init];
+//        startNode.pos.x = self.location.longitude;
+//        startNode.pos.y = self.location.latitude;
+//        startNode.pos.eType = BNCoordinate_BaiduMapSDK;
+//        [nodesArray addObject:startNode];
+//    
+//        //终点
+//        BNRoutePlanNode *endNode = [[BNRoutePlanNode alloc] init];
+//        endNode.pos = [[BNPosition alloc] init];
+//        endNode.pos.x = _businessLongitude;
+//        endNode.pos.y = _businessLatitude;
+//        endNode.pos.eType = BNCoordinate_BaiduMapSDK;
+//        [nodesArray addObject:endNode];
+//    
+//        // 发起算路
+//        [BNCoreServices_RoutePlan  startNaviRoutePlan: BNRoutePlanMode_Recommend naviNodes:nodesArray time:nil delegete:self    userInfo:nil];
+}
+////算路成功回调
+//-(void)routePlanDidFinished:(NSDictionary *)userInfo
+//{
+//    NSLog(@"算路成功");
+//
+//    //路径规划成功，开始导航
+//    [BNCoreServices_UI showPage:BNaviUI_NormalNavi delegate:self extParams:nil];
+//}
+//
+////算路失败回调
+//- (void)routePlanDidFailedWithError:(NSError *)error andUserInfo:(NSDictionary *)userInfo
+//{
+//    NSLog(@"算路失败");
+//    NSString * tipsString = @"";
+//    switch ([error code]%10000)
+//    {
+//        case BNAVI_ROUTEPLAN_ERROR_LOCATIONFAILED:
+//            tipsString = @"暂时无法获取您的位置,请稍后重试";
+//            break;
+//        case BNAVI_ROUTEPLAN_ERROR_ROUTEPLANFAILED:
+//            tipsString = @"无法发起导航";
+//            break;
+//        case BNAVI_ROUTEPLAN_ERROR_LOCATIONSERVICECLOSED:
+//            tipsString = @"定位服务未开启,请到系统设置中打开定位服务。";
+//            break;
+//        case BNAVI_ROUTEPLAN_ERROR_NODESTOONEAR:
+//            tipsString = @"起终点距离起终点太近";
+//            break;
+//        default:
+//            NSLog(@"算路失败");
+//            tipsString = @"算路失败";
+//            break;
+//    }
+//    [MBProgressHUD py_showError:tipsString toView:self.view];
+//}
+//
+////算路取消
+//-(void)routePlanDidUserCanceled:(NSDictionary*)userInfo {
+//    NSLog(@"算路取消");
+//}
+
 - (void)MBProgressHUDErrorTips:(NSString *)error{
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.mode = MBProgressHUDModeText;
@@ -1156,6 +1236,18 @@
     }
     return _gotoV;
 }
+- (UIImageView*)gotoVTouchView
+{
+    if (!_gotoVTouchView) {
+        _gotoVTouchView = [[UIImageView alloc] init];
+        _gotoVTouchView.frame = CGRectMake(SCREEN_WIDTH - 21.5 - 40, 0, 61.5, 50);
+        _gotoVTouchView.backgroundColor = [UIColor clearColor];
+        UITapGestureRecognizer * gotov = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(TouchgotoVView)];
+        _gotoVTouchView.userInteractionEnabled = YES;
+        [_gotoVTouchView addGestureRecognizer:gotov];
+    }
+    return _gotoVTouchView;
+}
 
 - (UILabel*)gotoLabel
 {
@@ -1344,6 +1436,7 @@
         self.arShopSearchParams.latitude = location.coordinate.latitude;
         self.arShopSearchParams.longitude = location.coordinate.longitude;
         self.arShopSearchParams.number = 0;
+        self.location = location.coordinate;
         self.arShopSearchParams.currentTime = nil;
         [self getArShops];
     }
@@ -1372,6 +1465,7 @@
         self.arShopSearchParams.latitude = location.coordinate.latitude;
         self.arShopSearchParams.longitude = location.coordinate.longitude;
         self.arShopSearchParams.number = 0;
+        self.location = location.coordinate;
         self.arShopSearchParams.currentTime = nil;
         [self getArShops];
     }

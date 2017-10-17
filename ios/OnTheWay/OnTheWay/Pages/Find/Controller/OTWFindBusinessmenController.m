@@ -378,6 +378,8 @@
     }else{
         OTWBusinessDetailViewController *businessVC = [[OTWBusinessDetailViewController alloc] init];
         FindBusinessmenModel *status=_status[indexPath.row];
+        businessVC.latitude = self.location.latitude;
+        businessVC.longitude = self.location.longitude;
         [businessVC setOpData:[NSString stringWithFormat:@"%@",status.businessId]];
         [self.navigationController pushViewController:businessVC animated:YES];
     }

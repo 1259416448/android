@@ -88,4 +88,7 @@
 #define AlbumImageSize @"?imageView2/1/w/200/h/200"
 #define FriendsHeadImageSize @"?imageView2/1/w/100/h/100"
 
+//搜索历史记录
+#define searchHistory @"searchHistory"
+
 #endif /* Macro_h */
