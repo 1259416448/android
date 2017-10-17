@@ -45,8 +45,9 @@ public class JSONResult {
         this.messageCode = messageCode;
     }
 
-    public Object getBody() {
-        return body;
+    public <T> T getBody() {
+        //noinspection unchecked
+        return (T) body;
     }
 
     public void setBody(Object body) {

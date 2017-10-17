@@ -57,7 +57,6 @@ public class Business extends BaseEntity<Long> {
 
     //联系方式
     @ApiModelProperty(value = "联系方式")
-    @NotNull(message = "contactInfo is not null")
     @Length(min = 0, max = 255, message = "0 <= contactInfo <= 255 ")
     private String contactInfo;
 

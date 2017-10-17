@@ -69,6 +69,7 @@ public class CommentMessageService extends BaseServiceImpl<CommentMessage, Long>
             currentTime = System.currentTimeMillis();
         }
         params.put("dateCreated_lte", currentTime);
+        params.put("comment_isNotNull", "");
         if (number == null || number < 0) number = 0;
         if (size == null || size > 30) size = 15;
         Searchable searchable = Searchable.newSearchable(params, new PageRequest(number, size),

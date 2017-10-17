@@ -106,6 +106,13 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
         this.footprintService = footprintService;
     }
 
+    private BusinessAutoFetchService businessAutoFetchService;
+
+    @Autowired
+    public void setBusinessAutoFetchService(BusinessAutoFetchService businessAutoFetchService) {
+        this.businessAutoFetchService = businessAutoFetchService;
+    }
+
     private BusinessRepository getBusinessRepository() {
         return (BusinessRepository) baseRepository;
     }
@@ -196,6 +203,7 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
 
         //加入solr全文检索中
         businessSolrService.add(business);
+        getBusinessRepository().flush();
         return JsonUtil.getSuccess(CommonContact.OPTION_SUCCESS, CommonContact.OPTION_SUCCESS, business.getId());
     }
 
@@ -318,6 +326,10 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
                 .getInstance(q, number, size, latitude, longitude, distance, currentTime, typeIds));
         if (page == null) {
             return JsonUtil.getFailure("solr search failed", CommonErrorCode.AR_SEARCH_SOLR_ERROR);
+        }
+        //判断当前检索是否获取到内容，如果请求 为 0 页而且未获取到内容，将执行自动抓取功能
+        if (page.getContent().size() == 0 && number == 0) {
+            businessAutoFetchService.addJob(latitude, longitude, typeIds);
         }
         return JsonUtil.getSuccess(CommonContact.OPTION_SUCCESS, CommonContact.OPTION_SUCCESS, page);
     }
