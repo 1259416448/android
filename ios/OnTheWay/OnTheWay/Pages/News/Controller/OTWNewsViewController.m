@@ -33,11 +33,11 @@
 {
     [super viewWillAppear:animated];
     [[OTWLaunchManager sharedManager].mainTabController showTabBarWithAnimation:YES];
+    [self fetchSystemNews];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self fetchSystemNews];
     [self buildUI];
 }
 
@@ -61,10 +61,10 @@
 - (UITableView*)tableView
 {
     if (!_tableView) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, self.navigationHeight, self.view.width, self.view.height-self.navigationHeight) style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 74, self.view.width, 201) style:UITableViewStylePlain];
         _tableView.scrollEnabled = NO;
         _tableView.separatorColor = [UIColor color_f4f4f4];
-        _tableView.backgroundColor = [UIColor clearColor];
+        _tableView.backgroundColor = [UIColor whiteColor];
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.contentSize = CGSizeMake(self.view.width, self.view.height - self.navigationHeight);
@@ -159,13 +159,15 @@
             break;
         case 1: // 新的赞
         {
-            if (![self.newsModel.likeNum isEqualToString:@"0"]) {
-                OTWPraiseViewController *praiseVC = [[OTWPraiseViewController alloc] init];
-                [self.navigationController pushViewController:praiseVC animated:YES];
-            } else {
-                OTWNoPraiseViewController *noPraiseVC = [[OTWNoPraiseViewController alloc] init];
-                [self.navigationController pushViewController:noPraiseVC animated:YES];
-            }
+//            if (![self.newsModel.likeNum isEqualToString:@"0"]) {
+//                OTWPraiseViewController *praiseVC = [[OTWPraiseViewController alloc] init];
+//                [self.navigationController pushViewController:praiseVC animated:YES];
+//            } else {
+//                OTWNoPraiseViewController *noPraiseVC = [[OTWNoPraiseViewController alloc] init];
+//                [self.navigationController pushViewController:noPraiseVC animated:YES];
+//            }
+            OTWPraiseViewController *praiseVC = [[OTWPraiseViewController alloc] init];
+            [self.navigationController pushViewController:praiseVC animated:YES];
         }
             break;
         case 2: // 新的评论

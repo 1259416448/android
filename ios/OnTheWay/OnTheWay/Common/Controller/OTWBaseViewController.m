@@ -124,7 +124,6 @@
     [OTWUtils alertFailed:msg userInteractionEnabled:NO target:self];
     
 }
-
 - (void) errorTips:(NSString *)tips userInteractionEnabled:(BOOL)userInteractionEnabled
 {
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];

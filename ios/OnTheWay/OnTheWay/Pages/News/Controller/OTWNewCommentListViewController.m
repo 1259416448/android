@@ -24,6 +24,11 @@
 @property (nonatomic,strong) NSMutableArray<OTWNewsCommentModel *> *commentArr;
 @property (nonatomic,strong) NSDictionary *reponseCacheData;
 
+@property (nonatomic,strong) UIView *noResultView;
+@property (nonatomic,strong) UIImageView *noResultImage;
+@property (nonatomic,strong) UILabel *noResultLabelOne;
+@property (nonatomic,strong) UILabel *noResultLabelTwo;
+
 @end
 
 @implementation OTWNewCommentListViewController
@@ -54,9 +59,10 @@
 - (UITableView *)tableV
 {
     if (!_tableV) {
-        _tableV = [[UITableView alloc] initWithFrame:CGRectMake(0, self.navigationHeight - 20, SCREEN_WIDTH, SCREEN_HEIGHT) style:UITableViewStyleGrouped];
+        _tableV = [[UITableView alloc] initWithFrame:CGRectMake(0, 44, SCREEN_WIDTH, SCREEN_HEIGHT - 44) style:UITableViewStyleGrouped];
         _tableV.dataSource = self;
         _tableV.delegate = self;
+        _tableV.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableV.backgroundColor = [UIColor clearColor];
         _tableV.tableHeaderView = self.headerV;
     }
@@ -96,7 +102,10 @@
     return 1;
 }
 
-
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 0.01;
+}
 
 #pragma mark 返回每组行数
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -118,18 +127,24 @@
     if (!cell) {
         cell = [[OTWNewsCommentTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
+    cell.selectionStyle = UITableViewCellSeparatorStyleNone;
     cell.commentModel = self.commentArr[indexPath.row];
     [self.commentTableCells addObject:cell];
     return cell;
 }
 
 #pragma mark 代理方法
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    OTWNewsCommentModel * model = self.commentArr[indexPath.row];
+    OTWFootprintDetailController *VC =  [[OTWFootprintDetailController alloc] init];
+    [VC setFid:[NSString stringWithFormat:@"%@",model.commentId]];
+    [self.navigationController pushViewController:VC animated:YES];
+}
 #pragma mark 重新设置单元格高度
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    OTWNewsCommentTableCell *cell = (OTWNewsCommentTableCell *)[self tableView:tableView
-                                                                     cellForRowAtIndexPath:indexPath];
-    return cell.height;
+    return 84;
 }
 
 - (OTWNewsSearchParams*)newsSearchParams
@@ -138,7 +153,7 @@
         _newsSearchParams = [[OTWNewsSearchParams alloc] init];
         _newsSearchParams.number = 0;
         _newsSearchParams.size = 15;
-        _newsSearchParams.clear = false;
+        _newsSearchParams.clear = YES;
     }
     return _newsSearchParams;
 }
@@ -166,10 +181,11 @@
                 [self.commentArr removeAllObjects];
             }
             for (NSDictionary *dict in dataArr) {
-                OTWNewsCommentModel *commentModel = [OTWNewsCommentModel commentModelWithDictionary:dict];
+                OTWNewsCommentModel *commentModel = [OTWNewsCommentModel mj_objectWithKeyValues:dict];
                 [self.commentArr addObject:commentModel];
             }
             DLog(@"模型数组%@",[OTWNewsCommentModel mj_keyValuesArrayWithObjectArray:self.commentArr]);
+
             [self.tableV reloadData];
             if (dataArr.count < self.newsSearchParams.size) {
                 [self.tableV.mj_footer endRefreshingWithNoMoreData];
@@ -178,6 +194,7 @@
                 [self.tableV.mj_footer endRefreshing];
             }
         } else {
+            [self.view addSubview:self.noResultView];
             [self.tableV.mj_footer endRefreshingWithNoMoreData];
         }
         self.tableV.mj_footer.hidden = NO;
@@ -216,6 +233,60 @@
     } responseCacheFun:^(id responseCache) {
         self.reponseCacheData = responseCache;
     }];
+}
+-(UIView *)noResultView{
+    if(!_noResultView){
+        _noResultView=[[UIView alloc]initWithFrame:CGRectMake(0, self.navigationHeight+1, SCREEN_WIDTH, SCREEN_HEIGHT-self.navigationHeight)];
+        _noResultView.backgroundColor=[UIColor whiteColor];
+        [_noResultView addSubview:self.noResultImage];
+        [_noResultView addSubview:self.noResultLabelOne];
+        [_noResultView addSubview:self.noResultLabelTwo];
+    }
+    
+    return _noResultView;
+}
+-(UIImageView*)noResultImage{
+    if(!_noResultImage){
+        _noResultImage=[[UIImageView alloc]init];
+        _noResultImage.frame=CGRectMake((SCREEN_WIDTH-151)/2, 130, 151, 109);
+        _noResultImage.image=[UIImage imageNamed:@"qx_wupinglun"];
+    }
+    return _noResultImage;
+}
+
+-(UILabel*)noResultLabelOne{
+    if(!_noResultLabelOne){
+        _noResultLabelOne=[[UILabel alloc]init];
+        _noResultLabelOne.text=@"还没有小伙伴";
+        _noResultLabelOne.font=[UIFont systemFontOfSize:13];
+        _noResultLabelOne.textColor=[UIColor color_979797];
+        [_noResultLabelOne sizeToFit];
+        _noResultLabelOne.frame=CGRectMake(0, self.noResultImage.MaxY+15, SCREEN_WIDTH, _noResultLabelOne.Height);
+        _noResultLabelOne.textAlignment=NSTextAlignmentCenter;
+    }
+    return _noResultLabelOne;
+}
+
+-(UILabel*)noResultLabelTwo{
+    if(!_noResultLabelTwo){
+        _noResultLabelTwo=[[UILabel alloc]init];
+        _noResultLabelTwo.text=@"评论你的足迹呢";
+        _noResultLabelTwo.font=[UIFont systemFontOfSize:13];
+        _noResultLabelTwo.textColor=[UIColor color_979797];
+        [_noResultLabelTwo sizeToFit];
+        _noResultLabelTwo.frame=CGRectMake(0, self.noResultLabelOne.MaxY+10, SCREEN_WIDTH, _noResultLabelTwo.Height);
+        _noResultLabelTwo.textAlignment=NSTextAlignmentCenter;
+    }
+    return _noResultLabelTwo;
+}
+-(MBProgressHUD *) addLoadingHud
+{
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.tableV animated:YES];
+    hud.bezelView.color = [[UIColor blackColor] colorWithAlphaComponent:0.7];
+    hud.bezelView.style = MBProgressHUDBackgroundStyleSolidColor;
+    hud.activityIndicatorColor = [UIColor whiteColor];
+    hud.userInteractionEnabled = NO;
+    return hud;
 }
 
 @end

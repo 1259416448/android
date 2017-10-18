@@ -15,7 +15,7 @@
 #define OTWCommentTimeFontColor [UIColor color_979797];
 #define OTWCommentReplyButtonColor [UIColor color_f4f4f4];
 
-#define OTWCommentUserNameFontSize [UIFont systemFontOfSize:16]
+#define OTWCommentUserNameFontSize [UIFont systemFontOfSize:14]
 #define OTWCommentTimeFontSize [UIFont systemFontOfSize:12]
 #define OTWCommentButtonFontSize [UIFont systemFontOfSize:13]
 #define OTWTopicTitleFontSize [UIFont systemFontOfSize:15]
@@ -57,16 +57,18 @@
     //设置cell背景色
     [self setBackgroundColor:[UIColor whiteColor]];
     //用户头像
-    [self.cellBGV addSubview:self.userImageV];
+    [self addSubview:self.userImageV];
     //用户名
-    [self.cellBGV addSubview:self.userNameV];
+    [self addSubview:self.userNameV];
     //评论时间
-    [self.cellBGV addSubview:self.commentTimeV];
+    [self addSubview:self.commentTimeV];
     //评论内容
-    [self.cellBGV addSubview:self.commentContentV];
+    [self addSubview:self.commentContentV];
     //虚拟背景
-    [self addSubview:self.cellBGV];
-    
+//    [self addSubview:self.cellBGV];
+    UIView * line = [[UIView alloc] initWithFrame:CGRectMake(15, 83.5, SCREEN_WIDTH - 15, 0.5)];
+    line.backgroundColor = [UIColor color_d5d5d5];
+    [self addSubview:line];
 }
 
 - (UIView *)cellBGV
@@ -81,7 +83,9 @@
 - (UIImageView *)userImageV
 {
     if (!_userImageV) {
-        _userImageV = [[UIImageView alloc] init];
+        _userImageV = [[UIImageView alloc] initWithFrame:CGRectMake(15, 15, 30, 30)];
+        _userImageV.layer.masksToBounds = YES;
+        _userImageV.layer.cornerRadius = 15;
     }
     return _userImageV;
 }
@@ -89,7 +93,7 @@
 - (UILabel *)userNameV
 {
     if (!_userNameV) {
-        _userNameV = [[UILabel alloc] init];
+        _userNameV = [[UILabel alloc] initWithFrame:CGRectMake(55, 14, SCREEN_WIDTH - 55 - 37, 18)];
         _userNameV.textColor = OTWCommentUserNameFontColor;
         _userNameV.font = OTWCommentUserNameFontSize;
     }
@@ -99,7 +103,7 @@
 - (UILabel *)commentTimeV
 {
     if (!_commentTimeV) {
-        _commentTimeV = [[UILabel alloc] init];
+        _commentTimeV = [[UILabel alloc] initWithFrame:CGRectMake(55, CGRectGetMaxY(self.userNameV.frame) + 1, SCREEN_WIDTH - 55 - 37, 14)];
         _commentTimeV.textColor = OTWCommentTimeFontColor;
         _commentTimeV.font = OTWCommentTimeFontSize;
     }
@@ -109,10 +113,9 @@
 - (UILabel *)commentContentV
 {
     if (!_commentContentV){
-        _commentContentV = [[UILabel alloc] init];
-        _commentContentV.textColor = OTWCommentUserNameFontColor;
-        _commentContentV.font = OTWCommentUserNameFontSize;
-        _commentContentV.numberOfLines = 0;
+        _commentContentV = [[UILabel alloc] initWithFrame:CGRectMake(55, CGRectGetMaxY(self.commentTimeV.frame) + 8, SCREEN_WIDTH - 55 - 37, 15)];
+        _commentContentV.textColor = UIColorFromRGB(0x0e0e0e);
+        _commentContentV.font = [UIFont systemFontOfSize: 13];
     }
     return _commentContentV;
 }
@@ -120,40 +123,60 @@
 #pragma mark 设置视图
 - (void)setCommentModel:(OTWNewsCommentModel *)commentModel
 {
-    CGFloat userImageX = 15,userImageY = 15;
-    CGRect userImageRect = CGRectMake(userImageX, userImageY, OTWCommentUserImageWidth, OTWCommentUserImageWidth);
-    _userImageV.frame = userImageRect;
+//    CGFloat userImageX = 15,userImageY = 15;
+//    CGRect userImageRect = CGRectMake(userImageX, userImageY, OTWCommentUserImageWidth, OTWCommentUserImageWidth);
+//    _userImageV.frame = userImageRect;
     [_userImageV setImageWithURL:[NSURL URLWithString:commentModel.userHeadImg]];
-    _userImageV.layer.cornerRadius = _userImageV.width/2.0;
-    _userImageV.layer.masksToBounds = YES;
+//    _userImageV.layer.cornerRadius = _userImageV.width/2.0;
+//    _userImageV.layer.masksToBounds = YES;
     
-    CGFloat userNameX = CGRectGetMaxX(_userImageV.frame) + OTWSpacing_15;
-    CGFloat userNameY = 17.5;
-    CGSize userNameSize = [commentModel.userNickname sizeWithAttributes:@{NSFontAttributeName:OTWCommentUserNameFontSize}];
-    CGRect userNameRect = CGRectMake(userNameX, userNameY, userNameSize.width, userNameSize.height);
+//    CGFloat userNameX = CGRectGetMaxX(_userImageV.frame) + OTWSpacing_15;
+//    CGFloat userNameY = 17.5;
+//    CGSize userNameSize = [commentModel.userNickname sizeWithAttributes:@{NSFontAttributeName:OTWCommentUserNameFontSize}];
+//    CGRect userNameRect = CGRectMake(userNameX, userNameY, userNameSize.width, userNameSize.height);
     _userNameV.text = commentModel.userNickname;
-    _userNameV.frame = userNameRect;
+//    _userNameV.frame = userNameRect;
     
-    CGSize commentTimeSize = [commentModel.dateCreatedStr sizeWithAttributes:@{NSFontAttributeName:OTWCommentTimeFontSize}];
-    CGFloat commentTimeX = userNameX;
-    CGFloat commentTimeY = CGRectGetMaxY(_userNameV.frame) + 4.5;
-    CGRect commentTimeRect = CGRectMake(commentTimeX, commentTimeY, commentTimeSize.width, commentTimeSize.height);
+//    CGSize commentTimeSize = [commentModel.dateCreatedStr sizeWithAttributes:@{NSFontAttributeName:OTWCommentTimeFontSize}];
+//    CGFloat commentTimeX = userNameX;
+//    CGFloat commentTimeY = CGRectGetMaxY(_userNameV.frame) + 4.5;
+//    CGRect commentTimeRect = CGRectMake(commentTimeX, commentTimeY, commentTimeSize.width, commentTimeSize.height);
     _commentTimeV.text = commentModel.dateCreatedStr;
-    _commentTimeV.frame = commentTimeRect;
+//    _commentTimeV.frame = commentTimeRect;
     
-    CGFloat commentContentX = commentTimeX;
-    CGFloat commentContentY = CGRectGetMaxY(_commentTimeV.frame) + OTWSpacing_10;
-    CGFloat commentContentW = SCREEN_WIDTH - OTWSpacing_15*2 - OTWCommentUserImageWidth - 22;
-    CGRect commentContentRect = CGRectMake(commentContentX, commentContentY, commentContentW, 15);
-    NSString *tips = @"评论了这条足迹：";
-    if (commentModel.commentContent && ![commentModel.commentContent isEqualToString:@""]) {
-        _commentContentV.text = [tips stringByAppendingString:commentModel.commentContent];
+//    CGFloat commentContentX = commentTimeX;
+//    CGFloat commentContentY = CGRectGetMaxY(_commentTimeV.frame) + OTWSpacing_10;
+//    CGFloat commentContentW = SCREEN_WIDTH - OTWSpacing_15*2 - OTWCommentUserImageWidth - 22;
+//    CGRect commentContentRect = CGRectMake(commentContentX, commentContentY, commentContentW, 15);
+    NSString *tips = @"";
+    if (commentModel.footprintContent && ![commentModel.footprintContent isEqualToString:@""]) {
+        tips = [NSString stringWithFormat:@"%@%@",@"评论了这条足迹：",commentModel.footprintContent];
     } else {
-        _commentContentV.text = tips;
+        tips = @"评论了这条足迹：";
     }
-    _commentContentV.frame = commentContentRect;
+    NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:tips];
+    [attrString addAttribute:NSForegroundColorAttributeName value:[UIColor color_757575] range:NSMakeRange(0,8)];
+    _commentContentV.attributedText = attrString;
     
-    _height = 84 + 15;
-
+//    _commentContentV.frame = commentContentRect;
 }
+
+- (void)setPraiseModel:(OTWPraiseViewModel *) praise
+{
+    [_userImageV setImageWithURL:[NSURL URLWithString:praise.userHeadImg]];
+    _userNameV.text = praise.userNickname;
+    _commentTimeV.text = praise.dateCreatedStr;
+    NSString *tips = @"";
+    if (praise.footprintContent && ![praise.footprintContent isEqualToString:@""]) {
+        tips = [NSString stringWithFormat:@"%@%@",@"赞了这条足迹：",praise.footprintContent];
+    } else {
+        tips = @"赞了这条足迹：";
+    }
+    NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:tips];
+    [attrString addAttribute:NSForegroundColorAttributeName value:[UIColor color_757575] range:NSMakeRange(0,7)];
+    _commentContentV.attributedText = attrString;
+}
+
+
+
 @end
