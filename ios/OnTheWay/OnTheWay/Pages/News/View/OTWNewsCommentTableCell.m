@@ -33,6 +33,8 @@
 @property (nonatomic,strong) UILabel *commentTimeV;
 @property (nonatomic,strong) UILabel *commentContentV;
 @property (nonatomic,strong) UIImageView *topicImageV;
+@property (nonatomic,strong) UIImageView *arrow;
+
 @property (nonatomic,strong) UILabel *topicuserNameV;
 @property (nonatomic,strong) UILabel *topicContentV;
 
@@ -64,6 +66,8 @@
     [self addSubview:self.commentTimeV];
     //评论内容
     [self addSubview:self.commentContentV];
+    //箭头
+    [self addSubview:self.arrow];
     //虚拟背景
 //    [self addSubview:self.cellBGV];
     UIView * line = [[UIView alloc] initWithFrame:CGRectMake(15, 83.5, SCREEN_WIDTH - 15, 0.5)];
@@ -119,35 +123,24 @@
     }
     return _commentContentV;
 }
-
+- (UIImageView *)arrow
+{
+    if (!_arrow) {
+        _arrow = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 15 - 7, 36, 7, 12)];
+        _arrow.image = [UIImage imageNamed:@"arrow_right"];
+    }
+    return _arrow;
+}
 #pragma mark 设置视图
 - (void)setCommentModel:(OTWNewsCommentModel *)commentModel
 {
-//    CGFloat userImageX = 15,userImageY = 15;
-//    CGRect userImageRect = CGRectMake(userImageX, userImageY, OTWCommentUserImageWidth, OTWCommentUserImageWidth);
-//    _userImageV.frame = userImageRect;
+
     [_userImageV setImageWithURL:[NSURL URLWithString:commentModel.userHeadImg]];
-//    _userImageV.layer.cornerRadius = _userImageV.width/2.0;
-//    _userImageV.layer.masksToBounds = YES;
-    
-//    CGFloat userNameX = CGRectGetMaxX(_userImageV.frame) + OTWSpacing_15;
-//    CGFloat userNameY = 17.5;
-//    CGSize userNameSize = [commentModel.userNickname sizeWithAttributes:@{NSFontAttributeName:OTWCommentUserNameFontSize}];
-//    CGRect userNameRect = CGRectMake(userNameX, userNameY, userNameSize.width, userNameSize.height);
+
     _userNameV.text = commentModel.userNickname;
-//    _userNameV.frame = userNameRect;
-    
-//    CGSize commentTimeSize = [commentModel.dateCreatedStr sizeWithAttributes:@{NSFontAttributeName:OTWCommentTimeFontSize}];
-//    CGFloat commentTimeX = userNameX;
-//    CGFloat commentTimeY = CGRectGetMaxY(_userNameV.frame) + 4.5;
-//    CGRect commentTimeRect = CGRectMake(commentTimeX, commentTimeY, commentTimeSize.width, commentTimeSize.height);
+
     _commentTimeV.text = commentModel.dateCreatedStr;
-//    _commentTimeV.frame = commentTimeRect;
-    
-//    CGFloat commentContentX = commentTimeX;
-//    CGFloat commentContentY = CGRectGetMaxY(_commentTimeV.frame) + OTWSpacing_10;
-//    CGFloat commentContentW = SCREEN_WIDTH - OTWSpacing_15*2 - OTWCommentUserImageWidth - 22;
-//    CGRect commentContentRect = CGRectMake(commentContentX, commentContentY, commentContentW, 15);
+
     NSString *tips = @"";
     if (commentModel.footprintContent && ![commentModel.footprintContent isEqualToString:@""]) {
         tips = [NSString stringWithFormat:@"%@%@",@"评论了这条足迹：",commentModel.footprintContent];
@@ -158,7 +151,6 @@
     [attrString addAttribute:NSForegroundColorAttributeName value:[UIColor color_757575] range:NSMakeRange(0,8)];
     _commentContentV.attributedText = attrString;
     
-//    _commentContentV.frame = commentContentRect;
 }
 
 - (void)setPraiseModel:(OTWPraiseViewModel *) praise

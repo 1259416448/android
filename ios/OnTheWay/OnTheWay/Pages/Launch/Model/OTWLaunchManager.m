@@ -17,6 +17,7 @@
 #import "OTWPrintARViewController.h"
 #import "OTWPlaneMapViewController.h"
 #import "OTWBusinessARPoiViewController.h"
+#import "ImprovePersonInfoViewController.h"
 
 #import "OTWUserModel.h"
 
@@ -52,6 +53,10 @@
         return YES;
     }
     return NO;
+}
+- (void)showCompleteViewController:(UIViewController *_Nullable)viewController
+{
+    [viewController presentViewController:[[ImprovePersonInfoViewController alloc] init] animated:YES completion:nil];
 }
 
 - (void)showLoginView

@@ -175,10 +175,10 @@ static NSString *const praiseID = @"praise";
 #pragma mark 代理方法
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    OTWPraiseViewModel * model = self.hotestPraises[indexPath.row];
-//    OTWFootprintDetailController *VC =  [[OTWFootprintDetailController alloc] init];
-//    [VC setFid:[NSString stringWithFormat:@"%@",model.commentId]];
-//    [self.navigationController pushViewController:VC animated:YES];
+    OTWPraiseViewModel * model = self.hotestPraises[indexPath.row];
+    OTWFootprintDetailController *VC =  [[OTWFootprintDetailController alloc] init];
+    [VC setFid:[NSString stringWithFormat:@"%@",model.footprintId]];
+    [self.navigationController pushViewController:VC animated:YES];
 }
 
 #pragma mark 重新设置单元格高度

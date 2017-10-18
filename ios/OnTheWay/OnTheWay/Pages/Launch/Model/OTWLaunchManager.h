@@ -38,7 +38,7 @@ typedef enum : NSUInteger {
 - (void)showMainTabView;
 
 - (BOOL)showLoginViewWithController:(UIViewController*_Nullable)viewController completion:(void (^ __nullable)(void))completion NS_AVAILABLE_IOS(5_0);
-
+- (void)showCompleteViewController:(UIViewController *_Nullable)viewController;
 /**
  * 展示TabBar选中的视图 和tab的didSelectedItemByIndex等效
  * @param selectIndex 选中的Index
