@@ -90,6 +90,7 @@ public class CommentMessageService extends BaseServiceImpl<CommentMessage, Long>
                     dto.setCommentId(x.getComment().getId());
                     dto.setCommentContent(x.getComment().getContent());
                 }
+                dto.setFootprintId(x.getFootprint().getId());
                 content.add(dto);
             });
             page = new PageResult<>(
