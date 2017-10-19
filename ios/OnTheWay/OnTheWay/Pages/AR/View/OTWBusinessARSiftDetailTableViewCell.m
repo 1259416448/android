@@ -24,15 +24,22 @@
         _titleLabel.font = [UIFont systemFontOfSize: 15];
         _titleLabel.textColor = [UIColor color_202020];
         [self addSubview:_titleLabel];
-        _selectedImg = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH * 0.68 - 15 - 13, 15, 13, 14)];
+        _selectedImg = [[UIImageView alloc] initWithFrame:CGRectMake(self.frame.size.width - 15 - 13, 15, 13, 14)];
         _selectedImg.image = [UIImage imageNamed:@"xuanze"];
         _selectedImg.hidden = YES;
         [self addSubview:_selectedImg];
-        UIView * line = [[UIView alloc] initWithFrame:CGRectMake(0, 43.5, SCREEN_WIDTH * 0.68, 0.5)];
-        line.backgroundColor = [UIColor color_d5d5d5];
-        [self addSubview:line];
+        _line = [[UIView alloc] initWithFrame:CGRectMake(0, 43.5, SCREEN_WIDTH * 0.68, 0.5)];
+        _line.backgroundColor = [UIColor color_d5d5d5];
+        [self addSubview:_line];
     }
     return self;
+}
+- (void)layoutSubviews
+{
+    _titleLabel.frame = CGRectMake(30, 0, self.frame.size.width - 60, self.frame.size.height - 0.5);
+    _selectedImg.frame = CGRectMake(self.frame.size.width - 15 - 13, 15, 13, 14);
+    _line.frame = CGRectMake(0, self.frame.size.height - 0.5, self.frame.size.width, 0.5);
+    
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

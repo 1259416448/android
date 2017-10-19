@@ -11,18 +11,21 @@
 #import "OneView.h"
 #import "TwoView.h"
 #import "OneCollectionViewCell.h"
+#import "OTWBusinessARSiftTableViewCell.h"
+#import "OTWBusinessSortModel.h"
+#import "OTWBusinessARSiftDetailTableViewCell.h"
 #define FUll_VIEW_WIDTH  ([[UIScreen mainScreen] bounds].size.width)
 #define FUll_VIEW_HEIGHT  ([[UIScreen mainScreen] bounds].size.height)
 #define NAVIGATION_HEIGHT 64  //navigationbar height
 #define TABBAR_HEIGHT 49  //tabbar height
 
-@interface OTWSelectBarViewController ()
+@interface OTWSelectBarViewController ()<UITableViewDelegate,UITableViewDataSource>
 
-@property (strong,nonatomic) OneView *oneView;
-@property (strong,nonatomic) OneView *twoView;
-@property (strong,nonatomic) TwoView *threeView;
-@property (strong,nonatomic) UIView *fourView;
-@property (strong,nonatomic) OneView *fiveView;
+@property(nonatomic,strong) UITableView *siftSortTableView;
+@property(nonatomic,strong) UITableView *siftDetailTableView;
+//筛选分类数据
+@property(nonatomic,strong) NSMutableArray *siftSortArr;
+
 
 @end
 
@@ -43,48 +46,198 @@
 - (void)setBase
 {
     self.title = @"商家类型";
+    _siftSortArr = @[].mutableCopy;
     [self setLeftNavigationImage:[UIImage imageNamed:@"back_2"]];
     self.view.backgroundColor = [UIColor color_f4f4f4];
-    
-    //example view 1
-    _oneView = [[OneView alloc] initWithFrame:CGRectMake(0, 0, FUll_VIEW_WIDTH - 101, FUll_VIEW_HEIGHT - TABBAR_HEIGHT - NAVIGATION_HEIGHT)];
-    _oneView.dataArray = @[@"1",@"2",@"3",@"4",@"5",@"6",@"7",@"8",@"9",@"1",@"2",@"3",@"4",@"5",@"6",@"7",@"8",@"9"];
-    
-    //example view 2
-    _twoView = [[OneView alloc] initWithFrame:CGRectMake(0, 0, FUll_VIEW_WIDTH - 101, FUll_VIEW_HEIGHT - TABBAR_HEIGHT - NAVIGATION_HEIGHT)];
-    _twoView.dataArray = @[@"11",@"22",@"33",@"44",@"55",@"66",@"77",@"88"];
-    
-    //example view 3
-    _threeView = [[TwoView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH - 135, SCREEN_HEIGHT - TABBAR_HEIGHT - NAVIGATION_HEIGHT) style:UITableViewStyleGrouped];
-    
-    //example view 4
-    _fourView = [[UIView alloc] init];
-    _fourView.backgroundColor = [UIColor redColor];
-    
-    //example view 5
-    _fiveView = [[OneView alloc] initWithFrame:CGRectMake(0, 0, FUll_VIEW_WIDTH - 101, FUll_VIEW_HEIGHT - TABBAR_HEIGHT - NAVIGATION_HEIGHT)];
-    _fiveView.dataArray = @[@"11",@"22",@"33",@"44",@"55",@"66",@"77",@"88",@"99",@"1010"];
-    
-    //views array
-    NSArray *views = @[_threeView,_threeView,_threeView,_threeView,_threeView];
-    
-    //if views count less than menu count, leftover views will load the last view of the views
-    //如果view数量少于标题数量，剩下的view会默认加载view数组的最后一个view
-    LinkageMenuView *lkMenu = [[LinkageMenuView alloc] initWithFrame:CGRectMake(0, 0,FUll_VIEW_WIDTH , FUll_VIEW_HEIGHT - TABBAR_HEIGHT) WithMenu:@[@"为您推荐",@"美容美妆",@"奶粉纸尿裤",@"母婴专区",@"箱包配饰",@"家居个护",@"营养保健",@"服饰鞋靴",@"海外直邮",@"数码家电",@"环球美食",@"运动户外",@"生鲜",@"国家馆",@"品牌馆",@"运动户外",@"生鲜",@"国家馆",@"品牌馆"] andViews:views];
-    
-    //    lkMenu.textSize = 11;
-    //    lkMenu.textColor = [UIColor blueColor];
-    //    lkMenu.selectTextColor = [UIColor redColor];
-    //    lkMenu.bottomViewColor = [UIColor yellowColor];
-    
-    [self.view addSubview:lkMenu];
+    [self.view addSubview:self.siftSortTableView];
+    [self.view addSubview:self.siftDetailTableView];
 }
 
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setBase];
+    [self getbusinessSortData];
+}
 
+#pragma mark tableviewDelegate
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    if (tableView == _siftSortTableView) {
+        return _siftSortArr.count;
+    }else if (tableView == _siftDetailTableView)
+    {
+        NSInteger count = 0;
+        for (OTWBusinessSortModel * model in _siftSortArr) {
+            if (model.selected) {
+                count = model.children.count;
+            }
+        }
+        return count;
+    }else
+    {
+        return 0;
+    }
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 50;
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (tableView == _siftSortTableView) {
+        static NSString *flag=@"OTWBusinessARSiftTableViewCell";
+        OTWBusinessARSiftTableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:flag];
+        if (cell == nil) {
+            cell=[[OTWBusinessARSiftTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:flag];
+        }
+        cell.selectionStyle = UITableViewCellEditingStyleNone;
+        OTWBusinessSortModel * model = _siftSortArr[indexPath.row];
+        cell.titleLabel.text = model.name;
+        if (model.selected) {
+            cell.backgroundColor = [UIColor whiteColor];
+            cell.titleLabel.textColor = [UIColor colorWithHexString:model.colorCode];
+            cell.redLine.hidden = NO;
+        }else
+        {
+            cell.backgroundColor = [UIColor color_f4f4f4];
+            cell.titleLabel.textColor = [UIColor color_202020];
+            cell.redLine.hidden = YES;
+        }
+        return cell;
+    }else if (tableView == _siftDetailTableView)
+    {
+        static NSString *flag=@"OTWBusinessARSiftDetailTableViewCell";
+        OTWBusinessARSiftDetailTableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:flag];
+        if (cell == nil) {
+            cell=[[OTWBusinessARSiftDetailTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:flag];
+        }
+        cell.selectionStyle = UITableViewCellEditingStyleNone;
+        cell.backgroundColor = [UIColor whiteColor];
+        for (OTWBusinessSortModel * model in _siftSortArr) {
+            if (model.selected) {
+                OTWBusinessDetailSortModel * detailModel = model.children[indexPath.row];
+                cell.titleLabel.text = detailModel.name;
+                if (detailModel.selected) {
+                    cell.selectedImg.hidden = NO;
+                }else
+                {
+                    cell.selectedImg.hidden = YES;
+                }
+            }
+        }
+        return cell;
+    }else
+    {
+        return nil;
+    }
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (tableView == _siftSortTableView) {
+        for (OTWBusinessSortModel * model in _siftSortArr) {
+            model.selected = NO;
+        }
+        OTWBusinessSortModel * model = _siftSortArr[indexPath.row];
+        model.selected = YES;
+        [_siftSortTableView reloadData];
+        [_siftDetailTableView reloadData];
+    }else if (tableView == _siftDetailTableView)
+    {
+        for (OTWBusinessSortModel * models in _siftSortArr) {
+            for (OTWBusinessDetailSortModel * result in models.children) {
+                result.selected = NO;
+            }
+        }
+        for (OTWBusinessSortModel * model in _siftSortArr) {
+            if (model.selected) {
+                OTWBusinessDetailSortModel * detailModel = model.children[indexPath.row];
+                detailModel.selected = YES;
+                //                [self startPoiSearch];
+            }
+        }
+        [_siftSortTableView reloadData];
+        [_siftDetailTableView reloadData];
+    }else{
+    }
+}
+
+#pragma mark 获取店家分类信息
+
+- (void)getbusinessSortData
+{
+    NSString * url = @"/app/business/type/all";
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [OTWNetworkManager doGET:url parameters:nil responseCache:^(id responseCache) {
+            if([[NSString stringWithFormat:@"%@",responseCache[@"code"]] isEqualToString:@"0"]){
+                NSArray *arr = [NSArray arrayWithArray:[responseCache objectForKey:@"body"]];
+                for (NSDictionary *result in arr)
+                {
+                    OTWBusinessSortModel * model = [OTWBusinessSortModel mj_objectWithKeyValues:result];
+                    model.selected = NO;
+                    [_siftSortArr addObject:model];
+                }
+                [self reloadTableView];
+            }
+        } success:^(id responseObject) {
+            if([[NSString stringWithFormat:@"%@",responseObject[@"code"]] isEqualToString:@"0"]){
+                [_siftSortArr removeAllObjects];
+                NSArray *arr = [NSArray arrayWithArray:[responseObject objectForKey:@"body"]];
+                
+                for (NSDictionary *result in arr)
+                {
+                    OTWBusinessSortModel * model = [OTWBusinessSortModel mj_objectWithKeyValues:result];
+                    model.selected = NO;
+                    [_siftSortArr addObject:model];
+                }
+                [self reloadTableView];
+            }
+        } failure:^(NSError *error) {
+            
+        }];
+    });
     
 }
+- (void)reloadTableView
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        OTWBusinessSortModel * model = _siftSortArr[0];
+        model.selected = YES;
+        [_siftSortTableView reloadData];
+        [_siftDetailTableView reloadData];
+    });
+}
+
+
+- (UITableView *)siftSortTableView
+{
+    if (!_siftSortTableView) {
+        _siftSortTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 65, SCREEN_WIDTH * 0.36, SCREEN_HEIGHT - 65) style:UITableViewStylePlain];
+        _siftSortTableView.delegate = self;
+        _siftSortTableView.dataSource = self;
+        _siftSortTableView.separatorStyle = UITableViewCellSelectionStyleNone;
+        _siftSortTableView.backgroundColor = [UIColor color_f4f4f4];
+    }
+    return _siftSortTableView;
+}
+
+- (UITableView *)siftDetailTableView
+{
+    if (!_siftDetailTableView) {
+        _siftDetailTableView = [[UITableView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH * 0.36, 65, SCREEN_WIDTH * 0.64, SCREEN_HEIGHT - 65) style:UITableViewStylePlain];
+        _siftDetailTableView.delegate = self;
+        _siftDetailTableView.dataSource = self;
+        _siftDetailTableView.separatorStyle = UITableViewCellSelectionStyleNone;
+        _siftDetailTableView.backgroundColor = [UIColor whiteColor];
+    }
+    return _siftDetailTableView;
+}
+
+
+
 @end

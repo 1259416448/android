@@ -14,4 +14,6 @@
 
 @property(nonatomic,strong) UIImageView *selectedImg;
 
+@property(nonatomic,strong) UIView *line;
+
 @end

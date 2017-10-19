@@ -12,4 +12,10 @@
 
 @property(nonatomic,strong) UILabel *titleLabel;
 
+@property(nonatomic,strong) UIView *redLine;
+
+@property(nonatomic,strong) UIView *line;
+
+
+
 @end

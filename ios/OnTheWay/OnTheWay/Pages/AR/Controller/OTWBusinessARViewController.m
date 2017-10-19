@@ -818,26 +818,26 @@
 #pragma mark 路径导航
 - (void)TouchgotoVView
 {
-//        NSMutableArray *nodesArray = [[NSMutableArray alloc] initWithCapacity: 2];
-//    
-//        //起点
-//        BNRoutePlanNode *startNode = [[BNRoutePlanNode alloc] init];
-//        startNode.pos = [[BNPosition alloc] init];
-//        startNode.pos.x = self.location.longitude;
-//        startNode.pos.y = self.location.latitude;
-//        startNode.pos.eType = BNCoordinate_BaiduMapSDK;
-//        [nodesArray addObject:startNode];
-//    
-//        //终点
-//        BNRoutePlanNode *endNode = [[BNRoutePlanNode alloc] init];
-//        endNode.pos = [[BNPosition alloc] init];
-//        endNode.pos.x = _businessLongitude;
-//        endNode.pos.y = _businessLatitude;
-//        endNode.pos.eType = BNCoordinate_BaiduMapSDK;
-//        [nodesArray addObject:endNode];
-//    
-//        // 发起算路
-//        [BNCoreServices_RoutePlan  startNaviRoutePlan: BNRoutePlanMode_Recommend naviNodes:nodesArray time:nil delegete:self    userInfo:nil];
+//    NSMutableArray *nodesArray = [[NSMutableArray alloc] initWithCapacity: 2];
+//
+//    //起点
+//    BNRoutePlanNode *startNode = [[BNRoutePlanNode alloc] init];
+//    startNode.pos = [[BNPosition alloc] init];
+//    startNode.pos.x = self.location.longitude;
+//    startNode.pos.y = self.location.latitude;
+//    startNode.pos.eType = BNCoordinate_BaiduMapSDK;
+//    [nodesArray addObject:startNode];
+//
+//    //终点
+//    BNRoutePlanNode *endNode = [[BNRoutePlanNode alloc] init];
+//    endNode.pos = [[BNPosition alloc] init];
+//    endNode.pos.x = _businessLongitude;
+//    endNode.pos.y = _businessLatitude;
+//    endNode.pos.eType = BNCoordinate_BaiduMapSDK;
+//    [nodesArray addObject:endNode];
+//
+//    // 发起算路
+//    [BNCoreServices_RoutePlan  startNaviRoutePlan: BNRoutePlanMode_Recommend naviNodes:nodesArray time:nil delegete:self    userInfo:nil];
 }
 ////算路成功回调
 //-(void)routePlanDidFinished:(NSDictionary *)userInfo
