@@ -85,7 +85,7 @@ static NSString *nickNameUrl = @"/app/user/update/name";
         if (result) {
             [hud hideAnimated:YES];
             if ([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]) {
-                [self errorTips:@"修改成功" userInteractionEnabled:NO];
+                [self errorTips:@"设置成功" userInteractionEnabled:NO];
                 //保存用户信息
                 [OTWUserModel shared].name = name;
                 [[OTWUserModel shared] dump];
@@ -230,7 +230,7 @@ static NSString *nickNameUrl = @"/app/user/update/name";
     return _sureBtnImg;
 }
 
--(UIButton*)sureButton
+-(UIButton *)sureButton
 {
     if(!_sureButton){
         _sureButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -239,7 +239,6 @@ static NSString *nickNameUrl = @"/app/user/update/name";
         [_sureButton setTitle:@"完成" forState:UIControlStateNormal];
         [_sureButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_sureButton addTarget:self action:@selector(sureButtonClick) forControlEvents:UIControlEventTouchUpInside];
-        _sureButton.userInteractionEnabled = NO;
         _sureButton.titleLabel.font = [UIFont systemFontOfSize:17];
         _sureButton.layer.cornerRadius = 20;
     }
