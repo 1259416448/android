@@ -25,6 +25,10 @@
 
 @property (nonatomic, strong) OTWLoginViewController *loginViewController;
 
+@property (nonatomic, strong) UIViewController *vc;
+
+@property (nonatomic, strong) UIAlertController *actionSheet;
+
 @end
 
 @implementation OTWLaunchManager
@@ -57,6 +61,34 @@
 - (void)showCompleteViewController:(UIViewController *_Nullable)viewController
 {
     [viewController presentViewController:[[ImprovePersonInfoViewController alloc] init] animated:YES completion:nil];
+}
+- (void)showInViewController:(UIViewController *_Nullable)vc
+{
+    if (nil == vc) return;
+    self.vc = vc;
+    [self.vc presentViewController:self.actionSheet animated:YES completion:nil];
+}
+- (UIAlertController *)actionSheet
+{
+    if (!_actionSheet) {
+        
+        _actionSheet = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"完善信息会让更多的小伙伴发现你哦~快去完善你的个人资料吧~" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"稍后完善" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexPersonal];
+            
+            [self.vc dismissViewControllerAnimated:YES completion:nil];
+        }];
+        UIAlertAction *action2 = [UIAlertAction actionWithTitle:@"立即完善" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [[OTWLaunchManager sharedManager] showCompleteViewController:self.vc];
+            
+        }];
+        
+        [_actionSheet addAction:action1];
+        [_actionSheet addAction:action2];
+        
+    }
+    
+    return _actionSheet;
 }
 
 - (void)showLoginView

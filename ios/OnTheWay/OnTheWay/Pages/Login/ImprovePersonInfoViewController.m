@@ -72,7 +72,7 @@ static NSString *nickNameUrl = @"/app/user/update/name";
     NSString *name = self.nameTF.text;
     name = [name stringByReplacingOccurrencesOfString:@" " withString:@""];
     if (name.length == 0) {
-        [self errorTips:@"请输入名称" userInteractionEnabled:NO];
+        [self skipBtnClick];
         return;
     }
     NSDictionary *userDict = [NSDictionary dictionaryWithObjectsAndKeys:name,@"name",nil];

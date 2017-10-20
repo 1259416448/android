@@ -25,6 +25,7 @@
 		1843A7D61F26E67800A285A3 /* OTWNewFootprintsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1843A7D51F26E67800A285A3 /* OTWNewFootprintsTableViewCell.m */; };
 		1843A7D91F2737D600A285A3 /* OTWPersonalClaimViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1843A7D81F2737D600A285A3 /* OTWPersonalClaimViewController.m */; };
 		1843A7DF1F2837B100A285A3 /* OTWPersonalCollectController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1843A7DE1F2837B100A285A3 /* OTWPersonalCollectController.m */; };
+		184E6F371F99BA03004AB0E6 /* OTWActionContiollerHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 184E6F361F99BA03004AB0E6 /* OTWActionContiollerHelper.m */; };
 		186E12D81F569E440077A93C /* OneCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 186E12D31F569E440077A93C /* OneCollectionViewCell.m */; };
 		186E12D91F569E440077A93C /* OneView.m in Sources */ = {isa = PBXBuildFile; fileRef = 186E12D51F569E440077A93C /* OneView.m */; };
 		186E12DA1F569E440077A93C /* TwoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 186E12D71F569E440077A93C /* TwoView.m */; };
@@ -317,6 +318,8 @@
 		1843A7D81F2737D600A285A3 /* OTWPersonalClaimViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPersonalClaimViewController.m; sourceTree = "<group>"; };
 		1843A7DD1F2837B100A285A3 /* OTWPersonalCollectController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWPersonalCollectController.h; sourceTree = "<group>"; };
 		1843A7DE1F2837B100A285A3 /* OTWPersonalCollectController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWPersonalCollectController.m; sourceTree = "<group>"; };
+		184E6F351F99BA03004AB0E6 /* OTWActionContiollerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWActionContiollerHelper.h; sourceTree = "<group>"; };
+		184E6F361F99BA03004AB0E6 /* OTWActionContiollerHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWActionContiollerHelper.m; sourceTree = "<group>"; };
 		186E12D21F569E440077A93C /* OneCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OneCollectionViewCell.h; sourceTree = "<group>"; };
 		186E12D31F569E440077A93C /* OneCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OneCollectionViewCell.m; sourceTree = "<group>"; };
 		186E12D41F569E440077A93C /* OneView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OneView.h; sourceTree = "<group>"; };
@@ -1594,6 +1597,8 @@
 				D7F6B0C51F160E590013090A /* OTWAlbumSelectHelper.m */,
 				DDEA15FF1F29B35F00056166 /* QiniuUploadHelper.h */,
 				DDEA16001F29B35F00056166 /* QiniuUploadHelper.m */,
+				184E6F351F99BA03004AB0E6 /* OTWActionContiollerHelper.h */,
+				184E6F361F99BA03004AB0E6 /* OTWActionContiollerHelper.m */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -2222,6 +2227,7 @@
 				DD86E9591F46BA8600D49A64 /* ArvixARTrackingManager.m in Sources */,
 				18BCFAC41F53F89500B8E09D /* OTWBusinessExpand.m in Sources */,
 				DDEA15DD1F25CCA500056166 /* UIView+PYExtension.m in Sources */,
+				184E6F371F99BA03004AB0E6 /* OTWActionContiollerHelper.m in Sources */,
 				B13ADA1D1F1B23DA008E889C /* OTWSystemNewsViewController.m in Sources */,
 				D7F6B0581F0DCF040013090A /* UIColor+Utils.m in Sources */,
 				DDECE4E41F6B96820058F8BB /* OTWBusinessARAnnotationFrame.m in Sources */,

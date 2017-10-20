@@ -573,6 +573,13 @@
 - (void)refreshFootprints
 {
     self.arShopSearchParams.q = nil;
+    self.arShopSearchParams.typeIds = nil;
+    for (OTWBusinessSortModel * models in _siftSortArr) {
+        for (OTWBusinessDetailSortModel * result in models.children) {
+            result.selected = NO;
+        }
+    }
+    [self.siftDetailTableView reloadData];
     [self hideBusinessSimpleInfo];
     [self hideAllButton];
     [self getArShops];
@@ -796,7 +803,14 @@
             
             NSMutableArray *arShopModels = [OTWBusinessModel mj_objectArrayWithKeyValuesArray:result[@"body"][@"content"]];
             if (arShopModels.count == 0) {
-                [self MBProgressHUDErrorTips:@"抱歉，未找到结果"];
+                NSString * tips = @"";
+                if ([self.arShopSearchParams.q isEqualToString:@""] || self.arShopSearchParams.q == nil || [self.arShopSearchParams.typeIds isEqualToString:@""] || self.arShopSearchParams.typeIds == nil) {
+                    tips = @"正在为您准备数据，请稍后再试";
+                }else
+                {
+                    tips = @"抱歉，未找到结果";
+                }
+                [self MBProgressHUDErrorTips:tips];
                 [self setAnnotations:@[]];
             }else{
                 NSArray *dummyAnnotations = [self assembleAnnotation:arShopModels];

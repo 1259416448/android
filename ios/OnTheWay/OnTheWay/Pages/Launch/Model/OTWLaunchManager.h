@@ -45,5 +45,7 @@ typedef enum : NSUInteger {
  */
 - (void)showSelectedControllerByIndex:(OTWTabBarSelectedIndex)selectIndex;
 
+- (void)showInViewController:(UIViewController *_Nullable)vc;
+
 
 @end
