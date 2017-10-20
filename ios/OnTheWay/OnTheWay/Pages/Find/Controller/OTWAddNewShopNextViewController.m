@@ -36,6 +36,7 @@
 @property (nonatomic,strong) UIImageView *shopTelephoneV;
 @property (nonatomic,strong) UILabel *shopTelephoneContentV;
 @property (nonatomic,strong) UITableView *tableV;
+@property (nonatomic,strong) UIView *footView;
 @property (nonatomic,strong) UIButton *submitButton;
 @property (nonatomic,strong) CreateShopFormModel *createShopFormModel;
 
@@ -555,9 +556,19 @@
         _tableV.dataSource = self;
         _tableV.delegate = self;
         _tableV.backgroundColor = [UIColor clearColor];
-        _tableV.tableFooterView = self.submitButton;
+        _tableV.tableFooterView = self.footView;
     }
     return _tableV;
+}
+
+- (UIView *)footView
+{
+    if (!_footView) {
+        _footView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 131)];
+        _footView.backgroundColor = [UIColor color_f4f4f4];
+        [_footView addSubview:self.submitButton];
+    }
+    return _footView;
 }
 
 - (UIButton*)submitButton

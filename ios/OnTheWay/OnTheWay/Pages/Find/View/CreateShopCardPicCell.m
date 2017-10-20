@@ -51,7 +51,7 @@
 
 - (void)initPYPhotoV
 {
-    PYPhotosView *addShopImgV = [PYPhotosView initphotosViewWithImage:[UIImage imageNamed:@"wd_sfz_icon"]];
+    PYPhotosView *addShopImgV = [PYPhotosView initphotosViewWithImage:[UIImage imageNamed:@"wd_shenfenzheng"]];
     NSMutableArray *imageArr = [NSMutableArray array];
     addShopImgV.images = imageArr;
     addShopImgV.py_x = (SCREEN_WIDTH - 220)/2.0;
