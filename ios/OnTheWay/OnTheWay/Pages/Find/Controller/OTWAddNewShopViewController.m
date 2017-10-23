@@ -17,11 +17,14 @@
 
 #import <MJExtension.h>
 
-@interface OTWAddNewShopViewController ()<UITableViewDelegate,UITableViewDataSource>
+@interface OTWAddNewShopViewController ()<UITableViewDelegate,UITableViewDataSource,CreateShopPicCellDelegate>
 
 @property (nonatomic,strong) NSMutableArray *tableViewData;
 @property (nonatomic,strong) UITableView *tableV;
 @property (nonatomic,strong) UIButton *submitButton;
+@property (nonatomic,strong) UIView *footView;
+@property (nonatomic,strong) UILabel *tipsLabel;
+
 @property (nonatomic,strong) CreateShopFormModel *createShopFormModel;
 
 @end
@@ -49,7 +52,7 @@
     [self setLeftNavigationImage:[UIImage imageNamed:@"back_2"]];
     self.view.backgroundColor = [UIColor color_f4f4f4];
     [self.view addSubview:self.tableV];
-    [self.view addSubview:self.submitButton];
+//    [self.view addSubview:self.submitButton];
     [self initDataSource];
 }
 
@@ -103,6 +106,7 @@
     
     CreateShopModel *picSelectModel = [[CreateShopModel alloc] init];
     picSelectModel.cellType = CreateSHopCellType_PIC;
+    picSelectModel.cellHigh = (SCREEN_WIDTH - 60) / 4 + 30;
     [self.tableViewData addObject:picSelectModel];
 
     if (self.tableV) {
@@ -141,12 +145,16 @@
         return [CreateShopTVTWOCell cellHeight:createModel];
     }
     if (createModel.cellType == CreateSHopCellType_PIC) {
-        return [CreateShopPicCell cellHeight:createModel];
+        return createModel.cellHigh;
     }
     if (createModel.cellType == CreateSHopCellType_Address) {
         return [CreateShopAddressCell cellHeight:createModel];
     }
     return 50.f;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 0.01;
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -205,6 +213,7 @@
         }
         [cell refreshContent:createModel formModel:self.createShopFormModel control:self.navigationController];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.delegate = self;
         return cell;
     }
     return nil;
@@ -225,6 +234,11 @@
 {
     OTWSelectBarViewController *addNewShopNextVC = [[OTWSelectBarViewController alloc] init];
     [self.navigationController pushViewController:addNewShopNextVC animated:NO];
+}
+
+- (void)didChangeCellHigh:(CGFloat)cellHigh
+{
+    [self.tableV reloadData];
 }
 
 #pragma mark 设置cell数据
@@ -253,6 +267,7 @@
         _tableV.dataSource = self;
         _tableV.delegate = self;
         _tableV.backgroundColor = [UIColor clearColor];
+        _tableV.tableFooterView = self.footView;
     }
     return _tableV;
 }
@@ -266,7 +281,7 @@
         [_submitButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         _submitButton.backgroundColor = [UIColor color_e50834];
         _submitButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-        CGRect submitButtonRect = CGRectMake(30, SCREEN_HEIGHT - 44 - 94, SCREEN_WIDTH - 30*2, 44);
+        CGRect submitButtonRect = CGRectMake(30, 75, SCREEN_WIDTH - 30*2, 44);
         _submitButton.frame = submitButtonRect;
         [_submitButton addTarget:self action:@selector(submitFormData) forControlEvents:UIControlEventTouchUpInside];
         _submitButton.layer.cornerRadius = 6;
@@ -274,6 +289,27 @@
         
     }
     return _submitButton;
+}
+
+- (UIView *)footView
+{
+    if (!_footView) {
+        _footView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 150)];
+        _footView.backgroundColor = [UIColor color_f4f4f4];
+        [_footView addSubview:self.tipsLabel];
+        [_footView addSubview:self.submitButton];
+    }
+    return _footView;
+}
+- (UILabel *)tipsLabel
+{
+    if (!_tipsLabel) {
+        _tipsLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 10, 100, 11)];
+        _tipsLabel.textColor = [UIColor color_e50834];
+        _tipsLabel.font = [UIFont systemFontOfSize:11];
+        _tipsLabel.text = @"* 为必填信息";
+    }
+    return _tipsLabel;
 }
 
 @end

@@ -14,6 +14,7 @@
 #import "OTWUserModel.h"
 #import "OTWLaunchManager.h"
 #import "ImprovePersonInfoViewController.h"
+#import "OTWActionContiollerHelper.h"
 //#import "CHBaseAlertView.h"
 
 
@@ -279,14 +280,11 @@
                 [OTWUserModel shared].headImg = result[@"body"][@"headImg"];
                 [OTWUserModel shared].name = result[@"body"][@"name"];
                 [[OTWUserModel shared] dump];
-//                ImprovePersonInfoViewController * personInfo = [[ImprovePersonInfoViewController alloc] init];
-//                [self.presentingViewController presentViewController:personInfo animated:YES completion:nil];
 //                登陆成功
                 if(self.requiredLogin){
-                    [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexPersonal];
+                    [[OTWLaunchManager sharedManager] showCompleteViewController:self];
                 }
-                [self dismissViewControllerAnimated:YES completion:nil];
-                
+//                [self dismissViewControllerAnimated:YES completion:nil];
                 //[[NSNotificationCenter defaultCenter] postNotificationName:@"loginSuccess" object:self];
             }else{
                 [self.loginButton setTitle:@"登陆" forState:UIControlStateNormal];

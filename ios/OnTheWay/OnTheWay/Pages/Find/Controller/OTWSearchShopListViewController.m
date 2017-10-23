@@ -31,7 +31,18 @@
     [super viewDidLoad];
     [self buildUI];
 }
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear: animated];
+    [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
 
+}
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear: animated];
+    [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:NO];
+
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
@@ -194,7 +205,7 @@
 
 -(UIView*)noResultView{
     if(!_noResultView){
-        _noResultView=[[UIView alloc] initWithFrame:CGRectMake(0,65, SCREEN_WIDTH, SCREEN_HEIGHT-65-20)];
+        _noResultView=[[UIView alloc] initWithFrame:CGRectMake(0,65, SCREEN_WIDTH, SCREEN_HEIGHT-65)];
         _noResultView.backgroundColor=[UIColor whiteColor];
         [_noResultView addSubview:self.noResultImage];
         [_noResultView addSubview:self.noResultLabelOne];

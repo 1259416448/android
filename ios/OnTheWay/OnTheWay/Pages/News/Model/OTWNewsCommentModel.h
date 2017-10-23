@@ -24,6 +24,9 @@
 @property (nonatomic, strong) NSNumber *commentId;
 //userId
 @property (nonatomic, strong) NSNumber *userId;
+//footprintId
+@property (nonatomic, strong) NSNumber *footprintId;
+
 
 
 //-(OTWNewsCommentModel *) initWithDictionary: (NSDictionary *)dic;

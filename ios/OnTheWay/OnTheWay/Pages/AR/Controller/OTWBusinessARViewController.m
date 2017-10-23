@@ -573,6 +573,13 @@
 - (void)refreshFootprints
 {
     self.arShopSearchParams.q = nil;
+    self.arShopSearchParams.typeIds = nil;
+    for (OTWBusinessSortModel * models in _siftSortArr) {
+        for (OTWBusinessDetailSortModel * result in models.children) {
+            result.selected = NO;
+        }
+    }
+    [self.siftDetailTableView reloadData];
     [self hideBusinessSimpleInfo];
     [self hideAllButton];
     [self getArShops];
@@ -796,7 +803,14 @@
             
             NSMutableArray *arShopModels = [OTWBusinessModel mj_objectArrayWithKeyValuesArray:result[@"body"][@"content"]];
             if (arShopModels.count == 0) {
-                [self MBProgressHUDErrorTips:@"抱歉，未找到结果"];
+                NSString * tips = @"";
+                if ([self.arShopSearchParams.q isEqualToString:@""] || self.arShopSearchParams.q == nil || [self.arShopSearchParams.typeIds isEqualToString:@""] || self.arShopSearchParams.typeIds == nil) {
+                    tips = @"正在为您准备数据，请稍后再试";
+                }else
+                {
+                    tips = @"抱歉，未找到结果";
+                }
+                [self MBProgressHUDErrorTips:tips];
                 [self setAnnotations:@[]];
             }else{
                 NSArray *dummyAnnotations = [self assembleAnnotation:arShopModels];
@@ -818,26 +832,26 @@
 #pragma mark 路径导航
 - (void)TouchgotoVView
 {
-//        NSMutableArray *nodesArray = [[NSMutableArray alloc] initWithCapacity: 2];
-//    
-//        //起点
-//        BNRoutePlanNode *startNode = [[BNRoutePlanNode alloc] init];
-//        startNode.pos = [[BNPosition alloc] init];
-//        startNode.pos.x = self.location.longitude;
-//        startNode.pos.y = self.location.latitude;
-//        startNode.pos.eType = BNCoordinate_BaiduMapSDK;
-//        [nodesArray addObject:startNode];
-//    
-//        //终点
-//        BNRoutePlanNode *endNode = [[BNRoutePlanNode alloc] init];
-//        endNode.pos = [[BNPosition alloc] init];
-//        endNode.pos.x = _businessLongitude;
-//        endNode.pos.y = _businessLatitude;
-//        endNode.pos.eType = BNCoordinate_BaiduMapSDK;
-//        [nodesArray addObject:endNode];
-//    
-//        // 发起算路
-//        [BNCoreServices_RoutePlan  startNaviRoutePlan: BNRoutePlanMode_Recommend naviNodes:nodesArray time:nil delegete:self    userInfo:nil];
+//    NSMutableArray *nodesArray = [[NSMutableArray alloc] initWithCapacity: 2];
+//
+//    //起点
+//    BNRoutePlanNode *startNode = [[BNRoutePlanNode alloc] init];
+//    startNode.pos = [[BNPosition alloc] init];
+//    startNode.pos.x = self.location.longitude;
+//    startNode.pos.y = self.location.latitude;
+//    startNode.pos.eType = BNCoordinate_BaiduMapSDK;
+//    [nodesArray addObject:startNode];
+//
+//    //终点
+//    BNRoutePlanNode *endNode = [[BNRoutePlanNode alloc] init];
+//    endNode.pos = [[BNPosition alloc] init];
+//    endNode.pos.x = _businessLongitude;
+//    endNode.pos.y = _businessLatitude;
+//    endNode.pos.eType = BNCoordinate_BaiduMapSDK;
+//    [nodesArray addObject:endNode];
+//
+//    // 发起算路
+//    [BNCoreServices_RoutePlan  startNaviRoutePlan: BNRoutePlanMode_Recommend naviNodes:nodesArray time:nil delegete:self    userInfo:nil];
 }
 ////算路成功回调
 //-(void)routePlanDidFinished:(NSDictionary *)userInfo

@@ -20,6 +20,7 @@
 #import "OTWPersonalFindViewController.h"
 #import "OTWPersonalWalletViewController.h"
 #import "OTWBusinessFetchController.h"
+#import "OTWSearchShopListViewController.h"
 
 @interface OTWPersonalViewController() <UITableViewDataSource,UITableViewDelegate>
 
@@ -420,7 +421,7 @@
     DLog(@"点击我的认领");
 //    OTWPersonalClaimViewController *PersonalClaimVC = [[OTWPersonalClaimViewController alloc] init];
 //    [self.navigationController pushViewController:PersonalClaimVC animated:YES];
-    OTWBusinessFetchController *vc = [[OTWBusinessFetchController alloc] init];
+    OTWSearchShopListViewController *vc = [[OTWSearchShopListViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
 }
 -(UIImageView*)personalWalletIconImageView{

@@ -39,6 +39,9 @@ typedef enum : NSUInteger {
 @property (nonatomic,assign) CreateShopCellType cellType;
 //最大长度限制
 @property (nonatomic,assign) NSInteger maxInputLenth;
+//cell高度
+@property (nonatomic,assign) NSInteger cellHigh;
+
 //是否必填
 @property (nonatomic,assign) BOOL isRequire;
 @end

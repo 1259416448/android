@@ -89,6 +89,12 @@
             photoChooseH = ( images.count / 4 + 1 ) * (self.picHeight + 10) + 15 * 2 - 10;
         }
         self.photoChooseView.frame = CGRectMake(0, 0, SCREEN_WIDTH, photoChooseH);
+        self.createShopModel.cellHigh = photoChooseH;
+        
+        if (_delegate && [_delegate respondsToSelector:@selector(didChangeCellHigh:)]) {
+            [_delegate didChangeCellHigh:photoChooseH];
+        }
+        
         [self layoutView];
     }];
     [self.mainControl presentViewController:imagePickerVc animated:YES completion:nil];
@@ -170,6 +176,7 @@
 - (void)refreshContent:(CreateShopModel *)createModel formModel:(CreateShopFormModel *)formModel control:(UINavigationController *)control
 {
     self.mainControl = control;
+    self.createShopModel = createModel;
 }
 
 - (UIView *) photoChooseView

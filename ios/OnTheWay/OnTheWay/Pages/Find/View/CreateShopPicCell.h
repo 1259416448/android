@@ -10,6 +10,12 @@
 #import "CreateShopModel.h"
 #import "CreateShopFormModel.h"
 
+@protocol CreateShopPicCellDelegate <NSObject>
+
+- (void)didChangeCellHigh:(CGFloat)cellHigh;
+
+@end
+
 @interface CreateShopPicCell : UITableViewCell
 
 @property (nonatomic,strong) CreateShopModel *createShopModel;
@@ -18,8 +24,12 @@
 
 @property (assign,nonatomic) CGFloat cellHeight;
 
+@property (nonatomic, weak) id <CreateShopPicCellDelegate> delegate;
+
 -(void)refreshContent:(CreateShopModel *)createModel formModel:(CreateShopFormModel *)formModel control:(UINavigationController*)control;
 
 +(CGFloat)cellHeight:(CreateShopModel *)createModel;
+
+- (void)setFormModel:(CreateShopFormModel *)formModel;
 
 @end
