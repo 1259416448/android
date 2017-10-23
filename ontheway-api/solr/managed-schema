@@ -122,7 +122,7 @@
     <field name="_version_" type="long" indexed="true" stored="false"/>
     <field name="name" type="text_general" indexed="true" stored="true" multiValued="false"/>
     <field name="address" type="text_general" indexed="true" stored="true" multiValued="false"/>
-    <field name="poi_location_p"  type="location_rpt"  indexed="true"  stored="true"  multiValued="false"/>
+    <field name="poi_location_p" type="location_rpt" indexed="true" stored="true" multiValued="false"/>
     <field name="longitude" type="double" stored="true"/>
     <field name="latitude" type="double" stored="true"/>
     <field name="contact_info" type="string" stored="true"/>
@@ -132,6 +132,7 @@
     <field name="color_code" type="string" stored="true"/>
     <field name="weight" type="float" stored="true"/>
     <field name="if_show" type="boolean" stored="true"/>
+    <field name="if_claim" type="boolean" stored="true"/>
     <field name="date_created" type="long" stored="true" multiValued="false"/>
     <field name="last_updated" type="long" stored="true" multiValued="false"/>
 
@@ -522,7 +523,7 @@
          special relevancy modes: score=overlapRatio|area|area2D (local-param to the query).  DocValues is required for
          relevancy. -->
     <fieldType name="bbox" class="solr.BBoxField"
-            geo="true" distanceUnits="degrees" numberType="_bbox_coord" />
+               geo="true" distanceUnits="degrees" numberType="_bbox_coord"/>
     <fieldType name="_bbox_coord" class="solr.TrieDoubleField" precisionStep="8" docValues="true" stored="false"/>
 
     <!-- Money/currency field type. See http://wiki.apache.org/solr/MoneyFieldType

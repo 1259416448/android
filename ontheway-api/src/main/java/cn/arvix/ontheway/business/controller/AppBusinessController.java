@@ -132,4 +132,22 @@ public class AppBusinessController extends ExceptionHandlerController {
         return businessService.userPhotos(id, number, size, currentTime);
     }
 
+    @ApiOperation(value = "获取商家认领搜索数据", notes = "获取商家认领搜索数据 必须有查询关键字 q")
+    @ResponseBody
+    @GetMapping(value = "/claim/search")
+    @ApiImplicitParams(value = {
+            @ApiImplicitParam(value = "查询参数", name = "q", paramType = "query"),
+            @ApiImplicitParam(value = "纬度", name = "latitude", paramType = "query"),
+            @ApiImplicitParam(value = "经度", name = "longitude", paramType = "query"),
+            @ApiImplicitParam(value = "当前页", name = "number", required = true, paramType = "query"),
+            @ApiImplicitParam(value = "每页大小", name = "size", required = true, paramType = "query"),
+            @ApiImplicitParam(value = "开始分页时间", name = "currentTime", paramType = "query")
+    })
+    public JSONResult searchClaim(String q,
+                                  Integer number, Integer size,
+                                  Double latitude, Double longitude,
+                                  Long currentTime) {
+        return businessService.searchClaim(number, size, latitude, longitude, currentTime, q);
+    }
+
 }

@@ -323,7 +323,7 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
         if (number == null) number = 0;
         if (currentTime == null) currentTime = System.currentTimeMillis();
         Page<ARSearchDTO> page = businessSolrService.searchAR(SolrSearchDTO
-                .getInstance(q, number, size, latitude, longitude, distance, currentTime, typeIds));
+                .getInstance(q, number, size, null, latitude, longitude, distance, currentTime, typeIds));
         if (page == null) {
             return JsonUtil.getFailure("solr search failed", CommonErrorCode.AR_SEARCH_SOLR_ERROR);
         }
@@ -480,6 +480,35 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
     public JSONResult importDataToSolr() {
         importDataToSolr(0, 30);
         return JsonUtil.getSuccess(CommonContact.OPTION_SUCCESS, CommonContact.OPTION_SUCCESS);
+    }
+
+    /**
+     * 搜索认证商家列表
+     *
+     * @param number      当前页
+     * @param size        每页大小
+     * @param latitude    经纬度
+     * @param longitude   经纬度
+     * @param currentTime 查询时间
+     * @param q           查询key
+     * @return 查询到的列表
+     */
+    public JSONResult searchClaim(Integer number, Integer size,
+                                  Double latitude, Double longitude,
+                                  Long currentTime, String q) {
+        Assert.notNull(q, "q is not null");
+        if (size == null) size = 30;
+        if (number == null) number = 0;
+        if (currentTime == null) currentTime = System.currentTimeMillis();
+
+        Page<ARSearchDTO> page = businessSolrService.searchAR(SolrSearchDTO
+                .getInstance(q, number, size, Boolean.TRUE, latitude, longitude, null, currentTime, null));
+        if (page == null) {
+            return JsonUtil.getFailure("solr search failed", CommonErrorCode.AR_SEARCH_SOLR_ERROR);
+        }
+
+        return JsonUtil.getSuccess(CommonContact.FETCH_SUCCESS, CommonContact.FETCH_SUCCESS, page);
+
     }
 
     private void importDataToSolr(int size, int number) {

@@ -12,6 +12,7 @@ import java.util.Set;
 
 /**
  * Solr查询DTO
+ *
  * @author Created by yangyang on 2017/8/29.
  *         e-mail ：yangyang_666@icloud.com ； tel ：18580128658 ；QQ ：296604153
  */
@@ -29,16 +30,16 @@ public class SolrSearchDTO {
     private Integer size;
 
     //纬度
-    @NotNull(message = "latitude is not null")
     private Double latitude;
 
     //经度
-    @NotNull(message = "longitude is not null")
     private Double longitude;
 
     //检索距离
-    @NotNull(message = "distance is not null")
     private Double distance;
+
+    //这个不是等于！！！
+    private Boolean ifClaim;
 
     //当前检索截止时间
     @NotNull(message = "currentTime is not null")
@@ -47,18 +48,19 @@ public class SolrSearchDTO {
     //过滤类型
     private Set<Long> typeIds;
 
-    public static SolrSearchDTO getInstance(String q, Integer number, Integer size,
-                             Double latitude, Double longitude, Double distance,
-                             Long currentTime, Set<Long> typeIds){
-        return new SolrSearchDTO(q, number, size, latitude, longitude, distance, currentTime, typeIds);
+    public static SolrSearchDTO getInstance(String q, Integer number, Integer size, Boolean ifClaim,
+                                            Double latitude, Double longitude, Double distance,
+                                            Long currentTime, Set<Long> typeIds) {
+        return new SolrSearchDTO(q, number, size, ifClaim, latitude, longitude, distance, currentTime, typeIds);
     }
 
-    public SolrSearchDTO(String q, Integer number, Integer size,
+    public SolrSearchDTO(String q, Integer number, Integer size, Boolean ifClaim,
                          Double latitude, Double longitude, Double distance,
                          Long currentTime, Set<Long> typeIds) {
         this.q = q;
         this.number = number;
         this.size = size;
+        this.ifClaim = ifClaim;
         this.latitude = latitude;
         this.longitude = longitude;
         this.distance = distance;
@@ -68,13 +70,14 @@ public class SolrSearchDTO {
 
     /**
      * 获取 SolrQuery 对象
+     *
      * @return 获取查询对象
      */
     public SolrQuery getQuery() {
 
         //验证查询条件是否全部满足
         StringBuilder builder = HibernateValidationUtil.validateModel(this);
-        if(StringUtils.isNotEmpty(builder.toString())){
+        if (StringUtils.isNotEmpty(builder.toString())) {
             throw new DataCheckException(builder.toString());
         }
         SolrQuery query = new SolrQuery();
@@ -85,7 +88,6 @@ public class SolrSearchDTO {
         }
         //设置默认排序方式 距离最近 weight
         query.addSort("weight", SolrQuery.ORDER.desc); //权重排名最靠前
-        query.addSort("geodist()", SolrQuery.ORDER.asc);
 
         //设置过滤条件
         if (typeIds != null && typeIds.size() > 0) {
@@ -102,8 +104,10 @@ public class SolrSearchDTO {
             builder.insert(0, "type_ids:");
             query.add("fq", builder.toString());
         }
-        query.add("fq", "{!geofilt}");
         query.add("fq", "date_created:[* TO " + currentTime + "]");
+        if (ifClaim != null) {
+            query.add("fq", "-if_claim:" + ifClaim);
+        }
 
         //设置当前分页
         if (number < 0) number = 0;
@@ -115,12 +119,23 @@ public class SolrSearchDTO {
         query.add("wt", "json");
 
         //设置空间检索信息
-        query.add("pt", latitude + "," + longitude);
-        query.add("sfield", "poi_location_p");
-        query.add("d", distance.toString());
+
+        String flStr = "*";
+
+        if (latitude != null && longitude != null) {
+            query.add("pt", latitude + "," + longitude);
+            query.add("sfield", "poi_location_p");
+            query.addSort("geodist()", SolrQuery.ORDER.asc);
+            flStr += ",_dist_:geodist(),score";
+        }
+
+        if (distance != null) {
+            query.add("fq", "{!geofilt}");
+            query.add("d", distance.toString());
+        }
 
         //设置fl
-        query.add("fl","*,_dist_:geodist(),score");
+        query.add("fl", flStr);
 
         return query;
 
