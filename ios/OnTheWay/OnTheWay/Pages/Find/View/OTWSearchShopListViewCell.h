@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OTWSearchShopModel.h"
 
 @interface OTWSearchShopListViewCell : UITableViewCell
+
+@property (nonatomic, strong) OTWSearchShopModel * model;
 
 @end

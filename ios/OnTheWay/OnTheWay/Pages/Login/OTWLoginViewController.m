@@ -487,7 +487,7 @@
         _inputPhoneView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH-60, 44)];
         _inputPhoneView.layer.borderColor = [[UIColor color_d5d5d5] CGColor];
         _inputPhoneView.layer.borderWidth = 0.5f;
-        _inputPhoneView.layer.cornerRadius =20.0f;
+        _inputPhoneView.layer.cornerRadius = 20.0f;
         _inputPhoneView.layer.masksToBounds = YES;
     }
     return _inputPhoneView;

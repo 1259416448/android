@@ -7,10 +7,17 @@
 //
 
 #import "OTWBaseViewController.h"
+#import "OTWSearchShopModel.h"
+
 @class CreateShopFormModel;
 
 @interface OTWAddNewShopNextViewController : OTWBaseViewController
 
 @property (nonatomic,strong) CreateShopFormModel *createShopFormData;
+
+@property (nonatomic, strong) OTWSearchShopModel * model;
+
+@property (nonatomic, assign) BOOL isFromSearchShop;
+
 
 @end
