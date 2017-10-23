@@ -70,21 +70,21 @@ public class BusinessSolrService extends SolrServiceImpl {
     public SolrInputDocument getSolrInputDocument(Business m) {
         SolrInputDocument document = new SolrInputDocument();
         document.addField("id", m.getId());
-        document.addField("name",m.getName());
+        document.addField("name", m.getName());
         document.addField("address", m.getAddress());
-        document.addField("longitude",m.getLongitude());
-        document.addField("latitude",m.getLatitude());
-        document.addField("poi_location_p", m.getLatitude()+ ","+m.getLongitude());
+        document.addField("longitude", m.getLongitude());
+        document.addField("latitude", m.getLatitude());
+        document.addField("poi_location_p", m.getLatitude() + "," + m.getLongitude());
         document.addField("contact_info", m.getContactInfo());
         //获取一张首页图片信息
         document.addField("photo_url", documentService.findThemePhotoByParentId(m.getId(), SystemModule.business));
-        document.addField("type_ids",m.getTypeIds());
-        document.addField("type_names",businessTypeService.findTypeByTypeIds(m.getTypeIds()));
+        document.addField("type_ids", m.getTypeIds());
+        document.addField("type_names", businessTypeService.findTypeByTypeIds(m.getTypeIds()));
         document.addField("color_code", m.getColorCode());
         document.addField("weight", m.getWeight());
         document.addField("if_show", m.getIfShow());
         document.addField("date_created", TimeMaker.toTimeMillis(m.getDateCreated()));
-        document.addField("last_updated",TimeMaker.toTimeMillis(m.getLastUpdated()));
+        document.addField("last_updated", TimeMaker.toTimeMillis(m.getLastUpdated()));
         return document;
     }
 
@@ -92,16 +92,17 @@ public class BusinessSolrService extends SolrServiceImpl {
     /**
      * 分页获取商家数据
      * 重solr全文检索数据库中获取
+     *
      * @return 全文检索Page 出现异常会返回null
      */
-    public Page<ARSearchDTO> searchAR(SolrSearchDTO solrSearchDTO){
+    public Page<ARSearchDTO> searchAR(SolrSearchDTO solrSearchDTO) {
         try {
             QueryResponse rsp = getSolrClient().query(solrSearchDTO.getQuery());
             SolrDocumentList docs = rsp.getResults();
             Iterator<SolrDocument> iterator = docs.iterator();
             List<ARSearchDTO> content = Lists.newArrayList();
             String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL);
-            while (iterator.hasNext()){
+            while (iterator.hasNext()) {
                 SolrDocument doc = iterator.next();
                 ARSearchDTO dto = ARSearchDTO.getInstance();
                 dto.setBusinessId(Checks.toLong(Checks.stringValueOf(doc.getFieldValue("id"))));
@@ -110,15 +111,15 @@ public class BusinessSolrService extends SolrServiceImpl {
                 dto.setLatitude(Checks.toDouble(Checks.stringValueOf(doc.getFieldValue("latitude"))));
                 dto.setLongitude(Checks.toDouble(Checks.stringValueOf(doc.getFieldValue("longitude"))));
                 dto.setContactInfo(Checks.stringValueOf(doc.getFieldValue("contact_info")));
-                if(doc.getFieldValue("photo_url")!=null){
-                    dto.setContactInfo(urlFix + doc.getFieldValue("photo_url").toString());
+                if (doc.getFieldValue("photo_url") != null) {
+                    dto.setPhotoUrl(urlFix + doc.getFieldValue("photo_url").toString());
                 }
                 dto.setColorCode(Checks.stringValueOf(doc.getFieldValue("color_code")));
                 dto.setDistance(Checks.toDouble(Checks.stringValueOf(doc.getFieldValue("_dist_"))));
                 content.add(dto);
             }
-            Page<ARSearchDTO> page = new PageResult<>(content, new PageRequest(solrSearchDTO.getNumber(),solrSearchDTO.getSize()), docs.getNumFound());
-            ((PageResult)page).setCurrentTime(solrSearchDTO.getCurrentTime());
+            Page<ARSearchDTO> page = new PageResult<>(content, new PageRequest(solrSearchDTO.getNumber(), solrSearchDTO.getSize()), docs.getNumFound());
+            ((PageResult) page).setCurrentTime(solrSearchDTO.getCurrentTime());
             return page;
         } catch (SolrServerException | IOException e) {
             e.printStackTrace();
@@ -129,11 +130,12 @@ public class BusinessSolrService extends SolrServiceImpl {
 
     /**
      * 添加一个business信息到solr全文检索中，并返回添加结果
+     *
      * @param m business 对象
      * @return 添加结果
      */
-    public boolean add(Business m){
-        return solrOption(SolrOptionType.add,m);
+    public boolean add(Business m) {
+        return solrOption(SolrOptionType.add, m);
     }
 
     @SuppressWarnings("unchecked")
