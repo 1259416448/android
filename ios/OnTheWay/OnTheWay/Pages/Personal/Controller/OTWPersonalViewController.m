@@ -419,10 +419,10 @@
 }
 -(void)tapActionForWallet{
     DLog(@"点击我的认领");
-//    OTWPersonalClaimViewController *PersonalClaimVC = [[OTWPersonalClaimViewController alloc] init];
-//    [self.navigationController pushViewController:PersonalClaimVC animated:YES];
-    OTWSearchShopListViewController *vc = [[OTWSearchShopListViewController alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
+    OTWPersonalClaimViewController *PersonalClaimVC = [[OTWPersonalClaimViewController alloc] init];
+    [self.navigationController pushViewController:PersonalClaimVC animated:YES];
+//    OTWSearchShopListViewController *vc = [[OTWSearchShopListViewController alloc] init];
+//    [self.navigationController pushViewController:vc animated:YES];
 }
 -(UIImageView*)personalWalletIconImageView{
     if(!_personalWalletIconImageView){

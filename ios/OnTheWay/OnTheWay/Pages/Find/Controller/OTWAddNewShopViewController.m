@@ -17,7 +17,7 @@
 
 #import <MJExtension.h>
 
-@interface OTWAddNewShopViewController ()<UITableViewDelegate,UITableViewDataSource,CreateShopPicCellDelegate>
+@interface OTWAddNewShopViewController ()<UITableViewDelegate,UITableViewDataSource,CreateShopPicCellDelegate,CreateShopTVCellDelegate>
 
 @property (nonatomic,strong) NSMutableArray *tableViewData;
 @property (nonatomic,strong) UITableView *tableV;
@@ -180,6 +180,7 @@
         }
         [cell refreshContent:createModel formModel:self.createShopFormModel control:self.navigationController];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.delegate = self;
         return cell;
     }
     if (createModel.cellType == CreateSHopCellType_Address) {
@@ -218,7 +219,13 @@
     }
     return nil;
 }
-
+#pragma mark CreateShopTVCellDelegate
+- (void)didChangeType:(NSString *)typeStr
+{
+    CreateShopModel *createModel = self.tableViewData[3];
+    createModel.placeholder = typeStr;
+    [_tableV reloadData];
+}
 
 - (void)submitFormData
 {

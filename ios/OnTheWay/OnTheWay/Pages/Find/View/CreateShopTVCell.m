@@ -11,7 +11,7 @@
 
 #define TFCellPadding_15 15
 #define TFCellPadding_5 5
-@interface CreateShopTVCell()
+@interface CreateShopTVCell()<OTWSelectBarViewControllerDelegate>
 
 @property (nonatomic,strong) UILabel *titleV;
 @property (nonatomic,strong) UILabel *requireV;
@@ -143,8 +143,19 @@
 
 - (void)toChildView
 {
-    OTWSelectBarViewController *addNewShopNextVC = [[OTWSelectBarViewController alloc] init];
-    [self.mainControl pushViewController:addNewShopNextVC animated:NO];
+    if ([_createShopModel.title isEqualToString:@"证件类型"]) {
+    }else{
+        OTWSelectBarViewController *addNewShopNextVC = [[OTWSelectBarViewController alloc] init];
+        addNewShopNextVC.delegate = self;
+        [self.mainControl pushViewController:addNewShopNextVC animated:NO];
+    }
+}
+
+- (void)didSelected:(NSString *)str
+{
+    if (_delegate && [_delegate respondsToSelector:@selector(didChangeType:)]) {
+        [_delegate didChangeType:str];
+    }
 }
 
 @end
