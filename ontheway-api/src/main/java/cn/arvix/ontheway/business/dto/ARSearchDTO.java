@@ -24,8 +24,10 @@ public class ARSearchDTO {
 
     private String photoUrl;
 
-    public static ARSearchDTO getInstance(){
-        return  new ARSearchDTO();
+    private String claimStatus;
+
+    public static ARSearchDTO getInstance() {
+        return new ARSearchDTO();
     }
 
     public Double getDistance() {
@@ -98,5 +100,13 @@ public class ARSearchDTO {
 
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
+    }
+
+    public String getClaimStatus() {
+        return claimStatus;
+    }
+
+    public void setClaimStatus(String claimStatus) {
+        this.claimStatus = claimStatus;
     }
 }

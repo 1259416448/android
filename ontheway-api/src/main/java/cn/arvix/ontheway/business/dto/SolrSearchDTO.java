@@ -38,8 +38,7 @@ public class SolrSearchDTO {
     //检索距离
     private Double distance;
 
-    //这个不是等于！！！
-    private Boolean ifClaim;
+    private ClaimStatus claimStatus;
 
     //当前检索截止时间
     @NotNull(message = "currentTime is not null")
@@ -48,24 +47,31 @@ public class SolrSearchDTO {
     //过滤类型
     private Set<Long> typeIds;
 
-    public static SolrSearchDTO getInstance(String q, Integer number, Integer size, Boolean ifClaim,
+    public static SolrSearchDTO getInstance(String q, Integer number, Integer size, ClaimStatus claimStatus,
                                             Double latitude, Double longitude, Double distance,
                                             Long currentTime, Set<Long> typeIds) {
-        return new SolrSearchDTO(q, number, size, ifClaim, latitude, longitude, distance, currentTime, typeIds);
+        return new SolrSearchDTO(q, number, size, claimStatus, latitude, longitude, distance, currentTime, typeIds);
     }
 
-    public SolrSearchDTO(String q, Integer number, Integer size, Boolean ifClaim,
+    public SolrSearchDTO(String q, Integer number, Integer size, ClaimStatus claimStatus,
                          Double latitude, Double longitude, Double distance,
                          Long currentTime, Set<Long> typeIds) {
         this.q = q;
         this.number = number;
         this.size = size;
-        this.ifClaim = ifClaim;
+        this.claimStatus = claimStatus;
         this.latitude = latitude;
         this.longitude = longitude;
         this.distance = distance;
         this.currentTime = currentTime;
         this.typeIds = typeIds;
+    }
+
+    public enum ClaimStatus {
+        none,//没有提交过
+        submit, //提交
+        approved, //通过
+        notApproved //不通过审核
     }
 
     /**
@@ -105,8 +111,10 @@ public class SolrSearchDTO {
             query.add("fq", builder.toString());
         }
         query.add("fq", "date_created:[* TO " + currentTime + "]");
-        if (ifClaim != null) {
-            query.add("fq", "-if_claim:" + ifClaim);
+        if (claimStatus != null) {
+            if (ClaimStatus.none.equals(claimStatus)) { //获取 未提交和审核不通过的
+                query.add("fq", "-claim_status:(" + ClaimStatus.submit + " AND " + ClaimStatus.approved + ")");
+            }
         }
 
         //设置当前分页
@@ -180,6 +188,14 @@ public class SolrSearchDTO {
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
+    }
+
+    public ClaimStatus getClaimStatus() {
+        return claimStatus;
+    }
+
+    public void setClaimStatus(ClaimStatus claimStatus) {
+        this.claimStatus = claimStatus;
     }
 
     public Double getDistance() {

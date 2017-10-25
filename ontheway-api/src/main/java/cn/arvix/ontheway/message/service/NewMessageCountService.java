@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -136,6 +137,7 @@ public class NewMessageCountService extends BaseServiceImpl<NewMessageCount, Lon
                 break;
             }
             case system: {
+
                 break;
             }
             case clearComment: {
@@ -152,7 +154,8 @@ public class NewMessageCountService extends BaseServiceImpl<NewMessageCount, Lon
 
             }
             case clearSystem: {
-
+                messageCount.setSystemNum(0);
+                cache.put(getCacheKey(messageCount.getUserId()), messageCount);
             }
             default:
                 break;
@@ -237,6 +240,16 @@ public class NewMessageCountService extends BaseServiceImpl<NewMessageCount, Lon
                 }
             }
         }
+    }
+
+    /**
+     * 更新所有用户系统消息未读数量
+     * 并清理缓存
+     */
+    @Transactional
+    public void updateAllUserSystemCount(int value) {
+        getNewMessageCountRepository().updateSystemCount(value);
+        cache.clear();
     }
 
     /**

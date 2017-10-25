@@ -150,4 +150,11 @@ public class AppBusinessController extends ExceptionHandlerController {
         return businessService.searchClaim(number, size, latitude, longitude, currentTime, q);
     }
 
+    @ApiOperation(value = "认领商家接口", notes = "认领商家")
+    @ResponseBody
+    @PostMapping(value = "/claim")
+    public JSONResult claim(@RequestBody CreateAndClaimDTO dto) {
+        return businessService.claim(dto);
+    }
+
 }

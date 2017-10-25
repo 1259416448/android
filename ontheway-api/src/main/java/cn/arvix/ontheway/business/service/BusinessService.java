@@ -166,6 +166,79 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
     }
 
     /**
+     * 认领商家接口，需要填写正确的认领信息
+     *
+     * @param dto 认领信息
+     * @return 认领结果
+     */
+    public JSONResult claim(CreateAndClaimDTO dto) {
+        Assert.notNull(dto.getBusiness(), "商家信息不能为空");
+        Assert.notNull(dto.getBusiness().getBusinessExpand(), "认领信息不能为空");
+        Assert.notNull(dto.getCertificatePhoto(), "手持身份证照片不能为空");
+        Assert.notNull(dto.getBusinessLicensePhoto(), "营业执照照片不能为空");
+        Business business = super.findOne(dto.getBusiness().getId());
+
+        //验证是否可以提交认领信息，一家商家只能同时一个人提交认领信息
+        if (business.getBusinessExpand() != null) {
+            return JsonUtil.getFailure("当前商家已被认领或已提交过认领资料", CommonErrorCode.BUSINESS_CLAIM_FAILED);
+        }
+
+        User user = webContextUtils.getCheckCurrentUser();
+        BusinessExpand businessExpand = dto.getBusiness().getBusinessExpand();
+        //设置认领人
+        businessExpand.setUser(user);
+        //设置为提交状态
+        businessExpand.setStatus(BusinessExpand.ClaimStatus.submit);
+        businessExpand.setCertificatePhoto(dto.getCertificatePhoto().getFileUrl());
+        businessExpand.setBusinessLicensePhoto(dto.getBusinessLicensePhoto().getFileUrl());
+        businessExpandService.save(businessExpand);
+        business.setBusinessExpand(businessExpand); //设置认领信息
+
+        //保存document，设置 身份证正面照片 和 营业执照照片
+        dto.getCertificatePhoto().setSystemModule(SystemModule.businessExpand);
+        dto.getBusinessLicensePhoto().setSystemModule(SystemModule.businessExpand);
+        dto.getCertificatePhoto().setParentId(businessExpand.getId());
+        dto.getBusinessLicensePhoto().setParentId(businessExpand.getId());
+        documentService.save_(dto.getCertificatePhoto());
+        documentService.save_(dto.getBusinessLicensePhoto());
+
+        super.update(business);
+
+        return JsonUtil.getSuccess("认领申请提交成功", CommonContact.OPTION_SUCCESS, business.getId());
+
+    }
+
+    /**
+     * 审核认领商家
+     *
+     * @param businessId 商家ID
+     * @return 操作结果
+     */
+    public JSONResult approveClaim(Long businessId, BusinessExpand.ClaimStatus claimStatus) {
+        Business business = super.findOne(businessId);
+        if (business.getBusinessExpand() != null && claimStatus != null) {
+            business.getBusinessExpand().setStatus(claimStatus);
+            businessExpandService.update(business.getBusinessExpand());
+            //更新solr
+            businessSolrService.add(business);
+        }
+        return JsonUtil.getSuccess(CommonContact.OPTION_SUCCESS, CommonContact.OPTION_SUCCESS, businessId);
+    }
+
+    /**
+     * 获取当前用户正在审核的认领申请数量
+     *
+     * @return 认领数量;
+     */
+    public JSONResult checkUserSubmitClaim() {
+        User user = webContextUtils.getCheckCurrentUser();
+        return JsonUtil.getSuccess(CommonContact.FETCH_SUCCESS,
+                CommonContact.FETCH_SUCCESS,
+                businessExpandService.countByUserIdAndStatus(user.getId(),
+                        BusinessExpand.ClaimStatus.submit));
+    }
+
+    /**
      * 保存抓取的数据到数据库中
      *
      * @param business 商家信息
@@ -502,7 +575,7 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
         if (currentTime == null) currentTime = System.currentTimeMillis();
 
         Page<ARSearchDTO> page = businessSolrService.searchAR(SolrSearchDTO
-                .getInstance(q, number, size, Boolean.TRUE, latitude, longitude, null, currentTime, null));
+                .getInstance(q, number, size, SolrSearchDTO.ClaimStatus.none, latitude, longitude, null, currentTime, null));
         if (page == null) {
             return JsonUtil.getFailure("solr search failed", CommonErrorCode.AR_SEARCH_SOLR_ERROR);
         }

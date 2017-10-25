@@ -81,5 +81,11 @@ public interface CommonErrorCode {
      */
     String BUSINESS_IS_NOT_FUND = "000405";
 
+    /**
+     * 当前商家有被认领或已提交过认领资料
+     */
+
+    String BUSINESS_CLAIM_FAILED = "000406";
+
 
 }
