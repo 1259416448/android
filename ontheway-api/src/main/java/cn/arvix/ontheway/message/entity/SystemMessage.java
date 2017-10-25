@@ -32,10 +32,12 @@ public class SystemMessage extends BaseEntity<Long> {
     public Map<String, Object> toMap() {
         Map<String, Object> objectMap = Maps.newHashMap();
         objectMap.put("id", getId());
+        objectMap.put("dataId", getId());
         objectMap.put("title", title);
         objectMap.put("content", content);
         objectMap.put("dateCreated", TimeMaker.toTimeMillis(getDateCreated()));
-        objectMap.put("dateCreated", TimeMaker.dateCreatedStr(TimeMaker.toTimeMillis(getDateCreated())));
+        objectMap.put("dateCreatedFormat", TimeMaker.toDateTimeStr(getDateCreated()));
+        objectMap.put("dateCreatedStr", TimeMaker.dateCreatedStr(TimeMaker.toTimeMillis(getDateCreated())));
         return objectMap;
     }
 
