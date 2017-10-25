@@ -56,6 +56,10 @@
 @property (nonatomic,strong) UIImageView *loginBtnImg;
 @property (nonatomic,strong) UIImageView *messageTipsImg;
 @property (nonatomic,strong) UIButton *waitLoginBtn;
+//弹出提示框
+@property (nonatomic,strong) UIView *tipsView;
+@property (nonatomic,strong) UIView *tipsBackView;
+
 
 @end
 
@@ -205,7 +209,6 @@
     
     //微博登陆
     //[self.view addSubview:self.weiboLoginButton];
-    
 }
 
 #pragma mark - wechatLoginBUttonClickedAction
@@ -282,7 +285,8 @@
                 [[OTWUserModel shared] dump];
 //                登陆成功
                 if(self.requiredLogin){
-                    [[OTWLaunchManager sharedManager] showCompleteViewController:self];
+                    [[UIApplication sharedApplication].keyWindow addSubview:self.tipsBackView];
+                    [self.tipsBackView addSubview:self.tipsView];
                 }
 //                [self dismissViewControllerAnimated:YES completion:nil];
                 //[[NSNotificationCenter defaultCenter] postNotificationName:@"loginSuccess" object:self];
@@ -388,6 +392,19 @@
 {
     [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
+//稍后完善
+- (void)laterBtnClick
+{
+    [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexPersonal];
+    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.tipsBackView removeFromSuperview];
+}
+//立即完善
+- (void)nowBtnClick
+{
+    [[OTWLaunchManager sharedManager] showCompleteViewController:self];
+    [self.tipsBackView removeFromSuperview];
+}
 
 
 #pragma mark - UITextFieldDelegate
@@ -470,7 +487,7 @@
         _inputPhoneView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH-60, 44)];
         _inputPhoneView.layer.borderColor = [[UIColor color_d5d5d5] CGColor];
         _inputPhoneView.layer.borderWidth = 0.5f;
-        _inputPhoneView.layer.cornerRadius =20.0f;
+        _inputPhoneView.layer.cornerRadius = 20.0f;
         _inputPhoneView.layer.masksToBounds = YES;
     }
     return _inputPhoneView;
@@ -695,6 +712,58 @@
         [_waitLoginBtn addTarget:self action:@selector(waitLoginBtnClick) forControlEvents:UIControlEventTouchUpInside];
     }
     return _waitLoginBtn;
+}
+//弹出提示框
+- (UIView *)tipsView
+{
+    if (!_tipsView) {
+        _tipsView = [[UIView alloc] initWithFrame:CGRectMake((SCREEN_WIDTH - 270) / 2, (SCREEN_HEIGHT - 178) / 2, 270, 178)];
+        _tipsView.backgroundColor = [UIColor whiteColor];
+        _tipsView.layer.cornerRadius = 12;
+        _tipsView.layer.masksToBounds = YES;
+        UILabel * titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 20, 270, 24)];
+        titleLabel.font = [UIFont boldSystemFontOfSize:17];
+        titleLabel.textAlignment = NSTextAlignmentCenter;
+        titleLabel.textColor = [UIColor color_202020];
+        titleLabel.text = @"温馨提示";
+        [_tipsView addSubview:titleLabel];
+        UILabel * messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(18, CGRectGetMaxY(titleLabel.frame) + 15, 234, 48)];
+        messageLabel.font = [UIFont systemFontOfSize:16];
+        messageLabel.textColor = [UIColor color_202020];
+        messageLabel.text = @"完善信息会让更多的小伙伴发现你哦~快去完善你的个人资料吧~";
+        messageLabel.numberOfLines = 2;
+        [_tipsView addSubview:messageLabel];
+        UIView * line = [[UIView alloc] initWithFrame:CGRectMake(0, 127, 270, 0.5)];
+        line.backgroundColor = [UIColor color_d5d5d5];
+        [_tipsView addSubview:line];
+        UIView * downLine = [[UIView alloc] initWithFrame:CGRectMake(269.5 / 2, 127.5, 0.5, 50)];
+        downLine.backgroundColor = [UIColor color_d5d5d5];
+        [_tipsView addSubview:downLine];
+        UIButton * laterBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 128, 269.5 / 2, 50)];
+        laterBtn.backgroundColor = [UIColor clearColor];
+        [laterBtn setTitle:@"稍后完善" forState:UIControlStateNormal];
+        laterBtn.titleLabel.font = [UIFont systemFontOfSize:17];
+        [laterBtn setTitleColor:[UIColor color_202020] forState:UIControlStateNormal];
+        [laterBtn addTarget:self action:@selector(laterBtnClick) forControlEvents:UIControlEventTouchUpInside];
+        [_tipsView addSubview:laterBtn];
+        
+        UIButton * nowBtn = [[UIButton alloc] initWithFrame:CGRectMake(269.5 / 2 + 0.5, 128, 269.5 / 2, 50)];
+        nowBtn.backgroundColor = [UIColor clearColor];
+        [nowBtn setTitle:@"立即完善" forState:UIControlStateNormal];
+        nowBtn.titleLabel.font = [UIFont systemFontOfSize:17];
+        [nowBtn setTitleColor:UIColorFromRGB(0x0076ff) forState:UIControlStateNormal];
+        [nowBtn addTarget:self action:@selector(nowBtnClick) forControlEvents:UIControlEventTouchUpInside];
+        [_tipsView addSubview:nowBtn];
+    }
+    return _tipsView;
+}
+- (UIView *)tipsBackView
+{
+    if (!_tipsBackView) {
+        _tipsBackView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+        _tipsBackView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5];
+    }
+    return _tipsBackView;
 }
 
 //-(UIView*)underLineLeftView{

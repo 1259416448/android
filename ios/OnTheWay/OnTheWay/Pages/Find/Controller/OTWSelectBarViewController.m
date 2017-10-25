@@ -23,6 +23,10 @@
 
 @property(nonatomic,strong) UITableView *siftSortTableView;
 @property(nonatomic,strong) UITableView *siftDetailTableView;
+@property(nonatomic,strong) UIButton *sureBtn;
+
+@property (nonatomic, copy) NSString * selectedStr;
+
 //筛选分类数据
 @property(nonatomic,strong) NSMutableArray *siftSortArr;
 
@@ -47,7 +51,9 @@
 {
     self.title = @"商家类型";
     _siftSortArr = @[].mutableCopy;
+    _selectedStr = @"";
     [self setLeftNavigationImage:[UIImage imageNamed:@"back_2"]];
+    [self setCustomNavigationRightView:self.sureBtn];
     self.view.backgroundColor = [UIColor color_f4f4f4];
     [self.view addSubview:self.siftSortTableView];
     [self.view addSubview:self.siftDetailTableView];
@@ -158,6 +164,7 @@
             if (model.selected) {
                 OTWBusinessDetailSortModel * detailModel = model.children[indexPath.row];
                 detailModel.selected = YES;
+                _selectedStr = detailModel.name;
                 //                [self startPoiSearch];
             }
         }
@@ -213,6 +220,31 @@
     });
 }
 
+//点击确定
+- (void)sureBtnClick
+{
+    if ([_selectedStr isEqualToString:@""] || _selectedStr == nil) {
+        [self errorTips:@"请选择商家类型" userInteractionEnabled:YES];
+    }else{
+        if (_delegate && [_delegate respondsToSelector:@selector(didSelected:)]) {
+            [_delegate didSelected: _selectedStr];
+        }
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
+- (void) errorTips:(NSString *)tips userInteractionEnabled:(BOOL)userInteractionEnabled
+{
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.mode = MBProgressHUDModeText;
+    hud.label.text = tips;
+    hud.label.numberOfLines = 0;
+    hud.userInteractionEnabled = userInteractionEnabled;
+    hud.label.textColor = [UIColor whiteColor];
+    hud.bezelView.color = [[UIColor blackColor] colorWithAlphaComponent:0.7];
+    hud.bezelView.style = MBProgressHUDBackgroundStyleSolidColor;
+    [hud hideAnimated:YES afterDelay:2];
+}
 
 - (UITableView *)siftSortTableView
 {
@@ -238,6 +270,17 @@
     return _siftDetailTableView;
 }
 
+- (UIButton *)sureBtn
+{
+    if (!_sureBtn) {
+        _sureBtn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 15 - 35, 0, 35, 23)];
+        [_sureBtn setTitle:@"确定" forState:UIControlStateNormal];
+        [_sureBtn setTitleColor:[UIColor color_202020] forState:UIControlStateNormal];
+        _sureBtn.titleLabel.font = [UIFont systemFontOfSize:16];
+        [_sureBtn addTarget:self action:@selector(sureBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _sureBtn;
+}
 
 
 @end

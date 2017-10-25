@@ -8,6 +8,14 @@
 
 #import "OTWBaseViewController.h"
 
+@protocol OTWSelectBarViewControllerDelegate <NSObject>
+
+- (void)didSelected :(NSString *)str;
+
+@end
+
 @interface OTWSelectBarViewController : OTWBaseViewController
+
+@property (nonatomic, weak) id <OTWSelectBarViewControllerDelegate> delegate;
 
 @end

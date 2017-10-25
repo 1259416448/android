@@ -40,6 +40,7 @@
 @property (nonatomic,strong) UIButton *submitButton;
 @property (nonatomic,strong) CreateShopFormModel *createShopFormModel;
 
+
 @end
 
 @implementation OTWAddNewShopNextViewController
@@ -81,12 +82,26 @@
     CGFloat X = CGRectGetMaxX(self.shopLocationV.frame) + 5;
     CGFloat Y = CGRectGetMaxY(self.shopNameV.frame) + 10;
     CGFloat W = SCREEN_WIDTH - 15*2 - 13 - 5;
-    CGSize addressSize=[self.createShopFormModel.address boundingRectWithSize:CGSizeMake(W, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin
-                                                 attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:14]} context:nil].size;
-    CGRect addressRect = CGRectMake(X, Y, addressSize.width, addressSize.height);
+    CGSize addressSize = CGSizeZero;
+    CGRect addressRect = CGRectZero;
+    if (_isFromSearchShop) {
+        addressSize=[self.model.address boundingRectWithSize:CGSizeMake(W, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:14]} context:nil].size;
+        addressRect = CGRectMake(X, Y, addressSize.width, addressSize.height);
+    }else{
+        addressSize=[self.createShopFormModel.address boundingRectWithSize:CGSizeMake(W, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:14]} context:nil].size;
+        addressRect = CGRectMake(X, Y, addressSize.width, addressSize.height);
+    }
+
     self.shopLocatioinContentV.frame = addressRect;
     CGFloat shopHeaderVH = 0.f;
-    if (![self bInputIsEmpty:self.createShopFormModel.contactInfo]) {
+    NSString * contactInfo = @"";
+    if (_isFromSearchShop) {
+        contactInfo = self.model.contactInfo;
+    }else
+    {
+        contactInfo = self.createShopFormModel.contactInfo;
+    }
+    if (![self bInputIsEmpty:contactInfo]) {
         shopHeaderVH = CGRectGetMaxY(self.shopTelephoneContentV.frame) + 15;
         self.shopTelephoneV.hidden = NO;
         self.shopTelephoneContentV.hidden = NO;
@@ -103,9 +118,16 @@
 
 - (void)initDataSource
 {
-    self.shopNameV.text = self.createShopFormModel.shopName;
-    self.shopLocatioinContentV.text = self.createShopFormModel.address;
-    self.shopTelephoneContentV.text = self.createShopFormModel.contactInfo;
+    if (_isFromSearchShop) {
+        self.shopNameV.text = self.model.name;
+        self.shopLocatioinContentV.text = self.model.address;
+        self.shopTelephoneContentV.text = self.model.contactInfo;
+    }else{
+        self.shopNameV.text = self.createShopFormModel.shopName;
+        self.shopLocatioinContentV.text = self.createShopFormModel.address;
+        self.shopTelephoneContentV.text = self.createShopFormModel.contactInfo;
+    }
+
     
     CreateShopModel *userNameModel = [[CreateShopModel alloc] init];
     userNameModel.title = @"提交人姓名";

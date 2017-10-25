@@ -66,7 +66,6 @@
     //商店名称
     shopName=[[UILabel alloc] initWithFrame:CGRectMake(shopImageView.MaxX+10, 15, SCREEN_WIDTH-15-claimView.Witdh-10-shopImageView.MaxX, 20)];
     shopName.font=[UIFont systemFontOfSize:16];
-    shopName.text=@"胡大饭馆（东直门总店）";
     shopName.textColor=[UIColor color_202020];
     [self.contentView addSubview:shopName];
     
@@ -77,7 +76,6 @@
     
     //商店地址
     shopAddress=[[UILabel alloc] initWithFrame:CGRectMake(shopAddressIcon.MaxX+5, shopName.MaxY+10,SCREEN_WIDTH-shopAddressIcon.MaxX-5-15, 12)];
-    shopAddress.text=@"东城区东直门内大街233";
     shopAddress.font=[UIFont systemFontOfSize:13];
     shopAddress.textColor=[UIColor color_979797];
     [self.contentView  addSubview:shopAddress];
@@ -89,7 +87,6 @@
     
     //商店电话号码
     shopPhone=[[UILabel alloc] initWithFrame:CGRectMake(shopPhoneIcon.MaxX+5, shopAddress.MaxY+6.5,SCREEN_WIDTH-shopPhoneIcon.MaxX-5-15, 12)];
-    shopPhone.text=@"87474993";
     shopPhone.font=[UIFont systemFontOfSize:11];
     shopPhone.textColor=[UIColor color_979797];
     [self.contentView  addSubview:shopPhone];
@@ -97,6 +94,13 @@
     
     [self setFrame:CGRectMake(0, 0, SCREEN_WIDTH, CGRectGetMaxY(shopImageView.frame)+15)];
     
+}
+- (void)setModel:(OTWSearchShopModel *)model
+{
+    _model = model;
+    shopName.text = _model.name;
+    shopAddress.text = _model.address;
+    shopPhone.text = _model.contactInfo;
 }
 
 -(void)tapActionForClaim{
