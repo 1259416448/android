@@ -10,11 +10,18 @@
 @interface OTWSystemNewsModel : NSObject
 
 //系统消息标题
-@property (nonatomic,copy) NSString *newsTitle;
+@property (nonatomic,copy) NSString *title;
 //系统消息时间
-@property (nonatomic,copy) NSString *newsTime;
+@property (nonatomic,copy) NSString *dateCreatedStr;
 //系统消息内容
-@property (nonatomic,copy) NSString *newsContent;
+@property (nonatomic,copy) NSString *content;
+
+@property (nonatomic,strong) NSNumber *dataId;
+
+//@property (nonatomic,copy) NSString *dateCreated;
+@property (nonatomic,copy) NSString *dateCreatedFormat;
+
+
 
 + (id) initWithDict:(NSDictionary *)dict;
 

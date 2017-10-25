@@ -147,13 +147,15 @@
     switch (indexPath.row) {
         case 0: // 系统消息
         {
-            if (![self.newsModel.systemNum isEqualToString:@"0"]) {
-                OTWSystemNewsViewController *systemNewsVC = [[OTWSystemNewsViewController alloc] init];
-                [self.navigationController pushViewController:systemNewsVC animated:YES];
-            } else {
-                OTWNoSystemNewViewController *noSystemNewsVC = [[OTWNoSystemNewViewController alloc] init];
-                [self.navigationController pushViewController:noSystemNewsVC animated:YES];
-            }
+//            if (![self.newsModel.systemNum isEqualToString:@"0"]) {
+//                OTWSystemNewsViewController *systemNewsVC = [[OTWSystemNewsViewController alloc] init];
+//                [self.navigationController pushViewController:systemNewsVC animated:YES];
+//            } else {
+//                OTWNoSystemNewViewController *noSystemNewsVC = [[OTWNoSystemNewViewController alloc] init];
+//                [self.navigationController pushViewController:noSystemNewsVC animated:YES];
+//            }
+            OTWSystemNewsViewController *systemNewsVC = [[OTWSystemNewsViewController alloc] init];
+            [self.navigationController pushViewController:systemNewsVC animated:YES];
 
         }
             break;
@@ -181,13 +183,15 @@
         case 3://新的足迹动态
         {
         
-            if (![self.newsModel.footprintNum isEqualToString:@"0"]) {
-                OTWNewFootprintsControllerViewController *newsFootprintsVC = [[OTWNewFootprintsControllerViewController alloc] init];
-                [self.navigationController pushViewController:newsFootprintsVC animated:YES];
-            } else {
-                OTWNoFootprintViewController *noFootprintsVC = [[OTWNoFootprintViewController alloc] init];
-                [self.navigationController pushViewController:noFootprintsVC animated:YES];
-            }
+//            if (![self.newsModel.footprintNum isEqualToString:@"0"]) {
+//                OTWNewFootprintsControllerViewController *newsFootprintsVC = [[OTWNewFootprintsControllerViewController alloc] init];
+//                [self.navigationController pushViewController:newsFootprintsVC animated:YES];
+//            } else {
+//                OTWNoFootprintViewController *noFootprintsVC = [[OTWNoFootprintViewController alloc] init];
+//                [self.navigationController pushViewController:noFootprintsVC animated:YES];
+//            }
+            OTWNewFootprintsControllerViewController *newsFootprintsVC = [[OTWNewFootprintsControllerViewController alloc] init];
+            [self.navigationController pushViewController:newsFootprintsVC animated:YES];
         }
         break;
         default:
@@ -218,7 +222,7 @@
                 [self.tableView reloadData];
             }else{
                 DLog(@"message - %@  messageCode - %@",result[@"message"],result[@"messageCode"]);
-                [self errorTips:@"发布失败，请检查您的网络是否连接" userInteractionEnabled:YES];
+                [self errorTips:@"请检查您的网络是否连接" userInteractionEnabled:YES];
             }
         }else{
             [self netWorkErrorTips:error];

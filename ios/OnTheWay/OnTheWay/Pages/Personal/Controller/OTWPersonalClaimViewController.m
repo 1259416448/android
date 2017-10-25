@@ -91,6 +91,16 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     DLog(@"我点击了：%ld",indexPath.row);
+    if (indexPath.row == 0) {
+        
+    }else if (indexPath.row == 1)
+    {
+        
+    }else{
+        DLog(@"点击了活动");
+        OTWShopActiveViewController *ShopActiveViewVC = [[OTWShopActiveViewController alloc] init];
+        [self.navigationController pushViewController:ShopActiveViewVC animated:YES];
+    }
 }
 
 //section底部视图

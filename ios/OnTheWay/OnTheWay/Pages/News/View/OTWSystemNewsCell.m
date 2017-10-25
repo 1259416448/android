@@ -19,6 +19,9 @@
 
 @property (nonatomic,strong) UIView *newsBGView;
 
+@property (nonatomic,strong) UIImageView *arrow;
+
+
 @property (nonatomic,strong) UILabel *newsTitleLabel;
 
 @property (nonatomic,strong) UILabel *newsTimeLabel;
@@ -29,7 +32,7 @@
 
 @implementation OTWSystemNewsCell
 
-+ (instancetype)cellWithTableView:(UITableView *)tableView systemNewsCellframe:(OTWSystemNewsCellFrame *) frame
++ (instancetype)cellWithTableView:(UITableView *)tableView systemNewsCellframe:(OTWSystemNewsModel *) frame
 {
     OTWSystemNewsCell *cell = [tableView dequeueReusableCellWithIdentifier:@"systemNewsCell"];
     if (!cell) {
@@ -50,34 +53,60 @@
         [self.newsBGView addSubview:self.newsTitleLabel];
         [self.newsBGView addSubview:self.newsTimeLabel];
         [self.newsBGView addSubview:self.newsContentLabel];
+        [self.newsBGView addSubview:self.arrow];
+        UIView * line = [[UIView alloc] initWithFrame:CGRectMake(15, 92.5, SCREEN_WIDTH - 15, 0.5)];
+        line.backgroundColor = [UIColor color_d5d5d5];
+        [self.newsBGView addSubview:line];
     }
     return self;
 }
 
--(void)setSystemNewsFrame:(OTWSystemNewsCellFrame *) frame
+-(void)setSystemNewsFrame:(OTWSystemNewsModel *) frame
 {
-    _systemNewsCellframe = frame;
+    _model = frame;
     [self settingData];
-    [self settingFrame];
+//    [self settingFrame];
     
     
 }
 
 - (void)settingData
 {
-    OTWSystemNewsModel *model = self.systemNewsCellframe.newsmodel;
-    [self.newsTitleLabel setText:model.newsTitle];
-    [self.newsTimeLabel setText:model.newsTime];
-    [self.newsContentLabel setText:model.newsContent];
+    OTWSystemNewsModel *model = self.model;
+    [self.newsTitleLabel setText:model.title];
+    [self.newsTimeLabel setText:model.dateCreatedStr];
+    [self.newsContentLabel setText:model.content];
     
 }
-
-- (void)settingFrame
+- (void)layoutSubviews
 {
-    self.newsBGView.frame = self.systemNewsCellframe.newsBGF;
-    self.newsTitleLabel.frame = self.systemNewsCellframe.newsTitleF;
-    self.newsTimeLabel.frame = self.systemNewsCellframe.newsTimeF;
-    self.newsContentLabel.frame = self.systemNewsCellframe.newsContentF;
+    CGFloat padding = 15;
+    
+    //系统消息标题
+    CGFloat newsTitleX = 15;
+    CGFloat newsTitleY = 15;
+    CGFloat newsTitleW = SCREEN_WIDTH - 2*padding - 12 - 100;
+    CGFloat newsTitleH = 20;
+    _newsTitleLabel.frame = CGRectMake(newsTitleX, newsTitleY, newsTitleW, newsTitleH);
+    
+    //系统时间
+    CGFloat newsTimeX = SCREEN_WIDTH - padding - 100;
+    CGFloat newsTimeY = 15;
+    CGFloat newsTimeW = 100;
+    CGFloat newsTimeH = 12;
+    _newsTimeLabel.frame = CGRectMake(newsTimeX, newsTimeY, newsTimeW, newsTimeH);
+    
+    //系统消息内容
+    CGFloat newsContentX = 15;
+    CGFloat newsContentY = newsTitleH + newsTitleY + 5;
+    CGFloat newsContentW = SCREEN_WIDTH - 15 - 77;
+    CGFloat newsContentH = 38;
+    _newsContentLabel.frame = CGRectMake(newsContentX, newsContentY, newsContentW, newsContentH);
+    
+    _newsBGView.frame = CGRectMake(0, 0, SCREEN_WIDTH, self.frame.size.height);
+    
+    self.arrow.frame = CGRectMake(SCREEN_WIDTH - 15 - 7, (93 - 12) / 2, 7, 12);
+    
 }
 
 - (UILabel *)newsTitleLabel
@@ -96,6 +125,7 @@
         _newsTimeLabel = [[UILabel alloc] init];
         _newsTimeLabel.font = OTWSystemNewsTimeFont;
         _newsTimeLabel.textColor = [UIColor color_979797];
+        _newsTimeLabel.textAlignment = NSTextAlignmentRight;
     }
     return _newsTimeLabel;
 }
@@ -118,6 +148,15 @@
         _newsBGView.backgroundColor = [UIColor clearColor];
     }
     return _newsBGView;
+}
+
+-(UIImageView *)arrow
+{
+    if (!_arrow) {
+        _arrow = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_HEIGHT - 15 - 7, (self.frame.size.height - 12) / 2, 7, 12)];
+        _arrow.image = [UIImage imageNamed:@"arrow_right"];
+    }
+    return _arrow;
 }
 
 

@@ -33,7 +33,7 @@
     //系统消息内容
     CGFloat newsContentX = 15;
     CGFloat newsContentY = newsTitleH + newsTitleY + 5;
-    CGFloat newsContentW = SCREEN_WIDTH - 2*padding;
+    CGFloat newsContentW = SCREEN_WIDTH - 15 - 77;
     CGFloat newsContentH = 38;
     _newsContentF = CGRectMake(newsContentX, newsContentY, newsContentW, newsContentH);
     

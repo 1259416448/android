@@ -16,8 +16,8 @@
 #import "OTWFootprintListModel.h"
 
 @interface OTWNewFootprintsControllerViewController ()<UITableViewDataSource,UITableViewDelegate>{
-        UITableView *tableView;
-       NSMutableArray *status;
+        UITableView *_tableView;
+       NSMutableArray *_status;
 }
 
 @end
@@ -37,7 +37,7 @@
 }
 - (void) initData
 {
-    status = [[NSMutableArray alloc] init];
+    _status = [[NSMutableArray alloc] init];
     NSDictionary *dic=@{@"userNickname":@"高世奇",@"userHeadImg":@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"footprintContent":@"他家菜的味道不错，量也很大就是有点小贵，下次考虑还来",@"footprintPhotoArray":@[@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg"],@"dateCreatedStr":@"13:09",@"footprintAddress":@"北大街连回路33号"};
     NSDictionary *dic2=@{@"userNickname":@"高世奇",@"userHeadImg":@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"footprintContent":@"他家菜的味道不错，量也很大就是有点小贵，下次考虑还来",@"footprintPhotoArray":@[@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg"],@"dateCreatedStr":@"13:09",@"footprintAddress":@"北大街连回路33号"};
     NSDictionary *dic3=@{@"userNickname":@"高世奇",@"userHeadImg":@"http://osx4pwgde.bkt.clouddn.com/16sucai_201401171055.jpg",@"footprintContent":@"围绕着我的卑微 也许能消退 其实我并不在意 有很多机会像巨人一样的无畏放纵我心里的鬼",@"footprintPhotoArray":@[],@"dateCreatedStr":@"13:09",@"footprintAddress":@"北大街连回路33号"};
@@ -46,10 +46,10 @@
     OTWFootprintListModel *model2= [OTWFootprintListModel statusWithDictionary:dic2];
     OTWFootprintListModel *model3= [OTWFootprintListModel statusWithDictionary:dic3];
     OTWFootprintListModel *model4= [OTWFootprintListModel statusWithDictionary:dic4];
-    [status addObject:model];
-    [status addObject:model2];
-    [status addObject:model3];
-    [status addObject:model4];
+    [_status addObject:model];
+    [_status addObject:model2];
+    [_status addObject:model3];
+    [_status addObject:model4];
     //获取用户数据
 }
 -(void)buildUI {
@@ -61,17 +61,17 @@
     self.view.backgroundColor=[UIColor color_f4f4f4];
     
     //创建一个分组样式的UITableView
-    tableView = [[UITableView alloc]initWithFrame:CGRectMake(0,40, SCREEN_WIDTH, SCREEN_HEIGHT-65) style:UITableViewStyleGrouped];
+    _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0,40, SCREEN_WIDTH, SCREEN_HEIGHT-65) style:UITableViewStyleGrouped];
     
-    tableView.dataSource = self;
+    _tableView.dataSource = self;
     
-    tableView.delegate = self;
+    _tableView.delegate = self;
     
-    tableView.backgroundColor = [UIColor clearColor];
+    _tableView.backgroundColor = [UIColor clearColor];
     
-    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;//将边框去掉
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;//将边框去掉
     
-    [self.view addSubview:tableView];
+    [self.view addSubview:_tableView];
     
 }
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -80,7 +80,7 @@
 
 #pragma mark 这一组里面有多少行
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return  status.count;
+    return  _status.count;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -101,7 +101,7 @@
     
     }
 
-    [cell setData:status[indexPath.row]];
+    [cell setData:_status[indexPath.row]];
 
     return cell;
 }

@@ -10,11 +10,13 @@
 #import "OTWShopActiveViewCell.h"
 #import "OTWCustomNavigationBar.h"
 #import "OTWShopActiveDetailsViewCellViewController.h"
+#import "OTWAddNewActivityViewController.h"
 
 @interface OTWShopActiveViewController ()<UITableViewDataSource,UITableViewDelegate>{
-    UITableView *tableView;
-    NSMutableArray *status;
+    UITableView *_tableView;
+    NSMutableArray *_status;
 }
+@property(nonatomic,strong) UIButton *addBtn;
 
 
 @end
@@ -41,17 +43,17 @@
     self.view.backgroundColor=[UIColor color_f4f4f4];
     
     //创建一个分组样式的UITableView
-    tableView = [[UITableView alloc]initWithFrame:CGRectMake(0,40, SCREEN_WIDTH, SCREEN_HEIGHT-65) style:UITableViewStyleGrouped];
+    _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0,40, SCREEN_WIDTH, SCREEN_HEIGHT-65) style:UITableViewStyleGrouped];
     
-    tableView.dataSource = self;
+    _tableView.dataSource = self;
     
-    tableView.delegate = self;
+    _tableView.delegate = self;
     
-    tableView.backgroundColor = [UIColor clearColor];
+    _tableView.backgroundColor = [UIColor clearColor];
     
-    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;//将边框去掉
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;//将边框去掉
     
-    [self.view addSubview:tableView];
+    [self.view addSubview:_tableView];
     
 }
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -92,6 +94,24 @@
     OTWShopActiveViewCell *cell =(OTWShopActiveViewCell *)[self tableView:tableView
     cellForRowAtIndexPath:indexPath];
     return cell.frame.size.height;
+}
+//添加活动
+- (void)addBtnClick
+{
+    OTWAddNewActivityViewController * addNew = [[OTWAddNewActivityViewController alloc] init];
+    [self.navigationController pushViewController:addNew animated:YES];
+}
+
+- (UIButton *)addBtn
+{
+    if (!_addBtn) {
+        _addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        _addBtn.frame = CGRectMake(SCREEN_WIDTH - 52, 22, 52, 40);
+        _addBtn.backgroundColor = [UIColor clearColor];
+        [_addBtn setImage:[UIImage imageNamed:@"wd_zengjia"] forState:UIControlStateNormal];
+        [_addBtn addTarget:self action:@selector(addBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _addBtn;
 }
 
 

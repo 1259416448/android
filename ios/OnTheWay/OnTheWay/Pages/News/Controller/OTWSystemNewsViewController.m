@@ -10,6 +10,7 @@
 #import "OTWSystemNewsModel.h"
 #import "OTWSystemNewsCellFrame.h"
 #import "OTWSystemNewsCell.h"
+#import "OTWSystemNewsDetailViewController.h"
 
 @interface OTWSystemNewsViewController ()<UITableViewDelegate, UITableViewDataSource>
 
@@ -19,6 +20,9 @@
 @end
 
 @implementation OTWSystemNewsViewController
+{
+    NSInteger _page;
+}
 
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -29,9 +33,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
+    _page = 0;
+    _sysNewsFrames = @[].mutableCopy;
     [self buildUI];
-    
+    [self loadData];
 }
 
 - (void) buildUI
@@ -67,23 +72,34 @@
 {
     return [OTWSystemNewsCell cellWithTableView:tableView systemNewsCellframe:self.sysNewsFrames[indexPath.row]];
 }
-
--(NSMutableArray*)sysNewsFrames
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (!_sysNewsFrames) {
-        NSString *fullPath = [[NSBundle mainBundle] pathForResource:@"OTWSystemNews.plist" ofType:nil];
-        NSArray *dictArray = [NSArray arrayWithContentsOfFile:fullPath];
-        NSMutableArray *models = [NSMutableArray arrayWithCapacity:dictArray.count];
-        for (NSDictionary *dict in dictArray) {
-            OTWSystemNewsModel *model = [OTWSystemNewsModel initWithDict:dict];
-            NSLog(@"%@", model.newsTitle);
-            OTWSystemNewsCellFrame *frame = [[OTWSystemNewsCellFrame alloc] init];
-            [frame setNewsmodel:model];
-            [models addObject:frame];
+    OTWSystemNewsDetailViewController * detail = [[OTWSystemNewsDetailViewController alloc] init];
+    detail.model = self.sysNewsFrames[indexPath.row];
+    [self.navigationController pushViewController:detail animated:YES];
+}
+- (void)loadData
+{
+    NSString * url = @"/app/message/system/search";
+    NSDictionary * parameter = @{@"number":@(_page),
+                                 @"size":@(15),
+                                 @"clear":@(1)};
+    [OTWNetworkManager doGET:url parameters:parameter success:^(id responseObject) {
+        if([[NSString stringWithFormat:@"%@",responseObject[@"code"]] isEqualToString:@"0"]){
+            NSArray * arr = [[responseObject objectForKey:@"body"] objectForKey:@"content"];
+            for (NSDictionary * result in arr) {
+                OTWSystemNewsModel * model = [OTWSystemNewsModel mj_objectWithKeyValues:result];
+                [self.sysNewsFrames addObject:model];
+            }
         }
-        self.sysNewsFrames = [models copy];
-    }
-    return _sysNewsFrames;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_systemNewsTableView reloadData];
+        });
+
+    } failure:^(NSError *error) {
+        
+    }];
+    
 }
 
 - (UITableView*)systemNewsTableView
