@@ -43,7 +43,6 @@ public class Feedback extends BaseEntity<Long> {
         return objectMap;
     }
 
-
     public String getContent() {
         return content;
     }

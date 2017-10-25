@@ -113,6 +113,13 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
         this.businessAutoFetchService = businessAutoFetchService;
     }
 
+    private BusinessCheckInService businessCheckInService;
+
+    @Autowired
+    public void setBusinessCheckInService(BusinessCheckInService businessCheckInService) {
+        this.businessCheckInService = businessCheckInService;
+    }
+
     private BusinessRepository getBusinessRepository() {
         return (BusinessRepository) baseRepository;
     }
@@ -358,6 +365,7 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
                 photoUrls.forEach(x -> detailDTO.getPhotoUrls().add(urlFix + x));
             }
         }
+
         //抓取商家优惠信息  优惠功能暂未添加
 
 
@@ -365,13 +373,15 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
 
         User user = webContextUtils.getCurrentUser();
         //获取收藏情况
-        if (user != null && collectionRecordsService.countByUserIdAndBusinessId(user.getId(), business.getId()) > 0) {
-            detailDTO.setIfLike(Boolean.TRUE);
+        if (user != null) {
+            detailDTO.setIfLike(collectionRecordsService.countByUserIdAndBusinessId(user.getId(), business.getId()) > 0);
+            //获取签到情况
+            detailDTO.setIfCheckIn(businessCheckInService.checkInStatus(user.getId(), business.getId()));
         } else {
             detailDTO.setIfLike(Boolean.FALSE);
+            detailDTO.setIfCheckIn(Boolean.FALSE);
         }
-        //获取签到情况 功能为添加
-        detailDTO.setIfCheckIn(Boolean.FALSE); //签到功能添加后在完成此处
+
         Long currentTime = System.currentTimeMillis();
         //获取商家足迹信息
         //noinspection unchecked

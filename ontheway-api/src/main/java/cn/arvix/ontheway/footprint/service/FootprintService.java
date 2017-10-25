@@ -45,7 +45,7 @@ import java.util.*;
 @Service
 public class FootprintService extends BaseServiceImpl<Footprint, Long> {
 
-    private FootprintRepository getFootprintRepository(){
+    private FootprintRepository getFootprintRepository() {
         return (FootprintRepository) baseRepository;
     }
 
@@ -224,7 +224,7 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
         if (size == null) size = 15;
         Searchable searchable = Searchable.newSearchable(params, new PageRequest(number, size));
         //设置默认搜索范围 1km
-        searchable.addSearchParam("distance",1.0);
+        searchable.addSearchParam("distance", 1.0);
         //new Sort(Sort.Direction.ASC,"distance")
         //.and(new Sort(Sort.Direction.DESC,"dateCreated")));
         Page<Footprint> page = super.findAllWithNoCount(searchable);
@@ -652,7 +652,7 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
             page.getContent().forEach(x -> {
                 FootprintDetailDTO detailDTO = new FootprintDetailDTO();
                 detailDTO.setUserId(x.getUser().getId());
-                detailDTO.setUserHeadImg(urlFix + x.getUser().getHeadImg() + "?"+CommonContact.USER_HEAD_IMG_FIX);
+                detailDTO.setUserHeadImg(urlFix + x.getUser().getHeadImg() + "?" + CommonContact.USER_HEAD_IMG_FIX);
                 detailDTO.setUserNickname(x.getUser().getName());
 
                 detailDTO.setDateCreated(TimeMaker.toTimeMillis(x.getDateCreated()));
@@ -683,6 +683,60 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
 
 
     /**
+     * 获取 某个 用户 能查询的最新足迹动态
+     * 某个用户关注的用户足迹动态，按发布时间 DESC 排序
+     *
+     * @param number      当前页
+     * @param size        每页大小
+     * @param currentTime 抓取时间
+     * @param userId      某个用户ID
+     * @return Page 结果
+     */
+    public Page searchAttentionByUserId(Integer number, Integer size, Long currentTime, Long userId) {
+        if (currentTime == null) {
+            currentTime = System.currentTimeMillis();
+        }
+
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("attention", userId); //某个用户
+        params.put("dateCreated_lte", new Date(currentTime));
+        params.put("ifDelete_eq", Boolean.FALSE);
+        Searchable searchable = Searchable.newSearchable(params,
+                new PageRequest(number, size),
+                new Sort(Sort.Direction.DESC, "dateCreated"));
+        Page<Footprint> page = super.findAllWithNoCount(searchable);
+        if (page.getContent().size() > 0) {
+            Set<Long> footprintIdSet = Sets.newHashSetWithExpectedSize(page.getContent().size());
+            page.getContent().forEach(x -> footprintIdSet.add(x.getId()));
+            //获取足迹照片数据
+            Map<Long, List<String>> photoListMap = documentService.findFileUrlByParentIds(footprintIdSet, SystemModule.footprint);
+            String urlFix = configService.getConfigString(CommonContact.QINIU_BUCKET_URL);
+            List<FootprintDetailDTO> content = Lists.newArrayListWithCapacity(page.getContent().size());
+            page.getContent().forEach(x -> {
+                FootprintDetailDTO detailDTO = new FootprintDetailDTO();
+                detailDTO.setUserId(x.getUser().getId());
+                detailDTO.setUserHeadImg(urlFix + x.getUser().getHeadImg() + "?" + CommonContact.USER_HEAD_IMG_FIX);
+                detailDTO.setUserNickname(x.getUser().getName());
+
+                detailDTO.setDateCreated(TimeMaker.toTimeMillis(x.getDateCreated()));
+                detailDTO.setDateCreatedStr(TimeMaker.dateCreatedStr(detailDTO.getDateCreated()));
+                detailDTO.setFootprintContent(x.getContent());
+                detailDTO.setFootprintPhotoArray(photoListMap.get(x.getId()));
+
+                //目前后台没有添加视频支持
+                detailDTO.setFootprintType(Footprint.FootprintType.photo);
+
+                detailDTO.setFootprintId(x.getId());
+                detailDTO.setFootprintAddress(x.getAddress());
+                content.add(detailDTO);
+            });
+            page = new PageResult<>(content, searchable.getPage(), page.getTotalElements());
+        }
+        ((PageResult) page).setCurrentTime(currentTime);
+        return page;
+    }
+
+    /**
      * 通过足迹ID获取足迹数据
      *
      * @param footprintIds 足迹ID数据
@@ -696,11 +750,12 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
 
     /**
      * 通过商家ID获取 n 张足迹图片
+     *
      * @param businessId 商家ID
-     * @param number 抓取数量
+     * @param number     抓取数量
      */
-    public List<String> findPhotoUrlByBusinessId(Long businessId,int number){
-        return getFootprintRepository().findPhotoUrlByBusinessId(businessId,number);
+    public List<String> findPhotoUrlByBusinessId(Long businessId, int number) {
+        return getFootprintRepository().findPhotoUrlByBusinessId(businessId, number);
     }
 
 

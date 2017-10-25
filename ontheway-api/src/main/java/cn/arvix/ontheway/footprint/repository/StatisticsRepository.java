@@ -15,15 +15,15 @@ import java.util.List;
 public interface StatisticsRepository extends BaseRepository<Statistics, Long> {
 
     @Modifying
-    @Query("update Statistics set likeNum = likeNum + ?1 where instanceId = ?2 and systemModule = ?3")
+    @Query("update AttentionStatistics set likeNum = likeNum + ?1 where instanceId = ?2 and systemModule = ?3")
     int updateLikeNumByInstanceId(int value, Long instanceId, SystemModule systemModule);
 
     @Modifying
-    @Query("update Statistics set commentNum = commentNum + ?1 where instanceId = ?2 and systemModule = ?3")
+    @Query("update AttentionStatistics set commentNum = commentNum + ?1 where instanceId = ?2 and systemModule = ?3")
     int updateCommentNumByInstanceId(int value, Long instanceId, SystemModule systemModule);
 
     @Modifying
-    @Query("delete Statistics where instanceId in (?1) and systemModule = ?2")
+    @Query("delete AttentionStatistics where instanceId in (?1) and systemModule = ?2")
     int deleteInInstanceId(List instanceIds, SystemModule systemModule);
 
 }
