@@ -47,6 +47,8 @@
     
     [self buildUI];
     
+    [self loadFansData];
+    
     self.ifChangedOne = YES;
     
     self.ifChangedTwo = NO;
@@ -211,6 +213,25 @@
 -(void) loadMore
 {
     [self.service userFootprintList:nil userId:_userId viewController:self completion:nil];
+}
+//获取关注，粉丝数量
+- (void)loadFansData
+{
+    NSString * url = [NSString stringWithFormat:@"%@%@",@"/app/attention/info/",_userId];
+    NSDictionary * dic = @{@"userId":[NSNumber numberWithInteger:_userId.integerValue]};
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+       [OTWNetworkManager doGET:url parameters:dic success:^(id responseObject) {
+           if([[NSString stringWithFormat:@"%@",responseObject[@"code"]] isEqualToString:@"0"]){
+               self.statisticsModel.fansNum = [[[responseObject objectForKey:@"body"] objectForKey:@"fansNum"] integerValue];
+               self.statisticsModel.likeNum = [[[responseObject objectForKey:@"body"] objectForKey:@"attentionNum"] integerValue];
+           }
+           dispatch_async(dispatch_get_main_queue(), ^{
+               [self.myInfoView refleshData];
+           });
+       } failure:^(NSError *error) {
+           
+       }];
+    });
 }
 //关注
 - (void)attentionBtnClick

@@ -50,7 +50,7 @@
     [self.headerImgBg addSubview:self.headerImg];
     [self addSubview:self.userName];
     [self addSubview:self.fansBGView];
-    [self.fansBGView addSubview:self.fansLabel];
+//    [self.fansBGView addSubview:self.fansLabel];
     [self.fansBGView addSubview:self.fansNumLabel];
     if(self.ifMy){
         [self addSubview:self.centerLine];
@@ -80,11 +80,11 @@
         self.likeNumLabel.frame = CGRectMake(self.likeLabel.MaxX + 5 , 0, self.likeBGView.Witdh - self.likeLabel.Witdh - 5, 13);
         CGSize textSize = [self getFansLabelSize];
         self.fansBGView.frame = CGRectMake((SCREEN_WIDTH - 1)/2 - 10 - textSize.width - 5 - 25, self.userName.MaxY + 10, 25 + 5 + textSize.width, 13);
-        self.fansNumLabel.frame = CGRectMake(self.fansLabel.MaxX + 5, 0, textSize.width, 13);
+        self.fansNumLabel.frame = CGRectMake(0, 0, CGRectGetWidth(self.fansBGView.frame), 13);
     }else{
         CGSize textSize = [self getFansLabelSize];
         self.fansBGView.frame = CGRectMake((SCREEN_WIDTH - textSize.width - 5 - 25)/2, self.userName.MaxY + 10, 25 + 5 + textSize.width, 13);
-        self.fansNumLabel.frame = CGRectMake(self.fansLabel.MaxX + 5, 0, textSize.width, 13);
+        self.fansNumLabel.frame = CGRectMake(0, 0, CGRectGetWidth(self.fansBGView.frame), 13);
     }
 }
 
@@ -101,7 +101,7 @@
     
     CGSize textSize = [self getFansLabelSizeTwo:userNameW];
     CGRect fansBGViewF = CGRectMake(CGRectGetMinX(userNameF),CGRectGetMaxY(userNameF)+ 5, textSize.width + 25 + 5, 13);
-    CGRect fansNumLabelF = CGRectMake(self.fansLabel.MaxX + 5 , 0, textSize.width, 13);
+    CGRect fansNumLabelF = CGRectMake(0 , 0, textSize.width + 25 + 5, 13);
     CGRect temp;
     if(self.ifMy){
         CGRect centerLineF = CGRectMake(CGRectGetMaxX(fansBGViewF) + 10,CGRectGetMaxY(userNameF) + 6.5, 1, 10);
@@ -148,7 +148,15 @@
 
 -(void) refleshData
 {
-    self.fansNumLabel.text = [NSString stringWithFormat:@"%ld",(long)self.statistics.fansNum];
+    NSString * str = [NSString stringWithFormat:@"粉丝 %ld",(long)self.statistics.fansNum];
+    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:str];
+    
+    // 设置字体和设置字体的范围
+    [attrStr addAttribute:NSFontAttributeName
+                    value:[UIFont systemFontOfSize:12.f]
+                    range:NSMakeRange(0, 2)];
+    self.fansNumLabel.attributedText = attrStr;
+
     self.likeNumLabel.text = [NSString stringWithFormat:@"%ld",(long)self.statistics.likeNum];
 }
 
@@ -241,6 +249,7 @@
         _fansNumLabel = [[UILabel alloc] init];
         _fansNumLabel.font = infoLabelFont;
         _fansNumLabel.textColor = [UIColor color_ffe8e3];
+        _fansNumLabel.textAlignment = NSTextAlignmentRight;
     }
     return _fansNumLabel;
 }
