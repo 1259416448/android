@@ -20,6 +20,9 @@
 @property (nonatomic,strong) UIView *personalFootprintsListTableViewHeader;
 @property (nonatomic,strong) OTWMyInfoView *myInfoView;
 @property (nonatomic,strong) UIView *likeView;
+@property (nonatomic,strong) UIButton *attentionBtn;
+@property (nonatomic,strong) UIImageView *addImg;
+
 @property (nonatomic,strong) OTWPersonalFootprintService *service;
 @property (nonatomic,strong) OTWPersonalStatisticsModel *statisticsModel;
 @property (nonatomic,assign) BOOL ifChangedOne;
@@ -101,7 +104,7 @@
     
     if(!_ifMyFootprint){
         //关注
-        [self setCustomNavigationRightView:self.likeView];
+        [self setCustomNavigationRightView:self.attentionBtn];
     }
     //大背景
     self.view.backgroundColor=[UIColor whiteColor];
@@ -209,7 +212,11 @@
 {
     [self.service userFootprintList:nil userId:_userId viewController:self completion:nil];
 }
-
+//关注
+- (void)attentionBtnClick
+{
+    
+}
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return self.status.count;
@@ -373,7 +380,30 @@
     }
     return _button;
 }
-
+- (UIButton *)attentionBtn
+{
+    if (!_attentionBtn) {
+        _attentionBtn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 21 - 64, 0, 65, 25)];
+        _attentionBtn.layer.masksToBounds = YES;
+        _attentionBtn.layer.cornerRadius = 2;
+        _attentionBtn.backgroundColor = [UIColor whiteColor];
+        [_attentionBtn setTitle:@"   关注" forState:UIControlStateNormal];
+        [_attentionBtn setTitle:@"已关注" forState:UIControlStateSelected];
+        [_attentionBtn setTitleColor:[UIColor color_f3715a] forState:UIControlStateNormal];
+        _attentionBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+        [_attentionBtn addSubview:self.addImg];
+        [_attentionBtn addTarget:self action:@selector(attentionBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _attentionBtn;
+}
+- (UIImageView *)addImg
+{
+    if (!_addImg) {
+        _addImg = [[UIImageView alloc] initWithFrame:CGRectMake(10, 7, 11, 11)];
+        _addImg.image = [UIImage imageNamed:@"wd_guanzhu"];
+    }
+    return _addImg;
+}
 -(UIView *) likeView
 {
     if(!_likeView){
@@ -381,7 +411,7 @@
         _likeView.backgroundColor = [UIColor whiteColor];
         _likeView.layer.cornerRadius = 2;
         //增加关注信息 或者 是 取消关注信息
-        if(YES){
+        if(/* DISABLES CODE */ (YES)){
             UIImageView *likeImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 7, 11, 11)];
             likeImageView.image = [UIImage imageNamed:@"wd_guanzhu"];
             [_likeView addSubview:likeImageView];
@@ -392,7 +422,7 @@
             [_likeView addSubview:likeTitle];
         }else{
             UILabel *likeTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 5 , _likeView.Witdh, 15)];
-            likeTitle.text = @"取消关注";
+            likeTitle.text = @"已关注";
             likeTitle.textColor = [UIColor color_f3715a];
             likeTitle.font = [UIFont systemFontOfSize:14];
             likeTitle.textAlignment = NSTextAlignmentCenter;

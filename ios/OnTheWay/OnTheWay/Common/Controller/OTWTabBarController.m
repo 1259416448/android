@@ -215,7 +215,7 @@ static CGFloat otwCustomTabBarHeight = 49.0;
 
 - (void)tabBar:(OTWCustomTabBar *)tab didSelectItem:(OTWCustomTabBarItem *)item atIndex:(NSInteger)index
 {
-    if(index == 4){ //访问我的 必须做登陆验证
+    if(index == 4 || index == 3){ //访问我的 必须做登陆验证
         if([[OTWLaunchManager sharedManager] showLoginViewWithController:self completion:^{
              [[NSNotificationCenter defaultCenter] postNotificationName:@"personalViewController" object:self];
         }]){

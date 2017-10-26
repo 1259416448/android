@@ -8,7 +8,7 @@
 
 #import "OTWPersonalUserFeedbackViewController.h"
 
-@interface OTWPersonalUserFeedbackViewController ()<UITextViewDelegate>
+@interface OTWPersonalUserFeedbackViewController ()<UITextViewDelegate,UITextFieldDelegate>
 
 @property (nonatomic,strong) UIView *userFeedbackContent;
 @property (nonatomic,strong) UITextView *userFeedbackContentTextView;
@@ -77,7 +77,24 @@
     return _customRightNavigationBarView;
 }
 -(void)userFeedbackReleaseTap{
-    DLog(@"点击了提交");
+    if ([_userFeedbackContentTextView.text isEqualToString:@""] || _userFeedbackContentTextView.text == nil) {
+        [OTWUtils alertFailed:@"请先填写反馈内容哦" userInteractionEnabled:NO target:self];
+        return;
+    };
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSDictionary * dic = @{@"contactInfo":self.userFeedbackPhoneTextView.text,
+                               @"content":self.userFeedbackContentTextView.text};
+        NSString * url = @"/app/feedback/create";
+        [OTWNetworkManager doPOST:url parameters:dic success:^(id responseObject) {
+            if([[NSString stringWithFormat:@"%@",responseObject[@"code"]] isEqualToString:@"0"]){
+                [OTWUtils alertSuccess:@"反馈成功" userInteractionEnabled:NO target:self];
+                [self.navigationController popViewControllerAnimated:YES];
+            }
+        } failure:^(NSError *error) {
+            
+        }];
+        
+    });
 }
 -(UIView*)userFeedbackContent{
     if(!_userFeedbackContent){

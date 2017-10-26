@@ -577,6 +577,32 @@
 - (void)checkInClick:(OTWBusinessDetailView *)detailView businessModel:(OTWBusinessModel *)businessModel
 {
     DLog(@"点击了签到按钮");
+    if (businessModel.ifCheckIn) {
+        return;
+    }
+    NSString * url = [NSString stringWithFormat:@"%@%@",@"/app/business/checkIn/",_opId];
+    NSDictionary * Parameter = @{@"id":[NSNumber numberWithInteger:[_opId integerValue]]};
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [OTWNetworkManager doPOST:url parameters:Parameter success:^(id responseObject) {
+            if([[NSString stringWithFormat:@"%@",responseObject[@"code"]] isEqualToString:@"0"]){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    businessModel.ifCheckIn = !businessModel.ifCheckIn;
+                    NSString * tips = @"";
+                    if (businessModel.ifCheckIn) {
+                        tips = @"签到成功";
+                        [OTWUtils alertSuccess:tips userInteractionEnabled:YES target:self];
+                    }else{
+                    }
+                    [detailView changeCheckInStatus];
+                });
+            }
+        } failure:^(NSError *error) {
+            NSLog(@"fail");
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [OTWUtils alertFailed:@"网络异常" userInteractionEnabled:YES target:self];
+            });
+        }];
+    });
 }
 
 #pragma mark - Setter Getter
