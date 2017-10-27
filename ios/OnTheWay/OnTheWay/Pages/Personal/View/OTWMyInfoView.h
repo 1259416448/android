@@ -11,6 +11,7 @@
 /**
  * 个人中心列表中我的个人信息
  */
+
 @interface OTWMyInfoView : UIView
 
 @property (nonatomic,assign) NSString *userId;
@@ -20,6 +21,7 @@
 @property (nonatomic,assign) NSString *userHeaderImg;
 
 @property (nonatomic,strong) OTWPersonalStatisticsModel *statistics;
+
 
 + (instancetype) initWithUserInfo:(NSString*)userNickname userId:(NSString*)userId userHeaderImg:(NSString*)userHeaderImg ifMy:(BOOL) ifMy;
 

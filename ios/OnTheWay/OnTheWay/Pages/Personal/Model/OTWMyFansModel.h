@@ -10,8 +10,10 @@
 
 @interface OTWMyFansModel : NSObject
 
-@property (nonatomic,copy) NSString *userId;
-@property (nonatomic,copy) NSString *gender;
-@property (nonatomic,copy) NSString *headImg;
+@property (nonatomic,strong) NSNumber *userId;
+@property (nonatomic,strong) NSNumber *fansNum;
+
+@property (nonatomic,copy) NSString *userNickname;
+@property (nonatomic,copy) NSString *userHeadImg;
 
 @end

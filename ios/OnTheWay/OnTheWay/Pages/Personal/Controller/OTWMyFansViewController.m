@@ -10,6 +10,8 @@
 #import "OTWMyFansTableViewCell.h"
 #import "OTWMyFansModel.h"
 #import "OTWMyFansParameter.h"
+#import "OTWPersonalFootprintsListController.h"
+#import "OTWUserModel.h"
 
 @interface OTWMyFansViewController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -28,6 +30,8 @@
     // Do any additional setup after loading the view.
     self.title = @"我的粉丝";
     self.view.backgroundColor = [UIColor whiteColor];
+    [self setLeftNavigationImage:[UIImage imageNamed:@"back_2"]];
+
     _dataArr = @[].mutableCopy;
     
     _tableview = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, SCREEN_WIDTH, SCREEN_HEIGHT - 64) style:UITableViewStyleGrouped];
@@ -70,14 +74,24 @@
     if (cell == nil) {
         cell=[[OTWMyFansTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:flag];
     }
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.model = _dataArr[indexPath.row];
     return cell;
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    OTWMyFansModel * model = _dataArr[indexPath.row];
+    OTWPersonalFootprintsListController *personalSiteVC = [OTWPersonalFootprintsListController initWithIfMyFootprint:[[OTWUserModel shared].userId.description isEqualToString:[NSString stringWithFormat:@"%@",model.userId]]];
+    personalSiteVC.userId = [NSString stringWithFormat:@"%@",model.userId];
+    personalSiteVC.userNickname = model.userNickname;
+    personalSiteVC.userHeaderImg = model.userHeadImg;
+    [self.navigationController pushViewController:personalSiteVC animated:YES];
 }
 - (void)loadData
 {
     NSString * url = @"/app/attention/search";
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-       [OTWNetworkManager doPOST:url parameters:self.parameter.mj_keyValues responseCache:^(id responseCache) {
+       [OTWNetworkManager doGET:url parameters:self.parameter.mj_keyValues responseCache:^(id responseCache) {
            if([[NSString stringWithFormat:@"%@",responseCache[@"code"]] isEqualToString:@"0"]){
                NSArray * arr = [[responseCache objectForKey:@"body"] objectForKey:@"content"];
                if (self.parameter.number == 0) {
@@ -130,7 +144,11 @@
         _parameter = [[OTWMyFansParameter alloc] init];
         _parameter.number = 0;
         _parameter.size = 15;
-        _parameter.type = @"fans";
+        if (_isFromFans) {
+            _parameter.type = @"fans";
+        }else{
+            _parameter.type = @"attention";
+        }
     }
     return _parameter;
 }

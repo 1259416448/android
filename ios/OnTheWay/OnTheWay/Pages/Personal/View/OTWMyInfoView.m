@@ -26,6 +26,8 @@
 @property (nonatomic,strong) UIView *likeBGView;
 @property (nonatomic,strong) UILabel *likeLabel;
 @property (nonatomic,strong) UILabel *likeNumLabel;
+
+
 @property (nonatomic,assign) BOOL ifMy;
 
 @end
@@ -39,6 +41,7 @@
     info.userNickname = userNickname;
     info.userHeaderImg = userHeaderImg;
     info.ifMy = ifMy;
+    info.userInteractionEnabled = YES;
     [info buildUI];
     return info;
 }
@@ -145,14 +148,6 @@
     self.fansBGView.frame = fansBGViewF;
     self.fansNumLabel.frame = fansNumLabelF;
 }
-- (void)tapAtFans
-{
-    
-}
-- (void)tapAtAttentionv
-{
-    
-}
 -(void) refleshData
 {
     NSString * str = [NSString stringWithFormat:@"粉丝 %ld",(long)self.statistics.fansNum];
@@ -240,8 +235,6 @@
 -(UIView *)fansBGView{
     if(!_fansBGView){
         _fansBGView = [[UIView alloc] init];
-        _fansBGView.userInteractionEnabled = YES;
-        [_fansBGView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAtFans)]];
     }
     return _fansBGView;
 }
@@ -265,7 +258,7 @@
         _fansNumLabel.font = infoLabelFont;
         _fansNumLabel.textColor = [UIColor color_ffe8e3];
         _fansNumLabel.textAlignment = NSTextAlignmentRight;
-        _fansNumLabel.userInteractionEnabled = YES;
+
     }
     return _fansNumLabel;
 }
@@ -273,8 +266,6 @@
 -(UIView *)likeBGView{
     if(!_likeBGView){
         _likeBGView = [[UIView alloc] init];
-        _likeBGView.userInteractionEnabled = YES;
-        [_likeBGView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAtAttentionv)]];
     }
     return _likeBGView;
 }
@@ -297,7 +288,7 @@
         _likeNumLabel = [[UILabel alloc] init];
         _likeNumLabel.font = infoLabelFont;
         _likeNumLabel.textColor = [UIColor color_ffe8e3];
-        _likeNumLabel.userInteractionEnabled = YES;
+
     }
     return _likeNumLabel;
 }
@@ -311,6 +302,24 @@
     }
     return _headerLagerImgBG;
 }
+//- (UIButton * )fansBtn
+//{
+//    if (!_fansBtn) {
+//        _fansBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 144 + 64, SCREEN_WIDTH / 2, 30)];
+//        _fansBtn.backgroundColor = [UIColor clearColor];
+//        [_fansBtn addTarget:self action:@selector(tapAtFans) forControlEvents:UIControlEventTouchUpInside];
+//    }
+//    return _fansBtn;
+//}
+//- (UIButton * )attentionBtn
+//{
+//    if (!_attentionBtn) {
+//        _attentionBtn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH / 2, 144 + 64, SCREEN_WIDTH / 2, 30)];
+//        _attentionBtn.backgroundColor = [UIColor clearColor];
+//        [_attentionBtn addTarget:self action:@selector(tapAtAttentionv) forControlEvents:UIControlEventTouchUpInside];
+//    }
+//    return _attentionBtn;
+//}
 
 -(OTWPersonalStatisticsModel *) statistics
 {

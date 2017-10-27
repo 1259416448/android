@@ -30,7 +30,7 @@
         [self addSubview:_name];
         
         _personImg = [[UIImageView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(_headImageView.frame) + 15, CGRectGetMaxY(_name.frame) + 6.5, 12, 12)];
-        _personImg.image = [UIImage imageNamed:@""];
+        _personImg.image = [UIImage imageNamed:@"wd_guanzhu_fensi"];
         [self addSubview:_personImg];
         
         _fansNum = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(_personImg.frame) + 5, CGRectGetMaxY(_name.frame) + 5, SCREEN_WIDTH - 250, 15)];
@@ -39,7 +39,7 @@
         [self addSubview:_fansNum];
         
         _arrow = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 15 - 7, 53 / 2, 7, 12)];
-        _arrow.image = [UIImage imageNamed:@""];
+        _arrow.image = [UIImage imageNamed:@"arrow_right"];
         
         [self addSubview:_arrow];
         
@@ -49,6 +49,9 @@
 - (void)setModel:(OTWMyFansModel *)model
 {
     _model = model;
+    [_headImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",_model.userHeadImg,FriendsHeadImageSize]]];
+    _name.text = _model.userNickname;
+    _fansNum.text = [NSString stringWithFormat:@"粉丝 %@",_model.fansNum];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

@@ -14,6 +14,7 @@
 #import "OTWCustomNavigationBar.h"
 #import "OTWPersonalStatisticsModel.h"
 #import "OTWMyInfoView.h"
+#import "OTWMyFansViewController.h"
 
 @interface OTWPersonalFootprintsListController ()<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>
 
@@ -27,6 +28,8 @@
 @property (nonatomic,strong) OTWPersonalStatisticsModel *statisticsModel;
 @property (nonatomic,assign) BOOL ifChangedOne;
 @property (nonatomic,assign) BOOL ifChangedTwo;
+@property (nonatomic,strong) UIButton *fansBtn;
+@property (nonatomic,strong) UIButton *likeBtn;
 
 @end
 
@@ -103,6 +106,8 @@
     [self.customNavigationBar clearShadowColor];
     
     [self.customNavigationBar addSubview:self.myInfoView];
+    [self.customNavigationBar addSubview:self.fansBtn];
+    [self.customNavigationBar addSubview:self.likeBtn];
     
     if(!_ifMyFootprint){
         //关注
@@ -428,6 +433,24 @@
     return sectionHeader;
 }
 
+#pragma mark OTWMyInfoViewDelegate
+- (void)seeFans
+{
+    if (self.statisticsModel.fansNum > 0) {
+        OTWMyFansViewController * myFans = [[OTWMyFansViewController alloc] init];
+        myFans.isFromFans = YES;
+        [self.navigationController pushViewController:myFans animated:YES];
+    }
+}
+- (void)seeAttentions
+{
+    if (self.statisticsModel.likeNum > 0) {
+        OTWMyFansViewController * myFans = [[OTWMyFansViewController alloc] init];
+        myFans.isFromFans = NO;
+        [self.navigationController pushViewController:myFans animated:YES];
+    }
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -494,6 +517,33 @@
         }
     }
     return _likeView;
+}
+- (UIButton * )fansBtn
+{
+    if (!_fansBtn) {
+        _fansBtn = [[UIButton alloc] init];
+        if (_ifMyFootprint) {
+            _fansBtn.frame = CGRectMake(0, 144 + 64, SCREEN_WIDTH / 2, 40);
+        }else
+        {
+            _fansBtn.frame = CGRectMake(0, 144 + 64, SCREEN_WIDTH, 40);
+        }
+        _fansBtn.backgroundColor = [UIColor clearColor];
+        [_fansBtn addTarget:self action:@selector(seeFans) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _fansBtn;
+}
+- (UIButton * )likeBtn
+{
+    if (!_likeBtn) {
+        _likeBtn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH / 2, 144 + 64, SCREEN_WIDTH / 2, 30)];
+        _likeBtn.backgroundColor = [UIColor clearColor];
+        [_likeBtn addTarget:self action:@selector(seeAttentions) forControlEvents:UIControlEventTouchUpInside];
+        if (!_ifMyFootprint) {
+            _likeBtn.userInteractionEnabled = NO;
+        }
+    }
+    return _likeBtn;
 }
 
 -(OTWMyInfoView *) myInfoView

@@ -10,4 +10,6 @@
 
 @interface OTWMyFansViewController : OTWBaseViewController
 
+@property (nonatomic, assign) BOOL isFromFans;
+
 @end

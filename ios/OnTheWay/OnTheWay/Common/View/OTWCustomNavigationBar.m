@@ -28,6 +28,7 @@
     self.layer.shadowColor = [UIColor blackColor].CGColor;
     self.layer.shadowOffset = CGSizeMake(0, 1);
     self.layer.shadowOpacity = 0.1;
+    self.userInteractionEnabled = YES;
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
         [self buildUI];
