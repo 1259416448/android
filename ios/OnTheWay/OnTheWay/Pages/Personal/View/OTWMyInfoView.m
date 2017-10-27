@@ -71,7 +71,6 @@
     self.headerImgBg.frame = CGRectMake((SCREEN_WIDTH-98)/2, 69, headerImgBgW , headerImgBgW);
     self.headerLagerImgBG.frame = CGRectMake(0, 0, headerImgBgW, headerImgBgW);
     self.headerImg.frame = CGRectMake(4, 4, 90 , 90);
-    
     CGFloat userNameW = SCREEN_WIDTH - padding * 2;
     CGSize userNicknameSize = [OTWUtils sizeWithString:self.userNickname font:userNickNameFont maxSize:CGSizeMake(userNameW, 22.5)];
     userNameW = userNicknameSize.width;
@@ -202,10 +201,12 @@
 -(UIImageView*)headerImg{
     if(!_headerImg){
         _headerImg=[[UIImageView alloc]init];
+        _headerImg.layer.masksToBounds = YES;
+        _headerImg.layer.cornerRadius = 45;
         [_headerImg sd_setImageWithURL:[NSURL URLWithString:_userHeaderImg] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-            if(image){
-                _headerImg.image = [image roundedCornerImageWithCornerRadius:80];
-            }
+//            if(image){
+//                _headerImg.image = [image roundedCornerImageWithCornerRadius:80];
+//            }
         }];
     }
     return _headerImg;
