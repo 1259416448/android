@@ -67,6 +67,10 @@
 {
     return 10;
 }
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 0.01;
+}
 
 - (UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -86,18 +90,34 @@
                                  @"clear":@(1)};
     [OTWNetworkManager doGET:url parameters:parameter success:^(id responseObject) {
         if([[NSString stringWithFormat:@"%@",responseObject[@"code"]] isEqualToString:@"0"]){
+            if (_page == 0) {
+                [_sysNewsFrames removeAllObjects];
+            }
             NSArray * arr = [[responseObject objectForKey:@"body"] objectForKey:@"content"];
             for (NSDictionary * result in arr) {
                 OTWSystemNewsModel * model = [OTWSystemNewsModel mj_objectWithKeyValues:result];
                 [self.sysNewsFrames addObject:model];
             }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (_page == 0 && arr.count == 0) {
+                    //                       [self.view addSubview:self.noResultView];
+                }
+                if (arr.count == 0 || arr.count < 15) {
+                    [_systemNewsTableView.mj_footer endRefreshingWithNoMoreData];
+                }else{
+                    [_systemNewsTableView.mj_footer endRefreshing];
+                }
+                [_systemNewsTableView reloadData];
+                [_systemNewsTableView.mj_header endRefreshing];
+            });
         }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [_systemNewsTableView reloadData];
-        });
 
     } failure:^(NSError *error) {
-        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [OTWUtils alertFailed:@"服务端繁忙，请稍后再试" userInteractionEnabled:NO target:self];
+            [_systemNewsTableView.mj_header endRefreshing];
+            [_systemNewsTableView.mj_footer endRefreshing];
+        });
     }];
     
 }
@@ -109,6 +129,16 @@
         _systemNewsTableView.dataSource = self;
         _systemNewsTableView.delegate = self;
         _systemNewsTableView.backgroundColor = [UIColor clearColor];
+        
+        _systemNewsTableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+            _page = 0;
+            [self loadData];
+        }];
+        
+        _systemNewsTableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
+            _page++;
+            [self loadData];
+        }];
     }
     return _systemNewsTableView;
 }
