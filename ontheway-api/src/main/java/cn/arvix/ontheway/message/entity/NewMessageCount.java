@@ -36,7 +36,7 @@ public class NewMessageCount extends BaseEntity<Long> {
     @NotNull(message = "footprintNum is not null")
     private Integer footprintNum = 0;
 
-    public static NewMessageCount getInstance(){
+    public static NewMessageCount getInstance() {
         return new NewMessageCount();
     }
 

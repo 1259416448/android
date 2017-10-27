@@ -83,6 +83,13 @@ public class BusinessSolrService extends SolrServiceImpl {
         document.addField("color_code", m.getColorCode());
         document.addField("weight", m.getWeight());
         document.addField("if_show", m.getIfShow());
+
+        if (m.getBusinessExpand() != null) {
+            document.addField("claim_status", m.getBusinessExpand().getStatus());
+        } else {
+            document.addField("claim_status", "none");
+        }
+
         document.addField("date_created", TimeMaker.toTimeMillis(m.getDateCreated()));
         document.addField("last_updated", TimeMaker.toTimeMillis(m.getLastUpdated()));
         return document;
@@ -115,6 +122,7 @@ public class BusinessSolrService extends SolrServiceImpl {
                     dto.setPhotoUrl(urlFix + doc.getFieldValue("photo_url").toString());
                 }
                 dto.setColorCode(Checks.stringValueOf(doc.getFieldValue("color_code")));
+                dto.setClaimStatus(Checks.stringValueOf(doc.getFieldValue("claim_status")));
                 dto.setDistance(Checks.toDouble(Checks.stringValueOf(doc.getFieldValue("_dist_"))));
                 content.add(dto);
             }

@@ -132,7 +132,7 @@
     <field name="color_code" type="string" stored="true"/>
     <field name="weight" type="float" stored="true"/>
     <field name="if_show" type="boolean" stored="true"/>
-    <field name="if_claim" type="boolean" stored="true"/>
+    <field name="claim_status" type="string" stored="true"/>
     <field name="date_created" type="long" stored="true" multiValued="false"/>
     <field name="last_updated" type="long" stored="true" multiValued="false"/>
 

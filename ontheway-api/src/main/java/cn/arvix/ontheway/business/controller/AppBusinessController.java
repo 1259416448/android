@@ -5,6 +5,7 @@ import cn.arvix.base.common.utils.Checks;
 import cn.arvix.base.common.web.controller.ExceptionHandlerController;
 import cn.arvix.ontheway.business.dto.CreateAndClaimDTO;
 import cn.arvix.ontheway.business.entity.Business;
+import cn.arvix.ontheway.business.service.BusinessCheckInService;
 import cn.arvix.ontheway.business.service.BusinessService;
 import com.google.common.collect.Sets;
 import io.swagger.annotations.ApiImplicitParam;
@@ -31,6 +32,13 @@ public class AppBusinessController extends ExceptionHandlerController {
     @Autowired
     public void setBusinessService(BusinessService businessService) {
         this.businessService = businessService;
+    }
+
+    private BusinessCheckInService businessCheckInService;
+
+    @Autowired
+    public void setBusinessCheckInService(BusinessCheckInService businessCheckInService) {
+        this.businessCheckInService = businessCheckInService;
     }
 
     @ApiOperation(value = "用户添加并认领商家")
@@ -148,6 +156,27 @@ public class AppBusinessController extends ExceptionHandlerController {
                                   Double latitude, Double longitude,
                                   Long currentTime) {
         return businessService.searchClaim(number, size, latitude, longitude, currentTime, q);
+    }
+
+    @ApiOperation(value = "认领商家接口", notes = "认领商家")
+    @ResponseBody
+    @PostMapping(value = "/claim")
+    public JSONResult claim(@RequestBody CreateAndClaimDTO dto) {
+        return businessService.claim(dto);
+    }
+
+    @ApiOperation(value = "签到")
+    @ResponseBody
+    @PostMapping(value = "/checkIn/{businessId}")
+    public JSONResult checkIn(@PathVariable Long businessId) {
+        return businessCheckInService.checkIn(businessId);
+    }
+
+    @ApiOperation(value = "取消关注")
+    @ResponseBody
+    @PostMapping(value = "/cancel/{businessId}")
+    public JSONResult cancel(@PathVariable Long businessId) {
+        return businessCheckInService.cancel(businessId);
     }
 
 }

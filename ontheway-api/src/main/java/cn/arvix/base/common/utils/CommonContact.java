@@ -173,4 +173,6 @@ public interface CommonContact {
     //百度地图AK
     String BAIDU_MAP_AK = "OS7n8khfGx4sUa07yZt0DG1DIKmOhI3q";
 
+    String DATE_CREATED = "dateCreated";
+
 }

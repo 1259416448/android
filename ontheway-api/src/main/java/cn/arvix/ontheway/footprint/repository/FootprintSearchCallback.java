@@ -21,6 +21,7 @@ public class FootprintSearchCallback extends DefaultSearchCallback {
     public void prepareQL(StringBuilder ql, Searchable search) {
         super.prepareQL(ql, search);
         boolean ifSearchType = search.containsSearchKey("searchType");
+        boolean ifAttention = search.containsSearchKey("attention");
         if (ifSearchType) {
             FootprintService.SearchType searchType = search.getValue("searchType");
             //构建list页面的查询数据
@@ -86,10 +87,18 @@ public class FootprintSearchCallback extends DefaultSearchCallback {
                 ql.append(" and (ROUND( 6378.138 * 2 * ASIN( SQRT( POW( SIN( ( ").append(latitude).append(" * PI() / 180 - x.latitude * PI() / 180 ) / 2 ), 2 ) + COS( ").append(latitude).append(" * PI() / 180) * COS(x.latitude * PI() / 180) * POW( SIN( ( ").append(longitude).append(" * PI() / 180 - x.longitude * PI() / 180 ) / 2 ), 2 ) ) ) ,3)) < ").append(distance);
             }
         }
+        if (ifAttention) {
+            ql.append(" and exists ( select 1 from Attention where user.id = :attention and attentionUser.id = x.user.id ) ");
+        }
     }
 
     @Override
     public void setValues(Query query, Searchable search) {
         super.setValues(query, search);
+        boolean ifAttention = search.containsSearchKey("attention");
+        if (ifAttention) {
+            Long attention = search.getValue("attention");
+            query.setParameter("attention", attention);
+        }
     }
 }

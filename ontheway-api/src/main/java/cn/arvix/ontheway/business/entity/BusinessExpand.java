@@ -16,8 +16,8 @@ import javax.validation.constraints.NotNull;
  * @author Created by yangyang on 2017/8/15.
  *         e-mail ：yangyang_666@icloud.com ； tel ：18580128658 ；QQ ：296604153
  */
-@Table
-@Entity(name = "otw_business_expand")
+@Table(name = "otw_business_expand")
+@Entity
 public class BusinessExpand extends BaseEntity<Long> {
 
     //认领的用户
