@@ -18,6 +18,7 @@
 @interface OTWNewFootprintsControllerViewController ()<UITableViewDataSource,UITableViewDelegate>{
         UITableView *_tableView;
        NSMutableArray *_status;
+    NSInteger _page;
 }
 
 @end
@@ -27,8 +28,21 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    _page = 0;
+    _status = @[].mutableCopy;
     [self buildUI];
-    [self initData];
+//    [self initData];
+    [self loadData];
+}
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
+}
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:NO];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -61,7 +75,7 @@
     self.view.backgroundColor=[UIColor color_f4f4f4];
     
     //创建一个分组样式的UITableView
-    _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0,40, SCREEN_WIDTH, SCREEN_HEIGHT-65) style:UITableViewStyleGrouped];
+    _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0,64, SCREEN_WIDTH, SCREEN_HEIGHT - 64) style:UITableViewStyleGrouped];
     
     _tableView.dataSource = self;
     
@@ -72,6 +86,16 @@
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;//将边框去掉
     
     [self.view addSubview:_tableView];
+    
+    _tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        _page = 0;
+        [self loadData];
+    }];
+    
+    _tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
+        _page++;
+        [self loadData];
+    }];
     
 }
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -105,12 +129,73 @@
 
     return cell;
 }
-
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 10;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 0.01;
+}
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     
     OTWNewFootprintsTableViewCell *cell = (OTWNewFootprintsTableViewCell *)[self tableView:tableView
                                                        cellForRowAtIndexPath:indexPath];
     return cell.frame.size.height;
+}
+- (void)loadData
+{
+    NSString * url = @"/app/attention/footprint";
+    NSDictionary * dic = @{@"number":@(_page),
+                               @"size":@(15)};
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+       [OTWNetworkManager doGET:url parameters:dic responseCache:^(id responseCache) {
+           if([[NSString stringWithFormat:@"%@",responseCache[@"code"]] isEqualToString:@"0"]){
+               NSArray * arr = [[responseCache objectForKey:@"body"] objectForKey:@"content"];
+               if (_page == 0) {
+                   [_status removeAllObjects];
+                   for (NSDictionary * result in arr) {
+                       OTWFootprintListModel *model = [OTWFootprintListModel statusWithDictionary:result];
+                       [_status addObject: model];
+                   }
+                   dispatch_async(dispatch_get_main_queue(), ^{
+                       [_tableView reloadData];
+                       [_tableView.mj_header endRefreshing];
+                       [_tableView.mj_footer endRefreshing];
+                   });
+               }
+           }
+       } success:^(id responseObject) {
+           if([[NSString stringWithFormat:@"%@",responseObject[@"code"]] isEqualToString:@"0"]){
+               if (_page == 0) {
+                   [_status removeAllObjects];
+               }
+               NSArray * arr = [[responseObject objectForKey:@"body"] objectForKey:@"content"];
+               for (NSDictionary * result in arr) {
+                   OTWFootprintListModel *model = [OTWFootprintListModel statusWithDictionary:result];
+                   [_status addObject: model];
+               }
+               dispatch_async(dispatch_get_main_queue(), ^{
+                   if (_page == 0 && arr.count == 0) {
+//                       [self.view addSubview:self.noResultView];
+                   }
+                   if (arr.count == 0 || arr.count < 15) {
+                       [_tableView.mj_footer endRefreshingWithNoMoreData];
+                   }else{
+                       [_tableView.mj_footer endRefreshing];
+                   }
+                   [_tableView reloadData];
+                   [_tableView.mj_header endRefreshing];
+               });
+           }
+       } failure:^(NSError *error) {
+           dispatch_async(dispatch_get_main_queue(), ^{
+               [OTWUtils alertFailed:@"服务端繁忙，请稍后再试" userInteractionEnabled:NO target:self];
+               [_tableView.mj_header endRefreshing];
+               [_tableView.mj_footer endRefreshing];
+           });
+       }];
+    });
 }
 /*
 #pragma mark - Navigation

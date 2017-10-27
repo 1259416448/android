@@ -102,7 +102,7 @@
 -(void)setData:(OTWFootprintListModel *)status{
     //设置头像的大小和位置
     CGRect avatarRect=CGRectMake(15, 15,  ShopDetailsHeadImgWidth, ShopDetailsHeadImgWidth);
-    [_ShopDetailsHeaderImg setImageWithURL:[NSURL URLWithString:[status.userHeadImg stringByAppendingString:@"?imageView2/1/w/60/h/60"]]];
+    [_ShopDetailsHeaderImg setImageWithURL:[NSURL URLWithString:status.userHeadImg]];
     _ShopDetailsHeaderImg.frame=avatarRect;
     _ShopDetailsHeaderImg.layer.cornerRadius = ShopDetailsHeadImgWidth/2;
     _ShopDetailsHeaderImg.layer.masksToBounds = YES;
