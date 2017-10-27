@@ -140,25 +140,29 @@
             
             _ShopDetailsCommentImgList.frame=CGRectMake(_ShopDetailsHeaderImg.MaxX+10, CGRectGetMaxY(_ShopDetailsCommentConten.frame) + 5, SCREEN_WIDTH-_ShopDetailsHeaderImg.MaxX-10-15, status.footprintPhotoArray.count/3*self.photoH +(status.footprintPhotoArray.count/3-1)*5 );
     
+            int k = 0;
             for (int i = 0; i < status.footprintPhotoArray.count / 3; i ++) {
                 for (int j = 0; j < 3; j ++) {
                     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(j*(SCREEN_WIDTH-_ShopDetailsHeaderImg.MaxX-10-15)/3, i*(self.photoH+5), (SCREEN_WIDTH-_ShopDetailsHeaderImg.MaxX-10-14-15)/3, self.photoH)];
                     imageView.layer.masksToBounds = YES;
                     imageView.contentMode = UIViewContentModeScaleAspectFill;
-                    [imageView setImageWithURL:[NSURL URLWithString:[status.footprintPhotoArray[i] stringByAppendingString:@"?imageView2/1/w/194/h/156"]]];
+                    [imageView setImageWithURL:[NSURL URLWithString:[status.footprintPhotoArray[k] stringByAppendingString:@"?imageView2/1/w/194/h/156"]]];
                     [_ShopDetailsCommentImgList addSubview:imageView];
+                    k++;
                 }
             }
         }else{
             _ShopDetailsCommentImgList.frame=CGRectMake(_ShopDetailsHeaderImg.MaxX+10, CGRectGetMaxY(_ShopDetailsCommentConten.frame) + 5, SCREEN_WIDTH-_ShopDetailsHeaderImg.MaxX-10-15, (status.footprintPhotoArray.count/3+1)*self.photoH +status.footprintPhotoArray.count/3*5 );
 
+            int k = 0;
             for (int i = 0; i < status.footprintPhotoArray.count / 3 + 1; i ++) {
                 for (int j = 0; j < 3; j ++) {
                     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(j*(SCREEN_WIDTH-_ShopDetailsHeaderImg.MaxX-10-14)/3, i*(self.photoH+5), (SCREEN_WIDTH-_ShopDetailsHeaderImg.MaxX-10-14-15)/3, self.photoH)];
-                    [imageView setImageWithURL:[NSURL URLWithString:status.footprintPhotoArray[i]]];
+                    [imageView setImageWithURL:[NSURL URLWithString:status.footprintPhotoArray[k]]];
                     imageView.layer.masksToBounds = YES;
                     imageView.contentMode = UIViewContentModeScaleAspectFill;
                     [_ShopDetailsCommentImgList addSubview:imageView];
+                    k++;
                     if (j + i*3 == status.footprintPhotoArray.count-1) {
                         break;
                     }
