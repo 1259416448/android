@@ -168,9 +168,9 @@
         cell.contentView.backgroundColor = [UIColor whiteColor];
         cell.backgroundColor = [UIColor whiteColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        //在此模块，以便重新布局
-        cell.model = _status[indexPath.row];
     }
+    //在此模块，以便重新布局
+    cell.model = _status[indexPath.row];
     
     return cell;
 }

@@ -14,4 +14,7 @@
 
 @property (nonatomic,assign) NSInteger likeNum;
 
+@property (nonatomic,assign) BOOL isAttention;
+
+
 @end

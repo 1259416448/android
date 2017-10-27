@@ -145,7 +145,14 @@
     self.fansBGView.frame = fansBGViewF;
     self.fansNumLabel.frame = fansNumLabelF;
 }
-
+- (void)tapAtFans
+{
+    
+}
+- (void)tapAtAttentionv
+{
+    
+}
 -(void) refleshData
 {
     NSString * str = [NSString stringWithFormat:@"粉丝 %ld",(long)self.statistics.fansNum];
@@ -155,6 +162,12 @@
     [attrStr addAttribute:NSFontAttributeName
                     value:[UIFont systemFontOfSize:12.f]
                     range:NSMakeRange(0, 2)];
+    if (_ifMy) {
+        self.fansNumLabel.textAlignment = NSTextAlignmentRight;
+    }else{
+        self.fansNumLabel.textAlignment = NSTextAlignmentCenter;
+    }
+    
     self.fansNumLabel.attributedText = attrStr;
 
     self.likeNumLabel.text = [NSString stringWithFormat:@"%ld",(long)self.statistics.likeNum];
@@ -227,6 +240,8 @@
 -(UIView *)fansBGView{
     if(!_fansBGView){
         _fansBGView = [[UIView alloc] init];
+        _fansBGView.userInteractionEnabled = YES;
+        [_fansBGView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAtFans)]];
     }
     return _fansBGView;
 }
@@ -250,6 +265,7 @@
         _fansNumLabel.font = infoLabelFont;
         _fansNumLabel.textColor = [UIColor color_ffe8e3];
         _fansNumLabel.textAlignment = NSTextAlignmentRight;
+        _fansNumLabel.userInteractionEnabled = YES;
     }
     return _fansNumLabel;
 }
@@ -257,6 +273,8 @@
 -(UIView *)likeBGView{
     if(!_likeBGView){
         _likeBGView = [[UIView alloc] init];
+        _likeBGView.userInteractionEnabled = YES;
+        [_likeBGView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAtAttentionv)]];
     }
     return _likeBGView;
 }
@@ -279,6 +297,7 @@
         _likeNumLabel = [[UILabel alloc] init];
         _likeNumLabel.font = infoLabelFont;
         _likeNumLabel.textColor = [UIColor color_ffe8e3];
+        _likeNumLabel.userInteractionEnabled = YES;
     }
     return _likeNumLabel;
 }

@@ -222,10 +222,22 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
        [OTWNetworkManager doGET:url parameters:dic success:^(id responseObject) {
            if([[NSString stringWithFormat:@"%@",responseObject[@"code"]] isEqualToString:@"0"]){
+               if (self.ifMyFootprint) {
+                   self.statisticsModel.likeNum = [[[responseObject objectForKey:@"body"] objectForKey:@"attentionNum"] integerValue];
+               }else{
+                   self.statisticsModel.isAttention = [[[responseObject objectForKey:@"body"] objectForKey:@"attentionStatus"] boolValue];
+               }
                self.statisticsModel.fansNum = [[[responseObject objectForKey:@"body"] objectForKey:@"fansNum"] integerValue];
-               self.statisticsModel.likeNum = [[[responseObject objectForKey:@"body"] objectForKey:@"attentionNum"] integerValue];
            }
            dispatch_async(dispatch_get_main_queue(), ^{
+               self.attentionBtn.selected = self.statisticsModel.isAttention;
+               if (self.attentionBtn.selected) {
+                   self.addImg.hidden = YES;
+               }else
+               {
+                   self.addImg.hidden = NO;
+               }
+               self.attentionBtn.userInteractionEnabled = YES;
                [self.myInfoView refleshData];
            });
        } failure:^(NSError *error) {
@@ -236,7 +248,37 @@
 //关注
 - (void)attentionBtnClick
 {
-    
+    NSString * url = @"";
+    if (self.statisticsModel.isAttention) {
+        url = [NSString stringWithFormat:@"%@%@",@"/app/attention/cancel/",_userId];
+    }else{
+        url = [NSString stringWithFormat:@"%@%@",@"/app/attention/create/",_userId];
+    }
+    NSDictionary * dic = @{@"attentionUserId":[NSNumber numberWithInteger:_userId.integerValue]};
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [OTWNetworkManager doPOST:url parameters:dic success:^(id responseObject) {
+            if([[NSString stringWithFormat:@"%@",responseObject[@"code"]] isEqualToString:@"0"]){
+                self.statisticsModel.isAttention = !self.statisticsModel.isAttention;
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.attentionBtn.selected = self.statisticsModel.isAttention;
+                NSString * tips = @"";
+                if (self.statisticsModel.isAttention) {
+                    self.addImg.hidden = YES;
+                    tips = @"已关注";
+                }else{
+                    self.addImg.hidden = NO;
+                    tips = @"取消关注";
+                }
+                [OTWUtils alertSuccess:tips userInteractionEnabled:NO target:self];
+            });
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [OTWUtils alertFailed:@"网络请求失败" userInteractionEnabled:NO target:self];
+            });
+        }];
+    });
+
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -407,6 +449,7 @@
         _attentionBtn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 21 - 64, 0, 65, 25)];
         _attentionBtn.layer.masksToBounds = YES;
         _attentionBtn.layer.cornerRadius = 2;
+        _attentionBtn.userInteractionEnabled = NO;
         _attentionBtn.backgroundColor = [UIColor whiteColor];
         [_attentionBtn setTitle:@"   关注" forState:UIControlStateNormal];
         [_attentionBtn setTitle:@"已关注" forState:UIControlStateSelected];
