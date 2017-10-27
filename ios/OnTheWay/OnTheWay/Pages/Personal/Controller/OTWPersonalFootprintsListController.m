@@ -298,6 +298,12 @@
         [UIView animateWithDuration:0.5f animations:^{
            [self changeNavigationViewFrameOne];
             self.ifChangedOne = YES;
+            if (_ifMyFootprint) {
+                
+            }else
+            {
+                
+            }
         } completion:^(BOOL finished){
             self.ifChangedTwo = NO;
         }];
@@ -305,6 +311,12 @@
         [UIView animateWithDuration:0.5f animations:^{
             [self changeNavigationViewFrameTwo];
             self.ifChangedTwo = YES;
+            if (_ifMyFootprint) {
+                
+            }else
+            {
+                
+            }
         } completion:^(BOOL finished){
             self.ifChangedOne = NO;
         }];

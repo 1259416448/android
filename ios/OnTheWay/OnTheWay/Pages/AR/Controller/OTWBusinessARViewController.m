@@ -805,10 +805,11 @@
             if (arShopModels.count == 0) {
                 NSString * tips = @"";
                 if ([self.arShopSearchParams.q isEqualToString:@""] || self.arShopSearchParams.q == nil || [self.arShopSearchParams.typeIds isEqualToString:@""] || self.arShopSearchParams.typeIds == nil) {
-                    tips = @"正在为您准备数据，请稍后再试";
+                    tips = @"抱歉，未找到结果";
                 }else
                 {
-                    tips = @"抱歉，未找到结果";
+                    tips = @"正在为您准备数据，请稍后再试";
+
                 }
                 [self MBProgressHUDErrorTips:tips];
                 [self setAnnotations:@[]];
