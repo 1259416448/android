@@ -43,13 +43,17 @@
         
         [self addSubview:_arrow];
         
+        UIView * line = [[UIView alloc] initWithFrame:CGRectMake(15, 64.5, SCREEN_WIDTH - 15, 0.5)];
+        line.backgroundColor = [UIColor color_d5d5d5];
+        [self addSubview:line];
+        
     }
     return self;
 }
 - (void)setModel:(OTWMyFansModel *)model
 {
     _model = model;
-    [_headImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",_model.userHeadImg,FriendsHeadImageSize]]];
+    [_headImageView sd_setImageWithURL:[NSURL URLWithString:_model.userHeadImg]];
     _name.text = _model.userNickname;
     _fansNum.text = [NSString stringWithFormat:@"粉丝 %@",_model.fansNum];
 }

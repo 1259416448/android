@@ -88,7 +88,9 @@
         [OTWNetworkManager doPOST:url parameters:dic success:^(id responseObject) {
             if([[NSString stringWithFormat:@"%@",responseObject[@"code"]] isEqualToString:@"0"]){
                 [OTWUtils alertSuccess:@"反馈成功" userInteractionEnabled:NO target:self];
-                [self.navigationController popViewControllerAnimated:YES];
+                dispatch_after(5, dispatch_get_main_queue(), ^{
+                    [self.navigationController popViewControllerAnimated:YES];
+                });
             }
         } failure:^(NSError *error) {
             

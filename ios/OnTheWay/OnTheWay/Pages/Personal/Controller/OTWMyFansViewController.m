@@ -67,6 +67,10 @@
 {
     return 10;
 }
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 0.01;
+}
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *flag=@"OTWMyFansTableViewCell";
@@ -98,6 +102,7 @@
                    [_dataArr removeAllObjects];
                    for (NSDictionary * result in arr) {
                        OTWMyFansModel * model = [OTWMyFansModel mj_objectWithKeyValues:result];
+                       model.userHeadImg = [NSString stringWithFormat:@"%@%@",model.userHeadImg,FriendsHeadImageSize];
                        [_dataArr addObject: model];
                    }
                    dispatch_async(dispatch_get_main_queue(), ^{
@@ -115,6 +120,7 @@
                NSArray * arr = [[responseObject objectForKey:@"body"] objectForKey:@"content"];
                for (NSDictionary * result in arr) {
                    OTWMyFansModel * model = [OTWMyFansModel mj_objectWithKeyValues:result];
+                   model.userHeadImg = [NSString stringWithFormat:@"%@%@",model.userHeadImg,FriendsHeadImageSize];
                    [_dataArr addObject: model];
                }
                dispatch_async(dispatch_get_main_queue(), ^{
