@@ -49,7 +49,7 @@ public class AppAttentionController extends ExceptionHandlerController {
 
     @ApiOperation(value = "获取关注列表或者粉丝列表", notes = "通过不同类型获取不同数据")
     @ResponseBody
-    @PostMapping(value = "/search")
+    @GetMapping(value = "/search")
     @ApiImplicitParams({
             @ApiImplicitParam(value = "当前页", name = "number", required = true, paramType = "query"),
             @ApiImplicitParam(value = "每页大小", name = "size", required = true, paramType = "query"),
