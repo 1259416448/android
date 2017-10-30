@@ -2,13 +2,12 @@ package cn.arvix.ontheway.business.controller;
 
 import cn.arvix.base.common.entity.JSONResult;
 import cn.arvix.base.common.web.controller.ExceptionHandlerController;
+import cn.arvix.ontheway.business.entity.BusinessExpand;
 import cn.arvix.ontheway.business.service.BusinessService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Created by yangyang on 2017/8/28.
@@ -28,8 +27,16 @@ public class BusinessController extends ExceptionHandlerController {
     @ApiOperation(value = "导入商家数据到solr中")
     @GetMapping(value = "/import")
     @ResponseBody
-    public JSONResult importToSolr(){
+    public JSONResult importToSolr() {
         return service.importDataToSolr();
+    }
+
+    @ApiOperation(value = "审核认领商家")
+    @ResponseBody
+    @PostMapping(value = "/approve/{businessId}/{status}")
+    public JSONResult approveClaim(@PathVariable Long businessId,
+                                   @PathVariable BusinessExpand.ClaimStatus status) {
+        return service.approveClaim(businessId, status);
     }
 
 }

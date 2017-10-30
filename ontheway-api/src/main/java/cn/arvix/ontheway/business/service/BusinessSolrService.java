@@ -8,6 +8,7 @@ import cn.arvix.base.common.utils.TimeMaker;
 import cn.arvix.ontheway.business.dto.ARSearchDTO;
 import cn.arvix.ontheway.business.dto.SolrSearchDTO;
 import cn.arvix.ontheway.business.entity.Business;
+import cn.arvix.ontheway.business.entity.BusinessExpand;
 import cn.arvix.ontheway.ducuments.service.DocumentService;
 import cn.arvix.ontheway.sys.config.service.ConfigService;
 import cn.arvix.solr.SolrServiceImpl;
@@ -85,7 +86,7 @@ public class BusinessSolrService extends SolrServiceImpl {
         document.addField("if_show", m.getIfShow());
 
         if (m.getBusinessExpand() != null) {
-            document.addField("claim_status", m.getBusinessExpand().getStatus());
+            document.addField("claim_status", m.getBusinessExpand().getStatus().toString());
         } else {
             document.addField("claim_status", "none");
         }
@@ -122,7 +123,9 @@ public class BusinessSolrService extends SolrServiceImpl {
                     dto.setPhotoUrl(urlFix + doc.getFieldValue("photo_url").toString());
                 }
                 dto.setColorCode(Checks.stringValueOf(doc.getFieldValue("color_code")));
-                dto.setClaimStatus(Checks.stringValueOf(doc.getFieldValue("claim_status")));
+                if (doc.getFieldValue("claim_status") != null) {
+                    dto.setClaimStatus(BusinessExpand.ClaimStatus.valueOf(doc.getFieldValue("claim_status").toString()));
+                }
                 dto.setDistance(Checks.toDouble(Checks.stringValueOf(doc.getFieldValue("_dist_"))));
                 content.add(dto);
             }

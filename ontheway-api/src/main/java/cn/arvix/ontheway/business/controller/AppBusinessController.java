@@ -8,10 +8,7 @@ import cn.arvix.ontheway.business.entity.Business;
 import cn.arvix.ontheway.business.service.BusinessCheckInService;
 import cn.arvix.ontheway.business.service.BusinessService;
 import com.google.common.collect.Sets;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -177,6 +174,13 @@ public class AppBusinessController extends ExceptionHandlerController {
     @PostMapping(value = "/cancel/{businessId}")
     public JSONResult cancel(@PathVariable Long businessId) {
         return businessCheckInService.cancel(businessId);
+    }
+
+    @ApiOperation(value = "获取当前用户正在审核的认领数量")
+    @ResponseBody
+    @GetMapping(value = "/user/claim/count")
+    public JSONResult checkUserSubmitClaim() {
+        return businessService.checkUserSubmitClaim();
     }
 
 }
