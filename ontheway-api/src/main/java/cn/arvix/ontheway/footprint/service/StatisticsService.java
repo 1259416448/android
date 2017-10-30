@@ -3,8 +3,8 @@ package cn.arvix.ontheway.footprint.service;
 import cn.arvix.base.common.entity.SystemModule;
 import cn.arvix.base.common.entity.search.Searchable;
 import cn.arvix.base.common.service.impl.BaseServiceImpl;
-import cn.arvix.ontheway.footprint.entity.Statistics;
-import cn.arvix.ontheway.footprint.repository.StatisticsRepository;
+import cn.arvix.ontheway.footprint.entity.FootprintStatistics;
+import cn.arvix.ontheway.footprint.repository.FootprintStatisticsRepository;
 import com.google.common.collect.Maps;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +17,10 @@ import java.util.Set;
  *         e-mail ：yangyang_666@icloud.com ； tel ：18580128658 ；QQ ：296604153
  */
 @Service
-public class StatisticsService extends BaseServiceImpl<Statistics, Long> {
+public class StatisticsService extends BaseServiceImpl<FootprintStatistics, Long> {
 
-    private StatisticsRepository getStatisticsRepository() {
-        return (StatisticsRepository) baseRepository;
+    private FootprintStatisticsRepository getStatisticsRepository() {
+        return (FootprintStatisticsRepository) baseRepository;
     }
 
     /**
@@ -64,12 +64,12 @@ public class StatisticsService extends BaseServiceImpl<Statistics, Long> {
      * @param footprintIds 足迹ID
      * @return 足迹统计数据Map
      */
-    public Map<Long, Statistics> findByFootprintIds(Set<Long> footprintIds) {
+    public Map<Long, FootprintStatistics> findByFootprintIds(Set<Long> footprintIds) {
         Map<String, Object> params = Maps.newHashMap();
         params.put("instanceId_in", footprintIds);
         params.put("systemModule_eq", SystemModule.footprint);
-        List<Statistics> statisticsList = super.findAllWithNoPageNoSort(Searchable.newSearchable(params));
-        Map<Long, Statistics> statisticsMap = Maps.newHashMap();
+        List<FootprintStatistics> statisticsList = super.findAllWithNoPageNoSort(Searchable.newSearchable(params));
+        Map<Long, FootprintStatistics> statisticsMap = Maps.newHashMap();
         statisticsList.forEach(x -> statisticsMap.put(x.getInstanceId(), x));
         return statisticsMap;
     }

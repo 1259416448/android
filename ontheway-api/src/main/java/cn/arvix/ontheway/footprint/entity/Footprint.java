@@ -60,7 +60,7 @@ public class Footprint extends BaseEntity<Long> {
     @OneToOne(fetch = FetchType.LAZY)
     @NotNull(message = "statistics is not null")
     @ApiModelProperty(hidden = true)
-    private Statistics statistics;
+    private FootprintStatistics statistics;
 
     //附件类型，是视频还是照片
     @Enumerated(EnumType.STRING)
@@ -189,11 +189,11 @@ public class Footprint extends BaseEntity<Long> {
         this.longitude = longitude;
     }
 
-    public Statistics getStatistics() {
+    public FootprintStatistics getStatistics() {
         return statistics;
     }
 
-    public void setStatistics(Statistics statistics) {
+    public void setStatistics(FootprintStatistics statistics) {
         this.statistics = statistics;
     }
 

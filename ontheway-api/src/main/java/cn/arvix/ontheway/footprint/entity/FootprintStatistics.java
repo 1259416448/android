@@ -18,7 +18,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "otw_statistics")
-public class Statistics extends BaseEntity<Long> {
+public class FootprintStatistics extends BaseEntity<Long> {
 
     private Long instanceId;
 
