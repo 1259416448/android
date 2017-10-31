@@ -1,5 +1,7 @@
 package cn.arvix.ontheway.business.dto;
 
+import cn.arvix.ontheway.business.entity.BusinessExpand;
+
 /**
  * @author Created by yangyang on 2017/8/29.
  *         e-mail ：yangyang_666@icloud.com ； tel ：18580128658 ；QQ ：296604153
@@ -24,7 +26,7 @@ public class ARSearchDTO {
 
     private String photoUrl;
 
-    private String claimStatus;
+    private BusinessExpand.ClaimStatus claimStatus;
 
     public static ARSearchDTO getInstance() {
         return new ARSearchDTO();
@@ -102,11 +104,11 @@ public class ARSearchDTO {
         this.photoUrl = photoUrl;
     }
 
-    public String getClaimStatus() {
+    public BusinessExpand.ClaimStatus getClaimStatus() {
         return claimStatus;
     }
 
-    public void setClaimStatus(String claimStatus) {
+    public void setClaimStatus(BusinessExpand.ClaimStatus claimStatus) {
         this.claimStatus = claimStatus;
     }
 }

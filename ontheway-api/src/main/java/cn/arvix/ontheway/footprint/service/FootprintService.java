@@ -20,7 +20,7 @@ import cn.arvix.ontheway.footprint.dto.FootprintCreateDTO;
 import cn.arvix.ontheway.footprint.dto.FootprintDetailDTO;
 import cn.arvix.ontheway.footprint.dto.FootprintSearchListDTO;
 import cn.arvix.ontheway.footprint.entity.Footprint;
-import cn.arvix.ontheway.footprint.entity.Statistics;
+import cn.arvix.ontheway.footprint.entity.FootprintStatistics;
 import cn.arvix.ontheway.footprint.repository.FootprintRepository;
 import cn.arvix.ontheway.sys.config.service.ConfigService;
 import cn.arvix.ontheway.sys.user.entity.User;
@@ -129,7 +129,7 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
             m.setIfBusinessComment(Boolean.TRUE);
         }
         //创建统计信息
-        Statistics statistics = new Statistics();
+        FootprintStatistics statistics = new FootprintStatistics();
         statistics.setSystemModule(SystemModule.footprint);
         statisticsService.save(statistics);
         m.setStatistics(statistics);
@@ -632,7 +632,7 @@ public class FootprintService extends BaseServiceImpl<Footprint, Long> {
             Set<Long> footprintIdSet = Sets.newHashSetWithExpectedSize(page.getContent().size());
             page.getContent().forEach(x -> footprintIdSet.add(x.getId()));
             //获取统计数据
-            Map<Long, Statistics> statisticsMap = statisticsService.findByFootprintIds(footprintIdSet);
+            Map<Long, FootprintStatistics> statisticsMap = statisticsService.findByFootprintIds(footprintIdSet);
             //获取足迹照片数据
             Map<Long, List<String>> photoListMap = documentService.findFileUrlByParentIds(footprintIdSet, SystemModule.footprint);
 

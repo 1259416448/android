@@ -179,6 +179,7 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
      * @return 认领结果
      */
     public JSONResult claim(CreateAndClaimDTO dto) {
+
         Assert.notNull(dto.getBusiness(), "商家信息不能为空");
         Assert.notNull(dto.getBusiness().getBusinessExpand(), "认领信息不能为空");
         Assert.notNull(dto.getCertificatePhoto(), "手持身份证照片不能为空");
