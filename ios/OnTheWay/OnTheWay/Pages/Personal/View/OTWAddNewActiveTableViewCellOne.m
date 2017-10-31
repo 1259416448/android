@@ -19,16 +19,20 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 100, self.frame.size.height - 0.5)];
+        _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 100, 49.5)];
         _titleLabel.font = [UIFont systemFontOfSize:16];
         _titleLabel.textColor = [UIColor color_202020];
         [self addSubview:_titleLabel];
         
-        _detailTF = [[UITextField alloc] initWithFrame:CGRectMake(130, 0, SCREEN_WIDTH - 15 - 130, self.frame.size.height - 0.5)];
+        _detailTF = [[UITextField alloc] initWithFrame:CGRectMake(130, 0, SCREEN_WIDTH - 15 - 130, 49.5)];
         _detailTF.textAlignment = NSTextAlignmentRight;
         _detailTF.font = [UIFont systemFontOfSize:14];
         _detailTF.textColor = UIColorFromRGB(0x979797);
         [self addSubview:_detailTF];
+        
+        UIView * downLine = [[UIView alloc] initWithFrame:CGRectMake(0, 49.5, SCREEN_WIDTH, 0.5)];
+        downLine.backgroundColor = [UIColor color_d5d5d5];
+        [self addSubview:downLine];
         
     }
     return self;

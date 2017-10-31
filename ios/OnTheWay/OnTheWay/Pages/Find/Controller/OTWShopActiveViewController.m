@@ -38,6 +38,7 @@
     //设置标题
     self.title = @"商家活动";
     [self setLeftNavigationImage:[UIImage imageNamed:@"back_2"]];
+    [self setCustomNavigationRightView:self.addBtn];
 
     //大背景
     self.view.backgroundColor=[UIColor color_f4f4f4];

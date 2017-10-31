@@ -19,6 +19,9 @@
 //商家分类ID
 @property (nonatomic,strong) NSString * typeId;
 
+@property (nonatomic,strong) NSString * sortId;
+
+
 //筛选分类数据
 @property(nonatomic,strong) NSMutableArray *siftSortArr;
 

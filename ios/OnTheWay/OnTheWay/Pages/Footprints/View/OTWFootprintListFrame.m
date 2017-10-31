@@ -64,13 +64,7 @@
     CGFloat footprintAddressImageFW = 9.8;
     CGFloat footprintAddressImageFH = 9.8;
     _footprintAddressImageF = CGRectMake(footprintAddressImageFX, footprintAddressImageFY, footprintAddressImageFW, footprintAddressImageFH);
-    
-    //定位label
-    CGFloat footprintAddressFX = 26+1.8;
-    CGFloat footprintAddressFY = 96 - 46  + footprintContentH;
-    CGFloat footprintAddressFW = SCREEN_WIDTH - padding*2 - 15 - 80;
-    CGFloat footprintAddressFH = 12;
-    _footprintAddressF = CGRectMake(footprintAddressFX, footprintAddressFY, footprintAddressFW, footprintAddressFH);
+
     
     CGSize textSize = [self sizeWithString:_footprint.dateCreatedStr font:FootprintDateCreatedStrFont maxSize:CGSizeMake(100, 12)];
     
@@ -87,6 +81,14 @@
     CGFloat dataCreatedFW = textSize.width;
     CGFloat dataCreatedFH = 12;
     _dataCreatedF = CGRectMake(dataCreatedFX, dataCreatedFY, dataCreatedFW, dataCreatedFH);
+    
+    
+    //定位label
+    CGFloat footprintAddressFX = 26+1.8;
+    CGFloat footprintAddressFY = 96 - 46  + footprintContentH;
+    CGFloat footprintAddressFW = SCREEN_WIDTH - 30 - 28 - textSize.width - 30;
+    CGFloat footprintAddressFH = 12;
+    _footprintAddressF = CGRectMake(footprintAddressFX, footprintAddressFY, footprintAddressFW, footprintAddressFH);
     
     //目前行高固定
     _cellHeight = 118 ;

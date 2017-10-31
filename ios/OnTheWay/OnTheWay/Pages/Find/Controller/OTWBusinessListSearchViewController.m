@@ -92,6 +92,7 @@
     headLabel.text = @"历史搜索";
     [headView addSubview:headLabel];
     UIButton * deleteBtn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 45, 18.5, 45, 35)];
+    [deleteBtn addTarget:self action:@selector(deleteBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [deleteBtn setImage:[UIImage imageNamed:@"ar_ss_shanchu"] forState:UIControlStateNormal];
     [headView addSubview:deleteBtn];
     return headView;
@@ -112,6 +113,14 @@
         [cell setTextArray:_dataArray row:indexPath.section];
     }
     return cell;
+}
+- (void)deleteBtnClick
+{
+    [OTWUtils alertSuccess:@"清除成功" userInteractionEnabled:NO target:self];
+    NSUserDefaults * userDefault = [NSUserDefaults standardUserDefaults];
+    [userDefault setObject:@[] forKey:[NSString stringWithFormat:@"%@%@",searchHistory,[OTWUserModel shared].mobilePhoneNumber]];
+    _dataArray = @[];
+    [_tableView reloadData];
 }
 
 - (UITableView *)tableView

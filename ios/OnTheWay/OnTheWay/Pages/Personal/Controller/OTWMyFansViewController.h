@@ -8,8 +8,19 @@
 
 #import "OTWBaseViewController.h"
 
+@protocol OTWMyFansViewControllerDelegate <NSObject>
+
+- (void)refreshData;
+
+@end
+
 @interface OTWMyFansViewController : OTWBaseViewController
 
 @property (nonatomic, assign) BOOL isFromFans;
+
+@property (nonatomic, assign) BOOL isNoFans;
+
+@property (nonatomic, weak) id <OTWMyFansViewControllerDelegate> delegate;
+
 
 @end

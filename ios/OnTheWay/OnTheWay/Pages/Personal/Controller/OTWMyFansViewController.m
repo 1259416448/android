@@ -49,7 +49,6 @@
     }];
     [self.view addSubview:_tableview];
     
-    [self loadData];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -144,6 +143,13 @@
     });
     
 }
+- (void)leftNavigaionButtonClicked
+{
+    if (_delegate && [_delegate respondsToSelector:@selector(refreshData)]) {
+        [_delegate refreshData];
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
 - (OTWMyFansParameter *)parameter
 {
     if (!_parameter) {
@@ -161,6 +167,11 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self loadData];
 }
 
 /*

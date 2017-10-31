@@ -117,10 +117,12 @@
     self.userNicknameLabel.frame = CGRectMake(0, 0, self.userNicknameView.Witdh, self.userNicknameView.Height);
     self.footprintContentLabel.frame = frame.footprintContentF;
     self.footprintPhotoImgView.frame = frame.footprintPhotoImgF;
-    self.footprintAddressImageView.frame = frame.footprintAddressImageF;
-    self.footprintAddressLabel.frame = frame.footprintAddressF;
+
     self.dateCreatedImageView.frame = frame.dataCreatedImageF;
     self.dateCreatedLabel.frame = frame.dataCreatedF;
+    
+    self.footprintAddressImageView.frame = frame.footprintAddressImageF;
+    self.footprintAddressLabel.frame = frame.footprintAddressF;
 }
 
 #pragma mark - Setter Getter

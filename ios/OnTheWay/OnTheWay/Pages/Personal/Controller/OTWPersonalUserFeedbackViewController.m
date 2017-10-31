@@ -20,6 +20,9 @@
 @end
 
 @implementation OTWPersonalUserFeedbackViewController
+{
+    NSTimer *_timer;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -88,15 +91,18 @@
         [OTWNetworkManager doPOST:url parameters:dic success:^(id responseObject) {
             if([[NSString stringWithFormat:@"%@",responseObject[@"code"]] isEqualToString:@"0"]){
                 [OTWUtils alertSuccess:@"反馈成功" userInteractionEnabled:NO target:self];
-                dispatch_after(5, dispatch_get_main_queue(), ^{
-                    [self.navigationController popViewControllerAnimated:YES];
-                });
+                _timer =  [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(delayMethod) userInfo:nil repeats:NO];
             }
         } failure:^(NSError *error) {
             
         }];
         
     });
+}
+- (void)delayMethod
+{
+    [_timer invalidate];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 -(UIView*)userFeedbackContent{
     if(!_userFeedbackContent){

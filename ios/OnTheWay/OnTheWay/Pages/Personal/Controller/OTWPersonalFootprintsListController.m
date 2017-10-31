@@ -16,7 +16,7 @@
 #import "OTWMyInfoView.h"
 #import "OTWMyFansViewController.h"
 
-@interface OTWPersonalFootprintsListController ()<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>
+@interface OTWPersonalFootprintsListController ()<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate,OTWMyFansViewControllerDelegate>
 
 @property (nonatomic,strong) UIView *personalFootprintsListTableViewHeader;
 @property (nonatomic,strong) OTWMyInfoView *myInfoView;
@@ -271,10 +271,13 @@
                 if (self.statisticsModel.isAttention) {
                     self.addImg.hidden = YES;
                     tips = @"已关注";
+                    self.statisticsModel.fansNum++;
                 }else{
                     self.addImg.hidden = NO;
                     tips = @"取消关注";
+                    self.statisticsModel.fansNum--;
                 }
+                [self.myInfoView refleshData];
                 [OTWUtils alertSuccess:tips userInteractionEnabled:NO target:self];
             });
         } failure:^(NSError *error) {
@@ -448,21 +451,33 @@
 #pragma mark OTWMyInfoViewDelegate
 - (void)seeFans
 {
-    if (self.statisticsModel.fansNum > 0) {
+    if (_ifMyFootprint) {
         OTWMyFansViewController * myFans = [[OTWMyFansViewController alloc] init];
         myFans.isFromFans = YES;
+        if (self.statisticsModel.fansNum == 0) {
+            myFans.isNoFans = YES;
+        }
+        myFans.delegate = self;
         [self.navigationController pushViewController:myFans animated:YES];
     }
+
 }
 - (void)seeAttentions
 {
-    if (self.statisticsModel.likeNum > 0) {
+    if (_ifMyFootprint) {
         OTWMyFansViewController * myFans = [[OTWMyFansViewController alloc] init];
         myFans.isFromFans = NO;
+        if (self.statisticsModel.likeNum == 0) {
+            myFans.isNoFans = YES;
+        }
+        myFans.delegate = self;
         [self.navigationController pushViewController:myFans animated:YES];
     }
 }
-
+- (void)refreshData
+{
+    [_tableView.mj_header beginRefreshing];
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -614,8 +629,8 @@
 {
     if(!_statisticsModel){
         _statisticsModel = [[OTWPersonalStatisticsModel alloc] init];
-        _statisticsModel.likeNum = 45654;
-        _statisticsModel.fansNum = 99999;
+        _statisticsModel.likeNum = 0;
+        _statisticsModel.fansNum = 0;
     }
     return _statisticsModel;
 }

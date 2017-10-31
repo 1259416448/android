@@ -21,7 +21,6 @@
 #import "OTWBusinessAlbumViewController.h"
 //#import "BNCoreServices.h"
 
-
 #import <MJExtension.h>
 
 @interface OTWBusinessDetailViewController () <UITableViewDelegate,UITableViewDataSource,OTWBusinessDetailViewDelegate>
@@ -510,8 +509,8 @@
 #pragma mark 导航
 - (void)goMapClick:(OTWBusinessDetailView *)detailView businessModel:(OTWBusinessModel *)businessModel
 {
-//    DLog(@"点击了到这里");
-//    
+    DLog(@"点击了到这里");
+    
 //    NSMutableArray *nodesArray = [[NSMutableArray alloc] initWithCapacity: 2];
 //    
 //    //起点

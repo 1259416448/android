@@ -460,8 +460,16 @@
                 {
                     OTWBusinessSortModel * model = [OTWBusinessSortModel mj_objectWithKeyValues:result];
                     model.selected = NO;
+                    for (OTWBusinessDetailSortModel * result in model.children) {
+                        if ([[NSString stringWithFormat:@"%@",result.typeId] isEqualToString:self.sortId]) {
+                            result.selected = YES;
+                        }else{
+                            result.selected = NO;
+                        }
+                    }
                     [_siftSortArr addObject:model];
                 }
+                
                 [self reloadTableView];
             }
         } success:^(id responseObject) {
@@ -473,6 +481,13 @@
                 {
                     OTWBusinessSortModel * model = [OTWBusinessSortModel mj_objectWithKeyValues:result];
                     model.selected = NO;
+                    for (OTWBusinessDetailSortModel * result in model.children) {
+                        if ([[NSString stringWithFormat:@"%@",result.typeId] isEqualToString:self.sortId]) {
+                            result.selected = YES;
+                        }else{
+                            result.selected = NO;
+                        }
+                    }
                     [_siftSortArr addObject:model];
                 }
                 [self reloadTableView];
