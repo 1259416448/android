@@ -49,7 +49,7 @@
     self.view.backgroundColor=[UIColor color_f4f4f4];
     
     //创建一个分组样式的UITableView
-    tableView = [[UITableView alloc]initWithFrame:CGRectMake(0,64, SCREEN_WIDTH, SCREEN_HEIGHT - 64) style:UITableViewStyleGrouped];
+    tableView = [[UITableView alloc]initWithFrame:CGRectMake(0,65, SCREEN_WIDTH, SCREEN_HEIGHT - 65) style:UITableViewStyleGrouped];
     
     tableView.dataSource = self;
     

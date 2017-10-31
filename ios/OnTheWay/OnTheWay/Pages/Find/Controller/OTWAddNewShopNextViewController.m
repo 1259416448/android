@@ -349,29 +349,47 @@
 #pragma mark 上传照片
 - (void)uploadPhotots
 {
+    if ([self.createShopFormModel.name isEqualToString:@""] || self.createShopFormModel.name == nil) {
+        [OTWUtils alertFailed:@"请填写提交人姓名" userInteractionEnabled:NO target:self];
+        return;
+    }
+    if ([self.createShopFormModel.mobilePhoneNumber isEqualToString:@""] || self.createShopFormModel.mobilePhoneNumber == nil) {
+        [OTWUtils alertFailed:@"请填写提交人手机号" userInteractionEnabled:NO target:self];
+        return;
+    }
+    if ([self.createShopFormModel.certificateNumber isEqualToString:@""] || self.createShopFormModel.certificateNumber == nil) {
+        [OTWUtils alertFailed:@"请填写证件号码" userInteractionEnabled:NO target:self];
+        return;
+    }
+    if ([self.createShopFormModel.organizationNumber isEqualToString:@""] || self.createShopFormModel.organizationNumber == nil) {
+        [OTWUtils alertFailed:@"请填写组织机构代码" userInteractionEnabled:NO target:self];
+        return;
+    }
+    NSMutableArray<UIImage*> *shopAboutImages = [NSMutableArray array];
+    if (self.createShopFormModel.businessLicenseImage) {
+        [shopAboutImages addObject:self.createShopFormModel.certificateImage];
+    } else {
+        [OTWUtils alertFailed:@"请上传营业执照" userInteractionEnabled:NO target:self];
+        return;
+    }
+    if (self.createShopFormModel.certificateImage) {
+        [shopAboutImages addObject:self.createShopFormModel.businessLicenseImage];
+    } else {
+        [OTWUtils alertFailed:@"请上传身份证" userInteractionEnabled:NO target:self];
+        return;
+    }
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.label.textColor = [UIColor whiteColor];
     hud.bezelView.color = [UIColor blackColor];
-    hud.activityIndicatorColor = [UIColor whiteColor];
-    NSMutableArray<UIImage*> *shopAboutImages = [NSMutableArray array];
-    if (self.createShopFormModel.certificateImage) {
-        [shopAboutImages addObject:self.createShopFormModel.certificateImage];
-    } else {
-        hud.label.text = @"请上传营业执照";
-        return;
-    }
-    if (self.createShopFormModel.businessLicenseImage) {
-        [shopAboutImages addObject:self.createShopFormModel.businessLicenseImage];
-    } else {
-        hud.label.text = @"请上传身份证";
-        return;
-    }
+//    hud.activityIndicatorColor = [UIColor whiteColor];
     if(shopAboutImages.count > 0){
+//        [OTWUtils alertLoading:@"正在上传图片" userInteractionEnabled:NO target:self];
         hud.label.text = @"正在上传图片";
         [QiniuUploadService uploadImages:shopAboutImages progress:^(CGFloat progress){
             DLog(@"已成功上传了 progress %f",progress);
         }success:^(NSArray<OTWDocument *> *documents){
             hud.label.text = @"正在提交商家信息";
+//            [OTWUtils alertLoading:@"正在提交商家信息" userInteractionEnabled:NO target:self];
             if (documents.count > 0) {
                 self.createShopFormModel.certificatePhoto = [documents objectAtIndex:0];
                 self.createShopFormModel.businessLicensePhoto = [documents objectAtIndex:1];
@@ -389,27 +407,62 @@
 #pragma mark 提交表单数据
 - (void)submitFormData:(MBProgressHUD *)hud
 {
-    OTWBusinessExpand *businessExpand = [[OTWBusinessExpand alloc] init];
-    self.createShopFormModel.businessExpand = businessExpand;
-    [self validateFormData];
-    NSDictionary *requestBody = [NSDictionary dictionaryWithObjectsAndKeys:self.createShopFormModel.mj_keyValues,@"business",self.createShopFormModel.certificatePhoto.mj_keyValues,@"certificatePhoto",self.createShopFormModel.businessLicensePhoto.mj_keyValues,@"businessLicensePhoto",nil];
-        DLog(@"form表单数据为:%@",requestBody.mj_keyValues);
-    [OTWBusinessService createBusiness:requestBody completion:^(id result, NSError *error) {
-        if (result) {
-            [hud hideAnimated:YES];
-            if ([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]) {
-                [self errorTips:@"添加成功" userInteractionEnabled:YES];
-                self.createShopFormModel = [[CreateShopFormModel alloc] init];
-                OTWSearchShopListViewController *findSearchVC = [[OTWSearchShopListViewController alloc] init];
-                [self.navigationController pushViewController:findSearchVC animated:NO];
+
+    NSDictionary * businessExpand = @{@"certificateNumber":self.createShopFormModel.certificateNumber,
+                                      @"certificateType":@"idCard",
+                                      @"mobilePhoneNumber":self.createShopFormModel.mobilePhoneNumber,
+                                      @"name":self.createShopFormModel.name,
+                                      @"organizationNumber":self.createShopFormModel.organizationNumber};
+    NSDictionary * business = @{@"id":_model.businessId,
+                                @"businessExpand":businessExpand};
+    NSDictionary * dto = @{@"business":business,
+                           @"businessLicensePhoto":self.createShopFormModel.businessLicensePhoto.mj_keyValues,
+                           @"certificatePhoto":self.createShopFormModel.certificatePhoto.mj_keyValues};
+    if (_isFromSearchShop) {
+        NSString * url = @"/app/business/claim";
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [OTWNetworkManager doPOST:url parameters:dto success:^(id responseObject) {
+                if ([[NSString stringWithFormat:@"%@",responseObject[@"code"]] isEqualToString:@"0"]) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [hud hideAnimated:YES];
+                        [OTWUtils alertSuccess:@"添加认领成功" userInteractionEnabled:NO target:self];
+                    });
+                }else
+                {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [OTWUtils alertFailed:@"添加失败，请检查您的网络是否连接" userInteractionEnabled:NO target:self];
+                    });
+                }
+            } failure:^(NSError *error) {
+                [self netWorkErrorTips:error];
+            }];
+        });
+
+    }else
+    {
+            OTWBusinessExpand *businessExpand = [[OTWBusinessExpand alloc] init];
+            self.createShopFormModel.businessExpand = businessExpand;
+            [self validateFormData];
+            NSDictionary *requestBody = [NSDictionary dictionaryWithObjectsAndKeys:self.createShopFormModel.mj_keyValues,@"business",self.createShopFormModel.certificatePhoto.mj_keyValues,@"certificatePhoto",self.createShopFormModel.businessLicensePhoto.mj_keyValues,@"businessLicensePhoto",nil];
+                DLog(@"form表单数据为:%@",requestBody.mj_keyValues);
+        [OTWBusinessService createBusiness:requestBody completion:^(id result, NSError *error) {
+            if (result) {
+                [hud hideAnimated:YES];
+                if ([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]) {
+                    [self errorTips:@"添加成功" userInteractionEnabled:YES];
+                    self.createShopFormModel = [[CreateShopFormModel alloc] init];
+                    OTWSearchShopListViewController *findSearchVC = [[OTWSearchShopListViewController alloc] init];
+                    [self.navigationController pushViewController:findSearchVC animated:NO];
+                } else {
+                    [self errorTips:@"添加失败，请检查您的网络是否连接" userInteractionEnabled:YES];
+                }
             } else {
-                [self errorTips:@"添加失败，请检查您的网络是否连接" userInteractionEnabled:YES];
+                [self netWorkErrorTips:error];
             }
-        } else {
-            [self netWorkErrorTips:error];
-        }
-        
-    }];
+            
+        }];
+    }
+
 }
 
 #pragma mark 验证输入框数据合法性

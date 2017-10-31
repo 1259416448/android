@@ -21,6 +21,9 @@
 
 @property (nonatomic,strong) NSString * sortId;
 
+@property (nonatomic,strong) NSString * firstID;
+
+
 
 //筛选分类数据
 @property(nonatomic,strong) NSMutableArray *siftSortArr;

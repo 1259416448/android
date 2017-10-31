@@ -167,6 +167,7 @@
     OTWFindBusinessmenViewController *FindBusinessmenVC = [[OTWFindBusinessmenViewController alloc] init];
     OTWFindStatus *status=_status[indexPath.row];
     FindBusinessmenVC.typeId = [NSString stringWithFormat:@"%@",status.typeId];
+    FindBusinessmenVC.firstID = [NSString stringWithFormat:@"%@",status.typeId];
     [self.navigationController pushViewController:FindBusinessmenVC animated:YES];
     
 }
@@ -242,6 +243,8 @@
     OTWFindStatus *status=_status[indexpath.row];
     FindBusinessmenVC.typeId = [NSString stringWithFormat:@"%@,%@",status.typeId,typeId];
     FindBusinessmenVC.sortId = [NSString stringWithFormat:@"%@",typeId];
+    FindBusinessmenVC.firstID = [NSString stringWithFormat:@"%@",status.typeId];
+
     [self.navigationController pushViewController:FindBusinessmenVC animated:YES];
 }
 #pragma mark OTWBusinessListSearchViewControllerDelegate

@@ -11,9 +11,17 @@
 #import <MJRefresh.h>
 #import "OTWNotFundFootprintView.h"
 
+@protocol OTWPersonalFootprintsListControllerDelegate <NSObject>
+
+- (void)refresh;
+
+@end
+
 @interface OTWPersonalFootprintsListController : OTWBaseViewController
 
 @property (nonatomic,assign) BOOL ifMyFootprint;
+
+@property (nonatomic, assign) BOOL isFromFans;
 
 @property (nonatomic,assign) NSString *userId;
 
@@ -28,6 +36,8 @@
 @property (nonatomic,strong) OTWNotFundFootprintView *notFundFootprintView;
 
 @property (nonatomic,assign) BOOL ifInsertCreateCell;
+
+@property (nonatomic, weak) id <OTWPersonalFootprintsListControllerDelegate> delegate;
 
 +(instancetype) initWithIfMyFootprint: (BOOL) ifMyFootprint;
 

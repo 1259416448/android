@@ -263,6 +263,9 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [OTWNetworkManager doPOST:url parameters:dic success:^(id responseObject) {
             if([[NSString stringWithFormat:@"%@",responseObject[@"code"]] isEqualToString:@"0"]){
+                if (_delegate && [_delegate respondsToSelector:@selector(refresh)]) {
+                    [_delegate refresh];
+                }
                 self.statisticsModel.isAttention = !self.statisticsModel.isAttention;
             }
             dispatch_async(dispatch_get_main_queue(), ^{

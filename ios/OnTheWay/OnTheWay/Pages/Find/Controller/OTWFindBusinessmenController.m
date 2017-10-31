@@ -417,14 +417,17 @@
         cell.selectionStyle = UITableViewCellEditingStyleNone;
         for (OTWBusinessSortModel * model in _siftSortArr) {
             if (model.selected) {
-                OTWBusinessDetailSortModel * detailModel = model.children[indexPath.row];
-                cell.titleLabel.text = detailModel.name;
-                if (detailModel.selected) {
-                    cell.selectedImg.hidden = NO;
-                }else
-                {
-                    cell.selectedImg.hidden = YES;
+                if (model.children.count > indexPath.row) {
+                    OTWBusinessDetailSortModel * detailModel = model.children[indexPath.row];
+                    cell.titleLabel.text = detailModel.name;
+                    if (detailModel.selected) {
+                        cell.selectedImg.hidden = NO;
+                    }else
+                    {
+                        cell.selectedImg.hidden = YES;
+                    }
                 }
+
             }
         }
         return cell;
@@ -459,7 +462,12 @@
                 for (NSDictionary *result in arr)
                 {
                     OTWBusinessSortModel * model = [OTWBusinessSortModel mj_objectWithKeyValues:result];
-                    model.selected = NO;
+                    if ([[NSString stringWithFormat:@"%@",model.typeId] isEqualToString:self.firstID]) {
+                        model.selected = YES;
+                    }else
+                    {
+                        model.selected = NO;
+                    }
                     for (OTWBusinessDetailSortModel * result in model.children) {
                         if ([[NSString stringWithFormat:@"%@",result.typeId] isEqualToString:self.sortId]) {
                             result.selected = YES;
@@ -480,7 +488,12 @@
                 for (NSDictionary *result in arr)
                 {
                     OTWBusinessSortModel * model = [OTWBusinessSortModel mj_objectWithKeyValues:result];
-                    model.selected = NO;
+                    if ([[NSString stringWithFormat:@"%@",model.typeId] isEqualToString:self.firstID]) {
+                        model.selected = YES;
+                    }else
+                    {
+                        model.selected = NO;
+                    }
                     for (OTWBusinessDetailSortModel * result in model.children) {
                         if ([[NSString stringWithFormat:@"%@",result.typeId] isEqualToString:self.sortId]) {
                             result.selected = YES;
@@ -501,8 +514,6 @@
 - (void)reloadTableView
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        OTWBusinessSortModel * model = _siftSortArr[0];
-        model.selected = YES;
         for (OTWBusinessSortModel * result in _siftSortArr) {
             OTWBusinessDetailSortModel * resultModel = [[OTWBusinessDetailSortModel alloc] init];
             resultModel.name = @"全部";
@@ -563,6 +574,14 @@
     _siftView.frame = CGRectMake(0, -415, SCREEN_WIDTH, 415);
     [UIView commitAnimations];
     _siftView.hidden = YES;
+}
+- (void)toSearchBusiness
+{
+    [self cancelButtonClick];
+    OTWBusinessListSearchViewController *findSearchVC = [[OTWBusinessListSearchViewController alloc] init];
+    findSearchVC.delegate = self;
+    findSearchVC.isFromAR = YES;
+    [self.navigationController pushViewController:findSearchVC animated:NO];
 }
 
 /*

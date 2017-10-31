@@ -35,7 +35,8 @@
     UIImageView *_ShopDetailsAdressIcon;//地址图标
     UIView *_ShopDetailsCommentImgList;//评论图片列表
     UIView *_CellBottomBorder;//cell底部边框
-
+    UIView *_line1;
+    UIView *_line2;
 }
 
 @property (nonatomic,assign) CGFloat photoH;
@@ -54,6 +55,9 @@
 
 #pragma mark 初始化视图
 -(void)initSubView{
+    _line2 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 0.5)];
+    _line2.backgroundColor = [UIColor color_d5d5d5];
+    [self.contentView addSubview:_line2];
     
     //头像控件
     _ShopDetailsHeaderImg=[[UIImageView alloc]init];
@@ -92,8 +96,13 @@
 
     //cell的边框
     _CellBottomBorder=[[UIView alloc] init];
-    _CellBottomBorder.layer.borderColor=[UIColor color_d5d5d5].CGColor;
-    _CellBottomBorder.layer.borderWidth=0.5;
+    _CellBottomBorder.backgroundColor = [UIColor color_f4f4f4];
+//    _CellBottomBorder.layer.borderColor=[UIColor color_d5d5d5].CGColor;
+//    _CellBottomBorder.layer.borderWidth=0.5;
+    _line1 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 0.5)];
+    _line1.backgroundColor = [UIColor color_d5d5d5];
+    [_CellBottomBorder addSubview:_line1];
+    
     [self.contentView addSubview:_CellBottomBorder];
 
 }
@@ -175,9 +184,11 @@
     _ShopDetailsAdress.frame=CGRectMake(_ShopDetailsAdressIcon.MaxX+5, CGRectGetMaxY(_ShopDetailsCommentImgList.frame)+15-2, SCREEN_WIDTH-_ShopDetailsHeaderImg.MaxX-10-10-15, 12);
     _ShopDetailsAdress.text=status.footprintAddress;
     
-    _CellBottomBorder.frame=CGRectMake(0, CGRectGetMaxY(_ShopDetailsAdressIcon.frame)+14, SCREEN_WIDTH, 0.5);
+    _CellBottomBorder.frame=CGRectMake(0, CGRectGetMaxY(_ShopDetailsAdressIcon.frame)+14, SCREEN_WIDTH, 11);
+    _line1.frame = CGRectMake(0, 0, SCREEN_WIDTH, 0.5);
+    _line2.frame = CGRectMake(0, 0, SCREEN_WIDTH, 0.5);
     
-    [self setFrame:CGRectMake(0, 0, SCREEN_WIDTH, CGRectGetMaxY(_ShopDetailsAdressIcon.frame)+15)];
+    [self setFrame:CGRectMake(0, 0, SCREEN_WIDTH, CGRectGetMaxY(_ShopDetailsAdressIcon.frame)+15 + 10)];
     
 }
 

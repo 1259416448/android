@@ -125,7 +125,7 @@
 - (UITableView*)systemNewsTableView
 {
     if (!_systemNewsTableView) {
-        _systemNewsTableView = [[UITableView alloc] initWithFrame: CGRectMake(0, self.navigationHeight, self.view.width, self.view.height - self.navigationHeight) style:UITableViewStyleGrouped];
+        _systemNewsTableView = [[UITableView alloc] initWithFrame: CGRectMake(0, self.navigationHeight + 1, self.view.width, self.view.height - self.navigationHeight - 1) style:UITableViewStyleGrouped];
         _systemNewsTableView.dataSource = self;
         _systemNewsTableView.delegate = self;
         _systemNewsTableView.backgroundColor = [UIColor clearColor];

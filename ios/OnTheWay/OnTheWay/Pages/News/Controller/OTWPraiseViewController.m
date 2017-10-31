@@ -60,11 +60,12 @@ static NSString *const praiseID = @"praise";
 - (UITableView *)tableV
 {
     if (!_tableV) {
-        _tableV = [[UITableView alloc] initWithFrame: CGRectMake(0, 74, SCREEN_WIDTH,SCREEN_HEIGHT - 74) style:UITableViewStylePlain];
+        _tableV = [[UITableView alloc] initWithFrame: CGRectMake(0, 65, SCREEN_WIDTH,SCREEN_HEIGHT - 65) style:UITableViewStyleGrouped];
         _tableV.dataSource = self;
         _tableV.delegate = self;
         _tableV.backgroundColor = [UIColor clearColor];
         _tableV.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _tableV.tableHeaderView = self.headerV;
         _tableV.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
             self.Parameter.number = 0;
             [self initData];
@@ -82,7 +83,7 @@ static NSString *const praiseID = @"praise";
 {
     if (!_headerV) {
         _headerV = [[UIView alloc] init];
-        _headerV.backgroundColor = [UIColor color_f4f4f4];
+        _headerV.backgroundColor = [UIColor clearColor];
         _headerV.frame = CGRectMake(0, 0, SCREEN_WIDTH, 10);
 
     }

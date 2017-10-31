@@ -13,7 +13,7 @@
 #import "OTWPersonalFootprintsListController.h"
 #import "OTWUserModel.h"
 
-@interface OTWMyFansViewController ()<UITableViewDelegate,UITableViewDataSource>
+@interface OTWMyFansViewController ()<UITableViewDelegate,UITableViewDataSource,OTWPersonalFootprintsListControllerDelegate>
 
 @property (nonatomic, strong) UITableView * tableview;
 
@@ -21,14 +21,35 @@
 
 @property (nonatomic, strong) OTWMyFansParameter * parameter;
 
+@property (nonatomic,strong) UIView *noResultView;
+@property (nonatomic,strong) UIImageView *noResultImage;
+@property (nonatomic,strong) UILabel *noResultLabelOne;
+@property (nonatomic,strong) UILabel *noResultLabelTwo;
+
 @end
 
 @implementation OTWMyFansViewController
+{
+    NSString *_imageStr;
+    NSString *_tipsOne;
+    NSString *_tipsTwo;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title = @"我的粉丝";
+    if (_isFromFans) {
+        self.title = @"我的粉丝";
+        _imageStr = @"qx_wufensi";
+        _tipsOne = @"一个粉丝都没有";
+        _tipsTwo = @"是不是有点孤单呢";
+    }else
+    {
+        self.title = @"我的关注";
+        _imageStr = @"qx_wuguanzhu";
+        _tipsOne = @"一个人是不是很无聊呢";
+        _tipsTwo = @"那就去关注更多小伙伴吧";
+    }
     self.view.backgroundColor = [UIColor whiteColor];
     [self setLeftNavigationImage:[UIImage imageNamed:@"back_2"]];
 
@@ -88,6 +109,8 @@
     personalSiteVC.userId = [NSString stringWithFormat:@"%@",model.userId];
     personalSiteVC.userNickname = model.userNickname;
     personalSiteVC.userHeaderImg = model.userHeadImg;
+    personalSiteVC.isFromFans = _isFromFans;
+    personalSiteVC.delegate = self;
     [self.navigationController pushViewController:personalSiteVC animated:YES];
 }
 - (void)loadData
@@ -123,6 +146,9 @@
                    [_dataArr addObject: model];
                }
                dispatch_async(dispatch_get_main_queue(), ^{
+                   if (arr.count == 0 && self.parameter.number == 0) {
+                       [self.view addSubview:self.noResultView];
+                   }
                    if (arr.count == 0 || arr.count < 15) {
                        [_tableview.mj_footer endRefreshingWithNoMoreData];
                    }else{
@@ -150,6 +176,10 @@
         [self.navigationController popViewControllerAnimated:YES];
     }
 }
+- (void)refresh
+{
+    [_tableview.mj_header beginRefreshing];
+}
 - (OTWMyFansParameter *)parameter
 {
     if (!_parameter) {
@@ -164,6 +194,54 @@
     }
     return _parameter;
 }
+
+-(UIView*)noResultView{
+    if(!_noResultView){
+        _noResultView=[[UIView alloc]initWithFrame:CGRectMake(0, self.navigationHeight+1, SCREEN_WIDTH, SCREEN_HEIGHT-self.navigationHeight)];
+        _noResultView.backgroundColor=[UIColor whiteColor];
+        [_noResultView addSubview:self.noResultImage];
+        [_noResultView addSubview:self.noResultLabelOne];
+        [_noResultView addSubview:self.noResultLabelTwo];
+    }
+    
+    return _noResultView;
+}
+-(UIImageView*)noResultImage{
+    if(!_noResultImage){
+        _noResultImage=[[UIImageView alloc]init];
+        _noResultImage.frame=CGRectMake((SCREEN_WIDTH-151)/2, 130 + 64, 151, 109);
+        _noResultImage.image=[UIImage imageNamed:_imageStr];
+    }
+    return _noResultImage;
+}
+
+-(UILabel*)noResultLabelOne{
+    if(!_noResultLabelOne){
+        _noResultLabelOne=[[UILabel alloc]init];
+        _noResultLabelOne.text = _tipsOne;
+        _noResultLabelOne.font=[UIFont systemFontOfSize:13];
+        _noResultLabelOne.textColor=[UIColor color_979797];
+        [_noResultLabelOne sizeToFit];
+        _noResultLabelOne.frame=CGRectMake(0, self.noResultImage.MaxY+15, SCREEN_WIDTH, _noResultLabelOne.Height);
+        _noResultLabelOne.textAlignment=NSTextAlignmentCenter;
+    }
+    return _noResultLabelOne;
+}
+
+-(UILabel*)noResultLabelTwo{
+    if(!_noResultLabelTwo){
+        _noResultLabelTwo=[[UILabel alloc]init];
+        _noResultLabelTwo.text = _tipsTwo;
+        _noResultLabelTwo.font=[UIFont systemFontOfSize:13];
+        _noResultLabelTwo.textColor=[UIColor color_979797];
+        [_noResultLabelTwo sizeToFit];
+        _noResultLabelTwo.frame=CGRectMake(0, self.noResultLabelOne.MaxY+10, SCREEN_WIDTH, _noResultLabelTwo.Height);
+        _noResultLabelTwo.textAlignment=NSTextAlignmentCenter;
+    }
+    return _noResultLabelTwo;
+}
+
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

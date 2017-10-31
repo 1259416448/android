@@ -636,7 +636,7 @@
 {
     if(!_codeSentButton){
         _codeSentButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        _codeSentButton.frame = CGRectMake(self.inputCodeView.Witdh-15-75, 9.5, 75, 30);
+        _codeSentButton.frame = CGRectMake(self.inputCodeView.Witdh-15-75, 7, 75, 30);
         //_codeSentButton.backgroundColor = [UIColor color_e50834];
         [_codeSentButton setTitle:@"获取验证码" forState:UIControlStateNormal];
         [_codeSentButton setTitleColor:[UIColor color_e50834] forState:UIControlStateNormal];
