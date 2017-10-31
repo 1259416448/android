@@ -33,7 +33,6 @@
     UILabel *_ShopDetailsCommentConten;//评论内容
     UILabel *_ShopDetailsAdress;//地址
     UIImageView *_ShopDetailsAdressIcon;//地址图标
-    UIView *_ShopDetailsCommentImgList;//评论图片列表
     UIView *_CellBottomBorder;//cell底部边框
     UIView *_line1;
     UIView *_line2;
@@ -156,6 +155,9 @@
                     imageView.layer.masksToBounds = YES;
                     imageView.contentMode = UIViewContentModeScaleAspectFill;
                     [imageView setImageWithURL:[NSURL URLWithString:[status.footprintPhotoArray[k] stringByAppendingString:@"?imageView2/1/w/194/h/156"]]];
+                    imageView.tag = 1000 + k;
+                    imageView.userInteractionEnabled = YES;
+                    [imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAt:)]];
                     [_ShopDetailsCommentImgList addSubview:imageView];
                     k++;
                 }
@@ -170,6 +172,9 @@
                     [imageView setImageWithURL:[NSURL URLWithString:status.footprintPhotoArray[k]]];
                     imageView.layer.masksToBounds = YES;
                     imageView.contentMode = UIViewContentModeScaleAspectFill;
+                    imageView.tag = 1000 + k;
+                    imageView.userInteractionEnabled = YES;
+                    [imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAt:)]];
                     [_ShopDetailsCommentImgList addSubview:imageView];
                     k++;
                     if (j + i*3 == status.footprintPhotoArray.count-1) {
@@ -190,6 +195,13 @@
     
     [self setFrame:CGRectMake(0, 0, SCREEN_WIDTH, CGRectGetMaxY(_ShopDetailsAdressIcon.frame)+15 + 10)];
     
+}
+- (void)tapAt:(UITapGestureRecognizer *)tap
+{
+    NSLog(@"-=-=-=-==-=-=-=--=-%ld",tap.view.tag);
+    if (_delegate && [_delegate respondsToSelector:@selector(tapAtIndexPath:AndImgIndex:)]) {
+        [_delegate tapAtIndexPath:_indexPath AndImgIndex:tap.view.tag - 1000];
+    }
 }
 
 -(CGFloat)photoH{

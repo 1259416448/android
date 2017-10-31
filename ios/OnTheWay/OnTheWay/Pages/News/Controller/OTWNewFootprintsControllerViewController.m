@@ -15,7 +15,9 @@
 
 #import "OTWFootprintListModel.h"
 
-@interface OTWNewFootprintsControllerViewController ()<UITableViewDataSource,UITableViewDelegate>{
+#import "SDPhotoBrowser.h"
+
+@interface OTWNewFootprintsControllerViewController ()<UITableViewDataSource,UITableViewDelegate,OTWNewFootprintsTableViewCellDelegate,SDPhotoBrowserDelegate>{
         UITableView *_tableView;
        NSMutableArray *_status;
     NSInteger _page;
@@ -24,6 +26,7 @@
 @property (nonatomic,strong) UIImageView *noResultImage;
 @property (nonatomic,strong) UILabel *noResultLabelOne;
 @property (nonatomic,strong) UILabel *noResultLabelTwo;
+@property (nonatomic,strong) NSIndexPath * currentIndexPath;
 
 @end
 
@@ -34,6 +37,7 @@
     // Do any additional setup after loading the view.
     _page = 0;
     _status = @[].mutableCopy;
+    _currentIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
     [self buildUI];
 //    [self initData];
     [self loadData];
@@ -132,6 +136,8 @@
         //在此模块，以便重新布局
     }
     if (_status.count > 0) {
+        cell.indexPath = indexPath;
+        cell.delegate = self;
         [cell setData:_status[indexPath.row]];
     }
 
@@ -208,6 +214,42 @@
        }];
     });
 }
+#pragma mark OTWNewFootprintsTableViewCellDelegate
+- (void)tapAtIndexPath:(NSIndexPath *)indexPath AndImgIndex:(NSInteger)index
+{
+    SDPhotoBrowser *photoBrowser = [[SDPhotoBrowser alloc] init];
+    OTWFootprintListModel * model = _status[indexPath.row];
+    _currentIndexPath = indexPath;
+    photoBrowser.delegate = self;
+    OTWNewFootprintsTableViewCell *cell = (OTWNewFootprintsTableViewCell *)[self tableView:_tableView
+                                                                     cellForRowAtIndexPath:indexPath];
+    photoBrowser.sourceImagesContainerView = cell;
+    photoBrowser.isAnimate = NO;
+    photoBrowser.currentImageIndex = index;
+    photoBrowser.imageCount = model.footprintPhotoArray.count;
+    [photoBrowser show];
+}
+
+#pragma mark - SDPhotoBrowserDelegate
+
+- (NSURL *)photoBrowser:(SDPhotoBrowser *)browser highQualityImageURLForIndex:(NSInteger)index
+{
+    NSString *urlString = @"";
+    OTWFootprintListModel * model = _status[_currentIndexPath.row];
+
+    urlString = model.footprintPhotoArray[index];
+    return [NSURL URLWithString:urlString];
+}
+- (UIImage *)photoBrowser:(SDPhotoBrowser *)browser placeholderImageForIndex:(NSInteger)index
+{
+    OTWNewFootprintsTableViewCell *cell = (OTWNewFootprintsTableViewCell *)[self tableView:_tableView
+                                                                     cellForRowAtIndexPath:_currentIndexPath];
+    UIImageView * imageview = cell.ShopDetailsCommentImgList.subviews[index];
+    
+    
+    return imageview.image;
+}
+
 -(UIView*)noResultView{
     if(!_noResultView){
         _noResultView=[[UIView alloc]initWithFrame:CGRectMake(0, self.navigationHeight+1, SCREEN_WIDTH, SCREEN_HEIGHT-self.navigationHeight)];

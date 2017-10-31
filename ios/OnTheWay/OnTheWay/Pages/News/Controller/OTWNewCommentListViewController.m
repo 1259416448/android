@@ -177,7 +177,7 @@
         self.newsSearchParams.currentTime = result[@"currentTime"];
         NSArray *dataArr = result[@"body"][@"content"];
         if (dataArr && dataArr.count > 0) {
-            if (reflesh) {
+            if (reflesh || self.newsSearchParams.number == 0) {
                 [self.commentArr removeAllObjects];
             }
             for (NSDictionary *dict in dataArr) {
