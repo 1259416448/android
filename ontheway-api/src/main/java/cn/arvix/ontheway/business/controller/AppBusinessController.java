@@ -183,4 +183,17 @@ public class AppBusinessController extends ExceptionHandlerController {
         return businessService.checkUserSubmitClaim();
     }
 
+    @ApiOperation(value = "获取当前用户的认领商家，分页获取")
+    @GetMapping(value = "/user/claim/search")
+    @ResponseBody
+    @ApiImplicitParams(value = {
+            @ApiImplicitParam(value = "当前页", name = "number", required = true, paramType = "query"),
+            @ApiImplicitParam(value = "每页大小", name = "size", required = true, paramType = "query"),
+            @ApiImplicitParam(value = "开始分页时间", name = "currentTime", paramType = "query")
+    })
+    public JSONResult userClaim(int number, int size, Long currentTime) {
+        return businessService.userClaim(number, size, currentTime);
+    }
+
+
 }

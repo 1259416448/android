@@ -71,6 +71,7 @@ public class BusinessExpand extends BaseEntity<Long> {
      * 认领状态
      */
     public enum ClaimStatus {
+        none,
         submit, //提交
         approved, //通过
         notApproved //不通过审核

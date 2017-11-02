@@ -595,6 +595,34 @@ public class BusinessService extends BaseServiceImpl<Business, Long> {
 
     }
 
+    /**
+     * 获取用户的认领商家，只会获取到以审核通过的
+     *
+     * @param number      当前页
+     * @param size        每页大小
+     * @param currentTime 请求时间
+     * @return 认领商家信息
+     */
+    public JSONResult userClaim(int number, int size, Long currentTime) {
+        if (currentTime == null) currentTime = System.currentTimeMillis();
+        if (number < 0) number = 0;
+        if (size > 30) size = 15;
+        Map<String, Object> params = Maps.newHashMap();
+        User user = webContextUtils.getCheckCurrentUser();
+        params.put("claim", Boolean.TRUE);
+        params.put("userId", user.getId());
+        params.put("dateCreated", new Date(currentTime));
+        params.put("claimStatus", BusinessExpand.ClaimStatus.approved);
+        Searchable searchable = Searchable.newSearchable(params, new PageRequest(number, size));
+        Page page = super.findAll(searchable);
+
+        //加载优惠信息
+
+        //加载封面图片信息
+
+        return JsonUtil.getSuccess(CommonContact.FETCH_SUCCESS, CommonContact.FETCH_SUCCESS, page);
+    }
+
     private void importDataToSolr(int size, int number) {
         Map<String, Object> params = Maps.newHashMap();
         params.put("ifShow_eq", true);
