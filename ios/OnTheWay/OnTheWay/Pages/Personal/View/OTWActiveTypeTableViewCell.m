@@ -19,7 +19,10 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
-        _activeImage = [[UIImageView alloc] init];
+        _activeImage = [[UILabel alloc] init];
+        _activeImage.font = [UIFont systemFontOfSize:10];
+        _activeImage.textColor = [UIColor whiteColor];
+        _activeImage.textAlignment = NSTextAlignmentCenter;
         [self addSubview:_activeImage];
         _titleLabel = [[UILabel alloc] init];
         _titleLabel.textColor = [UIColor color_202020];
@@ -31,13 +34,15 @@
     }
     return self;
 }
-- (void)setTitle:(NSString *)title
+- (void)setModel:(OTWBusinessActivityModel *)model
 {
-    _title = title;
-    NSInteger width = _title.length * 16 - 1;
+    _model = model;
+    NSInteger width = _model.name.length * 16 - 1;
     _activeImage.frame = CGRectMake((SCREEN_WIDTH - 25 - width) / 2, 29 / 2, 15, 15);
     _titleLabel.frame = CGRectMake(CGRectGetMaxX(_activeImage.frame) + 10, 0, width, 43.5);
-    _titleLabel.text = _title;
+    _titleLabel.text = _model.name;
+    _activeImage.text = _model.typeName;
+    _activeImage.backgroundColor = [UIColor colorWithHexString:_model.colorStr];
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];

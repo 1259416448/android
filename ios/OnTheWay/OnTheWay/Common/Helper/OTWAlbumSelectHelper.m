@@ -87,7 +87,7 @@
     
     [picker dismissViewControllerAnimated:YES completion: ^{
         
-        UIImage *orImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+        UIImage *orImage = [info objectForKey:UIImagePickerControllerEditedImage];
         NSData *imageData = UIImageJPEGRepresentation(orImage, 0.4); //压缩图片
         UIImage *image = [UIImage imageWithData:imageData];
         

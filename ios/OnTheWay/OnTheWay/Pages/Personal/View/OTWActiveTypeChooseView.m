@@ -18,6 +18,9 @@
 @end
 
 @implementation OTWActiveTypeChooseView
+{
+    NSMutableArray<OTWBusinessActivityModel *> *_dataArr;
+}
 
 /*
 // Only override drawRect: if you perform custom drawing.
@@ -32,11 +35,13 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5];
-        _titleArr = @[];
+        _dataArr = @[].mutableCopy;
+        [self prepareData];
 //        _imageArr = @[@"",@"",@"",@""];
         _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT - 225, SCREEN_WIDTH, 225)];
         _tableView.delegate = self;
         _tableView.dataSource = self;
+        _tableView.scrollEnabled = NO;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.backgroundColor = [UIColor clearColor];
         [self addSubview:_tableView];
@@ -56,6 +61,32 @@
 - (void)cancelBtnClick
 {
     self.hidden = YES;
+}
+- (void)prepareData
+{
+    NSArray *array = @[@{
+                           @"name":@"优惠券",
+                           @"colorStr":@"FF5959",
+                           @"typeName":@"券",
+                           @"url":@""
+                           },@{
+                           @"name":@"特价",
+                           @"colorStr":@"61CB60",
+                           @"typeName":@"促",
+                           @"url":@""
+                           },@{
+                           @"name":@"团购",
+                           @"colorStr":@"FB903E",
+                           @"typeName":@"团",
+                           @"url":@""
+                           },
+                             @{
+                           @"name":@"外卖",
+                           @"colorStr":@"3DC3EC",
+                           @"typeName":@"外",
+                           @"url":@""
+                           }];
+    _dataArr = [OTWBusinessActivityModel mj_objectArrayWithKeyValuesArray:array];
 }
 #pragma mark 这一组里面有多少行
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -86,16 +117,16 @@
     if (cell == nil) {
         cell=[[OTWActiveTypeTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:flag];
     }
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.backgroundColor = [UIColor whiteColor];
-    cell.title = _titleArr[indexPath.row];
-    cell.activeImage.image = [UIImage imageNamed:@"wd_guanli"];
-    
+    cell.model = _dataArr[indexPath.row];    
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (_delegate && [_delegate respondsToSelector:@selector(selectedTitle:)]) {
-        [_delegate selectedTitle:_titleArr[indexPath.row]];
+    if (_delegate && [_delegate respondsToSelector:@selector(selectedModel:)]) {
+        [_delegate selectedModel:_dataArr[indexPath.row]];
+        self.hidden = YES;
     }
 }
 

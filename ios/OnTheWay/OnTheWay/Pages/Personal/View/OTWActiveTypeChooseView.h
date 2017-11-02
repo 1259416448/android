@@ -7,11 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OTWBusinessActivityModel.h"
 #import "OTWActiveTypeChooseView.h"
 
 @protocol OTWActiveTypeChooseViewDelegate <NSObject>
 
-- (void)selectedTitle:(NSString *)title;
+- (void)selectedModel:(OTWBusinessActivityModel *)model;
 
 @end
 

@@ -809,7 +809,6 @@
                 }else
                 {
                     tips = @"正在为您准备数据，请稍后再试";
-
                 }
                 [self MBProgressHUDErrorTips:tips];
                 [self setAnnotations:@[]];

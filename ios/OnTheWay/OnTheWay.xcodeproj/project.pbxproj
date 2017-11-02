@@ -77,6 +77,7 @@
 		18ED8A331FA6D33C007513C6 /* OTWAddNewActiveTableViewCellFour.m in Sources */ = {isa = PBXBuildFile; fileRef = 18ED8A321FA6D33C007513C6 /* OTWAddNewActiveTableViewCellFour.m */; };
 		18ED8A361FA72126007513C6 /* OTWActiveTypeChooseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18ED8A351FA72126007513C6 /* OTWActiveTypeChooseView.m */; };
 		18ED8A391FA722F0007513C6 /* OTWActiveTypeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18ED8A381FA722F0007513C6 /* OTWActiveTypeTableViewCell.m */; };
+		18ED8A561FA97359007513C6 /* OTWIssueActiveModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18ED8A551FA97359007513C6 /* OTWIssueActiveModel.m */; };
 		B12360111F4C075F00E8FA62 /* OTWPersonalWalletDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B12360101F4C075F00E8FA62 /* OTWPersonalWalletDetailViewController.m */; };
 		B12360141F4D182900E8FA62 /* OTWPersonalWalletDetailViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B12360131F4D182900E8FA62 /* OTWPersonalWalletDetailViewCell.m */; };
 		B123601D1F53CAE600E8FA62 /* OTWPersonalHistroyPayeeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B123601C1F53CAE500E8FA62 /* OTWPersonalHistroyPayeeViewController.m */; };
@@ -437,6 +438,8 @@
 		18ED8A351FA72126007513C6 /* OTWActiveTypeChooseView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWActiveTypeChooseView.m; sourceTree = "<group>"; };
 		18ED8A371FA722F0007513C6 /* OTWActiveTypeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWActiveTypeTableViewCell.h; sourceTree = "<group>"; };
 		18ED8A381FA722F0007513C6 /* OTWActiveTypeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWActiveTypeTableViewCell.m; sourceTree = "<group>"; };
+		18ED8A541FA97359007513C6 /* OTWIssueActiveModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTWIssueActiveModel.h; sourceTree = "<group>"; };
+		18ED8A551FA97359007513C6 /* OTWIssueActiveModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTWIssueActiveModel.m; sourceTree = "<group>"; };
 		45C2D5CA9B6813E8ACAF6178 /* libPods-OnTheWay.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OnTheWay.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B8637730B7A7E4B6ADD9FEE /* Pods-OnTheWay.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnTheWay.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OnTheWay/Pods-OnTheWay.debug.xcconfig"; sourceTree = "<group>"; };
 		68C4FF114BC411D8C8AADB56 /* Pods-OnTheWay.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnTheWay.release.xcconfig"; path = "Pods/Target Support Files/Pods-OnTheWay/Pods-OnTheWay.release.xcconfig"; sourceTree = "<group>"; };
@@ -1544,6 +1547,8 @@
 			children = (
 				DDB8C29D1F14AF0D0091E7B0 /* OTWUserModel.h */,
 				DDB8C29E1F14AF230091E7B0 /* OTWUserModel.m */,
+				18ED8A541FA97359007513C6 /* OTWIssueActiveModel.h */,
+				18ED8A551FA97359007513C6 /* OTWIssueActiveModel.m */,
 				18ED8A0E1FA2C3BE007513C6 /* OTWMyFansModel.h */,
 				18ED8A0F1FA2C3BE007513C6 /* OTWMyFansModel.m */,
 				18ED8A141FA2CB1F007513C6 /* OTWMyFansParameter.h */,
@@ -2249,6 +2254,7 @@
 				D7F6B0B31F1089400013090A /* OTWLoginService.m in Sources */,
 				DD14F2401F113654004DFE4A /* HmacUtils.m in Sources */,
 				DDEA16011F29B35F00056166 /* QiniuUploadHelper.m in Sources */,
+				18ED8A561FA97359007513C6 /* OTWIssueActiveModel.m in Sources */,
 				B12360231F53EF7900E8FA62 /* OTWPersonalCashViewController.m in Sources */,
 				DDF5AB411F90C88700AFF6F9 /* UIImage+CHTailort.m in Sources */,
 				18BCFAA91F4C000500B8E09D /* CreateShopFormModel.m in Sources */,

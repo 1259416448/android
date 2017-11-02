@@ -7,17 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OTWBusinessActivityModel.h"
 
 @interface OTWActiveTypeTableViewCell : UITableViewCell
 
-@property (nonatomic, copy) NSString * title;
-
-@property (nonatomic, copy) NSString * image;
+@property (nonatomic, strong) OTWBusinessActivityModel * model;
 
 
 @property (nonatomic, strong) UILabel * titleLabel;
 
-@property (nonatomic, strong) UIImageView * activeImage;
+@property (nonatomic, strong) UILabel * activeImage;
 
 
 @end

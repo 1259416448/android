@@ -9,7 +9,7 @@
 #import "OTWNewFootprintsTableViewCell.h"
 
 #import "OTWFootprintListModel.h"
-
+#import "PYPhotosView.h"
 #import <AFNetworking/UIImageView+AFNetworking.h>
 
 #define ShopDetailsHeadImgWidth 45 //头像都长宽
@@ -37,10 +37,20 @@
     UIView *_line1;
     UIView *_line2;
 }
+@property (nonatomic,strong) PYPhotosView *photosView;
 
+//照片高度
 @property (nonatomic,assign) CGFloat photoH;
 
+//照片宽度
+@property (nonatomic,assign) CGFloat photoW;
+
+//照片高
+@property (nonatomic,assign) CGFloat photoViewH;
+
 @end
+static NSString *photoParamsTwo = @"?imageMogr2/thumbnail/!20p";
+
 
 @implementation OTWNewFootprintsTableViewCell
 
@@ -133,57 +143,107 @@
     _ShopDetailsCommentConten.numberOfLines = 0;//文字自适应行数
     [_ShopDetailsCommentConten sizeToFit];//更据文字自动布局
     
-    
-    
-    //评论图片列表
-    for (UIImageView *imageView in _ShopDetailsCommentImgList.subviews) {//移除加载的cell
-        [imageView removeFromSuperview];
-    }
-    
-    if(status.footprintPhotoArray.count==0){
-        _ShopDetailsCommentImgList.frame=CGRectMake(_ShopDetailsHeaderImg.MaxX+10, CGRectGetMaxY(_ShopDetailsCommentConten.frame) + 5, (SCREEN_WIDTH-_ShopDetailsHeaderImg.MaxX-10)/3, 0);
-    
-    }else{
-        if(status.footprintPhotoArray.count%3==0){
-            
-            _ShopDetailsCommentImgList.frame=CGRectMake(_ShopDetailsHeaderImg.MaxX+10, CGRectGetMaxY(_ShopDetailsCommentConten.frame) + 5, SCREEN_WIDTH-_ShopDetailsHeaderImg.MaxX-10-15, status.footprintPhotoArray.count/3*self.photoH +(status.footprintPhotoArray.count/3-1)*5 );
-    
-            int k = 0;
-            for (int i = 0; i < status.footprintPhotoArray.count / 3; i ++) {
-                for (int j = 0; j < 3; j ++) {
-                    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(j*(SCREEN_WIDTH-_ShopDetailsHeaderImg.MaxX-10-15)/3, i*(self.photoH+5), (SCREEN_WIDTH-_ShopDetailsHeaderImg.MaxX-10-14-15)/3, self.photoH)];
-                    imageView.layer.masksToBounds = YES;
-                    imageView.contentMode = UIViewContentModeScaleAspectFill;
-                    [imageView setImageWithURL:[NSURL URLWithString:[status.footprintPhotoArray[k] stringByAppendingString:@"?imageView2/1/w/194/h/156"]]];
-                    imageView.tag = 1000 + k;
-                    imageView.userInteractionEnabled = YES;
-                    [imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAt:)]];
-                    [_ShopDetailsCommentImgList addSubview:imageView];
-                    k++;
-                }
-            }
-        }else{
-            _ShopDetailsCommentImgList.frame=CGRectMake(_ShopDetailsHeaderImg.MaxX+10, CGRectGetMaxY(_ShopDetailsCommentConten.frame) + 5, SCREEN_WIDTH-_ShopDetailsHeaderImg.MaxX-10-15, (status.footprintPhotoArray.count/3+1)*self.photoH +status.footprintPhotoArray.count/3*5 );
-
-            int k = 0;
-            for (int i = 0; i < status.footprintPhotoArray.count / 3 + 1; i ++) {
-                for (int j = 0; j < 3; j ++) {
-                    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(j*(SCREEN_WIDTH-_ShopDetailsHeaderImg.MaxX-10-14)/3, i*(self.photoH+5), (SCREEN_WIDTH-_ShopDetailsHeaderImg.MaxX-10-14-15)/3, self.photoH)];
-                    [imageView setImageWithURL:[NSURL URLWithString:status.footprintPhotoArray[k]]];
-                    imageView.layer.masksToBounds = YES;
-                    imageView.contentMode = UIViewContentModeScaleAspectFill;
-                    imageView.tag = 1000 + k;
-                    imageView.userInteractionEnabled = YES;
-                    [imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAt:)]];
-                    [_ShopDetailsCommentImgList addSubview:imageView];
-                    k++;
-                    if (j + i*3 == status.footprintPhotoArray.count-1) {
-                        break;
-                    }
-                }
-            }
+//    //评论图片列表
+//    for (UIImageView *imageView in _ShopDetailsCommentImgList.subviews) {//移除加载的cell
+//        [imageView removeFromSuperview];
+//    }
+    if(_ShopDetailsCommentImgList.subviews && _ShopDetailsCommentImgList.subviews.count >0){
+        for (UIView *view in _ShopDetailsCommentImgList.subviews) {
+            [view removeFromSuperview];
         }
     }
+    
+    //计算照片的高度
+    if(status.footprintPhotoArray && status.footprintPhotoArray.count > 0 ){
+        //根据图片张数计算高度
+        NSUInteger cell = status.footprintPhotoArray.count / 3;
+        if(status.footprintPhotoArray.count % 3 != 0){
+            cell ++ ;
+        }
+        self.photoViewH = self.photoH * cell + 5 * (cell - 1);
+        
+        // 1. 创建缩略图图片链接数组
+        NSMutableArray *thumbnailImageUrls = [NSMutableArray array];
+        // 2 创建原图图片链接数组
+        NSMutableArray *originalImageUrls = [NSMutableArray array];
+        
+        for (NSString *one in status.footprintPhotoArray) {
+            [thumbnailImageUrls addObject:[one stringByAppendingString:AlbumImageSize]];
+            //增加了参数处理
+            //[originalImageUrls addObject:[one stringByAppendingString:photoParamsTwo]];
+            [originalImageUrls addObject:one];
+        }
+        self.photosView.thumbnailUrls = thumbnailImageUrls;
+        self.photosView.originalUrls = originalImageUrls;
+        
+    } else {
+        self.photoViewH = 0;
+    }
+    CGFloat width = 0;
+    if (status.footprintPhotoArray.count == 1) {
+        width = self.photoW;
+    }else if (status.footprintPhotoArray.count == 2)
+    {
+        width = self.photoW * 2 + 5;
+    }else
+    {
+        width = SCREEN_WIDTH - 70 - 15;
+    }
+    self.photosView.frame = CGRectMake(0, 0, width, self.photoViewH);
+    
+    _ShopDetailsCommentImgList.frame = CGRectMake(_ShopDetailsHeaderImg.MaxX + 10, CGRectGetMaxY(_ShopDetailsCommentConten.frame) + 5, SCREEN_WIDTH - 70 - 15, self.photoViewH);
+    if (self.photoViewH == 0) {
+        self.photosView.hidden = YES;
+    }else{
+        self.photosView.hidden = NO;
+    }
+    [_ShopDetailsCommentImgList addSubview:self.photosView];
+    
+    
+//    if(status.footprintPhotoArray.count==0){
+//        _ShopDetailsCommentImgList.frame=CGRectMake(_ShopDetailsHeaderImg.MaxX+10, CGRectGetMaxY(_ShopDetailsCommentConten.frame) + 5, (SCREEN_WIDTH-_ShopDetailsHeaderImg.MaxX-10)/3, 0);
+//    
+//    }else{
+//        if(status.footprintPhotoArray.count%3==0){
+//            
+//            _ShopDetailsCommentImgList.frame=CGRectMake(_ShopDetailsHeaderImg.MaxX+10, CGRectGetMaxY(_ShopDetailsCommentConten.frame) + 5, SCREEN_WIDTH-_ShopDetailsHeaderImg.MaxX-10-15, status.footprintPhotoArray.count/3*self.photoH +(status.footprintPhotoArray.count/3-1)*5 );
+//    
+//            int k = 0;
+//            for (int i = 0; i < status.footprintPhotoArray.count / 3; i ++) {
+//                for (int j = 0; j < 3; j ++) {
+//                    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(j*(SCREEN_WIDTH-_ShopDetailsHeaderImg.MaxX-10-15)/3, i*(self.photoH+5), (SCREEN_WIDTH-_ShopDetailsHeaderImg.MaxX-10-14-15)/3, self.photoH)];
+//                    imageView.layer.masksToBounds = YES;
+//                    imageView.contentMode = UIViewContentModeScaleAspectFill;
+//                    [imageView setImageWithURL:[NSURL URLWithString:[status.footprintPhotoArray[k] stringByAppendingString:@"?imageView2/1/w/194/h/156"]]];
+//                    imageView.tag = 1000 + k;
+//                    imageView.userInteractionEnabled = YES;
+//                    [imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAt:)]];
+//                    [_ShopDetailsCommentImgList addSubview:imageView];
+//                    k++;
+//                }
+//            }
+//        }else{
+//            _ShopDetailsCommentImgList.frame=CGRectMake(_ShopDetailsHeaderImg.MaxX+10, CGRectGetMaxY(_ShopDetailsCommentConten.frame) + 5, SCREEN_WIDTH-_ShopDetailsHeaderImg.MaxX-10-15, (status.footprintPhotoArray.count/3+1)*self.photoH +status.footprintPhotoArray.count/3*5 );
+//
+//            int k = 0;
+//            for (int i = 0; i < status.footprintPhotoArray.count / 3 + 1; i ++) {
+//                for (int j = 0; j < 3; j ++) {
+//                    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(j*(SCREEN_WIDTH-_ShopDetailsHeaderImg.MaxX-10-14)/3, i*(self.photoH+5), (SCREEN_WIDTH-_ShopDetailsHeaderImg.MaxX-10-14-15)/3, self.photoH)];
+//                    [imageView setImageWithURL:[NSURL URLWithString:status.footprintPhotoArray[k]]];
+//                    imageView.layer.masksToBounds = YES;
+//                    imageView.contentMode = UIViewContentModeScaleAspectFill;
+//                    imageView.tag = 1000 + k;
+//                    imageView.userInteractionEnabled = YES;
+//                    [imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAt:)]];
+//                    [_ShopDetailsCommentImgList addSubview:imageView];
+//                    k++;
+//                    if (j + i*3 == status.footprintPhotoArray.count-1) {
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+//    }
     _ShopDetailsAdressIcon.frame=CGRectMake(_ShopDetailsHeaderImg.MaxX+10, CGRectGetMaxY(_ShopDetailsCommentImgList.frame)+15, 10, 10);
 
     _ShopDetailsAdress.frame=CGRectMake(_ShopDetailsAdressIcon.MaxX+5, CGRectGetMaxY(_ShopDetailsCommentImgList.frame)+15-2, SCREEN_WIDTH-_ShopDetailsHeaderImg.MaxX-10-10-15, 12);
@@ -204,11 +264,33 @@
     }
 }
 
--(CGFloat)photoH{
+- (CGFloat) photoH
+{
     if(!_photoH || _photoH == 0){
-        _photoH=(SCREEN_WIDTH-55-15-14) /3  *78 /97;
+        //  78 / 97 高宽比
+        _photoH = 78.0 / 92.0 * self.photoW;
     }
     return _photoH;
+}
+
+- (CGFloat) photoW
+{
+    if(!_photoW || _photoW == 0){
+        _photoW = (SCREEN_WIDTH - 70 - 15 - 14) / 3;
+    }
+    return _photoW;
+}
+- (PYPhotosView *) photosView
+{
+    if(!_photosView){
+        _photosView = [[PYPhotosView alloc] init];
+        _photosView.py_x = 0;
+        _photosView.py_y = 0;
+        _photosView.photoWidth = self.photoW;
+        _photosView.photoHeight = self.photoH;
+        _photosView.photoMargin = 5;
+    }
+    return _photosView;
 }
 
 

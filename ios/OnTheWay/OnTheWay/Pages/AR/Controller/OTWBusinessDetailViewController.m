@@ -509,8 +509,8 @@
 #pragma mark 导航
 - (void)goMapClick:(OTWBusinessDetailView *)detailView businessModel:(OTWBusinessModel *)businessModel
 {
-    DLog(@"点击了到这里");
-    
+//    DLog(@"点击了到这里");
+//    
 //    NSMutableArray *nodesArray = [[NSMutableArray alloc] initWithCapacity: 2];
 //    
 //    //起点
@@ -540,7 +540,7 @@
 //    //路径规划成功，开始导航
 //    [BNCoreServices_UI showPage:BNaviUI_NormalNavi delegate:self extParams:nil];
 //}
-//
+
 ////算路失败回调
 //- (void)routePlanDidFailedWithError:(NSError *)error andUserInfo:(NSDictionary *)userInfo
 //{
@@ -567,42 +567,42 @@
 //    }
 //    [MBProgressHUD py_showError:tipsString toView:self.view];
 //}
-//
+
 ////算路取消
 //-(void)routePlanDidUserCanceled:(NSDictionary*)userInfo {
 //    NSLog(@"算路取消");
 //}
-
-- (void)checkInClick:(OTWBusinessDetailView *)detailView businessModel:(OTWBusinessModel *)businessModel
-{
-    DLog(@"点击了签到按钮");
-    if (businessModel.ifCheckIn) {
-        return;
-    }
-    NSString * url = [NSString stringWithFormat:@"%@%@",@"/app/business/checkIn/",_opId];
-    NSDictionary * Parameter = @{@"id":[NSNumber numberWithInteger:[_opId integerValue]]};
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [OTWNetworkManager doPOST:url parameters:Parameter success:^(id responseObject) {
-            if([[NSString stringWithFormat:@"%@",responseObject[@"code"]] isEqualToString:@"0"]){
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    businessModel.ifCheckIn = !businessModel.ifCheckIn;
-                    NSString * tips = @"";
-                    if (businessModel.ifCheckIn) {
-                        tips = @"签到成功";
-                        [OTWUtils alertSuccess:tips userInteractionEnabled:YES target:self];
-                    }else{
-                    }
-                    [detailView changeCheckInStatus];
-                });
-            }
-        } failure:^(NSError *error) {
-            NSLog(@"fail");
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [OTWUtils alertFailed:@"网络异常" userInteractionEnabled:YES target:self];
-            });
-        }];
-    });
-}
+//
+//- (void)checkInClick:(OTWBusinessDetailView *)detailView businessModel:(OTWBusinessModel *)businessModel
+//{
+//    DLog(@"点击了签到按钮");
+//    if (businessModel.ifCheckIn) {
+//        return;
+//    }
+//    NSString * url = [NSString stringWithFormat:@"%@%@",@"/app/business/checkIn/",_opId];
+//    NSDictionary * Parameter = @{@"id":[NSNumber numberWithInteger:[_opId integerValue]]};
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        [OTWNetworkManager doPOST:url parameters:Parameter success:^(id responseObject) {
+//            if([[NSString stringWithFormat:@"%@",responseObject[@"code"]] isEqualToString:@"0"]){
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    businessModel.ifCheckIn = !businessModel.ifCheckIn;
+//                    NSString * tips = @"";
+//                    if (businessModel.ifCheckIn) {
+//                        tips = @"签到成功";
+//                        [OTWUtils alertSuccess:tips userInteractionEnabled:YES target:self];
+//                    }else{
+//                    }
+//                    [detailView changeCheckInStatus];
+//                });
+//            }
+//        } failure:^(NSError *error) {
+//            NSLog(@"fail");
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                [OTWUtils alertFailed:@"网络异常" userInteractionEnabled:YES target:self];
+//            });
+//        }];
+//    });
+//}
 
 #pragma mark - Setter Getter
 

@@ -12,6 +12,7 @@
 #import "OTWAddNewActiveTableViewCellThree.h"
 #import "OTWAddNewActiveTableViewCellFour.h"
 #import "OTWActiveTypeChooseView.h"
+#import "OTWIssueActiveModel.h"
 
 @interface OTWAddNewActivityViewController ()<UITableViewDelegate,UITableViewDataSource,OTWActiveTypeChooseViewDelegate>
 
@@ -26,6 +27,7 @@
 @property (nonatomic, strong) UIDatePicker *datePicker;
 
 @property (nonatomic, strong) OTWActiveTypeChooseView *activeChooseView;
+@property (nonatomic, strong) OTWIssueActiveModel *issueActiveModel;
 
 
 
@@ -170,6 +172,11 @@
         }
     }
 }
+#pragma mark OTWActiveTypeChooseViewDelegate
+- (void)selectedModel:(OTWBusinessActivityModel *)model
+{
+    
+}
 
 - (void)valueChange:(UIDatePicker *)datePicker{
 //    //创建一个日期格式
@@ -250,6 +257,13 @@
         _activeChooseView.delegate = self;
     }
     return _activeChooseView;
+}
+- (OTWIssueActiveModel *)issueActiveModel
+{
+    if (!_issueActiveModel) {
+        _issueActiveModel = [[OTWIssueActiveModel alloc] init];
+    }
+    return _issueActiveModel;
 }
 
 
