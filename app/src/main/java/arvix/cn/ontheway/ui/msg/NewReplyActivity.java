@@ -37,7 +37,7 @@ import arvix.cn.ontheway.utils.UIUtils;
  * Created by asdtiang on 2017/7/27 0027.
  * asdtiangxia@163.com
  */
-
+//
 public class NewReplyActivity  extends BaseActivity implements AdapterView.OnItemClickListener, PullToRefreshBase.OnRefreshListener2<ListView>  {
 
     private NewReplyAdapter adapter;
