@@ -111,7 +111,7 @@
     [super viewDidLoad];
     _siftSortArr = @[].mutableCopy;
     _siftDetailArr = @[].mutableCopy;
-    [self getbusinessSortData];
+//    [self getbusinessSortData];
     [self showARViewController];
     [self buildUI];
     self.ifFirstLoadData = NO;
@@ -156,10 +156,8 @@
         [self initCLLocationManager];
         return ;
     }
-    if (_isFromFind) {
-        self.arShopSearchParams.q = _searchText;
-        [self getArShops];
-    }
+    [self getArShops];
+    [self getbusinessSortData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -300,17 +298,20 @@
             cell=[[OTWBusinessARSiftTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:flag];
         }
         cell.selectionStyle = UITableViewCellEditingStyleNone;
-        OTWBusinessSortModel * model = _siftSortArr[indexPath.row];
-        cell.titleLabel.text = model.name;
-        if (model.selected) {
-            cell.backgroundColor = [UIColor color_f4f4f4];
-            cell.titleLabel.textColor = [UIColor colorWithHexString:model.colorCode];
-        }else
-        {
-            cell.backgroundColor = [UIColor whiteColor];
-            cell.titleLabel.textColor = [UIColor color_202020];
+        if (_siftSortArr.count > indexPath.row) {
+            OTWBusinessSortModel * model = _siftSortArr[indexPath.row];
+            cell.titleLabel.text = model.name;
+            if (model.selected) {
+                cell.backgroundColor = [UIColor color_f4f4f4];
+                cell.titleLabel.textColor = [UIColor colorWithHexString:model.colorCode];
+            }else
+            {
+                cell.backgroundColor = [UIColor whiteColor];
+                cell.titleLabel.textColor = [UIColor color_202020];
+            }
         }
         return cell;
+
     }else if (tableView == _siftDetailTableView)
     {
         static NSString *flag=@"OTWBusinessARSiftDetailTableViewCell";
@@ -321,13 +322,15 @@
         cell.selectionStyle = UITableViewCellEditingStyleNone;
         for (OTWBusinessSortModel * model in _siftSortArr) {
             if (model.selected) {
-                OTWBusinessDetailSortModel * detailModel = model.children[indexPath.row];
-                cell.titleLabel.text = detailModel.name;
-                if (detailModel.selected) {
-                    cell.selectedImg.hidden = NO;
-                }else
-                {
-                    cell.selectedImg.hidden = YES;
+                if (model.children.count > indexPath.row) {
+                    OTWBusinessDetailSortModel * detailModel = model.children[indexPath.row];
+                    cell.titleLabel.text = detailModel.name;
+                    if (detailModel.selected) {
+                        cell.selectedImg.hidden = NO;
+                    }else
+                    {
+                        cell.selectedImg.hidden = YES;
+                    }
                 }
             }
         }
@@ -443,8 +446,8 @@
 {
     self.trackingManager.stopLocation = TRUE;
     [self hideBusinessSimpleInfo];
-    if (_isFromFind) {
-        [self.navigationController popViewControllerAnimated:YES];
+    if (_isFromFind || _isFromSearch) {
+        [self.navigationController popViewControllerAnimated:NO];
     }else{
         [[OTWLaunchManager sharedManager] showSelectedControllerByIndex:OTWTabBarSelectedIndexFind]; // 显示首页
     }
@@ -573,13 +576,14 @@
 - (void)refreshFootprints
 {
     self.arShopSearchParams.q = nil;
-    self.arShopSearchParams.typeIds = nil;
-    for (OTWBusinessSortModel * models in _siftSortArr) {
-        for (OTWBusinessDetailSortModel * result in models.children) {
-            result.selected = NO;
-        }
-    }
-    [self.siftDetailTableView reloadData];
+//    self.arShopSearchParams.typeIds = nil;
+//    for (OTWBusinessSortModel * models in _siftSortArr) {
+//        for (OTWBusinessDetailSortModel * result in models.children) {
+//            result.selected = NO;
+//        }
+//    }
+//    [self.siftDetailTableView reloadData];
+    self.arShopSearchParams.number += 1;
     [self hideBusinessSimpleInfo];
     [self hideAllButton];
     [self getArShops];
@@ -611,9 +615,11 @@
 #pragma mark 跳转至商家列表页面
 - (void)toFootprintListView
 {
-    [OTWLaunchManager sharedManager].FindBusinessmenVC.latitude = self.arShopSearchParams.latitude;
-    [OTWLaunchManager sharedManager].FindBusinessmenVC.longitude = self.arShopSearchParams.longitude;
+//    [OTWLaunchManager sharedManager].FindBusinessmenVC.latitude = self.arShopSearchParams.latitude;
+//    [OTWLaunchManager sharedManager].FindBusinessmenVC.longitude = self.arShopSearchParams.longitude;
     [OTWLaunchManager sharedManager].FindBusinessmenVC.isFromAR = YES;
+    [OTWLaunchManager sharedManager].FindBusinessmenVC.arShopSearchParams = self.arShopSearchParams;
+
 
     //获取当前push View
     NSArray *viewController = self.navigationController.viewControllers;
@@ -688,6 +694,8 @@
         _arShopSearchParams.isFirstPage = YES;
         
         _arShopSearchParams.q = self.searchText;
+        
+        _arShopSearchParams.typeIds = self.typeId;
     }
     
     return _arShopSearchParams;
@@ -739,7 +747,19 @@
                 for (NSDictionary *result in arr)
                 {
                     OTWBusinessSortModel * model = [OTWBusinessSortModel mj_objectWithKeyValues:result];
-                    model.selected = NO;
+                    if ([[NSString stringWithFormat:@"%@",model.typeId] isEqualToString:[self firstIDReSet]]) {
+                        model.selected = YES;
+                    }else
+                    {
+                        model.selected = NO;
+                    }
+                    for (OTWBusinessDetailSortModel * result in model.children) {
+                        if ([[NSString stringWithFormat:@"%@",result.typeId] isEqualToString:[self sortIdReset]]) {
+                            result.selected = YES;
+                        }else{
+                            result.selected = NO;
+                        }
+                    }
                     [_siftSortArr addObject:model];
                 }
                 [self reloadTableView];
@@ -752,7 +772,19 @@
                 for (NSDictionary *result in arr)
                 {
                     OTWBusinessSortModel * model = [OTWBusinessSortModel mj_objectWithKeyValues:result];
-                    model.selected = NO;
+                    if ([[NSString stringWithFormat:@"%@",model.typeId] isEqualToString:[self firstIDReSet]]) {
+                        model.selected = YES;
+                    }else
+                    {
+                        model.selected = NO;
+                    }
+                    for (OTWBusinessDetailSortModel * result in model.children) {
+                        if ([[NSString stringWithFormat:@"%@",result.typeId] isEqualToString:[self sortIdReset]]) {
+                            result.selected = YES;
+                        }else{
+                            result.selected = NO;
+                        }
+                    }
                     [_siftSortArr addObject:model];
                 }
                 [self reloadTableView];
@@ -766,8 +798,10 @@
 - (void)reloadTableView
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        OTWBusinessSortModel * model = _siftSortArr[0];
-        model.selected = YES;
+        if ([[self firstIDReSet] isEqualToString:@""]) {
+            OTWBusinessSortModel * model = _siftSortArr[0];
+            model.selected = YES;
+        }
         for (OTWBusinessSortModel * result in _siftSortArr) {
             OTWBusinessDetailSortModel * resultModel = [[OTWBusinessDetailSortModel alloc] init];
             resultModel.name = @"全部";
@@ -782,6 +816,9 @@
 #pragma mark 根据查询参数加载足迹数据
 - (void)getArShops
 {
+    if (self.arShopSearchParams.latitude == 0 || self.arShopSearchParams.longitude == 0) {
+        return;
+    }
     [self fetchARShops:self.arShopSearchParams.mj_keyValues completion:^(id result) {
         
         if([[NSString stringWithFormat:@"%@",result[@"code"]] isEqualToString:@"0"]){
@@ -793,9 +830,10 @@
                 if([[NSString stringWithFormat:@"%@",result[@"body"][@"first"]] isEqualToString:@"0"]){
                     [self errorTips:@"已经是最后一批信息，再次点击会循环展示" userInteractionEnabled:NO];
                 }
-            } else {
-                self.arShopSearchParams.number += 1;
             }
+//            else {
+//                self.arShopSearchParams.number += 1;
+//            }
             if ([[NSString stringWithFormat:@"%@",result[@"body"][@"first"]] isEqualToString:@"true"]) {
                 self.arShopSearchParams.isFirstPage = YES;
             }
@@ -1416,6 +1454,30 @@
         _geoCodeSearch.delegate = self;
     }
     return _geoCodeSearch;
+}
+
+
+- (NSString *)firstIDReSet
+{
+    if (self.arShopSearchParams.typeIds.length > 1) {
+        _firstID = [[self.arShopSearchParams.typeIds componentsSeparatedByString:@","] firstObject];
+    }else if (self.arShopSearchParams.typeIds.length > 0)
+    {
+        _firstID = self.arShopSearchParams.typeIds;
+    }else{
+        _firstID = @"";
+    }
+    return _firstID;
+}
+- (NSString *)sortIdReset
+{
+    if (self.arShopSearchParams.typeIds.length > 1) {
+        _sortId = [[self.arShopSearchParams.typeIds componentsSeparatedByString:@","] lastObject];
+    }else
+    {
+        _sortId = @"";
+    }
+    return _sortId;
 }
 
 /**

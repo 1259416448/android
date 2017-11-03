@@ -14,6 +14,7 @@
 #import "CHCustomSearchBar.h"
 #import "findSearchViewController.h"
 #import "OTWBusinessListSearchViewController.h"
+#import "OTWBusinessARViewController.h"
 
 @interface OTWFindViewController ()<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate,OTWBusinessListSearchViewControllerDelegate,OTWFindViewCellDelegate>{
     UITableView *_tableView;
@@ -164,11 +165,12 @@
 #pragma mark 点击行
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     DLog(@"我点击了：%ld",indexPath.row);
-    OTWFindBusinessmenViewController *FindBusinessmenVC = [[OTWFindBusinessmenViewController alloc] init];
+    OTWBusinessARViewController *BusinessARVC = [[OTWBusinessARViewController alloc] init];
     OTWFindStatus *status=_status[indexPath.row];
-    FindBusinessmenVC.typeId = [NSString stringWithFormat:@"%@",status.typeId];
-    FindBusinessmenVC.firstID = [NSString stringWithFormat:@"%@",status.typeId];
-    [self.navigationController pushViewController:FindBusinessmenVC animated:YES];
+    BusinessARVC.typeId = [NSString stringWithFormat:@"%@",status.typeId];
+    BusinessARVC.firstID = [NSString stringWithFormat:@"%@",status.typeId];
+    BusinessARVC.isFromFind = YES;
+    [self.navigationController pushViewController:BusinessARVC animated:YES];
     
 }
 
@@ -239,13 +241,14 @@
 
 - (void)selectedWithTypeId:(NSNumber *)typeId andIndexpath:(NSIndexPath *)indexpath
 {
-    OTWFindBusinessmenViewController *FindBusinessmenVC = [[OTWFindBusinessmenViewController alloc] init];
+    OTWBusinessARViewController *BusinessARVC = [[OTWBusinessARViewController alloc] init];
     OTWFindStatus *status=_status[indexpath.row];
-    FindBusinessmenVC.typeId = [NSString stringWithFormat:@"%@,%@",status.typeId,typeId];
-    FindBusinessmenVC.sortId = [NSString stringWithFormat:@"%@",typeId];
-    FindBusinessmenVC.firstID = [NSString stringWithFormat:@"%@",status.typeId];
+    BusinessARVC.typeId = [NSString stringWithFormat:@"%@,%@",status.typeId,typeId];
+    BusinessARVC.sortId = [NSString stringWithFormat:@"%@",typeId];
+    BusinessARVC.firstID = [NSString stringWithFormat:@"%@",status.typeId];
+    BusinessARVC.isFromFind = YES;
 
-    [self.navigationController pushViewController:FindBusinessmenVC animated:YES];
+    [self.navigationController pushViewController:BusinessARVC animated:YES];
 }
 #pragma mark OTWBusinessListSearchViewControllerDelegate
 

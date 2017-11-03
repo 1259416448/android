@@ -21,6 +21,13 @@ typedef void(^requestBackBlock) (id result);
 
 @property (nonatomic, assign) BOOL isFromSearch;
 
+//商家分类ID
+@property (nonatomic,strong) NSString * typeId;
+
+@property (nonatomic,strong) NSString * sortId;
+
+@property (nonatomic,strong) NSString * firstID;
+
 
 
 @end

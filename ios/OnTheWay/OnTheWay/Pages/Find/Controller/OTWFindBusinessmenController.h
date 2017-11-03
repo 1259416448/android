@@ -6,6 +6,7 @@
 //  Copyright © 2017年 WeiHuan. All rights reserved.
 //
 #import <UIKit/UIKit.h>
+#import "OTWFootprintSearchParams.h"
 
 @interface OTWFindBusinessmenViewController : OTWBaseViewController
 
@@ -23,10 +24,14 @@
 
 @property (nonatomic,strong) NSString * firstID;
 
+//查询对象
+@property (nonatomic,strong) OTWFootprintSearchParams *arShopSearchParams;
 
 
 //筛选分类数据
 @property(nonatomic,strong) NSMutableArray *siftSortArr;
+
+- (void)getShopsList;
 
 
 

@@ -192,7 +192,7 @@
     
     if (_isFromFind) {
         [OTWLaunchManager sharedManager].BusinessARVC.searchText = textField.text;
-        [OTWLaunchManager sharedManager].BusinessARVC.isFromFind = YES;
+        [OTWLaunchManager sharedManager].BusinessARVC.isFromSearch = YES;
         [self.navigationController pushViewController:[OTWLaunchManager sharedManager].BusinessARVC animated:NO];
         return YES;
     }
@@ -221,7 +221,7 @@
 
     if (_isFromFind) {
         [OTWLaunchManager sharedManager].BusinessARVC.searchText = str;
-        [OTWLaunchManager sharedManager].BusinessARVC.isFromFind = YES;
+        [OTWLaunchManager sharedManager].BusinessARVC.isFromSearch = YES;
         [self.navigationController pushViewController:[OTWLaunchManager sharedManager].BusinessARVC animated:NO];
         return;
     }

@@ -34,7 +34,7 @@
 }
 @property (nonatomic,strong) UIView * ARdituImageView;
 @property (nonatomic,strong) UIView * fabuImageView;
-@property (nonatomic,strong) OTWFootprintSearchParams *arShopSearchParams;
+//@property (nonatomic,strong) OTWFootprintSearchParams *arShopSearchParams;
 @property (nonatomic,strong) NSDictionary *reponseCacheData;
 @property (nonatomic,assign) CLLocationCoordinate2D location;
 @property (nonatomic,strong) BMKLocationService *locService;
@@ -76,10 +76,10 @@
     // Do any additional setup after loading the view.
     _status = [[NSMutableArray alloc] init];
     [self.locService startUserLocationService];
-    if (_isFromAR) {
-    }else{
-        self.arShopSearchParams.typeIds = [NSString stringWithFormat:@"%@",_typeId];
-    }
+//    if (_isFromAR) {
+//    }else{
+//        self.arShopSearchParams.typeIds = [NSString stringWithFormat:@"%@",_typeId];
+//    }
     //创建一个分组样式的UITableView
     _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     
@@ -95,7 +95,7 @@
     
     _tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
         self.arShopSearchParams.number = 0;
-        _arShopSearchParams.q = nil;
+//        _arShopSearchParams.q = nil;
         [self getShopsList];
     }];
     
@@ -109,8 +109,7 @@
     
     [self.view addSubview:self.fabuImageView];
     [self buildUI];
-    //获取商家分类信息
-    [self getbusinessSortData];
+
     
     //[self.view addSubview:self.pingmianImageView];
     
@@ -241,6 +240,9 @@
 {
     [super viewWillAppear:animated];
     [[OTWLaunchManager sharedManager].mainTabController hiddenTabBarWithAnimation:YES];
+    [self getShopsList];
+    //获取商家分类信息
+    [self getbusinessSortData];
 }
 
 -(void)buildUI
@@ -348,6 +350,7 @@
     }else if (tableView == _siftDetailTableView)
     {
         self.arShopSearchParams.number = 0;
+        self.arShopSearchParams.q = nil;
         for (OTWBusinessSortModel * models in _siftSortArr) {
             for (OTWBusinessDetailSortModel * result in models.children) {
                 result.selected = NO;
@@ -396,15 +399,17 @@
             cell=[[OTWBusinessARSiftTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:flag];
         }
         cell.selectionStyle = UITableViewCellEditingStyleNone;
-        OTWBusinessSortModel * model = _siftSortArr[indexPath.row];
-        cell.titleLabel.text = model.name;
-        if (model.selected) {
-            cell.backgroundColor = [UIColor color_f4f4f4];
-            cell.titleLabel.textColor = [UIColor colorWithHexString:model.colorCode];
-        }else
-        {
-            cell.backgroundColor = [UIColor whiteColor];
-            cell.titleLabel.textColor = [UIColor color_202020];
+        if (_siftSortArr.count > indexPath.row) {
+            OTWBusinessSortModel * model = _siftSortArr[indexPath.row];
+            cell.titleLabel.text = model.name;
+            if (model.selected) {
+                cell.backgroundColor = [UIColor color_f4f4f4];
+                cell.titleLabel.textColor = [UIColor colorWithHexString:model.colorCode];
+            }else
+            {
+                cell.backgroundColor = [UIColor whiteColor];
+                cell.titleLabel.textColor = [UIColor color_202020];
+            }
         }
         return cell;
     }else if (tableView == _siftDetailTableView)
@@ -427,7 +432,6 @@
                         cell.selectedImg.hidden = YES;
                     }
                 }
-
             }
         }
         return cell;
@@ -462,14 +466,14 @@
                 for (NSDictionary *result in arr)
                 {
                     OTWBusinessSortModel * model = [OTWBusinessSortModel mj_objectWithKeyValues:result];
-                    if ([[NSString stringWithFormat:@"%@",model.typeId] isEqualToString:self.firstID]) {
+                    if ([[NSString stringWithFormat:@"%@",model.typeId] isEqualToString:[self firstIDReSet]]) {
                         model.selected = YES;
                     }else
                     {
                         model.selected = NO;
                     }
                     for (OTWBusinessDetailSortModel * result in model.children) {
-                        if ([[NSString stringWithFormat:@"%@",result.typeId] isEqualToString:self.sortId]) {
+                        if ([[NSString stringWithFormat:@"%@",result.typeId] isEqualToString:[self sortIdReset]]) {
                             result.selected = YES;
                         }else{
                             result.selected = NO;
@@ -488,14 +492,14 @@
                 for (NSDictionary *result in arr)
                 {
                     OTWBusinessSortModel * model = [OTWBusinessSortModel mj_objectWithKeyValues:result];
-                    if ([[NSString stringWithFormat:@"%@",model.typeId] isEqualToString:self.firstID]) {
+                    if ([[NSString stringWithFormat:@"%@",model.typeId] isEqualToString:[self firstIDReSet]]) {
                         model.selected = YES;
                     }else
                     {
                         model.selected = NO;
                     }
                     for (OTWBusinessDetailSortModel * result in model.children) {
-                        if ([[NSString stringWithFormat:@"%@",result.typeId] isEqualToString:self.sortId]) {
+                        if ([[NSString stringWithFormat:@"%@",result.typeId] isEqualToString:[self sortIdReset]]) {
                             result.selected = YES;
                         }else{
                             result.selected = NO;
@@ -514,6 +518,11 @@
 - (void)reloadTableView
 {
     dispatch_async(dispatch_get_main_queue(), ^{
+        if ([[self firstIDReSet] isEqualToString:@""]) {
+            OTWBusinessSortModel * model = _siftSortArr[0];
+            model.selected = YES;
+        }
+        
         for (OTWBusinessSortModel * result in _siftSortArr) {
             OTWBusinessDetailSortModel * resultModel = [[OTWBusinessDetailSortModel alloc] init];
             resultModel.name = @"全部";
@@ -775,25 +784,29 @@
 //}
 
 #pragma mark 初始化商家list查询参数
--(OTWFootprintSearchParams *)arShopSearchParams
+//-(OTWFootprintSearchParams *)arShopSearchParams
+//{
+//    if (!_arShopSearchParams) {
+//        _arShopSearchParams = [[OTWFootprintSearchParams alloc] init];
+//        //列表查询
+//        _arShopSearchParams.type = @"list";
+//        //默认搜索半径为1公里
+//        _arShopSearchParams.searchDistance = @"three";
+//        //默认当前页为 0
+//        _arShopSearchParams.number = 0;
+//        //默认每页大小为 15
+//        _arShopSearchParams.size = 30;
+//        //默认不是最后一页
+//        _arShopSearchParams.isLastPage = NO;
+//        //默认是第一页
+//        _arShopSearchParams.isFirstPage = YES;
+//    }
+//    
+//    return _arShopSearchParams;
+//}
+- (void)setArShopSearchParams:(OTWFootprintSearchParams *)arShopSearchParams
 {
-    if (!_arShopSearchParams) {
-        _arShopSearchParams = [[OTWFootprintSearchParams alloc] init];
-        //列表查询
-        _arShopSearchParams.type = @"list";
-        //默认搜索半径为1公里
-        _arShopSearchParams.searchDistance = @"three";
-        //默认当前页为 0
-        _arShopSearchParams.number = 0;
-        //默认每页大小为 15
-        _arShopSearchParams.size = 30;
-        //默认不是最后一页
-        _arShopSearchParams.isLastPage = NO;
-        //默认是第一页
-        _arShopSearchParams.isFirstPage = YES;
-    }
-    
-    return _arShopSearchParams;
+    _arShopSearchParams = arShopSearchParams;
 }
 - (BMKLocationService *) locService
 {
@@ -802,6 +815,28 @@
         _locService.delegate = self;
     }
     return _locService;
+}
+- (NSString *)firstIDReSet
+{
+    if (self.arShopSearchParams.typeIds.length > 1) {
+        _firstID = [[self.arShopSearchParams.typeIds componentsSeparatedByString:@","] firstObject];
+    }else if (self.arShopSearchParams.typeIds.length > 0)
+    {
+        _firstID = self.arShopSearchParams.typeIds;
+    }else{
+        _firstID = @"";
+    }
+    return _firstID;
+}
+- (NSString *)sortIdReset
+{
+    if (self.arShopSearchParams.typeIds.length > 1) {
+        _sortId = [[self.arShopSearchParams.typeIds componentsSeparatedByString:@","] lastObject];
+    }else
+    {
+        _sortId = @"";
+    }
+    return _sortId;
 }
 
 //-(UIView*)pingmianImageView{
@@ -826,9 +861,9 @@
 {
     CLLocationCoordinate2D coordinate = userLocation.location.coordinate;
     self.location = coordinate;
-    self.arShopSearchParams.latitude = coordinate.latitude;
-    self.arShopSearchParams.longitude = coordinate.longitude;
-    [self getShopsList];
+//    self.arShopSearchParams.latitude = coordinate.latitude;
+//    self.arShopSearchParams.longitude = coordinate.longitude;
+//    [self getShopsList];
     [self.locService stopUserLocationService];
 }
 

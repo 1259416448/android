@@ -229,24 +229,24 @@
         [self.indicatorView stopAnimating];
         self.businessModel = [OTWBusinessModel mj_objectWithKeyValues:result[@"body"]];
         //虚拟展示一些数据
-        NSArray *array = @[@{
-                               @"name":@"送优惠券",
-                               @"colorStr":@"FF5959",
-                               @"typeName":@"券",
-                               @"url":@""
-                               },@{
-                               @"name":@"促销大瓶果粒橙",
-                               @"colorStr":@"61CB60",
-                               @"typeName":@"促",
-                               @"url":@""
-                               },@{
-                               @"name":@"支持团购",
-                               @"colorStr":@"FB903E",
-                               @"typeName":@"团",
-                               @"url":@""
-                               }];
-        NSMutableArray<OTWBusinessActivityModel *> *activitys = [OTWBusinessActivityModel mj_objectArrayWithKeyValuesArray:array];
-        self.businessModel.activitys = activitys;
+//        NSArray *array = @[@{
+//                               @"name":@"送优惠券",
+//                               @"colorStr":@"FF5959",
+//                               @"typeName":@"券",
+//                               @"url":@""
+//                               },@{
+//                               @"name":@"促销大瓶果粒橙",
+//                               @"colorStr":@"61CB60",
+//                               @"typeName":@"促",
+//                               @"url":@""
+//                               },@{
+//                               @"name":@"支持团购",
+//                               @"colorStr":@"FB903E",
+//                               @"typeName":@"团",
+//                               @"url":@""
+//                               }];
+//        NSMutableArray<OTWBusinessActivityModel *> *activitys = [OTWBusinessActivityModel mj_objectArrayWithKeyValuesArray:array];
+        self.businessModel.activitys = @[].mutableCopy;
         
         //构建足迹信息
         if(self.businessModel.footprints && self.businessModel.footprints.count > 0 ){
