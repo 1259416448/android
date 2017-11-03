@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shop_item_border"
+        android:padding="15dp">
+
+        <ImageView
+            android:id="@+id/photo4_grid_two_photo_1"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/header_default" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="17dp"
+                android:ellipsize="end"
+                android:text="高士其"
+                android:textColor="@color/text_label_default"
+                android:textSize="14sp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="12dp"
+                android:ellipsize="end"
+                android:text="10:09"
+                android:textColor="#979797"
+                android:textSize="12sp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="他家菜的味道不错，量也很大就是有点小贵，下次考虑还来"
+                android:textColor="@color/text_label_default"
+                android:textSize="15sp"
+                android:layout_marginTop="10px"
+                />
+            <!--有图片的时候显示一下LinearLayout-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="5dp">
+                <!--这里判断图片的张数，来判断显示LinerLayout的个数-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
+                    <!-- 这里图片的宽度为（屏幕宽度-15-30-10-14）/3   高和宽的比例为78/97-->
+                    <ImageView
+                        android:id="@+id/comment_photo_1"
+                        android:layout_width="97dp"
+                        android:scaleType="centerCrop"
+                        android:layout_height="78dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/header_default" />
+                    <ImageView
+                        android:id="@+id/comment_photo_2"
+                        android:layout_width="97dp"
+                        android:layout_height="78dp"
+                        android:layout_marginLeft="7dp"
+                        android:layout_weight="1"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/header_default" />
+                    <ImageView
+                        android:id="@+id/comment_photo_3"
+                        android:layout_width="97dp"
+                        android:layout_height="78dp"
+                        android:layout_marginLeft="7dp"
+                        android:layout_weight="1"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/header_default" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
+                    <!-- 这里图片的宽度为（屏幕宽度-15-30-10-14）/3   高和宽的比例为78/97-->
+                    <ImageView
+                        android:id="@+id/comment_photo_4"
+                        android:layout_width="97dp"
+                        android:scaleType="centerCrop"
+                        android:layout_height="78dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/header_default" />
+                    <ImageView
+                        android:id="@+id/comment_photo_5"
+                        android:layout_width="97dp"
+                        android:layout_height="78dp"
+                        android:layout_marginLeft="7dp"
+                        android:layout_weight="1"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/header_default" />
+                    <ImageView
+                        android:id="@+id/comment_photo_6"
+                        android:layout_width="97dp"
+                        android:layout_height="78dp"
+                        android:layout_marginLeft="7dp"
+                        android:layout_weight="1"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/header_default" />
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="11sp"
+                    android:textColor="#979797"
+                    android:text="126条回复"
+                    android:gravity="center_vertical"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:textSize="11sp"
+                    android:textColor="#979797"
+                    android:layout_marginLeft="10dp"
+                    android:text="43赞"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:layout_height="match_parent" />
+                <LinearLayout
+                    android:layout_width="60dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/button_radius"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    >
+                    <ImageView
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:src="@drawable/ar_zan"
+                        android:gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="6.5dp"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:text="点赞"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/text_label_default"
+                        android:textSize="12sp"
+                        android:layout_marginLeft="5dp"
+                        />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="60dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/button_radius"
+                    >
+                    <ImageView
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:src="@drawable/ar_fenxiang_black"
+                        android:gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="6.5dp"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:text="分享"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/text_label_default"
+                        android:textSize="12sp"
+                        android:layout_marginLeft="5dp"
+                        />
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
