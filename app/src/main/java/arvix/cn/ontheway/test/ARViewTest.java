@@ -19,12 +19,14 @@ import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,11 +36,8 @@ import org.xutils.x;
 import arvix.cn.ontheway.BaiduActivity;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.bean.FootPrintSearchVo;
-import arvix.cn.ontheway.bean.SearchDistance;
-import arvix.cn.ontheway.bean.SearchTime;
 import arvix.cn.ontheway.service.impl.BusinessSearchServiceImpl;
 import arvix.cn.ontheway.service.inter.CacheService;
-import arvix.cn.ontheway.service.inter.FootPrintSearchService;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.MainActivity;
 import arvix.cn.ontheway.ui.ar_draw.AROverlayViewDraw;
@@ -51,12 +50,12 @@ import arvix.cn.ontheway.utils.StaticMethod;
 import arvix.cn.ontheway.utils.StaticVar;
 import arvix.cn.ontheway.utils.UIUtils;
 
-public class ARViewTest1 extends BaseActivity implements SensorEventListener, LocationListener {
+public class ARViewTest extends BaseActivity implements SensorEventListener, LocationListener {
 
 	final static String TAG = "ARActivity";
-	private  SurfaceView surfaceView;
+	private SurfaceView surfaceView;
 	private FrameLayout cameraContainerLayout;
-	private AROverlayViewDraw arOverlayView;
+	private AROverlayViewDrawTest arOverlayView;
 	private Camera camera;
 	private ARCamera arCamera;
 	public static TextView tvCurrentLocation;
@@ -116,10 +115,10 @@ public class ARViewTest1 extends BaseActivity implements SensorEventListener, Lo
 	private Button refreshBtn;
 	@ViewInject(R.id.back_img)
 	private Button backBtn;
-	@ViewInject(R.id.shaixuan)
-	private Button shaiXuan;
 	@ViewInject(R.id.sousuo)
-	private Button souSuo;
+	private ImageView mSeacher;
+	@ViewInject(R.id.shaixuan)
+	private ImageView mFilter;
 	public static int SCREEN_WIDTH  = 0;
 
 	public static int SCREEN_HEIGHT  = 0;
@@ -152,7 +151,7 @@ public class ARViewTest1 extends BaseActivity implements SensorEventListener, Lo
 		cameraContainerLayout = (FrameLayout) findViewById(R.id.camera_container_layout);
 		surfaceView = (SurfaceView) findViewById(R.id.surface_view);
 		tvCurrentLocation = (TextView) findViewById(R.id.tv_current_location);
-		arOverlayView = new AROverlayViewDraw(this, FootPrintSearchService.class,(ViewGroup)getWindow().getDecorView(),trackSearchVo,radarPointFrameLayout);
+		arOverlayView = new AROverlayViewDrawTest(this, BusinessSearchServiceImpl.class,(ViewGroup)getWindow().getDecorView(),trackSearchVo,radarPointFrameLayout);
 
 		rangeButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -209,22 +208,6 @@ public class ARViewTest1 extends BaseActivity implements SensorEventListener, Lo
 				back();
 			}
 		});
-
-		shaiXuan.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-
-
-			}
-		});
-		souSuo.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-
-
-			}
-		});
-
 		initSearchEvent();
 	}
 
@@ -251,26 +234,30 @@ public class ARViewTest1 extends BaseActivity implements SensorEventListener, Lo
 		}
 	}
 
+	public int convertToPix(int val){
+		float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
+		return (int)px;
 
+	}
 	private void initSearchEvent(){
 		r100mBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				updateSearchDistance(SearchDistance.one);
+				updateSearchDistance(FootPrintSearchVo.SearchDistance.one);
 				rangeLine.setVisibility(View.INVISIBLE);
 			}
 		});
 		r500mBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				updateSearchDistance(SearchDistance.two);
+				updateSearchDistance(FootPrintSearchVo.SearchDistance.two);
 				rangeLine.setVisibility(View.INVISIBLE);
 			}
 		});
 		r1kmBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				updateSearchDistance(SearchDistance.three);
+				updateSearchDistance(FootPrintSearchVo.SearchDistance.three);
 				rangeLine.setVisibility(View.INVISIBLE);
 			}
 		});
@@ -279,21 +266,21 @@ public class ARViewTest1 extends BaseActivity implements SensorEventListener, Lo
 		timeOneBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				updateSearchTime(SearchTime.oneDay);
+				updateSearchTime(FootPrintSearchVo.SearchTime.oneDay);
 				timeLine.setVisibility(View.INVISIBLE);
 			}
 		});
 		timeTwoBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				updateSearchTime(SearchTime.sevenDay);
+				updateSearchTime(FootPrintSearchVo.SearchTime.sevenDay);
 				timeLine.setVisibility(View.INVISIBLE);
 			}
 		});
 		timeThreeBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				updateSearchTime(SearchTime.oneMonth);
+				updateSearchTime(FootPrintSearchVo.SearchTime.oneMonth);
 				timeLine.setVisibility(View.INVISIBLE);
 			}
 		});
@@ -310,20 +297,39 @@ public class ARViewTest1 extends BaseActivity implements SensorEventListener, Lo
 				arOverlayView.updateSearchParams();
 			}
 		});
+		mSeacher.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+
+			}
+		});
+		mFilter.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+
+			}
+		});
 	}
 
-	private void updateSearchDistance(SearchDistance distance){
+	private void updateSearchDistance(FootPrintSearchVo.SearchDistance distance){
 		trackSearchVo.setSearchDistance(distance);
 		arOverlayView.updateSearchParams();
 	}
 
-	private void updateSearchTime(SearchTime time){
+	private void updateSearchTime(FootPrintSearchVo.SearchTime time){
 		trackSearchVo.setSearchTime(time);
 		arOverlayView.updateSearchParams();
 	}
-
-
-	public void updateUi(String totalCount,String address){
+	//设置搜索内容
+	private void updateSearchContent(String content){
+//		trackSearchVo
+		arOverlayView.updateSearchParams();
+	}
+	//设置搜索兴趣点
+	private void updateSearchPoi(String poi){
+		arOverlayView.updateSearchParams();
+	}
+	public void updateUi(String totalCount, String address){
 		totalCountTv.setText(totalCount);
 		addressTv.setText(StaticMethod.genLesAddressStr(address,5));
 		// draw ui
@@ -432,8 +438,8 @@ public class ARViewTest1 extends BaseActivity implements SensorEventListener, Lo
 				sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR),
 				SensorManager.SENSOR_DELAY_NORMAL);
 		sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)  , SensorManager.SENSOR_DELAY_NORMAL);
-		sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) ,SensorManager.SENSOR_DELAY_NORMAL);
-		sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION) ,SensorManager.SENSOR_DELAY_NORMAL);
+		sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) , SensorManager.SENSOR_DELAY_NORMAL);
+		sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION) , SensorManager.SENSOR_DELAY_NORMAL);
 	}
 
 	@Override
@@ -485,7 +491,7 @@ public class ARViewTest1 extends BaseActivity implements SensorEventListener, Lo
 	private void initLocationService() {
 
 		if ( Build.VERSION.SDK_INT >= 23 &&
-				ContextCompat.checkSelfPermission( this, Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED) {
+				ContextCompat.checkSelfPermission( this, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED) {
 			return  ;
 		}
 

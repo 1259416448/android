@@ -63,40 +63,41 @@ public class NewReplyActivity  extends BaseActivity implements AdapterView.OnIte
         listHolder.list.setRefreshing();
     }
 
-
     private void initData(final boolean refresh) {
-        AsyncUtil.goAsync(new Callable<Result<List<CommentBean>>>() {
+//        AsyncUtil.goAsync(new Callable<Result<List<CommentBean>>>() {
+//
+//                @Override
+//                public Result<List<CommentBean>> call() throws Exception {
+//                    Result<List<CommentBean>> ret = new Result<>();
+////                ret.setData(NewReplyData.genData());
+//                    RequestParams requestParams = new RequestParams();
+//                    requestParams.setUri( ServerUrl.COMMENT_SEARCH);
+//                    Map<String,Object> parMap = new HashMap<>();
+//                    parMap.put("number",1);
+//                    parMap.put("size",10);
+//                    requestParams.setBodyContent(JSON.toJSONString(parMap));
+//                    ret.setData(dataList);
+//                    return ret;
+//                }
+//            }, new Callback<Result<List<CommentBean>>>() {
+//
+//                @Override
+//                public void onHandle(Result<List<CommentBean>> result) {
+//                    if (result.ok()) {
+//                        if (refresh) {
+//                            dataList.clear();
+//                        }
+//                        dataList.addAll(result.getData());
+//                        adapter.notifyDataSetChanged();
+//                    } else {
+//                        new AlertDialog.Builder(NewReplyActivity.this).setMessage(result.getErrorMsg()).show();
+//                    }
+//                    listHolder.mayShowEmpty(adapter.getCount());
+//                    listHolder.list.onRefreshComplete();
+//                }
+//        });
 
-            @Override
-            public Result<List<CommentBean>> call() throws Exception {
-                Result<List<CommentBean>> ret = new Result<>();
-//                ret.setData(NewReplyData.genData());
-                RequestParams requestParams = new RequestParams();
-                requestParams.setUri( ServerUrl.COMMENT_SEARCH);
-                Map<String,Object> parMap = new HashMap<>();
-                parMap.put("number",1);
-                parMap.put("size",10);
-                requestParams.setBodyContent(JSON.toJSONString(parMap));
-                ret.setData(dataList);
-                return ret;
-            }
-        }, new Callback<Result<List<CommentBean>>>() {
 
-            @Override
-            public void onHandle(Result<List<CommentBean>> result) {
-                if (result.ok()) {
-                    if (refresh) {
-                        dataList.clear();
-                    }
-                    dataList.addAll(result.getData());
-                    adapter.notifyDataSetChanged();
-                } else {
-                    new AlertDialog.Builder(NewReplyActivity.this).setMessage(result.getErrorMsg()).show();
-                }
-                listHolder.mayShowEmpty(adapter.getCount());
-                listHolder.list.onRefreshComplete();
-            }
-        });
 
     }
 

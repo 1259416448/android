@@ -7,12 +7,12 @@ import java.util.List;
  * asdtiangxia@163.com
  * ar item draw  重叠时修正draw位置算法
  */
-class OverlapFilter {
+public class OverlapFilter {
 
-    static double overlapDis;
-    static float diffY;
+    public static double overlapDis;
+    public static float diffY;
 
-    static void filter(List<DrawFootPrintItemInfo> pointList){
+    public static void filter(List<DrawFootPrintItemInfo> pointList){
         if(pointList==null || pointList.size()<=1){
             return;
         }

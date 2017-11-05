@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.location.Location;
 import android.opengl.Matrix;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
@@ -37,8 +38,6 @@ import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.bean.FootPrintBean;
 import arvix.cn.ontheway.bean.FootPrintSearchVo;
 import arvix.cn.ontheway.bean.Pagination;
-import arvix.cn.ontheway.bean.SearchDistance;
-import arvix.cn.ontheway.bean.SearchType;
 import arvix.cn.ontheway.service.impl.ArFootPrintCacheMemoryService;
 import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.service.inter.FootPrintSearchNotify;
@@ -77,7 +76,7 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
     private FootPrintSearchVo trackSearchVo;
     private final float radius= StaticMethod.dip2px(App.self , 37f);
     float cx = StaticMethod.dip2px(App.self,40);
-    LatLng center = new LatLng(OnthewayApplication.getInstahce(CacheService.class).getDouble(StaticVar.BAIDU_LOC_CACHE_LAT),OnthewayApplication.getInstahce(CacheService.class).getDouble(StaticVar.BAIDU_LOC_CACHE_LON));
+    LatLng center = new LatLng(OnthewayApplication.getInstahce(CacheService.class).getDouble(StaticVar.BAIDU_LOC_CACHE_LAT), OnthewayApplication.getInstahce(CacheService.class).getDouble(StaticVar.BAIDU_LOC_CACHE_LON));
     private int headerImgWidth = StaticMethod.dip2px(App.self, 28);
     private String preTrackBeanIdStr = "";
     private String oldRotateStr = "";
@@ -89,10 +88,10 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
     public static float xDegrees;
     public static float yDegrees;
     public static float zDegrees;
-    private  List<RadarPoint> radarPointList  = new ArrayList<>();
-    private  List<ImageView> radarImageViewList  = new ArrayList<>();
+    private List<RadarPoint> radarPointList  = new ArrayList<>();
+    private List<ImageView> radarImageViewList  = new ArrayList<>();
     private FrameLayout radarFrameLayout;
-    public AROverlayView(Context context, ViewGroup rootView, FootPrintSearchVo trackSearchVo,FrameLayout radarFrameLayout) {
+    public AROverlayView(Context context, ViewGroup rootView, FootPrintSearchVo trackSearchVo, FrameLayout radarFrameLayout) {
         this.context = context;
         this.rootView = rootView;
         this.trackSearchVo = trackSearchVo;
@@ -125,7 +124,7 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
         wait = Windows.waiting(context);
         trackSearchVo.setLatitude(lat);
         trackSearchVo.setLongitude(lon);
-        trackSearchVo.setSearchType(SearchType.ar);
+        trackSearchVo.setSearchType(FootPrintSearchVo.SearchType.ar);
         footPrintSearchService.search(context,trackSearchVo,this);
     }
 
@@ -200,13 +199,13 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
         LatLng target = null;
         double distance, azimuth,pLeft,pTop;
         double realRadius = 1000.0;
-        if(trackSearchVo.getSearchDistance()== SearchDistance.one){
+        if(trackSearchVo.getSearchDistance()== FootPrintSearchVo.SearchDistance.one){
             realRadius = 100.0;
         }
-        if(trackSearchVo.getSearchDistance()== SearchDistance.two){
+        if(trackSearchVo.getSearchDistance()== FootPrintSearchVo.SearchDistance.two){
             realRadius = 500.0;
         }
-        if(trackSearchVo.getSearchDistance()== SearchDistance.three){
+        if(trackSearchVo.getSearchDistance()== FootPrintSearchVo.SearchDistance.three){
             realRadius = 1000.0;
         }
         radarZoom = radius/realRadius;
@@ -229,8 +228,8 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
             if (rePointTimes == null) {
                 drawPointRePointMap.put(rePointKeyTemp, 1);
             } else {
-                pLeft = pLeft - (diffY * rePointTimes)*Math.sin(zRadians);
-                pTop = pTop - (diffY * rePointTimes)*Math.cos(zRadians);
+                pLeft = pLeft - (diffY * rePointTimes)* Math.sin(zRadians);
+                pTop = pTop - (diffY * rePointTimes)* Math.cos(zRadians);
                 drawPointRePointMap.put(rePointKeyTemp, rePointTimes + 1);
             }
             imageView = radarImageViewList.get(i);
@@ -390,7 +389,7 @@ public class AROverlayView implements FootPrintSearchNotify<FootPrintBean>, View
      * @param paginationFetch
      */
     @Override
-    public void trackSearchDataFetchSuccess(final FootPrintSearchVo trackSearchVo, final Pagination<FootPrintBean> paginationFetch) {
+    public void trackSearchDataFetchSuccess(final FootPrintSearchVo trackSearchVo, final Pagination<FootPrintBean> paginationFetch, Handler handler) {
         Pagination<FootPrintBean> lastPagination = pagination;
         pagination = paginationFetch;
         if(wait!=null){

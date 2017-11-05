@@ -26,7 +26,6 @@ import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.bean.FootPrintBean;
 import arvix.cn.ontheway.bean.FootPrintSearchVo;
 import arvix.cn.ontheway.bean.Pagination;
-import arvix.cn.ontheway.bean.SearchType;
 import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.service.inter.FootPrintSearchNotify;
 import arvix.cn.ontheway.service.inter.FootPrintSearchService;
@@ -45,7 +44,7 @@ import arvix.cn.ontheway.utils.StaticVar;
  * asdtiangxia@163.com
  */
 
-public class TrackListActivity  extends BaseActivity implements AdapterView.OnItemClickListener, PullToRefreshBase.OnRefreshListener2<ListView>, FootPrintSearchNotify<FootPrintBean> {
+public class TrackListActivity extends BaseActivity implements AdapterView.OnItemClickListener, PullToRefreshBase.OnRefreshListener2<ListView>, FootPrintSearchNotify<FootPrintBean> {
 
     private TrackListAdapter adapter;
     private List<FootPrintBean> footPrintList;
@@ -165,7 +164,7 @@ public class TrackListActivity  extends BaseActivity implements AdapterView.OnIt
     private void initData() {
         footPrintSearchVo = new FootPrintSearchVo();
        // footPrintSearchVo.setSize(5);
-        footPrintSearchVo.setSearchType(SearchType.list);
+        footPrintSearchVo.setSearchType(FootPrintSearchVo.SearchType.list);
         footPrintSearchVo.setLatitude(cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LAT));
         footPrintSearchVo.setLongitude(cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LON));
         footPrintSearchService.search(self,footPrintSearchVo,this);
@@ -195,7 +194,7 @@ public class TrackListActivity  extends BaseActivity implements AdapterView.OnIt
     public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
         footPrintSearchVo = new FootPrintSearchVo();
        // footPrintSearchVo.setSize(5);
-        footPrintSearchVo.setSearchType(SearchType.list);
+        footPrintSearchVo.setSearchType(FootPrintSearchVo.SearchType.list);
         footPrintSearchVo.setLatitude(cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LAT));
         footPrintSearchVo.setLongitude(cache.getDouble(StaticVar.BAIDU_LOC_CACHE_LON));
         footPrintSearchService.search(self,footPrintSearchVo,this);
@@ -225,15 +224,10 @@ public class TrackListActivity  extends BaseActivity implements AdapterView.OnIt
      * @param trackSearchVo
      * @param paginationFetch
      */
-//    @Override
-//    public void trackSearchDataFetchSuccess(FootPrintSearchVo trackSearchVo, Pagination<FootPrintBean> paginationFetch) {
-//
-//    }
-
     @Override
-    public void trackSearchDataFetchSuccess(FootPrintSearchVo trackSearchVo, Pagination<FootPrintBean> pagination) {
+    public void trackSearchDataFetchSuccess(FootPrintSearchVo trackSearchVo, Pagination<FootPrintBean> paginationFetch, Handler handler) {
         try{
-            pagination = pagination;
+            pagination = paginationFetch;
             footPrintSearchVo = trackSearchVo;
             Log.i(logTag,"trackSearchDataFetchSuccess---->"+pagination.getContent().size());
             if(refresh){

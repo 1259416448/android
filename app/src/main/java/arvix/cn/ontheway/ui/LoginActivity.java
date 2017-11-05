@@ -174,8 +174,9 @@ public class LoginActivity  extends BaseActivity  {
                                 if(response.getCode()==StaticVar.SUCCESS) {
                                     UserInfo userInfo = response.getBodyBean();
                                     StaticMethod.updateUserInfo(self,userInfo);
-                                    Log.i("response thread ","----------------->"+Thread.currentThread().getName());
                                     StaticMethod.showToast("登录成功",self);
+                                    Log.i("response thread ","------------------------->"+Thread.currentThread().getName());
+                                    Log.e("TAG",response.getBodyJSONStr()+"-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
                                     setResult(RESULT_OK, data);
                                     finish();
                                 }else if(response.getCode() == StaticVar.ERROR){

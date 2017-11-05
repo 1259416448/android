@@ -14,11 +14,15 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
+
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.bean.FootPrintBean;
@@ -41,7 +45,7 @@ import arvix.cn.ontheway.utils.UIUtils;
  * asdtiangxia@163.com
  */
 
-public class MyTrackListActivity  extends BaseActivity   implements AdapterView.OnItemClickListener, PullToRefreshBase.OnRefreshListener2<ListView>,FootPrintSearchNotify<FootPrintBean> {
+public class MyTrackListActivity extends BaseActivity implements AdapterView.OnItemClickListener, PullToRefreshBase.OnRefreshListener2<ListView>,FootPrintSearchNotify<FootPrintBean> {
 
     private MyTrackListAdapter adapter;
     private List<FootPrintBean> footPrintList;
@@ -159,7 +163,7 @@ public class MyTrackListActivity  extends BaseActivity   implements AdapterView.
     }
 
     @Override
-    public void trackSearchDataFetchSuccess(FootPrintSearchVo trackSearchVo, Pagination<FootPrintBean> paginationFetch) {
+    public void trackSearchDataFetchSuccess(FootPrintSearchVo trackSearchVo, Pagination<FootPrintBean> paginationFetch, Handler handler) {
         try{
             pagination = paginationFetch;
             footPrintSearchVo = trackSearchVo;

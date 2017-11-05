@@ -47,7 +47,8 @@ public interface ServerUrl {
     String FOOT_DYNAMIC=BASE_URL+"/app/attention/footprint";
     // 获取商家数据
     String BUSINESS=BASE_URL+"/app/business/search";
-
+    // 获取所有类型
+    String TYPE=BASE_URL+"/app/business/type/all";
 }
 
 

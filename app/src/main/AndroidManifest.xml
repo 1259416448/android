@@ -139,13 +139,18 @@
             android:name=".ui.LoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="LoginActivity" />
+
+
         <activity
             android:name=".ui.WNaviGuideActivity"
             android:label="WNaviGuideActivity" />
         <activity android:name=".ui.ar_view.ArFootPrintActivity" />
         <activity android:name=".ui.ar_draw.ArFootPrintDrawActivity" />
         <activity android:name=".ui.msg.NewFootActivity" />
-        <activity android:name=".test.ARViewTest1" />
+        <activity
+            android:name=".test.ARViewTest"
+            android:label="ARView" />
+        <activity android:name=".test.OtherActivity"></activity>
         <activity android:name=".ui.usercenter.MyCollectionActivity" />
         <activity android:name=".ui.usercenter.MyWalletActivity" />
         <activity android:name=".ui.usercenter.MyClaimActivity"></activity>

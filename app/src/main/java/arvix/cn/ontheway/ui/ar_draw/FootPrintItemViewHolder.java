@@ -13,19 +13,19 @@ import arvix.cn.ontheway.R;
  * footPrint item view
  */
 
-class FootPrintItemViewHolder {
+public class FootPrintItemViewHolder {
     @ViewInject(R.id.header_iv)
-    ImageView userHeader;
+    public ImageView userHeader;
 
     @ViewInject(R.id.time_tv)
-    TextView timeTv;
+    public TextView timeTv;
 
     @ViewInject(R.id.content_tv)
-    TextView contentTv;
+    public TextView contentTv;
     @ViewInject(R.id.address_tv)
-    TextView addressTv;
+    public TextView addressTv;
 
     @ViewInject(R.id.main_photo_iv)
-    ImageView trackPhotoIv;
+    public ImageView trackPhotoIv;
 
 }

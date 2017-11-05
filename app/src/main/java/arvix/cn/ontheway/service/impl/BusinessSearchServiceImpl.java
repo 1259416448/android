@@ -8,23 +8,27 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.util.TypeUtils;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import arvix.cn.ontheway.bean.BaseResponse;
+import arvix.cn.ontheway.bean.BusinessBean;
 import arvix.cn.ontheway.bean.FootPrintBean;
 import arvix.cn.ontheway.bean.FootPrintSearchVo;
 import arvix.cn.ontheway.bean.Pagination;
-import arvix.cn.ontheway.bean.SearchType;
 import arvix.cn.ontheway.http.ServerUrl;
 import arvix.cn.ontheway.service.inter.FootPrintSearchNotify;
 import arvix.cn.ontheway.service.inter.FootPrintSearchService;
+import arvix.cn.ontheway.test.ARViewTest;
 import arvix.cn.ontheway.utils.StaticMethod;
 import arvix.cn.ontheway.utils.StaticVar;
 
@@ -33,7 +37,7 @@ import arvix.cn.ontheway.utils.StaticVar;
  * asdtiangxia@163.com
  */
 
-public class BusinessSearchServiceImpl  implements FootPrintSearchService<FootPrintBean> {
+public class BusinessSearchServiceImpl implements FootPrintSearchService<BusinessBean> {
 
     private static long lastRequest = 0;
 
@@ -192,56 +196,54 @@ public class BusinessSearchServiceImpl  implements FootPrintSearchService<FootPr
 
 
     @Override
-    public void search(final Context context, final FootPrintSearchVo trackSearchVo, final FootPrintSearchNotify<FootPrintBean> trackSearchNotify) {
+    public void search(final Context context, final FootPrintSearchVo trackSearchVo, final FootPrintSearchNotify<BusinessBean> trackSearchNotify) {
         if((System.currentTimeMillis()-lastRequest)<200){
             return;
         }
         lastRequest = System.currentTimeMillis();
         RequestParams requestParams = new RequestParams();
-        String url = ServerUrl.FOOTPRINT_SEARCH;
-        if(SearchType.ar == trackSearchVo.getSearchType()){
+        String url = ServerUrl.BUSINESS;
+        if(FootPrintSearchVo.SearchType.ar == trackSearchVo.getSearchType()){
             url = url + "/ar";
-        }else if(SearchType.map == trackSearchVo.getSearchType()){
+        }else if(FootPrintSearchVo.SearchType.map == trackSearchVo.getSearchType()){
             url = url + "/map";
         }else{
-            url = url + "/list";
+            url = url + "/ar";
         }
         requestParams.setUri(url);
         requestParams.setCacheMaxAge(60000);
+        trackSearchVo.setNumber(1);
         requestParams.addParameter("number", trackSearchVo.getNumber());
         requestParams.addParameter("size", trackSearchVo.getSize());
+//        trackSearchVo.setLatitude(39.991489);
+//        trackSearchVo.setLongitude(116.336025);
         requestParams.addParameter("latitude", trackSearchVo.getLatitude());
         requestParams.addParameter("longitude", trackSearchVo.getLongitude());
         if (trackSearchVo.getCurrentTime()>0) {
             requestParams.addParameter("currentTime", trackSearchVo.getCurrentTime());
         }
         if(trackSearchVo.getSearchDistance()!=null){
-            requestParams.addParameter("searchDistance", trackSearchVo.getSearchDistance());
+           // requestParams.addParameter("searchDistance", trackSearchVo.getSearchDistance());
         }
         if(trackSearchVo.getSearchTime()!=null){
             requestParams.addParameter("time", trackSearchVo.getSearchTime());
         }
-        requestParams.addParameter("typeIds","咖啡");
+        trackSearchVo.setDistance(1000.0);
+        requestParams.addParameter("distance",trackSearchVo.getDistance());
+//        requestParams.addParameter("typeIds","咖啡");
         x.http().get(requestParams, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 try {
                     Log.i("onSuccess-->", "result->" + result.toString());
-                    BaseResponse<Pagination<FootPrintBean>> response =  JSON.parseObject(result,new TypeReference<BaseResponse<Pagination<FootPrintBean>>>(){});
+                    BaseResponse<Pagination<BusinessBean>> response =  JSON.parseObject(result,new TypeReference<BaseResponse<Pagination<BusinessBean>>>(){});
                     if (response.getCode() == StaticVar.SUCCESS) {
                         JSONObject jsonObject = response.getBody();
-                        Pagination paginationReturn = TypeUtils.castToJavaBean(jsonObject,Pagination.class);
-                        if(paginationReturn!=null&&paginationReturn.getContent()!=null){
-                            List<JSONObject> jsonArray =  (List<JSONObject>) paginationReturn.getContent();
-                            List<FootPrintBean> footPrintBeanList = new ArrayList<FootPrintBean>();
-                            for(JSONObject object :jsonArray){
-                                footPrintBeanList.add(TypeUtils.castToJavaBean(object,FootPrintBean.class));
-                            }
-                            paginationReturn.setContent(footPrintBeanList);
-                        }
+                        Type type = new TypeToken<Pagination<BusinessBean>>(){}.getType();
+                        Pagination paginationReturn = new Gson().fromJson(jsonObject.toJSONString(),type);
                         Log.i("trackSearchNotify-->", "trackSearchNotify------------------------->" );
                         trackSearchVo.setCurrentTime(paginationReturn.getCurrentTime());
-                        trackSearchNotify.trackSearchDataFetchSuccess(trackSearchVo , paginationReturn);
+                        trackSearchNotify.trackSearchDataFetchSuccess(trackSearchVo,paginationReturn, ARViewTest.handler);
                     } else if (response.getCode() == StaticVar.ERROR) {
                         StaticMethod.showToast("获取数据失败", context);
                     } else {
@@ -265,7 +267,7 @@ public class BusinessSearchServiceImpl  implements FootPrintSearchService<FootPr
     }
 
     @Override
-    public void fetchByUser(final Context context, final FootPrintSearchVo searchVo, Long userId, final FootPrintSearchNotify<FootPrintBean> searchNotify) {
+    public void fetchByUser(final Context context, final FootPrintSearchVo searchVo, Long userId, final FootPrintSearchNotify<BusinessBean> searchNotify) {
         if((System.currentTimeMillis()-lastRequest)<200){
             return;
         }
@@ -313,7 +315,7 @@ public class BusinessSearchServiceImpl  implements FootPrintSearchService<FootPr
                         }
                         Log.i("trackSearchNotify-->", "trackSearchNotify------------------------->" );
                         searchVo.setCurrentTime(paginationReturn.getCurrentTime());
-                        searchNotify.trackSearchDataFetchSuccess(searchVo , paginationReturn);
+                        searchNotify.trackSearchDataFetchSuccess(searchVo , paginationReturn, ARViewTest.handler);
                     } else if (response.getCode() == StaticVar.ERROR) {
                         StaticMethod.showToast("获取数据失败", context);
                     } else {

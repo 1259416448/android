@@ -1,4 +1,4 @@
-package arvix.cn.ontheway.ui.ar_draw;
+package arvix.cn.ontheway.test;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +11,6 @@ import android.opengl.Matrix;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -23,10 +22,7 @@ import android.widget.ImageView;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.CoordinateConverter;
 import com.baidu.mapapi.utils.DistanceUtil;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
-import org.xutils.image.ImageDecoder;
 import org.xutils.x;
 
 import java.util.ArrayList;
@@ -34,18 +30,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import arvix.cn.ontheway.App;
 import arvix.cn.ontheway.R;
-import arvix.cn.ontheway.bean.FootPrintBean;
+import arvix.cn.ontheway.bean.BusinessBean;
 import arvix.cn.ontheway.bean.FootPrintSearchVo;
 import arvix.cn.ontheway.bean.Pagination;
 import arvix.cn.ontheway.service.impl.ArFootPrintCacheMemoryService;
 import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.service.inter.FootPrintSearchNotify;
 import arvix.cn.ontheway.service.inter.FootPrintSearchService;
-import arvix.cn.ontheway.ui.track.TrackDetailActivity;
+import arvix.cn.ontheway.ui.ar_draw.DrawFootPrintItemInfo;
+import arvix.cn.ontheway.ui.ar_draw.DrawMoveCheck;
+import arvix.cn.ontheway.ui.ar_draw.FootPrintItemViewHolder;
+import arvix.cn.ontheway.ui.ar_draw.OverlapFilter;
+import arvix.cn.ontheway.ui.ar_draw.RadarPoint;
 import arvix.cn.ontheway.utils.LocationHelper;
 import arvix.cn.ontheway.utils.MyProgressDialog;
 import arvix.cn.ontheway.utils.OnthewayApplication;
@@ -57,7 +56,7 @@ import arvix.cn.ontheway.utils.Windows;
  * Created by ntdat on 1/13/17.
  */
 
-public class AROverlayViewDraw extends View implements FootPrintSearchNotify<FootPrintBean>, View.OnTouchListener {
+public class AROverlayViewDrawTest extends View implements FootPrintSearchNotify<BusinessBean>, View.OnTouchListener {
     private String logTag = this.getClass().getName();
     Context context;
     private float[] rotatedProjectionMatrix = new float[16];
@@ -67,7 +66,7 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
     CacheService cache;
     ArFootPrintCacheMemoryService arFootPrintCacheMemoryService;
     FootPrintSearchService footPrintSearchService;
-    private Pagination<FootPrintBean> pagination = new Pagination<>();
+    private Pagination<BusinessBean> pagination = new Pagination<>();
     private Paint mBitPaint;
     private String viewBitmapCachePrefix = "trackItem";
     private Bitmap bitmapTemp = null;
@@ -95,7 +94,7 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
     private boolean afterOverlapFilterDraw = false;
     java.text.DecimalFormat   df   =new   java.text.DecimalFormat("#.00");
     LatLng center = new LatLng(OnthewayApplication.getInstahce(CacheService.class).getDouble(StaticVar.BAIDU_LOC_CACHE_LAT), OnthewayApplication.getInstahce(CacheService.class).getDouble(StaticVar.BAIDU_LOC_CACHE_LON));
-    public AROverlayViewDraw(Context context, Class<? extends FootPrintSearchService> clz, ViewGroup rootView, FootPrintSearchVo trackSearchVo, FrameLayout radarFrameLayout) {
+    public AROverlayViewDrawTest(Context context, Class<? extends FootPrintSearchService> clz, ViewGroup rootView, FootPrintSearchVo trackSearchVo, FrameLayout radarFrameLayout) {
         super(context);
         this.context = context;
         this.rootView = rootView;
@@ -229,11 +228,11 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
                     float touchY = event.getY();
                     float touchX = event.getX();
                     Log.i(logTag,"touch--->touchX:"+touchX+",touchY:"+touchY +"  --->");
-                    FootPrintBean footPrintBean = computeTouchTrack(touchX,touchY);
+                    BusinessBean footPrintBean = computeTouchTrack(touchX,touchY);
                     if(footPrintBean !=null){
                         //TODO 跳转
                        // StaticMethod.showToast(footPrintBean.getFootprintContent(),context);
-                        Intent intent = new Intent(context,TrackDetailActivity.class);
+                        Intent intent = new Intent(context,OtherActivity.class);
                         intent.putExtra(StaticVar.EXTRA_TRACK_BEAN, footPrintBean);
                       //  intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
@@ -245,15 +244,15 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
         return false;
     }
 
-    private FootPrintBean computeTouchTrack(float touchX, float touchY){
-        FootPrintBean footPrintBean = null;
+    private BusinessBean computeTouchTrack(float touchX, float touchY){
+        BusinessBean footPrintBean = null;
         touchY = touchY - computeTouchDiffY;
         if(drawFootPrintItemInfoList.size()>0){
-            DrawFootPrintItemInfo<FootPrintBean> drawFootPrintItemInfo;
+            DrawFootPrintItemInfo<BusinessBean> drawFootPrintItemInfo;
             for(int i = drawFootPrintItemInfoList.size()-1; i>=0; i-- ){
                 drawFootPrintItemInfo = drawFootPrintItemInfoList.get(i);
                 Log.i(logTag,"touch--->touchX:"+touchX+",touchY:"+touchY +",drawX:"+ drawFootPrintItemInfo.drawX+",drawY:"+ drawFootPrintItemInfo.drawY
-                        +",rectHeight:"+ drawFootPrintItemInfo.rectHeight +",rectWidth:"+ drawFootPrintItemInfo.rectWidth +"    " + drawFootPrintItemInfo.footPrintBean.getFootprintContent());
+                        +",rectHeight:"+ drawFootPrintItemInfo.rectHeight +",rectWidth:"+ drawFootPrintItemInfo.rectWidth +"    " );
                 if( drawFootPrintItemInfo.drawX < touchX &&  touchX < (drawFootPrintItemInfo.drawX + drawFootPrintItemInfo.rectWidth)
                 && drawFootPrintItemInfo.drawY < touchY && touchY <  (drawFootPrintItemInfo.drawY + drawFootPrintItemInfo.rectHeight)   ){
                     footPrintBean = drawFootPrintItemInfo.footPrintBean;
@@ -272,7 +271,7 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
     private long drawSumTime = 0;
     private long fps = 0;
     private Map<String, Integer> drawPointRePointMap = new HashMap<String, Integer>();
-    private FootPrintBean footPrintBeanTemp;
+    private BusinessBean footPrintBeanTemp;
     RadarPoint radarPoint;
     float[] currentLocationInECEF;
     float[] pointInECEF;
@@ -292,12 +291,12 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
                     // Log.i(logTag, "do onDraw------------------------------------>");
                     drawPointRePointMap.clear();
                     drawFootPrintItemInfoList.clear();
-                    DrawFootPrintItemInfo pointInfo ;
+                    DrawFootPrintItemInfo<BusinessBean> pointInfo ;
                     //for start
                     radarPointList.clear();
 
-                    for ( final FootPrintBean footPrintBean : this.pagination.getContent()) {
-                        location = new Location(footPrintBean.getFootprintContent());
+                    for ( final BusinessBean footPrintBean : this.pagination.getContent()) {
+                        location = new Location(footPrintBean.getName());
                         location.setLatitude(footPrintBean.getLatitude());
                         location.setLongitude(footPrintBean.getLongitude());
                         location.setAltitude(this.alt);
@@ -333,39 +332,20 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
                             drawFootPrintItemInfoList.add(pointInfo);
                             radarPoint.isNegative = false;
                             //  ArFootPrintDrawActivity.tvCurrentLocation.setText(System.currentTimeMillis() + " show:" + cameraCoordinateVector[2]);
-                            bitmapTemp = arFootPrintCacheMemoryService.getT(viewBitmapCachePrefix + footPrintBean.getFootprintId(), Bitmap.class);
+                            bitmapTemp = arFootPrintCacheMemoryService.getT(viewBitmapCachePrefix + footPrintBean.getBusinessId(), Bitmap.class);
                             if (bitmapTemp == null) {
                                 View convertView = LayoutInflater.from(context).inflate(R.layout.track_ar_item, rootView, false);
                                 FootPrintItemViewHolder h = new FootPrintItemViewHolder();
                                 x.view().inject(h, convertView);
-                                h.addressTv.setText(StaticMethod.genLesAddressStr(footPrintBean.getFootprintAddress(), 4));
-                                h.timeTv.setText(footPrintBean.getDateCreatedStr());
-                                h.contentTv.setText(StaticMethod.genLesStr(footPrintBean.getFootprintContent(), 6));
-                                Bitmap headerBitmap = arFootPrintCacheMemoryService.getT(footPrintBean.getUserHeadImg(), Bitmap.class);
-                                boolean headerLoaded = false;
-                                boolean trackPhotoLoaded = false;
-                                // Log.i(logTag,"h.userHeader--->"+h.userHeader.getLayoutParams().width+ " "+StaticMethod.dip2px(context, 28));
-                                if (headerBitmap != null) {
-                                    h.userHeader.setImageBitmap(headerBitmap);
-                                    headerLoaded = true;
-                                }
-                                if (!TextUtils.isEmpty(footPrintBean.getFootprintPhoto())) {
-                                    Bitmap trackPhotoBitmap = arFootPrintCacheMemoryService.getT(footPrintBean.getFootprintPhoto(), Bitmap.class);
-                                    if (trackPhotoBitmap != null) {
-                                        h.trackPhotoIv.setImageBitmap(trackPhotoBitmap);
-                                        trackPhotoLoaded = true;
-                                    }
-                                } else {
+                                h.addressTv.setText(StaticMethod.genLesAddressStr(footPrintBean.getAddress(), 4));
+//                                h.timeTv.setText("商家"+footPrintBean.get);
+                                h.contentTv.setText(StaticMethod.genLesStr(footPrintBean.getName(), 6));
+                                    //隐藏图片
                                     h.trackPhotoIv.setVisibility(GONE);
-                                    trackPhotoLoaded = true;
-                                }
                                 //  Log.i(logTag, "loadImage------->,drawX:" + drawX + ",drawY:" + drawY + "  " + footPrintBean.getUserHeadImg());
                                 bitmapTemp = StaticMethod.getViewBitmap(convertView);
                                 canvas.drawBitmap(bitmapTemp, drawX, drawY, mBitPaint);
 
-                                if (trackPhotoLoaded && headerLoaded) {
-                                    arFootPrintCacheMemoryService.putObject(viewBitmapCachePrefix + footPrintBean.getFootprintId(), bitmapTemp);
-                                }
                                 convertView.setDrawingCacheEnabled(false);
                             }
                         }
@@ -373,9 +353,9 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
                     }
                     // for end
                     OverlapFilter.filter(this.drawFootPrintItemInfoList);
-                    for(DrawFootPrintItemInfo<FootPrintBean> itemInfo :drawFootPrintItemInfoList ){
+                    for(DrawFootPrintItemInfo<BusinessBean> itemInfo :drawFootPrintItemInfoList ){
                         footPrintBeanTemp = itemInfo.footPrintBean;
-                        bitmapTemp = arFootPrintCacheMemoryService.getT(viewBitmapCachePrefix + footPrintBeanTemp.getFootprintId(), Bitmap.class);
+                        bitmapTemp = arFootPrintCacheMemoryService.getT(viewBitmapCachePrefix + footPrintBeanTemp.getBusinessId(), Bitmap.class);
                         if (bitmapTemp != null) {
                             // Log.i(logTag, "load form cache bitmap drawX:" + drawX + ",drawY:" + drawY + "  ");
                             canvas.drawBitmap(bitmapTemp, itemInfo.drawX, itemInfo.drawY, mBitPaint);
@@ -498,7 +478,7 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
      * @param paginationFetch
      */
     @Override
-    public void trackSearchDataFetchSuccess(final FootPrintSearchVo trackSearchVo, final Pagination<FootPrintBean> paginationFetch, final Handler handler) {
+    public void trackSearchDataFetchSuccess(final FootPrintSearchVo trackSearchVo, final Pagination<BusinessBean> paginationFetch, final Handler handler) {
         pagination = paginationFetch;
         if(wait!=null){
             wait.dismiss();
@@ -509,8 +489,8 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
             @Override
             public void run() {
                 String newTrackBeanIdStr = "";
-                for (final FootPrintBean footPrintBean : pagination.getContent()) {
-                    newTrackBeanIdStr = newTrackBeanIdStr + footPrintBean.getFootprintId();
+                for (final BusinessBean footPrintBean : pagination.getContent()) {
+                    newTrackBeanIdStr = newTrackBeanIdStr + footPrintBean.getBusinessId();
                 }
                 Log.i(logTag,"trackSearchDataFetchSuccess-thread-start---->"+alt);
                 int width = StaticMethod.dip2px(context, 28);
@@ -524,21 +504,22 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
                     handler.sendMessage(msg);
                     //update activity end
                     trackSearchVo.setTotalPages(paginationFetch.getTotalPages());
-                    for (final FootPrintBean footPrintBean : pagination.getContent()) {
-                        newTrackBeanIdStr =newTrackBeanIdStr + footPrintBean.getFootprintId();
+                    for (final BusinessBean footPrintBean : pagination.getContent()) {
+                        newTrackBeanIdStr =newTrackBeanIdStr + footPrintBean.getBusinessId();
                         try {
-                            if (arFootPrintCacheMemoryService.getT(footPrintBean.getUserHeadImg(), Bitmap.class) == null) {
-                                Bitmap bitmap = Glide.with(context)
-                                        .load(R.mipmap.ic_launcher)//footPrintBean.getUserHeadImg()
-                                        .asBitmap()
-                                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                        .into(width, width)
-                                        .get();
-                                bitmap = ImageDecoder.cut2Circular(bitmap,false);
-                                arFootPrintCacheMemoryService.putObject(footPrintBean.getUserHeadImg(), bitmap);
-                                Log.i(logTag, "put cache:" + footPrintBean.getUserHeadImg());
-                            }
-                            if(footPrintBean.getFootprintPhoto()!=null){
+//                            if (arFootPrintCacheMemoryService.getT(footPrintBean.getUserHeadImg(), Bitmap.class) == null) {
+//                                Bitmap bitmap = Glide.with(context)
+//                                        .load(R.mipmap.ic_launcher)//footPrintBean.getUserHeadImg()
+//                                        .asBitmap()
+//                                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                                        .into(width, width)
+//                                        .get();
+//                                bitmap = ImageDecoder.cut2Circular(bitmap,false);
+//                                arFootPrintCacheMemoryService.putObject(footPrintBean.getUserHeadImg(), bitmap);
+//                                Log.i(logTag, "put cache:" + footPrintBean.getUserHeadImg());
+//                            }
+                            //TODO 取消加载图片
+                            /*if(footPrintBean.getFootprintPhoto()!=null){
                                 if (arFootPrintCacheMemoryService.getT(footPrintBean.getFootprintPhoto(), Bitmap.class) == null) {
                                     Log.i(logTag,"genCadhe:"+ footPrintBean.getFootprintPhoto());
                                     Bitmap bitmap = Glide.with(context)
@@ -550,7 +531,7 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
                                     Log.i(logTag, "put cache:" + footPrintBean.getFootprintPhoto());
                                     arFootPrintCacheMemoryService.putObject(footPrintBean.getFootprintPhoto(), bitmap);
                                 }
-                            }
+                            }*/
                         } catch (Exception e) {
                             e.printStackTrace();
                             Log.e(logTag, "cache image error", e);
@@ -566,8 +547,6 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
             }
         }).start();
     }
-
-
 }
 
 

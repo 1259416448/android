@@ -10,16 +10,16 @@ import arvix.cn.ontheway.bean.FootPrintSearchVo;
  * asdtiangxia@163.com
  */
 
-public interface FootPrintSearchService<F> {
+public interface FootPrintSearchService<T> {
     /**
      *
      * @param context
      * @param trackSearchVo
      * @return
      */
-    void search(Context context, FootPrintSearchVo trackSearchVo, FootPrintSearchNotify<FootPrintBean> trackSearchNotify);
+    void search(Context context, FootPrintSearchVo trackSearchVo, FootPrintSearchNotify<T> trackSearchNotify);
 
 
-    void fetchByUser(Context context,FootPrintSearchVo searchVo,Long userId,FootPrintSearchNotify<FootPrintBean> searchNotify);
+    void fetchByUser(Context context,FootPrintSearchVo searchVo,Long userId,FootPrintSearchNotify<T> searchNotify);
 
 }

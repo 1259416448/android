@@ -6,10 +6,10 @@ package arvix.cn.ontheway.ui.ar_draw;
  * 雷达信息
  */
 
-class RadarPoint {
-    boolean isNegative = false;
-    double lat;
-    double lon;
+public class RadarPoint {
+    public boolean isNegative = false;
+    public double lat;
+    public double lon;
     @Override
     public String toString() {
         return lat + ", " +lon;

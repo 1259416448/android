@@ -53,10 +53,10 @@ public class OnthewayApplication {
             iocMap.put(ImageFileUploadService.class,fileUploadService);
 
             FootPrintSearchService footPrintSearchService = new FootPrintSearchServiceImpl();
-            iocMap.put(FootPrintSearchService.class, footPrintSearchService);
+            iocMap.put(FootPrintSearchServiceImpl.class, footPrintSearchService);
 //
-//            FootPrintSearchService businessSearchService = new BusinessSearchServiceImpl();
-//            iocMap.put(FootPrintSearchService.class, businessSearchService);
+            FootPrintSearchService businessSearchService = new BusinessSearchServiceImpl();
+            iocMap.put(BusinessSearchServiceImpl.class, businessSearchService);
             Log.i("App","app init finish--------------------------------->");
         }
         initBefore = true;

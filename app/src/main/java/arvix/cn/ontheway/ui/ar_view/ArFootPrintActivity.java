@@ -25,14 +25,13 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import arvix.cn.ontheway.BaiduActivity;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.bean.FootPrintSearchVo;
-import arvix.cn.ontheway.bean.SearchDistance;
-import arvix.cn.ontheway.bean.SearchTime;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.track.TrackCreateActivity;
 import arvix.cn.ontheway.ui.track.TrackListActivity;
@@ -43,7 +42,7 @@ import arvix.cn.ontheway.utils.UIUtils;
 public class ArFootPrintActivity extends BaseActivity implements SensorEventListener, LocationListener {
 
     final static String TAG = "ARActivity";
-    private  SurfaceView surfaceView;
+    private SurfaceView surfaceView;
     private FrameLayout cameraContainerLayout;
     private AROverlayView arOverlayView;
     private Camera camera;
@@ -180,21 +179,21 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
         r100mBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateSearchDistance(SearchDistance.one);
+                updateSearchDistance(FootPrintSearchVo.SearchDistance.one);
                 rangeLine.setVisibility(View.INVISIBLE);
             }
         });
         r500mBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateSearchDistance(SearchDistance.two);
+                updateSearchDistance(FootPrintSearchVo.SearchDistance.two);
                 rangeLine.setVisibility(View.INVISIBLE);
             }
         });
         r1kmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateSearchDistance(SearchDistance.three);
+                updateSearchDistance(FootPrintSearchVo.SearchDistance.three);
                 rangeLine.setVisibility(View.INVISIBLE);
             }
         });
@@ -203,21 +202,21 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
         timeOneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateSearchTime(SearchTime.oneDay);
+                updateSearchTime(FootPrintSearchVo.SearchTime.oneDay);
                 timeLine.setVisibility(View.INVISIBLE);
             }
         });
         timeTwoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateSearchTime(SearchTime.sevenDay);
+                updateSearchTime(FootPrintSearchVo.SearchTime.sevenDay);
                 timeLine.setVisibility(View.INVISIBLE);
             }
         });
         timeThreeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateSearchTime(SearchTime.oneMonth);
+                updateSearchTime(FootPrintSearchVo.SearchTime.oneMonth);
                 timeLine.setVisibility(View.INVISIBLE);
             }
         });
@@ -236,18 +235,18 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
         });
     }
 
-    private void updateSearchDistance(SearchDistance distance){
+    private void updateSearchDistance(FootPrintSearchVo.SearchDistance distance){
         trackSearchVo.setSearchDistance(distance);
         arOverlayView.updateSearchParams();
     }
 
-    private void updateSearchTime(SearchTime time){
+    private void updateSearchTime(FootPrintSearchVo.SearchTime time){
         trackSearchVo.setSearchTime(time);
         arOverlayView.updateSearchParams();
     }
 
 
-    public void updateUi(String totalCount,String address){
+    public void updateUi(String totalCount, String address){
         totalCountTv.setText(totalCount);
         addressTv.setText(StaticMethod.genLesAddressStr(address,5));
     }
@@ -347,7 +346,7 @@ public class ArFootPrintActivity extends BaseActivity implements SensorEventList
                 sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR),
                 SensorManager.SENSOR_DELAY_FASTEST);
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)  , SensorManager.SENSOR_DELAY_FASTEST);
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) ,SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) , SensorManager.SENSOR_DELAY_FASTEST);
     }
 
     @Override

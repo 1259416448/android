@@ -20,20 +20,20 @@ public class FootPrintSearchVo {
     private String typeIds;
 
 
-//    //检索的几种类型
-//    public enum SearchType {
-//        ar, list, map
-//    }
-//
-//    //时间筛选 1天内 7天内 1月内
-//    public enum SearchTime {
-//        oneDay, sevenDay, oneMonth
-//    }
-//
-//    //范围筛选 100m 500m 1km
-//    public enum SearchDistance {
-//        one, two, three
-//    }
+    //检索的几种类型
+    public enum SearchType {
+        ar, list, map
+    }
+
+    //时间筛选 1天内 7天内 1月内
+    public enum SearchTime {
+        oneDay, sevenDay, oneMonth
+    }
+
+    //范围筛选 100m 500m 1km
+    public enum SearchDistance {
+        one, two, three
+    }
 
     public String getQ() {
         return q;

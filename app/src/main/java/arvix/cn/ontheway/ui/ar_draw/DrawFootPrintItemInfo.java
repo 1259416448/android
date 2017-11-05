@@ -8,14 +8,14 @@ import arvix.cn.ontheway.bean.FootPrintBean;
  * 用于记录footPrint draw info信息
  */
 
-public class DrawFootPrintItemInfo {
+public class DrawFootPrintItemInfo<T> {
     public DrawFootPrintItemInfo(float trackViewItemRectW, float trackViewItemRectH){
         rectWidth = trackViewItemRectW;
         rectHeight = trackViewItemRectH;
     }
-    float drawX;
-    float drawY;
-    FootPrintBean footPrintBean;
-    float rectWidth;
-    float rectHeight;
+    public float drawX;
+    public float drawY;
+    public T footPrintBean;
+    public float rectWidth;
+    public float rectHeight;
 }

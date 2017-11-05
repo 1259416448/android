@@ -15,7 +15,7 @@ public class DrawMoveCheck {
     //这个值越小，移动手机时draw频率会加快。
     float moveDiffAbsMin = 0.01f;
     float moveDiffAbsMax = 0.3f;
-    float moveDiffAbs = moveDiffAbsMin;
+    public float moveDiffAbs = moveDiffAbsMin;
     float[] diffAbsArray = new float[checkArraySize+1];
 
     public void addMoveDiffAbs(float diffAbs){

@@ -34,11 +34,8 @@ import org.xutils.x;
 import arvix.cn.ontheway.BaiduActivity;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.bean.FootPrintSearchVo;
-import arvix.cn.ontheway.bean.SearchDistance;
-import arvix.cn.ontheway.bean.SearchTime;
 import arvix.cn.ontheway.service.impl.FootPrintSearchServiceImpl;
 import arvix.cn.ontheway.service.inter.CacheService;
-import arvix.cn.ontheway.service.inter.FootPrintSearchService;
 import arvix.cn.ontheway.ui.BaseActivity;
 import arvix.cn.ontheway.ui.MainActivity;
 import arvix.cn.ontheway.ui.ar_view.ARCamera;
@@ -53,7 +50,7 @@ import arvix.cn.ontheway.utils.UIUtils;
 public class ArFootPrintDrawActivity extends BaseActivity implements SensorEventListener, LocationListener {
 
     final static String TAG = "ARActivity";
-    private  SurfaceView surfaceView;
+    private SurfaceView surfaceView;
     private FrameLayout cameraContainerLayout;
     private AROverlayViewDraw arOverlayView;
     private Camera camera;
@@ -147,7 +144,7 @@ public class ArFootPrintDrawActivity extends BaseActivity implements SensorEvent
         cameraContainerLayout = (FrameLayout) findViewById(R.id.camera_container_layout);
         surfaceView = (SurfaceView) findViewById(R.id.surface_view);
         tvCurrentLocation = (TextView) findViewById(R.id.tv_current_location);
-        arOverlayView = new AROverlayViewDraw(this, FootPrintSearchService.class,(ViewGroup)getWindow().getDecorView(),trackSearchVo,radarPointFrameLayout);
+        arOverlayView = new AROverlayViewDraw(this, FootPrintSearchServiceImpl.class,(ViewGroup)getWindow().getDecorView(),trackSearchVo,radarPointFrameLayout);
 
         rangeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -235,21 +232,21 @@ public class ArFootPrintDrawActivity extends BaseActivity implements SensorEvent
         r100mBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateSearchDistance(SearchDistance.one);
+                updateSearchDistance(FootPrintSearchVo.SearchDistance.one);
                 rangeLine.setVisibility(View.INVISIBLE);
             }
         });
         r500mBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateSearchDistance(SearchDistance.two);
+                updateSearchDistance(FootPrintSearchVo.SearchDistance.two);
                 rangeLine.setVisibility(View.INVISIBLE);
             }
         });
         r1kmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateSearchDistance(SearchDistance.three);
+                updateSearchDistance(FootPrintSearchVo.SearchDistance.three);
                 rangeLine.setVisibility(View.INVISIBLE);
             }
         });
@@ -258,21 +255,21 @@ public class ArFootPrintDrawActivity extends BaseActivity implements SensorEvent
         timeOneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateSearchTime(SearchTime.oneDay);
+                updateSearchTime(FootPrintSearchVo.SearchTime.oneDay);
                 timeLine.setVisibility(View.INVISIBLE);
             }
         });
         timeTwoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateSearchTime(SearchTime.sevenDay);
+                updateSearchTime(FootPrintSearchVo.SearchTime.sevenDay);
                 timeLine.setVisibility(View.INVISIBLE);
             }
         });
         timeThreeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateSearchTime(SearchTime.oneMonth);
+                updateSearchTime(FootPrintSearchVo.SearchTime.oneMonth);
                 timeLine.setVisibility(View.INVISIBLE);
             }
         });
@@ -291,18 +288,18 @@ public class ArFootPrintDrawActivity extends BaseActivity implements SensorEvent
         });
     }
 
-    private void updateSearchDistance(SearchDistance distance){
+    private void updateSearchDistance(FootPrintSearchVo.SearchDistance distance){
         trackSearchVo.setSearchDistance(distance);
         arOverlayView.updateSearchParams();
     }
 
-    private void updateSearchTime(SearchTime time){
+    private void updateSearchTime(FootPrintSearchVo.SearchTime time){
         trackSearchVo.setSearchTime(time);
         arOverlayView.updateSearchParams();
     }
 
 
-    public void updateUi(String totalCount,String address){
+    public void updateUi(String totalCount, String address){
         totalCountTv.setText(totalCount);
         addressTv.setText(StaticMethod.genLesAddressStr(address,5));
         // draw ui
@@ -411,8 +408,8 @@ public class ArFootPrintDrawActivity extends BaseActivity implements SensorEvent
                 sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR),
                 SensorManager.SENSOR_DELAY_NORMAL);
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)  , SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) ,SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION) ,SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) , SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION) , SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
@@ -464,7 +461,7 @@ public class ArFootPrintDrawActivity extends BaseActivity implements SensorEvent
     private void initLocationService() {
 
         if ( Build.VERSION.SDK_INT >= 23 &&
-                ContextCompat.checkSelfPermission( this, Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED) {
+                ContextCompat.checkSelfPermission( this, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED) {
             return  ;
         }
 
