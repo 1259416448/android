@@ -60,7 +60,7 @@ import arvix.cn.ontheway.utils.Windows;
 /**
  * Created by ntdat on 1/13/17.
  */
-
+//
 public class AROverlayViewDrawTest extends View implements FootPrintSearchNotify<BusinessBean>, View.OnTouchListener {
     private String logTag = this.getClass().getName();
     Context context;

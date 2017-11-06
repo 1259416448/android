@@ -38,6 +38,12 @@ public class OtherActivity extends BaseActivity {
                 finish();
             }
         });
+
+
+
+
+
+
     }
 }
 
