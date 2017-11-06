@@ -5,61 +5,28 @@
     android:background="#0000"
     android:orientation="horizontal">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="164dp"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="-20dp"
-        android:layout_marginTop="10dp"
-        android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:id="@+id/line_main"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:background="@drawable/track_item_bg"
-            android:elevation="2dp"
-            android:paddingBottom="6dp"
-            android:paddingLeft="6dp"
-            android:paddingTop="6dp">
+        <TextView
+            android:id="@+id/content_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:padding="8dp"
+            android:text="看我72变"
+            android:textColor="#fff"
+            android:background="#f00"/>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="6dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
+        <TextView
+            android:id="@+id/address_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_toRightOf="@id/content_tv"
+            android:padding="8dp"
+            android:text="234米"
+            android:textColor="#f00" />
 
-                <TextView
-                    android:id="@+id/content_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="37dp"
-                    android:text="看我七十二变.."
-                    android:textColor="#242424"
-                    android:textSize="13sp"
-                    android:layout_marginTop="8dp"/>
+    </RelativeLayout>
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-
-                    <TextView
-                        android:id="@id/address_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:text="1mi"
-                        android:textColor="#FF979797"
-                        android:textSize="11sp"
-                        android:layout_marginTop="8dp"/>
-
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-
-    </LinearLayout>
 </LinearLayout>

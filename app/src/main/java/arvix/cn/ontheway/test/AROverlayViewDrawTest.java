@@ -371,13 +371,14 @@ public class AROverlayViewDrawTest extends View implements FootPrintSearchNotify
                             //  ArFootPrintDrawActivity.tvCurrentLocation.setText(System.currentTimeMillis() + " show:" + cameraCoordinateVector[2]);
                             bitmapTemp = arFootPrintCacheMemoryService.getT(viewBitmapCachePrefix + footPrintBean.getBusinessId(), Bitmap.class);
                             if (bitmapTemp == null) {
-                                View convertView = LayoutInflater.from(context).inflate(R.layout.track_ar_item, rootView, false);
+                                View convertView = LayoutInflater.from(context).inflate(R.layout.business_ar_item, rootView, false);
                                 FootPrintItemViewHolder h = new FootPrintItemViewHolder();
                                 x.view().inject(h, convertView);
                                 h.addressTv.setText(StaticMethod.genLesAddressStr(footPrintBean.getAddress(), 4));
 //                                h.timeTv.setText("商家"+footPrintBean.get);
                                 h.contentTv.setText(StaticMethod.genLesStr(footPrintBean.getName(), 6));
                                     //隐藏图片
+
                                     h.trackPhotoIv.setVisibility(GONE);
                                 //  Log.i(logTag, "loadImage------->,drawX:" + drawX + ",drawY:" + drawY + "  " + footPrintBean.getUserHeadImg());
                                 bitmapTemp = StaticMethod.getViewBitmap(convertView);
