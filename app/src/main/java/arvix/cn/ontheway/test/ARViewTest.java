@@ -3,6 +3,8 @@ package arvix.cn.ontheway.test;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.hardware.Camera;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -20,22 +22,29 @@ import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import arvix.cn.ontheway.BaiduActivity;
 import arvix.cn.ontheway.R;
 import arvix.cn.ontheway.bean.FootPrintSearchVo;
+import arvix.cn.ontheway.erji.ListBean;
+import arvix.cn.ontheway.http.ServerUrl;
 import arvix.cn.ontheway.service.impl.BusinessSearchServiceImpl;
 import arvix.cn.ontheway.service.inter.CacheService;
 import arvix.cn.ontheway.ui.BaseActivity;
@@ -45,6 +54,7 @@ import arvix.cn.ontheway.ui.ar_view.ARCamera;
 import arvix.cn.ontheway.ui.track.TrackCreateActivity;
 import arvix.cn.ontheway.ui.track.TrackListActivity;
 import arvix.cn.ontheway.ui.track.TrackMapActivity;
+import arvix.cn.ontheway.ui.usercenter.PersonInfoActivity;
 import arvix.cn.ontheway.utils.OnthewayApplication;
 import arvix.cn.ontheway.utils.StaticMethod;
 import arvix.cn.ontheway.utils.StaticVar;
@@ -301,16 +311,66 @@ public class ARViewTest extends BaseActivity implements SensorEventListener, Loc
 			@Override
 			public void onClick(View view) {
 
+
 			}
 		});
 		mFilter.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
+				popupWindow();
+                RequestParams requestParams = new RequestParams();
+                requestParams.setUri(ServerUrl.TYPE);
+                x.http().get(requestParams, new Callback.CommonCallback<ListBean.BodyBean.ChildrenBean>() {
+                    @Override
+                    public void onSuccess(ListBean.BodyBean.ChildrenBean result) {
 
+                    }
+
+                    @Override
+                    public void onError(Throwable ex, boolean isOnCallback) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(CancelledException cex) {
+
+                    }
+
+                    @Override
+                    public void onFinished() {
+
+                    }
+                });
 			}
 		});
 	}
 
+	private  PopupWindow popupWindow;
+	private void popupWindow(){
+		popupWindow = new PopupWindow();
+		View view = LayoutInflater.from(ARViewTest.this).inflate(
+				R.layout.item_all, null);
+        popupWindow = new PopupWindow(view,
+				ViewGroup.LayoutParams.MATCH_PARENT,
+				ViewGroup.LayoutParams.WRAP_CONTENT);
+		// 取得焦点
+		popupWindow.setFocusable(true);
+        //注意  要是点击外部空白处弹框消息  那么必须给弹框设置一个背景色  不然是不起作用的
+        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+		//点击外部消失
+		popupWindow.setOutsideTouchable(true);
+		//设置可以点击
+		popupWindow.setTouchable(true);
+		//显示窗口
+		popupWindow.showAtLocation(view, Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 0);
+        View button = view.findViewById(R.id.finish);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popupWindow.dismiss();
+            }
+        });
+	}
 	private void updateSearchDistance(FootPrintSearchVo.SearchDistance distance){
 		trackSearchVo.setSearchDistance(distance);
 		arOverlayView.updateSearchParams();

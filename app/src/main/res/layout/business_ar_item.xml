@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#0000"
+    android:orientation="horizontal">
+
+       <RelativeLayout
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content">
+           <TextView
+               android:id="@+id/content_tv"
+               android:layout_width="wrap_content"
+               android:layout_height="30dp"
+               android:text="看我72变"
+                android:padding="8dp"
+               android:background="#f00"
+               android:textColor="#fff"/>
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="30dp"
+               android:text="234米"
+               android:padding="8dp"
+               android:layout_toRightOf="@id/content_tv"
+               android:textColor="#f00" />
+
+       </RelativeLayout>
+
+</LinearLayout>

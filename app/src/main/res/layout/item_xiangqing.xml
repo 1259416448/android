@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:background="#F4F4F4">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+           <TextView
+               android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="海底捞(白家庄店)"
+            android:textColor="#000"
+            android:textSize="18dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="15dp"/>
+
+
+               <ImageView
+                 android:id="@+id/daohang"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:src="@drawable/ar_daohang"
+                 android:layout_alignParentRight="true"
+                 android:layout_marginRight="20dp"
+                 android:layout_marginTop="15dp"/>
+
+                 <TextView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:text="到这去"
+                     android:layout_alignParentRight="true"
+                     android:layout_marginTop="40dp"
+                     android:layout_marginRight="10dp"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp">
+                <ImageView
+                    android:id="@+id/img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ar_sx_dingwei_" />
+                <TextView
+                    android:id="@+id/address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="北大街联慧路88号"
+                    android:layout_toRightOf="@id/img"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+               android:layout_marginLeft="20dp"
+                android:layout_marginTop="8dp">
+                <ImageView
+                    android:id="@+id/img2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ar_sx_dianhua"
+                    android:layout_margin="2dp"/>
+                <TextView
+                    android:id="@+id/phoneNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="010-3456776"
+                    android:layout_toRightOf="@id/img2"/>
+
+            </RelativeLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tiaozhuan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="查看商户更多信息"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:textSize="18dp"
+            android:layout_marginBottom="5dp"/>
+    </RelativeLayout>
+
+</LinearLayout>

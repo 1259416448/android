@@ -6,18 +6,22 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.opengl.Matrix;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.CoordinateConverter;
@@ -232,10 +236,40 @@ public class AROverlayViewDrawTest extends View implements FootPrintSearchNotify
                     if(footPrintBean !=null){
                         //TODO 跳转
                        // StaticMethod.showToast(footPrintBean.getFootprintContent(),context);
-                        Intent intent = new Intent(context,OtherActivity.class);
-                        intent.putExtra(StaticVar.EXTRA_TRACK_BEAN, footPrintBean);
-                      //  intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
+                        PopupWindow popupWindow = new PopupWindow();
+                        View view = LayoutInflater.from(getContext()).inflate(
+                                R.layout.item_xiangqing, null);
+                        TextView name = (TextView) view.findViewById(R.id.name);
+                        TextView address = (TextView) view.findViewById(R.id.address);
+
+                        name.setText(footPrintBean.getName());
+                        address.setText(footPrintBean.getAddress());
+
+                        popupWindow = new PopupWindow(view,
+                                ViewGroup.LayoutParams.MATCH_PARENT,
+                                ViewGroup.LayoutParams.WRAP_CONTENT);
+                        // 取得焦点
+                        popupWindow.setFocusable(true);
+                        //注意  要是点击外部空白处弹框消息  那么必须给弹框设置一个背景色  不然是不起作用的
+                        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+                        //点击外部消失
+                        popupWindow.setOutsideTouchable(true);
+                        //设置可以点击
+                        popupWindow.setTouchable(true);
+                        //显示窗口
+                        popupWindow.showAtLocation(view, Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
+
+                        View tiaozhuan= view.findViewById(R.id.tiaozhuan);
+                        tiaozhuan.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(context,OtherActivity.class);
+//                                intent.putExtra(StaticVar.EXTRA_TRACK_BEAN, footPrintBean);
+                            //  intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                context.startActivity(intent);
+                            }
+                        });
+
                     }
                 }
                 //否则不视为一次单击事件
