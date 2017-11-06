@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>footprint</key>
+		<dict>
+			<key>userHeadImg</key>
+			<string>http://osx4pwgde.bkt.clouddn.com/b4.jpg?imageView2/1/w/160/h/160</string>
+			<key>userNickname</key>
+			<string>软软的糯米糍饿了</string>
+			<key>footprintContent</key>
+			<string>清粥小菜，服务很好，环境干净，菜是一般，有名气，开了很连接店。建议你去看看</string>
+			<key>footprintAddress</key>
+			<string>成都市菁蓉国际广场A1栋</string>
+			<key>dateCreated</key>
+			<integer>1499846462587</integer>
+			<key>dateCreatedStr</key>
+			<string>57分钟前</string>
+			<key>footprintPhoto</key>
+			<string>http://osx4pwgde.bkt.clouddn.com/c0ab21ab26b4694769b6e904788b3590630777.jpg</string>
+			<key>footprintId</key>
+			<integer>1</integer>
+			<key>footprintType</key>
+			<string>photo</string>
+		</dict>
+		<key>sCommentContent</key>
+		<string>玩的很嗨啊，你是修了多长时间的图，树都变形了，大家都知道你长啥样，哈哈！</string>
+		<key>sCommentTime</key>
+		<string>02-12  13:23</string>
+		<key>sUserName</key>
+		<string>王小易</string>
+		<key>sUserImage</key>
+		<string>http://osx4pwgde.bkt.clouddn.com/b4.jpg?imageView2/1/w/160/h/160</string>
+	</dict>
+	<dict>
+		<key>footprint</key>
+		<dict>
+			<key>userHeadImg</key>
+			<string>http://osx4pwgde.bkt.clouddn.com/b4.jpg?imageView2/1/w/160/h/160</string>
+			<key>userNickname</key>
+			<string>软软的糯米糍饿了</string>
+			<key>footprintContent</key>
+			<string>清粥小菜，服务很好，环境干净，菜是一般，有名气，开了很连接店。建议你去看看</string>
+			<key>footprintAddress</key>
+			<string>成都市菁蓉国际广场A1栋</string>
+			<key>dateCreated</key>
+			<integer>1499846462587</integer>
+			<key>dateCreatedStr</key>
+			<string>57分钟前</string>
+			<key>footprintPhoto</key>
+			<string>http://osx4pwgde.bkt.clouddn.com/c0ab21ab26b4694769b6e904788b3590630777.jpg</string>
+			<key>footprintId</key>
+			<integer>1</integer>
+			<key>footprintType</key>
+			<string>photo</string>
+		</dict>
+		<key>sCommentContent</key>
+		<string>玩的很嗨啊，你是修了多长时间的图，树都变形了，大家都知道你长啥样，哈哈！</string>
+		<key>sCommentTime</key>
+		<string>02-12  13:23</string>
+		<key>sUserName</key>
+		<string>王小易</string>
+		<key>sUserImage</key>
+		<string>http://osx4pwgde.bkt.clouddn.com/b4.jpg?imageView2/1/w/160/h/160</string>
+	</dict>
+</array>
+</plist>

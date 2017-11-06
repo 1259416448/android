@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>newsTitle</key>
+		<string>紧急通知</string>
+		<key>newsTime</key>
+		<string>23:00</string>
+		<key>newsContent</key>
+		<string>故事的小黄花从出生那年就在飘着，童年的荡秋千，童年的荡秋千，童年的荡秋千</string>
+	</dict>
+	<dict>
+		<key>newsTitle</key>
+		<string>紧急通知</string>
+		<key>newsTime</key>
+		<string>23:00</string>
+		<key>newsContent</key>
+		<string>故事的小黄花从出生那年就在飘着，童年的荡秋千，童年的荡秋千，童年的荡秋千</string>
+	</dict>
+	<dict>
+		<key>newsTitle</key>
+		<string>紧急通知</string>
+		<key>newsTime</key>
+		<string>23:00</string>
+		<key>newsContent</key>
+		<string>故事的小黄花从出生那年就在飘着，童年的荡秋千，童年的荡秋千，童年的荡秋千</string>
+	</dict>
+	<dict>
+		<key>newsTitle</key>
+		<string>紧急通知</string>
+		<key>newsTime</key>
+		<string>23:00</string>
+		<key>newsContent</key>
+		<string>故事的小黄花从出生那年就在飘着，童年的荡秋千，童年的荡秋千，童年的荡秋千</string>
+	</dict>
+</array>
+</plist>

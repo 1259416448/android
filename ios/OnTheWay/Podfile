@@ -1,0 +1,20 @@
+platform :'ios','9.0'
+target 'OnTheWay' do
+  pod 'MBProgressHUD'
+  pod 'AFNetworking'
+  pod 'SDWebImage'
+  pod 'MJExtension'
+  pod 'MJRefresh'
+  pod 'IQKeyboardManager'
+  pod 'PPNetworkHelper'
+  pod 'YSCategorys'
+  pod 'STPopup'
+  pod 'SDCycleScrollView'
+  pod 'DACircularProgress'
+  pod 'TZImagePickerController'
+  pod 'BaiduMapKit' #百度地图SDK
+  pod "Qiniu", "~> 7.1"
+  pod 'UMessage_NOIDFA','~> 1.5.3'
+  
+end
+
