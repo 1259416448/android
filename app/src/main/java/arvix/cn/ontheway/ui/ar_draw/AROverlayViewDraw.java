@@ -168,7 +168,7 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
         drawMoveCheck.computeMoveDiffAbs();
         //这里的比较值越小，draw频率越高，移动会更流畅
         if( diffAbs > drawMoveCheck.moveDiffAbs){
-         //   Log.i(logTag,"updateRotatedProjectionMatrix--->change  new"  + newRotateStr);
+            //   Log.i(logTag,"updateRotatedProjectionMatrix--->change  new"  + newRotateStr);
             this.invalidate();
             overlapMoveFinish = false;
             oldRotatedProjectionMatrix = rotatedProjectionMatrix;
@@ -232,10 +232,10 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
                     FootPrintBean footPrintBean = computeTouchTrack(touchX,touchY);
                     if(footPrintBean !=null){
                         //TODO 跳转
-                       // StaticMethod.showToast(footPrintBean.getFootprintContent(),context);
+                        // StaticMethod.showToast(footPrintBean.getFootprintContent(),context);
                         Intent intent = new Intent(context,TrackDetailActivity.class);
                         intent.putExtra(StaticVar.EXTRA_TRACK_BEAN, footPrintBean);
-                      //  intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        //  intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
                     }
                 }
@@ -255,7 +255,7 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
                 Log.i(logTag,"touch--->touchX:"+touchX+",touchY:"+touchY +",drawX:"+ drawFootPrintItemInfo.drawX+",drawY:"+ drawFootPrintItemInfo.drawY
                         +",rectHeight:"+ drawFootPrintItemInfo.rectHeight +",rectWidth:"+ drawFootPrintItemInfo.rectWidth +"    " + drawFootPrintItemInfo.footPrintBean.getFootprintContent());
                 if( drawFootPrintItemInfo.drawX < touchX &&  touchX < (drawFootPrintItemInfo.drawX + drawFootPrintItemInfo.rectWidth)
-                && drawFootPrintItemInfo.drawY < touchY && touchY <  (drawFootPrintItemInfo.drawY + drawFootPrintItemInfo.rectHeight)   ){
+                        && drawFootPrintItemInfo.drawY < touchY && touchY <  (drawFootPrintItemInfo.drawY + drawFootPrintItemInfo.rectHeight)   ){
                     footPrintBean = drawFootPrintItemInfo.footPrintBean;
                     break;
                 }
@@ -285,117 +285,117 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
     protected void onDraw(final Canvas canvas) {
         super.onDraw(canvas);
         if (this.pagination.getContent() != null && this.pagination.getContent().size() > 0) {
-                Location location;
-                String drawIdStr = drawId;
-                long start = System.currentTimeMillis();
-                try {
-                    // Log.i(logTag, "do onDraw------------------------------------>");
-                    drawPointRePointMap.clear();
-                    drawFootPrintItemInfoList.clear();
-                    DrawFootPrintItemInfo pointInfo ;
-                    //for start
-                    radarPointList.clear();
+            Location location;
+            String drawIdStr = drawId;
+            long start = System.currentTimeMillis();
+            try {
+                // Log.i(logTag, "do onDraw------------------------------------>");
+                drawPointRePointMap.clear();
+                drawFootPrintItemInfoList.clear();
+                DrawFootPrintItemInfo pointInfo ;
+                //for start
+                radarPointList.clear();
 
-                    for ( final FootPrintBean footPrintBean : this.pagination.getContent()) {
-                        location = new Location(footPrintBean.getFootprintContent());
-                        location.setLatitude(footPrintBean.getLatitude());
-                        location.setLongitude(footPrintBean.getLongitude());
-                        location.setAltitude(this.alt);
-                        currentLocationInECEF = LocationHelper.WSG84toECEF(currentLocation);
-                        pointInECEF = LocationHelper.WSG84toECEF(location);
-                        pointInENU = LocationHelper.ECEFtoENU(currentLocation, currentLocationInECEF, pointInECEF);
-                        cameraCoordinateVector = new float[4];
-                        Matrix.multiplyMV(cameraCoordinateVector, 0, rotatedProjectionMatrix, 0, pointInENU, 0);
-                        // cameraCoordinateVector[2] is z, that always less than 0 to display on right position
-                        // if z > 0, the point will display on the opposite
-                        drawX = (0.5f + cameraCoordinateVector[0] / cameraCoordinateVector[3]) * canvas.getWidth();
-                        drawY = (0.5f - cameraCoordinateVector[1] / cameraCoordinateVector[3]) * canvas.getHeight();
-                        drawX = (int) drawX;
-                        drawY = (int) drawY;
-                        rePointKeyTemp = drawX + "-" + drawY;
-                        rePointTimes = drawPointRePointMap.get(rePointKeyTemp);
-                        if (rePointTimes == null) {
-                            drawPointRePointMap.put(rePointKeyTemp, 1);
-                        } else {
-                            drawX = drawX + drawXOffset * rePointTimes;
-                            drawY = drawY + drawYOffset * rePointTimes;
-                            drawPointRePointMap.put(rePointKeyTemp, rePointTimes + 1);
-                        }
-                        pointInfo = new DrawFootPrintItemInfo(trackViewItemRectW,trackViewItemRectH);
-                        pointInfo.footPrintBean = footPrintBean;
-                        pointInfo.drawY = drawY;
-                        pointInfo.drawX = drawX;
-                        radarPoint = new RadarPoint();
-                        radarPoint.lat = footPrintBean.getLatitude();
-                        radarPoint.lon = footPrintBean.getLongitude();
-                        radarPoint.isNegative = true;
-                        if (cameraCoordinateVector[2] < 0) {
-                            drawFootPrintItemInfoList.add(pointInfo);
-                            radarPoint.isNegative = false;
-                            //  ArFootPrintDrawActivity.tvCurrentLocation.setText(System.currentTimeMillis() + " show:" + cameraCoordinateVector[2]);
-                            bitmapTemp = arFootPrintCacheMemoryService.getT(viewBitmapCachePrefix + footPrintBean.getFootprintId(), Bitmap.class);
-                            if (bitmapTemp == null) {
-                                View convertView = LayoutInflater.from(context).inflate(R.layout.business_ar_item, rootView, false);
-                                FootPrintItemViewHolder h = new FootPrintItemViewHolder();
-                                x.view().inject(h, convertView);
-                                h.addressTv.setText(StaticMethod.genLesAddressStr(footPrintBean.getFootprintAddress(), 4));
-                                h.timeTv.setText(footPrintBean.getDateCreatedStr());
-                                h.contentTv.setText(StaticMethod.genLesStr(footPrintBean.getFootprintContent(), 6));
-                                Bitmap headerBitmap = arFootPrintCacheMemoryService.getT(footPrintBean.getUserHeadImg(), Bitmap.class);
-                                boolean headerLoaded = false;
-                                boolean trackPhotoLoaded = false;
-                                // Log.i(logTag,"h.userHeader--->"+h.userHeader.getLayoutParams().width+ " "+StaticMethod.dip2px(context, 28));
-                                if (headerBitmap != null) {
-                                    h.userHeader.setImageBitmap(headerBitmap);
-                                    headerLoaded = true;
-                                }
-                                if (!TextUtils.isEmpty(footPrintBean.getFootprintPhoto())) {
-                                    Bitmap trackPhotoBitmap = arFootPrintCacheMemoryService.getT(footPrintBean.getFootprintPhoto(), Bitmap.class);
-                                    if (trackPhotoBitmap != null) {
-                                        h.trackPhotoIv.setImageBitmap(trackPhotoBitmap);
-                                        trackPhotoLoaded = true;
-                                    }
-                                } else {
-                                    h.trackPhotoIv.setVisibility(GONE);
+                for ( final FootPrintBean footPrintBean : this.pagination.getContent()) {
+                    location = new Location(footPrintBean.getFootprintContent());
+                    location.setLatitude(footPrintBean.getLatitude());
+                    location.setLongitude(footPrintBean.getLongitude());
+                    location.setAltitude(this.alt);
+                    currentLocationInECEF = LocationHelper.WSG84toECEF(currentLocation);
+                    pointInECEF = LocationHelper.WSG84toECEF(location);
+                    pointInENU = LocationHelper.ECEFtoENU(currentLocation, currentLocationInECEF, pointInECEF);
+                    cameraCoordinateVector = new float[4];
+                    Matrix.multiplyMV(cameraCoordinateVector, 0, rotatedProjectionMatrix, 0, pointInENU, 0);
+                    // cameraCoordinateVector[2] is z, that always less than 0 to display on right position
+                    // if z > 0, the point will display on the opposite
+                    drawX = (0.5f + cameraCoordinateVector[0] / cameraCoordinateVector[3]) * canvas.getWidth();
+                    drawY = (0.5f - cameraCoordinateVector[1] / cameraCoordinateVector[3]) * canvas.getHeight();
+                    drawX = (int) drawX;
+                    drawY = (int) drawY;
+                    rePointKeyTemp = drawX + "-" + drawY;
+                    rePointTimes = drawPointRePointMap.get(rePointKeyTemp);
+                    if (rePointTimes == null) {
+                        drawPointRePointMap.put(rePointKeyTemp, 1);
+                    } else {
+                        drawX = drawX + drawXOffset * rePointTimes;
+                        drawY = drawY + drawYOffset * rePointTimes;
+                        drawPointRePointMap.put(rePointKeyTemp, rePointTimes + 1);
+                    }
+                    pointInfo = new DrawFootPrintItemInfo(trackViewItemRectW,trackViewItemRectH);
+                    pointInfo.footPrintBean = footPrintBean;
+                    pointInfo.drawY = drawY;
+                    pointInfo.drawX = drawX;
+                    radarPoint = new RadarPoint();
+                    radarPoint.lat = footPrintBean.getLatitude();
+                    radarPoint.lon = footPrintBean.getLongitude();
+                    radarPoint.isNegative = true;
+                    if (cameraCoordinateVector[2] < 0) {
+                        drawFootPrintItemInfoList.add(pointInfo);
+                        radarPoint.isNegative = false;
+                        //  ArFootPrintDrawActivity.tvCurrentLocation.setText(System.currentTimeMillis() + " show:" + cameraCoordinateVector[2]);
+                        bitmapTemp = arFootPrintCacheMemoryService.getT(viewBitmapCachePrefix + footPrintBean.getFootprintId(), Bitmap.class);
+                        if (bitmapTemp == null) {
+                            View convertView = LayoutInflater.from(context).inflate(R.layout.track_ar_item, rootView, false);
+                            FootPrintItemViewHolder h = new FootPrintItemViewHolder();
+                            x.view().inject(h, convertView);
+                            h.addressTv.setText(StaticMethod.genLesAddressStr(footPrintBean.getFootprintAddress(), 4));
+                            h.timeTv.setText(footPrintBean.getDateCreatedStr());
+                            h.contentTv.setText(StaticMethod.genLesStr(footPrintBean.getFootprintContent(), 6));
+                            Bitmap headerBitmap = arFootPrintCacheMemoryService.getT(footPrintBean.getUserHeadImg(), Bitmap.class);
+                            boolean headerLoaded = false;
+                            boolean trackPhotoLoaded = false;
+                            // Log.i(logTag,"h.userHeader--->"+h.userHeader.getLayoutParams().width+ " "+StaticMethod.dip2px(context, 28));
+                            if (headerBitmap != null) {
+                                h.userHeader.setImageBitmap(headerBitmap);
+                                headerLoaded = true;
+                            }
+                            if (!TextUtils.isEmpty(footPrintBean.getFootprintPhoto())) {
+                                Bitmap trackPhotoBitmap = arFootPrintCacheMemoryService.getT(footPrintBean.getFootprintPhoto(), Bitmap.class);
+                                if (trackPhotoBitmap != null) {
+                                    h.trackPhotoIv.setImageBitmap(trackPhotoBitmap);
                                     trackPhotoLoaded = true;
                                 }
-                                //  Log.i(logTag, "loadImage------->,drawX:" + drawX + ",drawY:" + drawY + "  " + footPrintBean.getUserHeadImg());
-                                bitmapTemp = StaticMethod.getViewBitmap(convertView);
-                                canvas.drawBitmap(bitmapTemp, drawX, drawY, mBitPaint);
-
-                                if (trackPhotoLoaded && headerLoaded) {
-                                    arFootPrintCacheMemoryService.putObject(viewBitmapCachePrefix + footPrintBean.getFootprintId(), bitmapTemp);
-                                }
-                                convertView.setDrawingCacheEnabled(false);
+                            } else {
+                                h.trackPhotoIv.setVisibility(GONE);
+                                trackPhotoLoaded = true;
                             }
-                        }
-                        radarPointList.add(radarPoint);
-                    }
-                    // for end
-                    OverlapFilter.filter(this.drawFootPrintItemInfoList);
-                    for(DrawFootPrintItemInfo<FootPrintBean> itemInfo :drawFootPrintItemInfoList ){
-                        footPrintBeanTemp = itemInfo.footPrintBean;
-                        bitmapTemp = arFootPrintCacheMemoryService.getT(viewBitmapCachePrefix + footPrintBeanTemp.getFootprintId(), Bitmap.class);
-                        if (bitmapTemp != null) {
-                            // Log.i(logTag, "load form cache bitmap drawX:" + drawX + ",drawY:" + drawY + "  ");
-                            canvas.drawBitmap(bitmapTemp, itemInfo.drawX, itemInfo.drawY, mBitPaint);
-                        }
-                    }
-                    drawRadarPoint();
-                    drawCount ++;
-                    drawSumTime = drawSumTime + (System.currentTimeMillis() - start);
-                    fps = drawSumTime/drawCount ;
+                            //  Log.i(logTag, "loadImage------->,drawX:" + drawX + ",drawY:" + drawY + "  " + footPrintBean.getUserHeadImg());
+                            bitmapTemp = StaticMethod.getViewBitmap(convertView);
+                            canvas.drawBitmap(bitmapTemp, drawX, drawY, mBitPaint);
 
-                    Log.i(logTag,"drawId:"+drawIdStr +" draw fps:" + fps +","+ canvas.isHardwareAccelerated()  );
-                    //ArFootPrintDrawActivity.tvCurrentLocation.setText("draw fps:"+fps+","+ canvas.isHardwareAccelerated());
-                    if(drawCount==100){
-                        drawCount = 0;
-                        drawSumTime = 0;
+                            if (trackPhotoLoaded && headerLoaded) {
+                                arFootPrintCacheMemoryService.putObject(viewBitmapCachePrefix + footPrintBean.getFootprintId(), bitmapTemp);
+                            }
+                            convertView.setDrawingCacheEnabled(false);
+                        }
                     }
-                } catch (Exception e) {
-                    Log.e(logTag, "load image error", e);
-                    e.printStackTrace();
+                    radarPointList.add(radarPoint);
                 }
+                // for end
+                OverlapFilter.filter(this.drawFootPrintItemInfoList);
+                for(DrawFootPrintItemInfo<FootPrintBean> itemInfo :drawFootPrintItemInfoList ){
+                    footPrintBeanTemp = itemInfo.footPrintBean;
+                    bitmapTemp = arFootPrintCacheMemoryService.getT(viewBitmapCachePrefix + footPrintBeanTemp.getFootprintId(), Bitmap.class);
+                    if (bitmapTemp != null) {
+                        // Log.i(logTag, "load form cache bitmap drawX:" + drawX + ",drawY:" + drawY + "  ");
+                        canvas.drawBitmap(bitmapTemp, itemInfo.drawX, itemInfo.drawY, mBitPaint);
+                    }
+                }
+                drawRadarPoint();
+                drawCount ++;
+                drawSumTime = drawSumTime + (System.currentTimeMillis() - start);
+                fps = drawSumTime/drawCount ;
+
+                Log.i(logTag,"drawId:"+drawIdStr +" draw fps:" + fps +","+ canvas.isHardwareAccelerated()  );
+                //ArFootPrintDrawActivity.tvCurrentLocation.setText("draw fps:"+fps+","+ canvas.isHardwareAccelerated());
+                if(drawCount==100){
+                    drawCount = 0;
+                    drawSumTime = 0;
+                }
+            } catch (Exception e) {
+                Log.e(logTag, "load image error", e);
+                e.printStackTrace();
+            }
 
         }
     }
@@ -443,11 +443,11 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
             target = new LatLng(radarPoint.lat, radarPoint.lon);
             distance = DistanceUtil.getDistance(center,target);
             azimuth = StaticMethod.comAzimuth(center.latitude,center.longitude,radarPoint.lat,radarPoint.lon);
-          //Log.i(logTag," Math.sin(azimuth):"+azimuth +","+Math.sin(azimuth));
-           // Log.i("comAzimuth","comAzimuth compute-ttttttt---->"+azimuth +",Math.sin(azimuth):"+Math.sin(azimuth)+",Math.cos(azimuth):"+Math.cos(azimuth));
+            //Log.i(logTag," Math.sin(azimuth):"+azimuth +","+Math.sin(azimuth));
+            // Log.i("comAzimuth","comAzimuth compute-ttttttt---->"+azimuth +",Math.sin(azimuth):"+Math.sin(azimuth)+",Math.cos(azimuth):"+Math.cos(azimuth));
             pLeft = (int)(cx + Math.sin(azimuth)*radarZoom*distance);
             pTop = (int) (cy - Math.cos(azimuth)*radarZoom*distance);
-          //  Log.i("pLeft","pLeft:"+pLeft +",pTop:"+pTop+",cx:"+cx +",cy:"+cy   + ",roate:"+(-rotaDegree));
+            //  Log.i("pLeft","pLeft:"+pLeft +",pTop:"+pTop+",cx:"+cx +",cy:"+cy   + ",roate:"+(-rotaDegree));
             rePointKeyTemp = pLeft + "-" + pTop;
             Integer rePointTimes = drawPointRePointMap.get(rePointKeyTemp);
             if (rePointTimes == null) {
@@ -466,8 +466,8 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
             }
             imageView = radarImageViewList.get(i);
             //  if(Math.sqrt(pointRadius) < (radius)){
-         //   Log.i(logTag,"left:"+(int)(pLeft)+",top:"+(int)(pTop)+",realRadius"+realRadius+",sW:"
-           //           +rootView.getWidth() +",sH:"+rootView.getHeight()+",distance:"+distance +",zDegrees:"+zDegrees) ;
+            //   Log.i(logTag,"left:"+(int)(pLeft)+",top:"+(int)(pTop)+",realRadius"+realRadius+",sW:"
+            //           +rootView.getWidth() +",sH:"+rootView.getHeight()+",distance:"+distance +",zDegrees:"+zDegrees) ;
             FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(StaticMethod.dip2px(context,2), StaticMethod.dip2px(context,2));
 
             layoutParams.setMargins((int)pLeft,(int)(pTop),0,0);
@@ -521,7 +521,7 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
                     b.putString("totalCount", paginationFetch.getTotalElements()+"");
                     b.putString("address", cache.get(StaticVar.BAIDU_LOC_CACHE_ADDRESS));
                     msg.setData(b);
-                    handler.sendMessage(msg);
+                    ArFootPrintDrawActivity.handler.sendMessage(msg);
                     //update activity end
                     trackSearchVo.setTotalPages(paginationFetch.getTotalPages());
                     for (final FootPrintBean footPrintBean : pagination.getContent()) {
