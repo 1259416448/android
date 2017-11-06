@@ -36,7 +36,7 @@ import arvix.cn.ontheway.utils.StaticVar;
  * Created by asdtiang on 2017/8/9 0009.
  * asdtiangxia@163.com
  */
-
+//
 public class BusinessSearchServiceImpl implements FootPrintSearchService<BusinessBean> {
 
     private static long lastRequest = 0;
