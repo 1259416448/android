@@ -49,6 +49,7 @@ import arvix.cn.ontheway.ui.ar_draw.DrawMoveCheck;
 import arvix.cn.ontheway.ui.ar_draw.FootPrintItemViewHolder;
 import arvix.cn.ontheway.ui.ar_draw.OverlapFilter;
 import arvix.cn.ontheway.ui.ar_draw.RadarPoint;
+import arvix.cn.ontheway.ui.track.TrackDetailActivity;
 import arvix.cn.ontheway.utils.LocationHelper;
 import arvix.cn.ontheway.utils.MyProgressDialog;
 import arvix.cn.ontheway.utils.OnthewayApplication;
@@ -232,7 +233,7 @@ public class AROverlayViewDrawTest extends View implements FootPrintSearchNotify
                     float touchY = event.getY();
                     float touchX = event.getX();
                     Log.i(logTag,"touch--->touchX:"+touchX+",touchY:"+touchY +"  --->");
-                    BusinessBean footPrintBean = computeTouchTrack(touchX,touchY);
+                    final BusinessBean footPrintBean = computeTouchTrack(touchX,touchY);
                     if(footPrintBean !=null){
                         //TODO 跳转
                        // StaticMethod.showToast(footPrintBean.getFootprintContent(),context);
@@ -264,8 +265,10 @@ public class AROverlayViewDrawTest extends View implements FootPrintSearchNotify
                             @Override
                             public void onClick(View view) {
                                 Intent intent = new Intent(context,OtherActivity.class);
-//                                intent.putExtra(StaticVar.EXTRA_TRACK_BEAN, footPrintBean);
+                                intent.putExtra(StaticVar.EXTRA_TRACK_BEAN, footPrintBean);
                             //  intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.putExtra("name", footPrintBean.getName());
+                                intent.putExtra("address",footPrintBean.getAddress());
                                 context.startActivity(intent);
                             }
                         });

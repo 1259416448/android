@@ -208,7 +208,7 @@ public class BusinessSearchServiceImpl implements FootPrintSearchService<Busines
         }else if(FootPrintSearchVo.SearchType.map == trackSearchVo.getSearchType()){
             url = url + "/map";
         }else{
-            url = url + "/ar";
+            url = url + "/list";
         }
         requestParams.setUri(url);
         requestParams.setCacheMaxAge(60000);
@@ -222,14 +222,16 @@ public class BusinessSearchServiceImpl implements FootPrintSearchService<Busines
         if (trackSearchVo.getCurrentTime()>0) {
             requestParams.addParameter("currentTime", trackSearchVo.getCurrentTime());
         }
-        if(trackSearchVo.getSearchDistance()!=null){
-           // requestParams.addParameter("searchDistance", trackSearchVo.getSearchDistance());
-        }
-        if(trackSearchVo.getSearchTime()!=null){
-            requestParams.addParameter("time", trackSearchVo.getSearchTime());
-        }
+//        if(trackSearchVo.getSearchDistance()!=null){
+//           // requestParams.addParameter("searchDistance", trackSearchVo.getSearchDistance());
+//        }
+//        if(trackSearchVo.getSearchTime()!=null){
+//            requestParams.addParameter("time", trackSearchVo.getSearchTime());
+//        }
         trackSearchVo.setDistance(1000.0);
         requestParams.addParameter("distance",trackSearchVo.getDistance());
+//        requestParams.addParameter("q",trackSearchVo.getQ());
+        requestParams.addParameter("typeIds",trackSearchVo.getTypeIds());
 //        requestParams.addParameter("typeIds","咖啡");
         x.http().get(requestParams, new Callback.CommonCallback<String>() {
             @Override
@@ -273,14 +275,24 @@ public class BusinessSearchServiceImpl implements FootPrintSearchService<Busines
         }
         lastRequest = System.currentTimeMillis();
         RequestParams requestParams = new RequestParams();
-        String url = ServerUrl.FOOTPRINT_USER +"/" +userId;
+        String url = ServerUrl. BUSINESS +"/" +userId;
         requestParams.setUri(url);
         requestParams.setCacheMaxAge(60000);
         requestParams.addParameter("number", searchVo.getNumber());
         requestParams.addParameter("size", searchVo.getSize());
+        requestParams.addParameter("latitude", searchVo.getLatitude());
+        requestParams.addParameter("longitude", searchVo.getLongitude());
         if (searchVo.getCurrentTime()>0) {
             requestParams.addParameter("currentTime", searchVo.getCurrentTime());
         }
+        if(searchVo.getSearchDistance()!=null){
+            requestParams.addParameter("distance", searchVo.getDistance());
+        }
+//        if(searchVo.getSearchTime()!=null){
+//            requestParams.addParameter("time", searchVo.getSearchTime());
+//        }
+//        requestParams.addParameter("q",searchVo.getQ());
+        requestParams.addParameter("typeIds",searchVo.getTypeIds());
         x.http().get(requestParams, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {

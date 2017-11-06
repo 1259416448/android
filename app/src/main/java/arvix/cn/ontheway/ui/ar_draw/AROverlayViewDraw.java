@@ -529,7 +529,7 @@ public class AROverlayViewDraw extends View implements FootPrintSearchNotify<Foo
                         try {
                             if (arFootPrintCacheMemoryService.getT(footPrintBean.getUserHeadImg(), Bitmap.class) == null) {
                                 Bitmap bitmap = Glide.with(context)
-                                        .load(R.mipmap.ic_launcher)//footPrintBean.getUserHeadImg()
+                                        .load(footPrintBean.getUserHeadImg())//footPrintBean.getUserHeadImg()
                                         .asBitmap()
                                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                                         .into(width, width)

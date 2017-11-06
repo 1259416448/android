@@ -114,6 +114,7 @@ public class SystemMsgActivity extends BaseActivity implements AdapterView.OnIte
 //        });
 
 
+
         final RequestParams requestParams = new RequestParams();
         requestParams.setUri(ServerUrl.SYSTEM_MESSAGE);
         requestParams.addHeader("x-auth-token", "d9fbe8c5-76a9-48fb-8557-e4522f80955f");
